@@ -3116,21 +3116,30 @@ ${matches.join('\n')}`;
                 // 从href提取toolId
                 const href = card.getAttribute('href');
                 const toolId = href ? href.replace('#', '') : `tool_${index}`;
+                console.log('初始化工具:', toolId);
                 
                 const count = getHotCount(toolId);
                 const hotTag = card.querySelector('.hot-count');
                 if (hotTag) {
                     hotTag.textContent = count;
+                    console.log(`工具 ${toolId} 热度设置为: ${count}`);
                 }
                 
                 // 点击卡片时增加热度
                 card.addEventListener('click', (e) => {
                     // 先更新热度再跳转
                     e.preventDefault();
+                    const oldCount = getHotCount(toolId);
                     const newCount = increaseHotCount(toolId);
+                    console.log(`工具 ${toolId} 热度更新: ${oldCount} -> ${newCount}`);
+                    
                     if (hotTag) {
                         hotTag.textContent = newCount;
                     }
+                    
+                    // 验证localStorage
+                    console.log('localStorage验证:', localStorage.getItem(`hot_${toolId}`));
+                    
                     // 跳转
                     setTimeout(() => {
                         window.location.hash = href;
