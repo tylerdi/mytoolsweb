@@ -3172,6 +3172,14 @@ ${matches.join('\n')}`;
             allCards.forEach((card, index) => {
                 if (index >= startIndex && index < endIndex) {
                     card.style.display = 'block';
+                    // 重新设置当前页卡片的热度
+                    const href = card.getAttribute('href');
+                    const toolId = href ? href.replace('#', '') : `tool_${index}`;
+                    const count = getHotCount(toolId);
+                    const hotTag = card.querySelector('.hot-count');
+                    if (hotTag) {
+                        hotTag.textContent = count;
+                    }
                 } else {
                     card.style.display = 'none';
                 }
