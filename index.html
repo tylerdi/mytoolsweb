@@ -3234,7 +3234,10 @@ ${matches.join('\n')}`;
         }
         
         // 页面加载完成后初始化分页
-        window.addEventListener('load', initPagination);
+        window.addEventListener('load', () => {
+            console.log('页面加载完成，开始初始化');
+            initPagination();
+        });
 
         // 证件照工具函数
         let idPhotoImage = null;
