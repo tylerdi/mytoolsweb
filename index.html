@@ -55,13 +55,15 @@
         }
         .search-box input {
             width: 100%;
-            padding: 16px 48px 16px 20px;
+            padding: 12px 48px 12px 20px;
             border: 2px solid rgba(180,140,220,0.2);
             border-radius: 12px;
             font-size: 16px;
             background: rgba(255,255,255,0.8);
             font-family: inherit;
             transition: all 0.3s;
+            min-height: auto;
+            height: 48px;
         }
         .search-box input:focus {
             outline: none;
@@ -1227,7 +1229,7 @@ console.log('Hello World');
                     <img id="imgconvert-preview" style="max-width: 300px; border-radius: 8px; display: none">
                 </div>
                 <div class="btn-group">
-                    <button class="btn" onclick="convertImage()" id="imgconvert-btn" disabled>开始转换</button>
+                    <button class="btn" onclick="convertImageFormat()" id="imgconvert-btn" disabled>开始转换</button>
                     <button class="btn secondary" onclick="downloadConvertImage()" id="imgconvert-download-btn" disabled>下载图片</button>
                 </div>
                 <div id="imgconvert-message"></div>
@@ -2497,9 +2499,18 @@ ${matches.join('\n')}`;
 
         // 搜索功能
         function searchTools() {
-            const query = document.getElementById('search-input').value.toLowerCase();
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
             const cards = document.querySelectorAll('.card');
             let hasResults = false;
+            
+            if (query === '') {
+                // 搜索框为空时显示所有卡片
+                cards.forEach(card => {
+                    card.style.display = 'block';
+                });
+                document.getElementById('no-results').style.display = 'none';
+                return;
+            }
             
             cards.forEach(card => {
                 const name = card.querySelector('.card-name').textContent.toLowerCase();
@@ -2848,15 +2859,15 @@ ${matches.join('\n')}`;
         }
 
         // 图片裁剪工具函数
-        let cropImage = null;
+        let cropImageData = null;
         function loadCropImage() {
             const input = document.getElementById('imgcrop-input');
             const file = input.files[0];
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
-                cropImage = e.target.result;
-                document.getElementById('imgcrop-preview').src = cropImage;
+                cropImageData = e.target.result;
+                document.getElementById('imgcrop-preview').src = cropImageData;
                 document.getElementById('imgcrop-preview').style.display = 'block';
                 document.getElementById('imgcrop-btn').disabled = false;
             };
@@ -2875,21 +2886,21 @@ ${matches.join('\n')}`;
         }
 
         // 图片格式转换工具函数
-        let convertImage = null;
+        let convertImageData = null;
         function loadConvertImage() {
             const input = document.getElementById('imgconvert-input');
             const file = input.files[0];
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
-                convertImage = e.target.result;
-                document.getElementById('imgconvert-preview').src = convertImage;
+                convertImageData = e.target.result;
+                document.getElementById('imgconvert-preview').src = convertImageData;
                 document.getElementById('imgconvert-preview').style.display = 'block';
                 document.getElementById('imgconvert-btn').disabled = false;
             };
             reader.readAsDataURL(file);
         }
-        function convertImage() {
+        function convertImageFormat() {
             const format = document.getElementById('convert-format').value;
             showMessage('imgconvert-message', `✅ 图片转换为${format.toUpperCase()}成功（演示）`);
             document.getElementById('imgconvert-download-btn').disabled = false;
@@ -2898,7 +2909,7 @@ ${matches.join('\n')}`;
             const format = document.getElementById('convert-format').value;
             const link = document.createElement('a');
             link.download = `转换图片.${format}`;
-            link.href = convertImage;
+            link.href = convertImageData;
             link.click();
             showMessage('imgconvert-message', '✅ 下载成功');
         }
