@@ -16,8 +16,9 @@ export async function onRequestPost(context) {
     // 解析请求体
     const { name } = await context.request.json()
 
-    // 连接Supabase数据库
-    const { SUPABASE_URL, SUPABASE_ANON_KEY } = context.env
+    // 连接Supabase数据库（直接写死配置，避免环境变量问题）
+    const SUPABASE_URL = "https://twyosmombfrcheyjujvb.supabase.co"
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eW9zbW9tYmZyY2hleWp1anZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjAwMDQsImV4cCI6MjA4ODIzNjAwNH0.70lVXwcjRqVNLDwkvIwEJHB5rRLBQttiWrW2hKi1bwo"
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
     // 示例：查询热门工具
