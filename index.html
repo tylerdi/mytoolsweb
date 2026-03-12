@@ -3133,8 +3133,10 @@ ${matches.join('\n')}`;
                     const newCount = increaseHotCount(toolId);
                     console.log(`工具 ${toolId} 热度更新: ${oldCount} -> ${newCount}`);
                     
-                    if (hotTag) {
-                        hotTag.textContent = newCount;
+                    // 重新获取hotTag元素，防止分页导致的引用失效
+                    const currentHotTag = e.currentTarget.querySelector('.hot-count');
+                    if (currentHotTag) {
+                        currentHotTag.textContent = newCount;
                     }
                     
                     // 验证localStorage
