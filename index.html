@@ -3114,41 +3114,44 @@ ${matches.join('\n')}`;
             const cards = document.querySelectorAll('.card');
             console.log('找到卡片数量:', cards.length);
             
-            cards.forEach((card, index) => {
-                // 从href提取toolId
-                const href = card.getAttribute('href');
-                const toolId = href ? href.replace('#', '') : `tool_${index}`;
-                
-                const count = getHotCount(toolId);
-                const hotTag = card.querySelector('.hot-count');
-                if (hotTag) {
-                    hotTag.textContent = count;
-                    console.log(`工具 ${toolId} 热度设置为: ${count}`);
-                }
-                
-                // 点击卡片时增加热度
-                card.addEventListener('click', function(e) {
-                    // 先更新热度再跳转
-                    e.preventDefault();
-                    const currentHref = this.getAttribute('href');
-                    const currentToolId = currentHref ? currentHref.replace('#', '') : `tool_${index}`;
+            // 强制等待DOM完全渲染
+            setTimeout(() => {
+                cards.forEach((card, index) => {
+                    // 从href提取toolId
+                    const href = card.getAttribute('href');
+                    const toolId = href ? href.replace('#', '') : `tool_${index}`;
                     
-                    const oldCount = getHotCount(currentToolId);
-                    const newCount = increaseHotCount(currentToolId);
-                    console.log(`工具 ${currentToolId} 热度更新: ${oldCount} -> ${newCount}`);
-                    
-                    // 更新当前卡片的热度
-                    const currentHotTag = this.querySelector('.hot-count');
-                    if (currentHotTag) {
-                        currentHotTag.textContent = newCount;
+                    const count = getHotCount(toolId);
+                    const hotTag = card.querySelector('.hot-count');
+                    if (hotTag) {
+                        hotTag.textContent = count;
+                        console.log(`工具 ${toolId} 热度设置为: ${count}`);
                     }
                     
-                    // 跳转
-                    setTimeout(() => {
-                        window.location.hash = currentHref;
-                    }, 100);
+                    // 点击卡片时增加热度
+                    card.addEventListener('click', function(e) {
+                        // 先更新热度再跳转
+                        e.preventDefault();
+                        const currentHref = this.getAttribute('href');
+                        const currentToolId = currentHref ? currentHref.replace('#', '') : `tool_${index}`;
+                        
+                        const oldCount = getHotCount(currentToolId);
+                        const newCount = increaseHotCount(currentToolId);
+                        console.log(`工具 ${currentToolId} 热度更新: ${oldCount} -> ${newCount}`);
+                        
+                        // 更新当前卡片的热度
+                        const currentHotTag = this.querySelector('.hot-count');
+                        if (currentHotTag) {
+                            currentHotTag.textContent = newCount;
+                        }
+                        
+                        // 跳转
+                        setTimeout(() => {
+                            window.location.hash = currentHref;
+                        }, 100);
+                    });
                 });
-            });
+            }, 100);
         }
         
         // 初始化分页
@@ -3237,8 +3240,10 @@ ${matches.join('\n')}`;
         }
         
         // 页面加载完成后初始化分页
-        window.addEventListener('load', () => {
+        window.addEventListener('DOMContentLoaded', () => {
             console.log('页面加载完成，开始初始化');
+            // 先清空localStorage测试
+            // localStorage.clear();
             initPagination();
         });
 
