@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>热度排序修复</title>
+    <script>
+        // 修复逻辑：页面加载完成后
+        window.addEventListener('load', async () => {
+            // 1. 先获取所有热度
+            const res = await fetch('/api/tool-hot/all');
+            const data = await res.json();
+            const hotMap = data.hotMap || {};
+            
+            // 2. 获取所有卡片
+            const cardsContainer = document.querySelector('.cards');
+            const cards = Array.from(cardsContainer.querySelectorAll('.card'));
+            
+            // 3. 设置热度并排序
+            cards.forEach(card => {
+                const href = card.getAttribute('href');
+                const toolId = href ? href.replace('#', '') : '';
+                const count = hotMap[toolId] || 1;
+                card.dataset.hot = count;
+                
+                // 设置热度显示，确保是数字
+                const hotTag = card.querySelector('.hot-count');
+                if (hotTag) {
+                    hotTag.textContent = count;
+                }
+            });
+            
+            // 4. 按热度降序排序
+            cards.sort((a, b) => (b.dataset.hot || 1) - (a.dataset.hot || 1));
+            
+            // 5. 重新渲染
+            cardsContainer.innerHTML = '';
+            cards.forEach(card => cardsContainer.appendChild(card));
+            
+            // 6. 重新初始化分页
+            window.allCards = Array.from(document.querySelectorAll('.card'));
+            window.currentPage = 1;
+            window.renderPage();
+            
+            console.log('✅ 热度排序完成');
+        });
+    </script>
+</head>
+<body>
+    <p>热度排序修复中...</p>
+</body>
+</html>
