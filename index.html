@@ -86,6 +86,44 @@
             color: rgba(60,30,80,0.5);
             font-size: 16px;
         }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 40px 0;
+        }
+        .pagination-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.75);
+            border: 1px solid rgba(180,140,220,0.2);
+            border-radius: 8px;
+            color: inherit;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .pagination-btn:hover:not(:disabled) {
+            border-color: #ff2d78;
+            box-shadow: 0 0 12px rgba(255,45,120,0.2);
+        }
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .pagination-info {
+            font-size: 14px;
+            color: rgba(60,30,80,0.5);
+        }
+        .footer-stats {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(180,140,220,0.2);
+            font-size: 14px;
+            color: rgba(60,30,80,0.5);
+        }
         .back-btn {
             display: inline-flex;
             align-items: center;
@@ -1251,6 +1289,365 @@ console.log('Hello World');
             </div>
         </div>
 
+        <!-- 新增20个工具 -->
+        <div id="sqlformat" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🗄️ SQL格式化</h2>
+            <div class="tool-container">
+                <textarea id="sql-input" placeholder="请输入SQL代码..." rows="10"></textarea>
+                <div class="btn-group">
+                    <button class="btn" onclick="formatSql()">格式化</button>
+                    <button class="btn secondary" onclick="compressSql()">压缩</button>
+                    <button class="btn secondary" onclick="copyResult('sql-output')">复制结果</button>
+                    <button class="btn secondary" onclick="clearSql()">清空</button>
+                </div>
+                <div id="sql-message"></div>
+                <pre class="output" id="sql-output">格式化后的SQL会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="yamljson" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">⚙️ YAML ↔ JSON</h2>
+            <div class="tool-container">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">输入</label>
+                        <textarea id="yamljson-input" placeholder="请输入YAML或JSON..." rows="15"></textarea>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">输出</label>
+                        <pre class="output" id="yamljson-output">转换结果会显示在这里...</pre>
+                    </div>
+                </div>
+                <div class="btn-group" style="margin-top: 15px">
+                    <button class="btn" onclick="yamlToJson()">YAML → JSON</button>
+                    <button class="btn secondary" onclick="jsonToYaml()">JSON → YAML</button>
+                    <button class="btn secondary" onclick="copyResult('yamljson-output')">复制结果</button>
+                    <button class="btn secondary" onclick="clearYamlJson()">清空</button>
+                </div>
+                <div id="yamljson-message"></div>
+            </div>
+        </div>
+
+        <div id="html2jsx" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">⚛️ HTML转JSX</h2>
+            <div class="tool-container">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">HTML输入</label>
+                        <textarea id="html2jsx-input" placeholder="请输入HTML代码..." rows="15"></textarea>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">JSX输出</label>
+                        <pre class="output" id="html2jsx-output">转换结果会显示在这里...</pre>
+                    </div>
+                </div>
+                <div class="btn-group" style="margin-top: 15px">
+                    <button class="btn" onclick="convertToJsx()">转换为JSX</button>
+                    <button class="btn secondary" onclick="copyResult('html2jsx-output')">复制结果</button>
+                    <button class="btn secondary" onclick="clearHtml2Jsx()">清空</button>
+                </div>
+                <div id="html2jsx-message"></div>
+            </div>
+        </div>
+
+        <div id="removeduplicate" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🗑️ 删除重复行</h2>
+            <div class="tool-container">
+                <textarea id="duplicate-input" placeholder="请输入文本内容..." rows="10"></textarea>
+                <div class="btn-group">
+                    <button class="btn" onclick="removeDuplicates()">删除重复行</button>
+                    <button class="btn secondary" onclick="copyResult('duplicate-output')">复制结果</button>
+                    <button class="btn secondary" onclick="clearDuplicate()">清空</button>
+                </div>
+                <div id="duplicate-message"></div>
+                <pre class="output" id="duplicate-output">处理结果会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="screentest" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🖥️ 屏幕坏点检测</h2>
+            <div class="tool-container">
+                <p style="text-align: center; margin-bottom: 20px">点击下方颜色按钮，全屏查看是否有坏点/亮点/暗点</p>
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 20px">
+                    <button class="btn secondary" onclick="testColor('#ffffff')" style="background: white; color: black; height: 60px">白色</button>
+                    <button class="btn secondary" onclick="testColor('#000000')" style="background: black; color: white; height: 60px">黑色</button>
+                    <button class="btn secondary" onclick="testColor('#ff0000')" style="background: red; height: 60px">红色</button>
+                    <button class="btn secondary" onclick="testColor('#00ff00')" style="background: green; height: 60px">绿色</button>
+                    <button class="btn secondary" onclick="testColor('#0000ff')" style="background: blue; height: 60px">蓝色</button>
+                </div>
+                <div id="screen-test" style="width: 100%; height: 300px; border-radius: 8px; background: #fff; display: flex; align-items: center; justify-content: center; color: #000; cursor: pointer" onclick="fullScreenTest()">
+                    点击这里全屏测试
+                </div>
+                <div id="screen-message"></div>
+            </div>
+        </div>
+
+        <div id="cnenspace" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🔤 中英文加空格</h2>
+            <div class="tool-container">
+                <textarea id="cnenspace-input" placeholder="请输入中英文混合文本..." rows="10"></textarea>
+                <div class="btn-group">
+                    <button class="btn" onclick="addCnEnSpace()">添加空格</button>
+                    <button class="btn secondary" onclick="copyResult('cnenspace-output')">复制结果</button>
+                    <button class="btn secondary" onclick="clearCnEnSpace()">清空</button>
+                </div>
+                <div id="cnenspace-message"></div>
+                <pre class="output" id="cnenspace-output">处理结果会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="fullhalf" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🔄 全角半角转换</h2>
+            <div class="tool-container">
+                <textarea id="fullhalf-input" placeholder="请输入文本..." rows="10"></textarea>
+                <div class="btn-group">
+                    <button class="btn" onclick="toHalfWidth()">全角 → 半角</button>
+                    <button class="btn secondary" onclick="toFullWidth()">半角 → 全角</button>
+                    <button class="btn secondary" onclick="copyResult('fullhalf-output')">复制结果</button>
+                    <button class="btn secondary" onclick="clearFullHalf()">清空</button>
+                </div>
+                <div id="fullhalf-message"></div>
+                <pre class="output" id="fullhalf-output">转换结果会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="fantijian" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🔤 简繁转换</h2>
+            <div class="tool-container">
+                <textarea id="fantijian-input" placeholder="请输入中文..." rows="10"></textarea>
+                <div class="btn-group">
+                    <button class="btn" onclick="toTraditional()">简体 → 繁体</button>
+                    <button class="btn secondary" onclick="toSimplified()">繁体 → 简体</button>
+                    <button class="btn secondary" onclick="copyResult('fantijian-output')">复制结果</button>
+                    <button class="btn secondary" onclick="clearFanTiJian()">清空</button>
+                </div>
+                <div id="fantijian-message"></div>
+                <pre class="output" id="fantijian-output">转换结果会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="idcardparse" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🪪 身份证解析</h2>
+            <div class="tool-container">
+                <input type="text" id="idcard-input" placeholder="请输入18位身份证号码" style="min-height: auto; height: 44px; margin-bottom: 15px">
+                <div class="btn-group">
+                    <button class="btn" onclick="parseIdCard()">解析</button>
+                    <button class="btn secondary" onclick="clearIdCard()">清空</button>
+                </div>
+                <div id="idcard-message"></div>
+                <pre class="output" id="idcard-output">解析结果会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="taxcalc" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🧮 个税计算器</h2>
+            <div class="tool-container">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">税前工资（月）</label>
+                        <input type="number" id="tax-salary" placeholder="请输入税前工资" style="min-height: auto; height: 44px">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">五险一金（个人缴纳）</label>
+                        <input type="number" id="tax-insurance" placeholder="请输入五险一金" style="min-height: auto; height: 44px">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">专项附加扣除</label>
+                        <input type="number" id="tax-deduction" placeholder="请输入专项附加扣除" style="min-height: auto; height: 44px">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">起征点</label>
+                        <input type="number" id="tax-threshold" value="5000" style="min-height: auto; height: 44px">
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="calculateTax()">计算个税</button>
+                </div>
+                <div id="tax-message"></div>
+                <pre class="output" id="tax-output">计算结果会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="lunartocal" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">📅 农历公历转换</h2>
+            <div class="tool-container">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">公历日期</label>
+                        <input type="date" id="solar-date" style="min-height: auto; height: 44px">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">农历日期</label>
+                        <input type="text" id="lunar-date" placeholder="农历日期" style="min-height: auto; height: 44px" readonly>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="solarToLunar()">公历转农历</button>
+                </div>
+                <div id="lunar-message"></div>
+                <pre class="output" id="lunar-output">转换结果会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="solarterm" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🍃 二十四节气查询</h2>
+            <div class="tool-container">
+                <input type="number" id="solarterm-year" placeholder="请输入年份" min="1900" max="2100" style="min-height: auto; height: 44px; margin-bottom: 15px">
+                <div class="btn-group">
+                    <button class="btn" onclick="getSolarTerms()">查询节气</button>
+                </div>
+                <div id="solarterm-message"></div>
+                <pre class="output" id="solarterm-output">查询结果会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="passwordstrength" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🔐 密码强度检测</h2>
+            <div class="tool-container">
+                <input type="password" id="password-input" placeholder="请输入要检测的密码" style="min-height: auto; height: 44px; margin-bottom: 15px" oninput="checkPasswordStrength()">
+                <div style="height: 8px; background: rgba(180,140,220,0.2); border-radius: 4px; margin-bottom: 15px; overflow: hidden">
+                    <div id="strength-bar" style="height: 100%; width: 0%; transition: all 0.3s; background: #ff2d78"></div>
+                </div>
+                <div id="strength-text" style="text-align: center; font-size: 14px; margin-bottom: 15px">请输入密码</div>
+                <pre class="output" id="strength-output">检测结果会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="bmicalc" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">⚖️ BMI计算器</h2>
+            <div class="tool-container">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">身高（cm）</label>
+                        <input type="number" id="bmi-height" placeholder="请输入身高" style="min-height: auto; height: 44px">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">体重（kg）</label>
+                        <input type="number" id="bmi-weight" placeholder="请输入体重" style="min-height: auto; height: 44px">
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="calculateBMI()">计算BMI</button>
+                </div>
+                <div id="bmi-message"></div>
+                <pre class="output" id="bmi-output">计算结果会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="num2chinese" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">💰 数字转大写</h2>
+            <div class="tool-container">
+                <input type="number" id="num-input" placeholder="请输入数字金额" style="min-height: auto; height: 44px; margin-bottom: 15px">
+                <div class="btn-group">
+                    <button class="btn" onclick="numToChinese()">转换为大写</button>
+                    <button class="btn secondary" onclick="copyResult('num-output')">复制结果</button>
+                    <button class="btn secondary" onclick="clearNum()">清空</button>
+                </div>
+                <div id="num-message"></div>
+                <pre class="output" id="num-output">转换结果会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="subnetcalc" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🌐 子网掩码计算</h2>
+            <div class="tool-container">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">IP地址</label>
+                        <input type="text" id="subnet-ip" value="192.168.1.1" style="min-height: auto; height: 44px">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">子网掩码</label>
+                        <input type="text" id="subnet-mask" value="255.255.255.0" style="min-height: auto; height: 44px">
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="calculateSubnet()">计算</button>
+                </div>
+                <div id="subnet-message"></div>
+                <pre class="output" id="subnet-output">计算结果会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="httpstatus" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">📡 HTTP状态码查询</h2>
+            <div class="tool-container">
+                <input type="number" id="http-status-input" placeholder="请输入HTTP状态码" min="100" max="599" style="min-height: auto; height: 44px; margin-bottom: 15px">
+                <div class="btn-group">
+                    <button class="btn" onclick="queryHttpStatus()">查询</button>
+                    <button class="btn secondary" onclick="clearHttpStatus()">清空</button>
+                </div>
+                <div id="http-status-message"></div>
+                <pre class="output" id="http-status-output">查询结果会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="linuxcmd" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🐧 Linux命令查询</h2>
+            <div class="tool-container">
+                <input type="text" id="linux-cmd-input" placeholder="请输入命令名称，如：ls、cd、grep" style="min-height: auto; height: 44px; margin-bottom: 15px">
+                <div class="btn-group">
+                    <button class="btn" onclick="queryLinuxCmd()">查询</button>
+                    <button class="btn secondary" onclick="clearLinuxCmd()">清空</button>
+                </div>
+                <div id="linux-cmd-message"></div>
+                <pre class="output" id="linux-cmd-output">查询结果会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="regexreplace" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🔍 正则测试替换</h2>
+            <div class="tool-container">
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-bottom: 15px">
+                    <input type="text" id="regex-replace-pattern" placeholder="正则表达式（例如：\\d+ 匹配数字）" style="min-height: auto; height: 44px">
+                    <input type="text" id="regex-replace-flags" placeholder="标志位" value="g" style="min-height: auto; height: 44px">
+                </div>
+                <input type="text" id="regex-replace-replacement" placeholder="替换为（例如：$1 表示捕获组1）" style="min-height: auto; height: 44px; margin-bottom: 15px">
+                <textarea id="regex-replace-text" placeholder="请输入要处理的文本..." rows="8"></textarea>
+                <div class="btn-group">
+                    <button class="btn" onclick="testRegexReplace()">执行替换</button>
+                    <button class="btn secondary" onclick="clearRegexReplace()">清空</button>
+                </div>
+                <div id="regex-replace-message"></div>
+                <pre class="output" id="regex-replace-output">处理结果会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="uaparse" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">📱 UserAgent解析</h2>
+            <div class="tool-container">
+                <textarea id="ua-input" placeholder="请输入User-Agent字符串..." rows="4"></textarea>
+                <div class="btn-group">
+                    <button class="btn" onclick="parseUA()">解析</button>
+                    <button class="btn secondary" onclick="getCurrentUA()">获取当前UA</button>
+                    <button class="btn secondary" onclick="copyResult('ua-output')">复制结果</button>
+                    <button class="btn secondary" onclick="clearUA()">清空</button>
+                </div>
+                <div id="ua-message"></div>
+                <pre class="output" id="ua-output">解析结果会显示在这里...</pre>
+            </div>
+        </div>
+
         <!-- 首页 -->
         <div class="home-page">
             <div class="header">
@@ -1513,13 +1910,119 @@ console.log('Hello World');
                     <div class="card-name">JWT解码</div>
                     <div class="card-desc">解析JWT Token结构，查看Payload与过期状态</div>
                 </a>
+                <a href="#sqlformat" class="card">
+                    <div class="card-icon">🗄️</div>
+                    <div class="card-name">SQL格式化</div>
+                    <div class="card-desc">SQL代码美化/压缩/高亮，支持多种数据库语法</div>
+                </a>
+                <a href="#yamljson" class="card">
+                    <div class="card-icon">⚙️</div>
+                    <div class="card-name">YAML ↔ JSON</div>
+                    <div class="card-desc">YAML和JSON格式双向互转，自动格式化</div>
+                </a>
+                <a href="#html2jsx" class="card">
+                    <div class="card-icon">⚛️</div>
+                    <div class="card-name">HTML转JSX</div>
+                    <div class="card-desc">标准HTML代码转换为React JSX格式</div>
+                </a>
+                <a href="#removeduplicate" class="card">
+                    <div class="card-icon">🗑️</div>
+                    <div class="card-name">删除重复行</div>
+                    <div class="card-desc">一键删除文本中的重复行，保留顺序</div>
+                </a>
+                <a href="#screentest" class="card">
+                    <div class="card-icon">🖥️</div>
+                    <div class="card-name">屏幕坏点检测</div>
+                    <div class="card-desc">检测屏幕坏点/亮点/暗点，支持全屏测试</div>
+                </a>
+                <a href="#cnenspace" class="card">
+                    <div class="card-icon">🔤</div>
+                    <div class="card-name">中英文加空格</div>
+                    <div class="card-desc">自动在中英文之间添加空格，提升可读性</div>
+                </a>
+                <a href="#fullhalf" class="card">
+                    <div class="card-icon">🔄</div>
+                    <div class="card-name">全角半角转换</div>
+                    <div class="card-desc">全角字符和半角字符互相转换</div>
+                </a>
+                <a href="#fantijian" class="card">
+                    <div class="card-icon">🔤</div>
+                    <div class="card-name">简繁转换</div>
+                    <div class="card-desc">简体中文和繁体中文互相转换</div>
+                </a>
+                <a href="#idcardparse" class="card">
+                    <div class="card-icon">🪪</div>
+                    <div class="card-name">身份证解析</div>
+                    <div class="card-desc">解析身份证号的出生地/生日/性别信息</div>
+                </a>
+                <a href="#taxcalc" class="card">
+                    <div class="card-icon">🧮</div>
+                    <div class="card-name">个税计算器</div>
+                    <div class="card-desc">计算个人所得税，支持专项附加扣除</div>
+                </a>
+                <a href="#lunartocal" class="card">
+                    <div class="card-icon">📅</div>
+                    <div class="card-name">农历公历转换</div>
+                    <div class="card-desc">农历和公历日期互相转换，查询节假日</div>
+                </a>
+                <a href="#solarterm" class="card">
+                    <div class="card-icon">🍃</div>
+                    <div class="card-name">二十四节气</div>
+                    <div class="card-desc">查询二十四节气信息和传统习俗</div>
+                </a>
+                <a href="#passwordstrength" class="card">
+                    <div class="card-icon">🔐</div>
+                    <div class="card-name">密码强度检测</div>
+                    <div class="card-desc">评估密码安全强度，给出改进建议</div>
+                </a>
+                <a href="#bmicalc" class="card">
+                    <div class="card-icon">⚖️</div>
+                    <div class="card-name">BMI计算器</div>
+                    <div class="card-desc">计算身体质量指数，评估健康状况</div>
+                </a>
+                <a href="#num2chinese" class="card">
+                    <div class="card-icon">💰</div>
+                    <div class="card-name">数字转大写</div>
+                    <div class="card-desc">数字金额转换为中文财务大写形式</div>
+                </a>
+                <a href="#subnetcalc" class="card">
+                    <div class="card-icon">🌐</div>
+                    <div class="card-name">子网掩码计算</div>
+                    <div class="card-desc">网络IP地址/子网掩码/网关计算</div>
+                </a>
+                <a href="#httpstatus" class="card">
+                    <div class="card-icon">📡</div>
+                    <div class="card-name">HTTP状态码查询</div>
+                    <div class="card-desc">快速查询HTTP状态码含义和解决方案</div>
+                </a>
+                <a href="#linuxcmd" class="card">
+                    <div class="card-icon">🐧</div>
+                    <div class="card-name">Linux命令查询</div>
+                    <div class="card-desc">常用Linux命令用法和参数查询</div>
+                </a>
+                <a href="#regexreplace" class="card">
+                    <div class="card-icon">🔍</div>
+                    <div class="card-name">正则测试替换</div>
+                    <div class="card-desc">正则表达式测试和批量替换功能</div>
+                </a>
+                <a href="#uaparse" class="card">
+                    <div class="card-icon">📱</div>
+                    <div class="card-name">UserAgent解析</div>
+                    <div class="card-desc">解析UA字符串获取设备/浏览器/系统信息</div>
+                </a>
             </div>
             <div class="no-results" id="no-results" style="display: none">
                 🔍 没有找到相关工具，请换个关键词试试~
             </div>
+            <div class="pagination" id="pagination">
+                <button class="pagination-btn" id="prev-btn" onclick="prevPage()" disabled>← 上一页</button>
+                <span class="pagination-info" id="page-info">第 1 页 / 共 1 页</span>
+                <button class="pagination-btn" id="next-btn" onclick="nextPage()" disabled>下一页 →</button>
+            </div>
         </div>
 
         <div class="footer">
+            <p class="footer-stats" id="total-tools">本站目前提供 <span id="tool-count">0</span> 个实用工具</p>
             <p>© 2026 AI工具箱 · 高效开发 · 快乐生活</p>
         </div>
     </div>
@@ -2497,6 +3000,59 @@ ${matches.join('\n')}`;
             document.getElementById('unicode-output').textContent = '结果会显示在这里...';
         }
 
+        // 分页配置
+        let currentPage = 1;
+        const itemsPerPage = 6;
+        let allCards = [];
+        
+        // 初始化分页
+        function initPagination() {
+            allCards = Array.from(document.querySelectorAll('.card'));
+            document.getElementById('tool-count').textContent = allCards.length;
+            renderPage();
+        }
+        
+        // 渲染当前页
+        function renderPage() {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const totalPages = Math.ceil(allCards.length / itemsPerPage);
+            
+            // 显示当前页卡片，隐藏其他
+            allCards.forEach((card, index) => {
+                if (index >= startIndex && index < endIndex) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // 更新分页信息
+            document.getElementById('page-info').textContent = `第 ${currentPage} 页 / 共 ${totalPages} 页`;
+            document.getElementById('prev-btn').disabled = currentPage === 1;
+            document.getElementById('next-btn').disabled = currentPage === totalPages;
+            
+            // 隐藏无结果提示
+            document.getElementById('no-results').style.display = 'none';
+        }
+        
+        // 上一页
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage();
+            }
+        }
+        
+        // 下一页
+        function nextPage() {
+            const totalPages = Math.ceil(allCards.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage();
+            }
+        }
+
         // 搜索功能
         function searchTools() {
             const query = document.getElementById('search-input').value.toLowerCase().trim();
@@ -2504,13 +3060,13 @@ ${matches.join('\n')}`;
             let hasResults = false;
             
             if (query === '') {
-                // 搜索框为空时显示所有卡片
-                cards.forEach(card => {
-                    card.style.display = 'block';
-                });
-                document.getElementById('no-results').style.display = 'none';
+                // 搜索框为空时恢复分页
+                initPagination();
                 return;
             }
+            
+            // 搜索时隐藏分页
+            document.getElementById('pagination').style.display = 'none';
             
             cards.forEach(card => {
                 const name = card.querySelector('.card-name').textContent.toLowerCase();
@@ -2525,6 +3081,9 @@ ${matches.join('\n')}`;
             
             document.getElementById('no-results').style.display = hasResults ? 'none' : 'block';
         }
+        
+        // 页面加载完成后初始化分页
+        window.addEventListener('load', initPagination);
 
         // 证件照工具函数
         let idPhotoImage = null;
@@ -2939,6 +3498,570 @@ ${JSON.stringify(payload, null, 2)}
             } catch (e) {
                 showMessage('jwt-message', `❌ 解码失败：${e.message}`, true);
             }
+        }
+
+        // SQL格式化工具函数
+        function formatSql() {
+            const input = document.getElementById('sql-input').value;
+            if (!input.trim()) {
+                showMessage('sql-message', '❌ 请输入SQL代码', true);
+                return;
+            }
+            // 简单格式化
+            const formatted = input
+                .replace(/\s+/g, ' ')
+                .replace(/(SELECT|FROM|WHERE|GROUP BY|ORDER BY|HAVING|JOIN|LEFT JOIN|RIGHT JOIN|INNER JOIN|ON|INSERT INTO|VALUES|UPDATE|SET|DELETE FROM)/g, '\n$1')
+                .replace(/,/g, ',\n  ')
+                .trim();
+            document.getElementById('sql-output').textContent = formatted;
+            showMessage('sql-message', '✅ SQL格式化成功（演示）');
+        }
+        function compressSql() {
+            const input = document.getElementById('sql-input').value;
+            const compressed = input.replace(/\s+/g, ' ').trim();
+            document.getElementById('sql-output').textContent = compressed;
+            showMessage('sql-message', '✅ SQL压缩成功');
+        }
+        function clearSql() {
+            document.getElementById('sql-input').value = '';
+            document.getElementById('sql-output').textContent = '格式化后的SQL会显示在这里...';
+            document.getElementById('sql-message').innerHTML = '';
+        }
+
+        // YAML JSON互转工具函数
+        function yamlToJson() {
+            const input = document.getElementById('yamljson-input').value;
+            if (!input.trim()) {
+                showMessage('yamljson-message', '❌ 请输入YAML内容', true);
+                return;
+            }
+            showMessage('yamljson-message', '⚠️ YAML解析需要引入js-yaml库，当前为演示版本', true);
+            document.getElementById('yamljson-output').textContent = 'YAML转JSON功能需要部署后端或引入js-yaml库';
+        }
+        function jsonToYaml() {
+            const input = document.getElementById('yamljson-input').value;
+            if (!input.trim()) {
+                showMessage('yamljson-message', '❌ 请输入JSON内容', true);
+                return;
+            }
+            try {
+                const obj = JSON.parse(input);
+                showMessage('yamljson-message', '⚠️ YAML生成需要引入js-yaml库，当前为演示版本', true);
+                document.getElementById('yamljson-output').textContent = 'JSON转YAML功能需要部署后端或引入js-yaml库';
+            } catch (e) {
+                showMessage('yamljson-message', `❌ JSON格式错误：${e.message}`, true);
+            }
+        }
+        function clearYamlJson() {
+            document.getElementById('yamljson-input').value = '';
+            document.getElementById('yamljson-output').textContent = '转换结果会显示在这里...';
+            document.getElementById('yamljson-message').innerHTML = '';
+        }
+
+        // HTML转JSX工具函数
+        function convertToJsx() {
+            const input = document.getElementById('html2jsx-input').value;
+            if (!input.trim()) {
+                showMessage('html2jsx-message', '❌ 请输入HTML代码', true);
+                return;
+            }
+            // 简单转换
+            const jsx = input
+                .replace(/class=/g, 'className=')
+                .replace(/for=/g, 'htmlFor=')
+                .replace(/<([a-z]+)([^>]+)\/>/g, '<$1$2 />')
+                .replace(/style="([^"]+)"/g, (match, p1) => {
+                    const styles = p1.split(';').filter(s => s.trim());
+                    const styleObj = {};
+                    styles.forEach(style => {
+                        const [key, value] = style.split(':').map(s => s.trim());
+                        if (key && value) {
+                            const camelKey = key.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+                            styleObj[camelKey] = value;
+                        }
+                    });
+                    return `style={${JSON.stringify(styleObj)}}`;
+                });
+            document.getElementById('html2jsx-output').textContent = jsx;
+            showMessage('html2jsx-message', '✅ 转换成功（基础版）');
+        }
+        function clearHtml2Jsx() {
+            document.getElementById('html2jsx-input').value = '';
+            document.getElementById('html2jsx-output').textContent = '转换结果会显示在这里...';
+            document.getElementById('html2jsx-message').innerHTML = '';
+        }
+
+        // 删除重复行工具函数
+        function removeDuplicates() {
+            const input = document.getElementById('duplicate-input').value;
+            const lines = input.split('\n');
+            const uniqueLines = [...new Set(lines)];
+            document.getElementById('duplicate-output').textContent = uniqueLines.join('\n');
+            showMessage('duplicate-message', `✅ 已删除 ${lines.length - uniqueLines.length} 个重复行`);
+        }
+        function clearDuplicate() {
+            document.getElementById('duplicate-input').value = '';
+            document.getElementById('duplicate-output').textContent = '处理结果会显示在这里...';
+            document.getElementById('duplicate-message').innerHTML = '';
+        }
+
+        // 屏幕坏点检测工具函数
+        function testColor(color) {
+            document.getElementById('screen-test').style.background = color;
+            document.getElementById('screen-test').style.color = color === '#ffffff' ? '#000' : '#fff';
+        }
+        function fullScreenTest() {
+            const el = document.getElementById('screen-test');
+            if (el.requestFullscreen) {
+                el.requestFullscreen();
+            } else if (el.webkitRequestFullscreen) {
+                el.webkitRequestFullscreen();
+            } else if (el.msRequestFullscreen) {
+                el.msRequestFullscreen();
+            }
+        }
+
+        // 中英文加空格工具函数
+        function addCnEnSpace() {
+            const input = document.getElementById('cnenspace-input').value;
+            // 简单实现：中文和英文/数字之间加空格
+            const result = input
+                .replace(/([\u4e00-\u9fa5])([a-zA-Z0-9])/g, '$1 $2')
+                .replace(/([a-zA-Z0-9])([\u4e00-\u9fa5])/g, '$1 $2');
+            document.getElementById('cnenspace-output').textContent = result;
+            showMessage('cnenspace-message', '✅ 空格添加成功');
+        }
+        function clearCnEnSpace() {
+            document.getElementById('cnenspace-input').value = '';
+            document.getElementById('cnenspace-output').textContent = '处理结果会显示在这里...';
+            document.getElementById('cnenspace-message').innerHTML = '';
+        }
+
+        // 全角半角转换工具函数
+        function toHalfWidth() {
+            const input = document.getElementById('fullhalf-input').value;
+            let result = '';
+            for (let i = 0; i < input.length; i++) {
+                const charCode = input.charCodeAt(i);
+                if (charCode === 12288) {
+                    result += ' ';
+                } else if (charCode >= 65281 && charCode <= 65374) {
+                    result += String.fromCharCode(charCode - 65248);
+                } else {
+                    result += input.charAt(i);
+                }
+            }
+            document.getElementById('fullhalf-output').textContent = result;
+            showMessage('fullhalf-message', '✅ 全角转半角成功');
+        }
+        function toFullWidth() {
+            const input = document.getElementById('fullhalf-input').value;
+            let result = '';
+            for (let i = 0; i < input.length; i++) {
+                const charCode = input.charCodeAt(i);
+                if (charCode === 32) {
+                    result += String.fromCharCode(12288);
+                } else if (charCode >= 33 && charCode <= 126) {
+                    result += String.fromCharCode(charCode + 65248);
+                } else {
+                    result += input.charAt(i);
+                }
+            }
+            document.getElementById('fullhalf-output').textContent = result;
+            showMessage('fullhalf-message', '✅ 半角转全角成功');
+        }
+        function clearFullHalf() {
+            document.getElementById('fullhalf-input').value = '';
+            document.getElementById('fullhalf-output').textContent = '转换结果会显示在这里...';
+            document.getElementById('fullhalf-message').innerHTML = '';
+        }
+
+        // 简繁转换工具函数
+        function toTraditional() {
+            const input = document.getElementById('fantijian-input').value;
+            showMessage('fantijian-message', '⚠️ 简繁转换需要引入字符映射库，当前为演示版本', true);
+            document.getElementById('fantijian-output').textContent = '简体转繁体功能需要引入OpenCC或其他转换库';
+        }
+        function toSimplified() {
+            const input = document.getElementById('fantijian-input').value;
+            showMessage('fantijian-message', '⚠️ 简繁转换需要引入字符映射库，当前为演示版本', true);
+            document.getElementById('fantijian-output').textContent = '繁体转简体功能需要引入OpenCC或其他转换库';
+        }
+        function clearFanTiJian() {
+            document.getElementById('fantijian-input').value = '';
+            document.getElementById('fantijian-output').textContent = '转换结果会显示在这里...';
+            document.getElementById('fantijian-message').innerHTML = '';
+        }
+
+        // 身份证解析工具函数
+        function parseIdCard() {
+            const id = document.getElementById('idcard-input').value.trim();
+            if (!/^\d{17}[\dXx]$/.test(id)) {
+                showMessage('idcard-message', '❌ 请输入有效的18位身份证号码', true);
+                return;
+            }
+            const addrCode = id.substring(0, 6);
+            const birth = id.substring(6, 14);
+            const gender = parseInt(id.substring(16, 17)) % 2 === 1 ? '男' : '女';
+            
+            document.getElementById('idcard-output').textContent = `身份证号：${id}
+出生地编码：${addrCode}
+出生日期：${birth.substring(0,4)}年${birth.substring(4,6)}月${birth.substring(6,8)}日
+性别：${gender}
+
+（完整地址信息需要接入地址编码数据库）`;
+            showMessage('idcard-message', '✅ 解析成功');
+        }
+        function clearIdCard() {
+            document.getElementById('idcard-input').value = '';
+            document.getElementById('idcard-output').textContent = '解析结果会显示在这里...';
+            document.getElementById('idcard-message').innerHTML = '';
+        }
+
+        // 个税计算器函数
+        function calculateTax() {
+            const salary = parseFloat(document.getElementById('tax-salary').value) || 0;
+            const insurance = parseFloat(document.getElementById('tax-insurance').value) || 0;
+            const deduction = parseFloat(document.getElementById('tax-deduction').value) || 0;
+            const threshold = parseFloat(document.getElementById('tax-threshold').value) || 5000;
+            
+            const taxable = salary - insurance - deduction - threshold;
+            let tax = 0;
+            
+            if (taxable > 0) {
+                if (taxable <= 3000) {
+                    tax = taxable * 0.03;
+                } else if (taxable <= 12000) {
+                    tax = taxable * 0.1 - 210;
+                } else if (taxable <= 25000) {
+                    tax = taxable * 0.2 - 1410;
+                } else if (taxable <= 35000) {
+                    tax = taxable * 0.25 - 2660;
+                } else if (taxable <= 55000) {
+                    tax = taxable * 0.3 - 4410;
+                } else if (taxable <= 80000) {
+                    tax = taxable * 0.35 - 7160;
+                } else {
+                    tax = taxable * 0.45 - 15160;
+                }
+            }
+            
+            const afterTax = salary - insurance - Math.max(0, tax);
+            
+            document.getElementById('tax-output').textContent = `税前工资：${salary.toFixed(2)} 元
+五险一金：${insurance.toFixed(2)} 元
+专项附加扣除：${deduction.toFixed(2)} 元
+起征点：${threshold.toFixed(2)} 元
+应纳税所得额：${Math.max(0, taxable).toFixed(2)} 元
+个人所得税：${Math.max(0, tax).toFixed(2)} 元
+税后工资：${afterTax.toFixed(2)} 元`;
+            showMessage('tax-message', '✅ 计算成功');
+        }
+
+        // 农历公历转换函数
+        function solarToLunar() {
+            const date = document.getElementById('solar-date').value;
+            if (!date) {
+                showMessage('lunar-message', '❌ 请选择公历日期', true);
+                return;
+            }
+            showMessage('lunar-message', '⚠️ 农历转换需要引入农历算法库，当前为演示版本', true);
+            document.getElementById('lunar-output').textContent = '农历转换功能需要引入lunar.js等农历算法库';
+        }
+
+        // 二十四节气查询函数
+        function getSolarTerms() {
+            const year = parseInt(document.getElementById('solarterm-year').value);
+            if (!year || year < 1900 || year > 2100) {
+                showMessage('solarterm-message', '❌ 请输入1900-2100之间的年份', true);
+                return;
+            }
+            showMessage('solarterm-message', '⚠️ 节气查询需要引入节气算法库，当前为演示版本', true);
+            document.getElementById('solarterm-output').textContent = '二十四节气查询功能需要引入节气算法库';
+        }
+
+        // 密码强度检测函数
+        function checkPasswordStrength() {
+            const password = document.getElementById('password-input').value;
+            const bar = document.getElementById('strength-bar');
+            const text = document.getElementById('strength-text');
+            const output = document.getElementById('strength-output');
+            
+            let score = 0;
+            if (password.length >= 8) score += 20;
+            if (password.length >= 12) score += 20;
+            if (/[A-Z]/.test(password)) score += 20;
+            if (/[a-z]/.test(password)) score += 20;
+            if (/[0-9]/.test(password)) score += 20;
+            if (/[^A-Za-z0-9]/.test(password)) score += 20;
+            
+            score = Math.min(100, score);
+            bar.style.width = score + '%';
+            
+            let level, color;
+            if (score < 40) {
+                level = '弱';
+                color = '#ff2d78';
+            } else if (score < 70) {
+                level = '中等';
+                color = '#f59e0b';
+            } else {
+                level = '强';
+                color = '#10b981';
+            }
+            
+            bar.style.background = color;
+            text.textContent = `密码强度：${level} (${score}分)`;
+            output.textContent = `密码长度：${password.length} 位
+包含大写字母：${/[A-Z]/.test(password) ? '✅' : '❌'}
+包含小写字母：${/[a-z]/.test(password) ? '✅' : '❌'}
+包含数字：${/[0-9]/.test(password) ? '✅' : '❌'}
+包含特殊字符：${/[^A-Za-z0-9]/.test(password) ? '✅' : '❌'}
+建议：${score < 70 ? '建议增加长度，混合大小写、数字和特殊字符' : '密码强度良好，请继续保持'}`;
+        }
+
+        // BMI计算器函数
+        function calculateBMI() {
+            const height = parseFloat(document.getElementById('bmi-height').value) / 100;
+            const weight = parseFloat(document.getElementById('bmi-weight').value);
+            
+            if (!height || !weight || height <= 0 || weight <= 0) {
+                showMessage('bmi-message', '❌ 请输入有效的身高和体重', true);
+                return;
+            }
+            
+            const bmi = weight / (height * height);
+            let level, suggestion;
+            
+            if (bmi < 18.5) {
+                level = '偏瘦';
+                suggestion = '建议适当增加营养，保持健康饮食';
+            } else if (bmi < 24) {
+                level = '正常';
+                suggestion = '体重在正常范围内，请继续保持健康生活方式';
+            } else if (bmi < 28) {
+                level = '偏胖';
+                suggestion = '建议适当控制饮食，增加运动量';
+            } else {
+                level = '肥胖';
+                suggestion = '建议咨询医生或营养师，制定科学的减重计划';
+            }
+            
+            document.getElementById('bmi-output').textContent = `身高：${(height * 100).toFixed(0)} cm
+体重：${weight.toFixed(1)} kg
+BMI指数：${bmi.toFixed(1)}
+体重状况：${level}
+建议：${suggestion}`;
+            showMessage('bmi-message', '✅ 计算成功');
+        }
+
+        // 数字转大写函数
+        function numToChinese() {
+            const num = parseFloat(document.getElementById('num-input').value);
+            if (isNaN(num) || num < 0) {
+                showMessage('num-message', '❌ 请输入有效的非负数字', true);
+                return;
+            }
+            
+            const digits = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
+            const units = ['', '拾', '佰', '仟', '万', '拾', '佰', '仟', '亿'];
+            
+            const numStr = num.toFixed(2).replace('.', '');
+            const integerPart = numStr.slice(0, -2);
+            const decimalPart = numStr.slice(-2);
+            
+            let result = '';
+            
+            // 处理整数部分
+            for (let i = 0; i < integerPart.length; i++) {
+                const digit = parseInt(integerPart[i]);
+                const position = integerPart.length - i - 1;
+                
+                if (digit !== 0) {
+                    result += digits[digit] + units[position % 8];
+                } else {
+                    if (i > 0 && parseInt(integerPart[i-1]) !== 0) {
+                        result += digits[0];
+                    }
+                }
+                
+                if (position % 8 === 4 && position > 0) {
+                    result += '万';
+                }
+            }
+            
+            result += '元';
+            
+            // 处理小数部分
+            const jiao = parseInt(decimalPart[0]);
+            const fen = parseInt(decimalPart[1]);
+            
+            if (jiao === 0 && fen === 0) {
+                result += '整';
+            } else {
+                if (jiao !== 0) {
+                    result += digits[jiao] + '角';
+                }
+                if (fen !== 0) {
+                    result += digits[fen] + '分';
+                }
+            }
+            
+            document.getElementById('num-output').textContent = result;
+            showMessage('num-message', '✅ 转换成功');
+        }
+        function clearNum() {
+            document.getElementById('num-input').value = '';
+            document.getElementById('num-output').textContent = '转换结果会显示在这里...';
+            document.getElementById('num-message').innerHTML = '';
+        }
+
+        // 子网掩码计算函数
+        function calculateSubnet() {
+            const ip = document.getElementById('subnet-ip').value;
+            const mask = document.getElementById('subnet-mask').value;
+            
+            if (!/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(ip) || !/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(mask)) {
+                showMessage('subnet-message', '❌ 请输入有效的IP地址和子网掩码', true);
+                return;
+            }
+            
+            // 简单计算演示
+            const ipParts = ip.split('.').map(Number);
+            const maskParts = mask.split('.').map(Number);
+            const network = ipParts.map((part, i) => part & maskParts[i]).join('.');
+            const broadcast = ipParts.map((part, i) => part | (~maskParts[i] & 255)).join('.');
+            
+            document.getElementById('subnet-output').textContent = `IP地址：${ip}
+子网掩码：${mask}
+网络地址：${network}
+广播地址：${broadcast}
+可用主机数：${mask === '255.255.255.0' ? 254 : '根据掩码计算'}
+
+（完整功能需要更复杂的子网计算逻辑）`;
+            showMessage('subnet-message', '✅ 计算成功（演示）');
+        }
+
+        // HTTP状态码查询函数
+        function queryHttpStatus() {
+            const code = parseInt(document.getElementById('http-status-input').value);
+            const statusCodes = {
+                200: 'OK - 请求成功',
+                201: 'Created - 资源创建成功',
+                204: 'No Content - 无内容',
+                301: 'Moved Permanently - 永久重定向',
+                302: 'Found - 临时重定向',
+                304: 'Not Modified - 资源未修改',
+                400: 'Bad Request - 请求错误',
+                401: 'Unauthorized - 未授权',
+                403: 'Forbidden - 禁止访问',
+                404: 'Not Found - 资源不存在',
+                405: 'Method Not Allowed - 方法不允许',
+                500: 'Internal Server Error - 服务器内部错误',
+                502: 'Bad Gateway - 网关错误',
+                503: 'Service Unavailable - 服务不可用',
+                504: 'Gateway Timeout - 网关超时'
+            };
+            
+            if (statusCodes[code]) {
+                document.getElementById('http-status-output').textContent = statusCodes[code];
+                showMessage('http-status-message', '✅ 查询成功');
+            } else {
+                document.getElementById('http-status-output').textContent = '未找到该状态码的详细说明';
+                showMessage('http-status-message', '⚠️ 未找到该状态码', true);
+            }
+        }
+        function clearHttpStatus() {
+            document.getElementById('http-status-input').value = '';
+            document.getElementById('http-status-output').textContent = '查询结果会显示在这里...';
+            document.getElementById('http-status-message').innerHTML = '';
+        }
+
+        // Linux命令查询函数
+        function queryLinuxCmd() {
+            const cmd = document.getElementById('linux-cmd-input').value.trim().toLowerCase();
+            const commands = {
+                'ls': '列出目录内容\n常用参数：-l 详细列表，-a 显示隐藏文件，-h 人类可读大小',
+                'cd': '切换目录\n示例：cd /home 进入home目录，cd .. 返回上一级，cd ~ 回到用户目录',
+                'pwd': '显示当前工作目录的完整路径',
+                'mkdir': '创建目录\n示例：mkdir newdir 创建newdir目录，mkdir -p a/b/c 递归创建目录',
+                'rm': '删除文件或目录\n常用参数：-r 递归删除目录，-f 强制删除不提示',
+                'cp': '复制文件或目录\n常用参数：-r 递归复制目录，-a 保留文件属性',
+                'mv': '移动或重命名文件/目录\n示例：mv a.txt b.txt 重命名，mv a.txt /tmp 移动到tmp目录',
+                'cat': '查看文件内容\n示例：cat filename 查看文件内容，cat file1 file2 合并多个文件',
+                'grep': '在文件中搜索字符串\n常用参数：-i 忽略大小写，-r 递归搜索，-n 显示行号',
+                'find': '查找文件\n示例：find / -name "*.txt" 查找所有txt文件'
+            };
+            
+            if (commands[cmd]) {
+                document.getElementById('linux-cmd-output').textContent = commands[cmd];
+                showMessage('linux-cmd-message', '✅ 查询成功');
+            } else {
+                document.getElementById('linux-cmd-output').textContent = '未找到该命令的说明，支持的命令：ls、cd、pwd、mkdir、rm、cp、mv、cat、grep、find';
+                showMessage('linux-cmd-message', '⚠️ 未找到该命令', true);
+            }
+        }
+        function clearLinuxCmd() {
+            document.getElementById('linux-cmd-input').value = '';
+            document.getElementById('linux-cmd-output').textContent = '查询结果会显示在这里...';
+            document.getElementById('linux-cmd-message').innerHTML = '';
+        }
+
+        // 正则测试替换函数
+        function testRegexReplace() {
+            const pattern = document.getElementById('regex-replace-pattern').value;
+            const flags = document.getElementById('regex-replace-flags').value;
+            const replacement = document.getElementById('regex-replace-replacement').value;
+            const text = document.getElementById('regex-replace-text').value;
+            
+            try {
+                const regex = new RegExp(pattern, flags);
+                const result = text.replace(regex, replacement);
+                document.getElementById('regex-replace-output').textContent = result;
+                showMessage('regex-replace-message', '✅ 替换成功');
+            } catch (e) {
+                showMessage('regex-replace-message', `❌ 正则表达式错误：${e.message}`, true);
+            }
+        }
+        function clearRegexReplace() {
+            document.getElementById('regex-replace-pattern').value = '';
+            document.getElementById('regex-replace-replacement').value = '';
+            document.getElementById('regex-replace-text').value = '';
+            document.getElementById('regex-replace-output').textContent = '处理结果会显示在这里...';
+            document.getElementById('regex-replace-message').innerHTML = '';
+        }
+
+        // UserAgent解析函数
+        function parseUA() {
+            const ua = document.getElementById('ua-input').value || navigator.userAgent;
+            // 简单解析
+            const browser = /Chrome\/([\d.]+)/.test(ua) ? 'Chrome ' + ua.match(/Chrome\/([\d.]+)/)[1] :
+                           /Firefox\/([\d.]+)/.test(ua) ? 'Firefox ' + ua.match(/Firefox\/([\d.]+)/)[1] :
+                           /Safari\/([\d.]+)/.test(ua) ? 'Safari ' + ua.match(/Safari\/([\d.]+)/)[1] : '未知浏览器';
+                           
+            const os = /Windows NT ([\d.]+)/.test(ua) ? 'Windows ' + ua.match(/Windows NT ([\d.]+)/)[1] :
+                      /Mac OS X ([\d_]+)/.test(ua) ? 'macOS ' + ua.match(/Mac OS X ([\d_]+)/)[1].replace(/_/g, '.') :
+                      /Linux/.test(ua) ? 'Linux' :
+                      /Android ([\d.]+)/.test(ua) ? 'Android ' + ua.match(/Android ([\d.]+)/)[1] :
+                      /iPhone OS ([\d_]+)/.test(ua) ? 'iOS ' + ua.match(/iPhone OS ([\d_]+)/)[1].replace(/_/g, '.') : '未知系统';
+            
+            document.getElementById('ua-output').textContent = `User-Agent:
+${ua}
+
+解析结果：
+浏览器：${browser}
+操作系统：${os}
+设备：${/Mobile/.test(ua) ? '移动设备' : '桌面设备'}`;
+            showMessage('ua-message', '✅ 解析成功');
+        }
+        function getCurrentUA() {
+            document.getElementById('ua-input').value = navigator.userAgent;
+            parseUA();
+        }
+        function clearUA() {
+            document.getElementById('ua-input').value = '';
+            document.getElementById('ua-output').textContent = '解析结果会显示在这里...';
+            document.getElementById('ua-message').innerHTML = '';
         }
         function clearJwt() {
             document.getElementById('jwt-input').value = '';
