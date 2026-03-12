@@ -1,0 +1,62 @@
+# 系统自动生成的缓存/临时文件
+.DS_Store                # Mac 系统文件
+Thumbs.db                # Windows 系统文件
+*.swp                    # Vim 临时文件
+*.swo                    # Vim 临时文件
+*~                       # 通用临时文件
+
+# 编辑器/IDE 配置文件（根据你用的工具选，不用的可以删）
+.idea/                   # IntelliJ/VSCode 等 JetBrains 编辑器
+.vscode/                 # VSCode 配置（含设置、插件、缓存）
+.project                 # Eclipse
+.classpath               # Eclipse
+.c9/                     # Cloud9 IDE
+*.suo                    # Visual Studio
+*.ntvs*                  # Visual Studio
+*.njsproj                # Visual Studio
+*.sln                    # Visual Studio
+*.swf                    # Flash 相关（如果不用可删）
+
+# 日志/缓存文件
+logs/
+cache/
+tmp/
+temp/
+
+# 环境变量/敏感配置（如果有）
+.env
+.env.local
+.env.development.local
+.env.production.local
+
+# 依赖包（如果用 npm/yarn 管理前端依赖）
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 构建产物（如果用打包工具如 Vite/Webpack）
+dist/
+build/
+out/
+
+# 基础版内容（复制上面的）
+
+# 打包工具相关
+.vite/                   # Vite 缓存
+webpack-stats.json
+.turbo/                  # Turbopack 缓存
+
+# 测试相关（如果写了测试用例）
+coverage/
+*.test.js
+*.spec.js
+
+# 图片/资源临时文件（如果有压缩/处理流程）
+*.webp.bak
+*.png.bak
+*.jpg.bak
+
+# Git 本身的忽略（防止递归）
+.gitignore.local
