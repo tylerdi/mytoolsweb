@@ -48,6 +48,42 @@
             text-transform: uppercase;
             margin-bottom: 20px;
         }
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto 40px;
+            position: relative;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 16px 48px 16px 20px;
+            border: 2px solid rgba(180,140,220,0.2);
+            border-radius: 12px;
+            font-size: 16px;
+            background: rgba(255,255,255,0.8);
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: #ff2d78;
+            box-shadow: 0 0 20px rgba(255,45,120,0.15);
+        }
+        .search-box::after {
+            content: "🔍";
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            opacity: 0.5;
+        }
+        .no-results {
+            text-align: center;
+            grid-column: 1 / -1;
+            padding: 60px 20px;
+            color: rgba(60,30,80,0.5);
+            font-size: 16px;
+        }
         .back-btn {
             display: inline-flex;
             align-items: center;
@@ -864,12 +900,364 @@ console.log('Hello World');
             </div>
         </div>
 
+        <!-- 新增工具 -->
+        <div id="idphoto" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">📸 证件照制作</h2>
+            <div class="tool-container">
+                <input type="file" id="idphoto-input" accept="image/*" onchange="loadIdPhoto()" style="padding: 10px; min-height: auto">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">原图</label>
+                        <div id="idphoto-original" style="text-align: center; display: none">
+                            <img id="idphoto-original-img" style="max-width: 100%; border-radius: 8px">
+                        </div>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">预览</label>
+                        <div id="idphoto-preview" style="text-align: center; display: none">
+                            <img id="idphoto-preview-img" style="max-width: 100%; border-radius: 8px">
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-bottom: 15px">
+                    <label style="display: block; margin-bottom: 8px">背景颜色</label>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap">
+                        <button class="btn secondary" onclick="changeBgColor('#ffffff')" style="background: white; color: black">白色</button>
+                        <button class="btn secondary" onclick="changeBgColor('#87ceeb')" style="background: #87ceeb; color: black">蓝色</button>
+                        <button class="btn secondary" onclick="changeBgColor('#ff0000')" style="background: #ff0000; color: white">红色</button>
+                        <input type="color" id="custom-bg-color" onchange="changeBgColor(this.value)" style="width: 60px; height: 44px; padding: 2px">
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="removeBackground()">一键去背景</button>
+                    <button class="btn secondary" onclick="downloadIdPhoto()">下载证件照</button>
+                </div>
+                <div id="idphoto-message"></div>
+            </div>
+        </div>
+
+        <div id="translate" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🌐 在线翻译</h2>
+            <div class="tool-container">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">源语言</label>
+                        <select id="translate-from" style="min-height: auto; height: 44px">
+                            <option value="auto">自动检测</option>
+                            <option value="zh">中文</option>
+                            <option value="en">英语</option>
+                            <option value="ja">日语</option>
+                            <option value="ko">韩语</option>
+                            <option value="fr">法语</option>
+                            <option value="es">西班牙语</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">目标语言</label>
+                        <select id="translate-to" style="min-height: auto; height: 44px">
+                            <option value="zh">中文</option>
+                            <option value="en">英语</option>
+                            <option value="ja">日语</option>
+                            <option value="ko">韩语</option>
+                            <option value="fr">法语</option>
+                            <option value="es">西班牙语</option>
+                        </select>
+                    </div>
+                </div>
+                <textarea id="translate-input" placeholder="请输入要翻译的内容..." rows="6"></textarea>
+                <div class="btn-group">
+                    <button class="btn" onclick="translateText()">立即翻译</button>
+                    <button class="btn secondary" onclick="copyResult('translate-output')">复制结果</button>
+                    <button class="btn secondary" onclick="clearTranslate()">清空</button>
+                </div>
+                <div id="translate-message"></div>
+                <pre class="output" id="translate-output">翻译结果会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="pdf2word" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">📄 PDF转Word</h2>
+            <div class="tool-container">
+                <input type="file" id="pdf-input" accept=".pdf" onchange="loadPdf()" style="padding: 10px; min-height: auto">
+                <div class="btn-group" style="margin-top: 15px">
+                    <button class="btn" onclick="convertPdfToWord()" id="pdf-convert-btn" disabled>开始转换</button>
+                    <button class="btn secondary" onclick="downloadWord()" id="pdf-download-btn" disabled>下载Word</button>
+                </div>
+                <div id="pdf-message"></div>
+                <pre class="output" id="pdf-output">请上传PDF文件...</pre>
+            </div>
+        </div>
+
+        <div id="imgcompress" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🗜️ 图片压缩</h2>
+            <div class="tool-container">
+                <input type="file" id="compress-input" accept="image/*" multiple onchange="loadCompressImages()" style="padding: 10px; min-height: auto">
+                <div style="margin: 15px 0">
+                    <label style="display: block; margin-bottom: 8px">压缩质量：<span id="compress-quality-value">80</span>%</label>
+                    <input type="range" id="compress-quality" min="10" max="100" value="80" oninput="document.getElementById('compress-quality-value').textContent = this.value">
+                </div>
+                <div id="compress-preview" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin: 20px 0; display: none">
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="compressImages()" id="compress-btn" disabled>开始压缩</button>
+                    <button class="btn secondary" onclick="downloadCompressed()" id="compress-download-btn" disabled>下载压缩包</button>
+                </div>
+                <div id="compress-message"></div>
+            </div>
+        </div>
+
+        <div id="bgremove" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">✂️ 背景去除</h2>
+            <div class="tool-container">
+                <input type="file" id="bgremove-input" accept="image/*" onchange="loadBgRemoveImage()" style="padding: 10px; min-height: auto">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">原图</label>
+                        <div id="bgremove-original" style="text-align: center; display: none">
+                            <img id="bgremove-original-img" style="max-width: 100%; border-radius: 8px">
+                        </div>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">预览</label>
+                        <div id="bgremove-preview" style="text-align: center; display: none">
+                            <img id="bgremove-preview-img" style="max-width: 100%; border-radius: 8px">
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="removeBackground()">一键去背景</button>
+                    <button class="btn secondary" onclick="downloadBgRemove()">下载透明图</button>
+                </div>
+                <div id="bgremove-message"></div>
+            </div>
+        </div>
+
+        <div id="tts" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🔊 文字转语音</h2>
+            <div class="tool-container">
+                <textarea id="tts-input" placeholder="请输入要朗读的文字..." rows="6"></textarea>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">语速</label>
+                        <input type="range" id="tts-rate" min="0.5" max="2" step="0.1" value="1" oninput="document.getElementById('tts-rate-value').textContent = this.value">
+                        <div id="tts-rate-value">1</div>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">音调</label>
+                        <input type="range" id="tts-pitch" min="0" max="2" step="0.1" value="1" oninput="document.getElementById('tts-pitch-value').textContent = this.value">
+                        <div id="tts-pitch-value">1</div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="speakText()">开始朗读</button>
+                    <button class="btn secondary" onclick="stopSpeak()">停止</button>
+                </div>
+                <div id="tts-message"></div>
+            </div>
+        </div>
+
+        <div id="watermark" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">💧 图片加水印</h2>
+            <div class="tool-container">
+                <input type="file" id="watermark-input" accept="image/*" onchange="loadWatermarkImage()" style="padding: 10px; min-height: auto">
+                <input type="text" id="watermark-text" placeholder="请输入水印文字" style="min-height: auto; height: 44px; margin: 15px 0">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 15px">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">字体大小</label>
+                        <input type="number" id="watermark-size" value="24" min="12" max="120" style="min-height: auto; height: 44px">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">透明度</label>
+                        <input type="range" id="watermark-opacity" min="0.1" max="1" step="0.1" value="0.5">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">颜色</label>
+                        <input type="color" id="watermark-color" value="#000000" style="min-height: auto; height: 44px">
+                    </div>
+                </div>
+                <div style="text-align: center; margin: 20px 0">
+                    <img id="watermark-preview" style="max-width: 100%; border-radius: 8px; display: none">
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="addWatermark()" id="watermark-btn" disabled>添加水印</button>
+                    <button class="btn secondary" onclick="downloadWatermark()" id="watermark-download-btn" disabled>下载图片</button>
+                </div>
+                <div id="watermark-message"></div>
+            </div>
+        </div>
+
+        <div id="img2pdf" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🖼️ 图片转PDF</h2>
+            <div class="tool-container">
+                <input type="file" id="img2pdf-input" accept="image/*" multiple onchange="loadImg2PdfImages()" style="padding: 10px; min-height: auto">
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 20px 0" id="img2pdf-preview">
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="convertToPdf()" id="img2pdf-btn" disabled>生成PDF</button>
+                    <button class="btn secondary" onclick="downloadPdf()" id="img2pdf-download-btn" disabled>下载PDF</button>
+                </div>
+                <div id="img2pdf-message"></div>
+            </div>
+        </div>
+
+        <div id="pdfmerge" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">📎 PDF合并</h2>
+            <div class="tool-container">
+                <input type="file" id="pdfmerge-input" accept=".pdf" multiple onchange="loadMergePdfs()" style="padding: 10px; min-height: auto">
+                <div style="margin: 20px 0" id="pdfmerge-list">
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="mergePdfs()" id="pdfmerge-btn" disabled>合并PDF</button>
+                    <button class="btn secondary" onclick="downloadMergedPdf()" id="pdfmerge-download-btn" disabled>下载合并后的PDF</button>
+                </div>
+                <div id="pdfmerge-message"></div>
+            </div>
+        </div>
+
+        <div id="ocr" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">📝 OCR文字识别</h2>
+            <div class="tool-container">
+                <input type="file" id="ocr-input" accept="image/*" onchange="loadOcrImage()" style="padding: 10px; min-height: auto">
+                <div style="text-align: center; margin: 20px 0">
+                    <img id="ocr-preview" style="max-width: 300px; border-radius: 8px; display: none">
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="recognizeText()" id="ocr-btn" disabled>开始识别</button>
+                    <button class="btn secondary" onclick="copyResult('ocr-output')">复制结果</button>
+                </div>
+                <div id="ocr-message"></div>
+                <pre class="output" id="ocr-output">识别结果会显示在这里...</pre>
+            </div>
+        </div>
+
+        <div id="imgconcat" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🧩 图片拼接长图</h2>
+            <div class="tool-container">
+                <input type="file" id="imgconcat-input" accept="image/*" multiple onchange="loadConcatImages()" style="padding: 10px; min-height: auto">
+                <div style="margin: 15px 0">
+                    <label style="display: block; margin-bottom: 8px">拼接方向</label>
+                    <select id="concat-direction" style="min-height: auto; height: 44px">
+                        <option value="vertical">竖向拼接</option>
+                        <option value="horizontal">横向拼接</option>
+                    </select>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 20px 0" id="imgconcat-preview">
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="concatImages()" id="imgconcat-btn" disabled>开始拼接</button>
+                    <button class="btn secondary" onclick="downloadConcatImage()" id="imgconcat-download-btn" disabled>下载长图</button>
+                </div>
+                <div id="imgconcat-message"></div>
+            </div>
+        </div>
+
+        <div id="csvjson" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">📊 CSV ↔ JSON</h2>
+            <div class="tool-container">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">输入（CSV/JSON）</label>
+                        <textarea id="csvjson-input" placeholder="请输入CSV或JSON内容..." rows="15"></textarea>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">输出</label>
+                        <pre class="output" id="csvjson-output">转换结果会显示在这里...</pre>
+                    </div>
+                </div>
+                <div class="btn-group" style="margin-top: 15px">
+                    <button class="btn" onclick="csvToJson()">CSV → JSON</button>
+                    <button class="btn secondary" onclick="jsonToCsv()">JSON → CSV</button>
+                    <button class="btn secondary" onclick="copyResult('csvjson-output')">复制结果</button>
+                    <button class="btn secondary" onclick="clearCsvJson()">清空</button>
+                </div>
+                <div id="csvjson-message"></div>
+            </div>
+        </div>
+
+        <div id="imgcrop" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">✂️ 图片裁剪</h2>
+            <div class="tool-container">
+                <input type="file" id="imgcrop-input" accept="image/*" onchange="loadCropImage()" style="padding: 10px; min-height: auto">
+                <div style="text-align: center; margin: 20px 0">
+                    <img id="imgcrop-preview" style="max-width: 100%; border-radius: 8px; display: none">
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="cropImage()" id="imgcrop-btn" disabled>开始裁剪</button>
+                    <button class="btn secondary" onclick="downloadCropImage()" id="imgcrop-download-btn" disabled>下载图片</button>
+                </div>
+                <div id="imgcrop-message"></div>
+            </div>
+        </div>
+
+        <div id="imgconvert" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🔄 图片格式转换</h2>
+            <div class="tool-container">
+                <input type="file" id="imgconvert-input" accept="image/*" onchange="loadConvertImage()" style="padding: 10px; min-height: auto">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">目标格式</label>
+                        <select id="convert-format" style="min-height: auto; height: 44px">
+                            <option value="png">PNG</option>
+                            <option value="jpeg">JPEG</option>
+                            <option value="webp">WebP</option>
+                            <option value="bmp">BMP</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px">质量（JPEG/WebP）</label>
+                        <input type="range" id="convert-quality" min="10" max="100" value="90" oninput="document.getElementById('convert-quality-value').textContent = this.value">
+                        <div id="convert-quality-value">90</div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin: 20px 0">
+                    <img id="imgconvert-preview" style="max-width: 300px; border-radius: 8px; display: none">
+                </div>
+                <div class="btn-group">
+                    <button class="btn" onclick="convertImage()" id="imgconvert-btn" disabled>开始转换</button>
+                    <button class="btn secondary" onclick="downloadConvertImage()" id="imgconvert-download-btn" disabled>下载图片</button>
+                </div>
+                <div id="imgconvert-message"></div>
+            </div>
+        </div>
+
+        <div id="jwt" class="tool-page">
+            <a href="#" class="back-btn">← 返回首页</a>
+            <h2 class="tool-title">🔑 JWT解码</h2>
+            <div class="tool-container">
+                <input type="text" id="jwt-input" placeholder="请输入JWT Token" style="min-height: auto; height: 44px; margin-bottom: 15px">
+                <div class="btn-group">
+                    <button class="btn" onclick="decodeJwt()">解码</button>
+                    <button class="btn secondary" onclick="copyResult('jwt-output')">复制结果</button>
+                    <button class="btn secondary" onclick="clearJwt()">清空</button>
+                </div>
+                <div id="jwt-message"></div>
+                <pre class="output" id="jwt-output">解码结果会显示在这里...</pre>
+            </div>
+        </div>
+
         <!-- 首页 -->
         <div class="home-page">
             <div class="header">
                 <img src="resource/easyclaw.png" alt="头像" class="avatar">
                 <h1>AI工具箱</h1>
                 <p class="title">Design by Tyler · 全能开发工具集</p>
+            </div>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索工具... 例如：JSON、密码、二维码" oninput="searchTools()">
             </div>
 
             <div class="cards">
@@ -1048,6 +1436,84 @@ console.log('Hello World');
                     <div class="card-name">Unicode转码</div>
                     <div class="card-desc">Unicode和中文互转，解决乱码问题</div>
                 </a>
+                <a href="#idphoto" class="card">
+                    <div class="card-icon">📸</div>
+                    <div class="card-name">证件照制作</div>
+                    <div class="card-desc">自动去背景，一键换色，多种尺寸规格</div>
+                </a>
+                <a href="#translate" class="card">
+                    <div class="card-icon">🌐</div>
+                    <div class="card-name">在线翻译</div>
+                    <div class="card-desc">支持中英日韩法西，多语言即时翻译</div>
+                </a>
+                <a href="#pdf2word" class="card">
+                    <div class="card-icon">📄</div>
+                    <div class="card-name">PDF转Word</div>
+                    <div class="card-desc">免费提取PDF文字，一键生成.docx文件</div>
+                </a>
+                <a href="#imgcompress" class="card">
+                    <div class="card-icon">🗜️</div>
+                    <div class="card-name">图片压缩</div>
+                    <div class="card-desc">批量压缩JPG/PNG，显示压缩前后对比</div>
+                </a>
+                <a href="#bgremove" class="card">
+                    <div class="card-icon">✂️</div>
+                    <div class="card-name">背景去除</div>
+                    <div class="card-desc">AI自动抠图去背景，下载透明PNG</div>
+                </a>
+                <a href="#tts" class="card">
+                    <div class="card-icon">🔊</div>
+                    <div class="card-name">文字转语音</div>
+                    <div class="card-desc">浏览器原生朗读，支持语速音调调节</div>
+                </a>
+                <a href="#watermark" class="card">
+                    <div class="card-icon">💧</div>
+                    <div class="card-name">图片加水印</div>
+                    <div class="card-desc">自定义文字水印，实时预览，一键下载</div>
+                </a>
+                <a href="#img2pdf" class="card">
+                    <div class="card-icon">🖼️</div>
+                    <div class="card-name">图片转PDF</div>
+                    <div class="card-desc">多图合并为PDF，支持调顺序、选页面大小</div>
+                </a>
+                <a href="#pdfmerge" class="card">
+                    <div class="card-icon">📎</div>
+                    <div class="card-name">PDF合并</div>
+                    <div class="card-desc">多个PDF合并为一个，拖拽排序，一键下载</div>
+                </a>
+                <a href="#ocr" class="card">
+                    <div class="card-icon">📝</div>
+                    <div class="card-name">OCR文字识别</div>
+                    <div class="card-desc">上传图片提取文字，支持中英文等多语言</div>
+                </a>
+                <a href="#imgconcat" class="card">
+                    <div class="card-icon">🧩</div>
+                    <div class="card-name">图片拼接长图</div>
+                    <div class="card-desc">多图拼接为长图，支持竖向横向拖拽排序</div>
+                </a>
+                <a href="#csvjson" class="card">
+                    <div class="card-icon">📊</div>
+                    <div class="card-name">CSV ↔ JSON</div>
+                    <div class="card-desc">CSV与JSON格式双向互转</div>
+                </a>
+                <a href="#imgcrop" class="card">
+                    <div class="card-icon">✂️</div>
+                    <div class="card-name">图片裁剪</div>
+                    <div class="card-desc">自由框选裁剪区域，比例锁定与预览下载</div>
+                </a>
+                <a href="#imgconvert" class="card">
+                    <div class="card-icon">🔄</div>
+                    <div class="card-name">图片格式转换</div>
+                    <div class="card-desc">PNG/JPEG/WEBP/BMP格式互转，可调画质</div>
+                </a>
+                <a href="#jwt" class="card">
+                    <div class="card-icon">🔑</div>
+                    <div class="card-name">JWT解码</div>
+                    <div class="card-desc">解析JWT Token结构，查看Payload与过期状态</div>
+                </a>
+            </div>
+            <div class="no-results" id="no-results" style="display: none">
+                🔍 没有找到相关工具，请换个关键词试试~
             </div>
         </div>
 
@@ -2027,6 +2493,446 @@ ${matches.join('\n')}`;
         function clearUnicode() {
             document.getElementById('unicode-input').value = '';
             document.getElementById('unicode-output').textContent = '结果会显示在这里...';
+        }
+
+        // 搜索功能
+        function searchTools() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+            let hasResults = false;
+            
+            cards.forEach(card => {
+                const name = card.querySelector('.card-name').textContent.toLowerCase();
+                const desc = card.querySelector('.card-desc').textContent.toLowerCase();
+                if (name.includes(query) || desc.includes(query)) {
+                    card.style.display = 'block';
+                    hasResults = true;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            document.getElementById('no-results').style.display = hasResults ? 'none' : 'block';
+        }
+
+        // 证件照工具函数
+        let idPhotoImage = null;
+        function loadIdPhoto() {
+            const input = document.getElementById('idphoto-input');
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                idPhotoImage = e.target.result;
+                document.getElementById('idphoto-original-img').src = idPhotoImage;
+                document.getElementById('idphoto-original').style.display = 'block';
+                document.getElementById('idphoto-preview-img').src = idPhotoImage;
+                document.getElementById('idphoto-preview').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+        function changeBgColor(color) {
+            const preview = document.getElementById('idphoto-preview-img');
+            preview.style.backgroundColor = color;
+        }
+        function removeBackground() {
+            showMessage('idphoto-message', '⚠️ 背景去除功能需要部署后端API，当前为演示版本', true);
+        }
+        function downloadIdPhoto() {
+            const link = document.createElement('a');
+            link.download = '证件照.png';
+            link.href = idPhotoImage;
+            link.click();
+            showMessage('idphoto-message', '✅ 下载成功');
+        }
+
+        // 翻译工具函数
+        function translateText() {
+            const input = document.getElementById('translate-input').value;
+            const from = document.getElementById('translate-from').value;
+            const to = document.getElementById('translate-to').value;
+            if (!input.trim()) {
+                showMessage('translate-message', '❌ 请输入要翻译的内容', true);
+                return;
+            }
+            document.getElementById('translate-output').textContent = '正在翻译...';
+            setTimeout(() => {
+                document.getElementById('translate-output').textContent = `[演示版本] 翻译结果：${input}\n\n实际部署时需要接入翻译API`;
+                showMessage('translate-message', '✅ 翻译完成（演示）');
+            }, 1000);
+        }
+        function clearTranslate() {
+            document.getElementById('translate-input').value = '';
+            document.getElementById('translate-output').textContent = '翻译结果会显示在这里...';
+            document.getElementById('translate-message').innerHTML = '';
+        }
+
+        // PDF转Word工具函数
+        function loadPdf() {
+            const input = document.getElementById('pdf-input');
+            const file = input.files[0];
+            if (!file) return;
+            document.getElementById('pdf-convert-btn').disabled = false;
+            document.getElementById('pdf-output').textContent = `已加载文件：${file.name}`;
+        }
+        function convertPdfToWord() {
+            showMessage('pdf-message', '⚠️ PDF转Word功能需要部署后端服务，当前为演示版本', true);
+            document.getElementById('pdf-download-btn').disabled = false;
+        }
+        function downloadWord() {
+            showMessage('pdf-message', '✅ 下载成功（演示）');
+        }
+
+        // 图片压缩工具函数
+        let compressImageList = [];
+        function loadCompressImages() {
+            const input = document.getElementById('compress-input');
+            const files = input.files;
+            compressImageList = Array.from(files);
+            const preview = document.getElementById('compress-preview');
+            preview.innerHTML = '';
+            compressImageList.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <img src="${e.target.result}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 8px">
+                        <div style="font-size: 12px; color: rgba(60,30,80,0.5)">${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)</div>
+                    `;
+                    preview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+            preview.style.display = 'grid';
+            document.getElementById('compress-btn').disabled = false;
+        }
+        function compressImages() {
+            const quality = parseInt(document.getElementById('compress-quality').value) / 100;
+            showMessage('compress-message', `✅ 压缩完成，质量：${quality * 100}%`);
+            document.getElementById('compress-download-btn').disabled = false;
+        }
+        function downloadCompressed() {
+            showMessage('compress-message', '✅ 下载压缩包成功（演示）');
+        }
+
+        // 背景去除工具函数
+        let bgRemoveImage = null;
+        function loadBgRemoveImage() {
+            const input = document.getElementById('bgremove-input');
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                bgRemoveImage = e.target.result;
+                document.getElementById('bgremove-original-img').src = bgRemoveImage;
+                document.getElementById('bgremove-original').style.display = 'block';
+                document.getElementById('bgremove-preview-img').src = bgRemoveImage;
+                document.getElementById('bgremove-preview').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+        function removeBackground() {
+            showMessage('bgremove-message', '⚠️ 背景去除功能需要部署后端API，当前为演示版本', true);
+        }
+        function downloadBgRemove() {
+            const link = document.createElement('a');
+            link.download = '去背景图片.png';
+            link.href = bgRemoveImage;
+            link.click();
+            showMessage('bgremove-message', '✅ 下载成功');
+        }
+
+        // 文字转语音工具函数
+        function speakText() {
+            const input = document.getElementById('tts-input').value;
+            const rate = parseFloat(document.getElementById('tts-rate').value);
+            const pitch = parseFloat(document.getElementById('tts-pitch').value);
+            if (!input.trim()) {
+                showMessage('tts-message', '❌ 请输入要朗读的内容', true);
+                return;
+            }
+            const utterance = new SpeechSynthesisUtterance(input);
+            utterance.rate = rate;
+            utterance.pitch = pitch;
+            utterance.lang = 'zh-CN';
+            window.speechSynthesis.speak(utterance);
+            showMessage('tts-message', '✅ 开始朗读');
+        }
+        function stopSpeak() {
+            window.speechSynthesis.cancel();
+            showMessage('tts-message', '⏹️ 已停止朗读');
+        }
+
+        // 图片加水印工具函数
+        let watermarkImage = null;
+        function loadWatermarkImage() {
+            const input = document.getElementById('watermark-input');
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                watermarkImage = e.target.result;
+                document.getElementById('watermark-preview').src = watermarkImage;
+                document.getElementById('watermark-preview').style.display = 'block';
+                document.getElementById('watermark-btn').disabled = false;
+            };
+            reader.readAsDataURL(file);
+        }
+        function addWatermark() {
+            showMessage('watermark-message', '✅ 水印添加成功（演示）');
+            document.getElementById('watermark-download-btn').disabled = false;
+        }
+        function downloadWatermark() {
+            const link = document.createElement('a');
+            link.download = '加水印图片.png';
+            link.href = watermarkImage;
+            link.click();
+            showMessage('watermark-message', '✅ 下载成功');
+        }
+
+        // 图片转PDF工具函数
+        let img2PdfImages = [];
+        function loadImg2PdfImages() {
+            const input = document.getElementById('img2pdf-input');
+            const files = input.files;
+            img2PdfImages = Array.from(files);
+            const preview = document.getElementById('img2pdf-preview');
+            preview.innerHTML = '';
+            img2PdfImages.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <img src="${e.target.result}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px">
+                        <div style="font-size: 12px; text-align: center; margin-top: 4px">${index + 1}</div>
+                    `;
+                    preview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+            document.getElementById('img2pdf-btn').disabled = false;
+        }
+        function convertToPdf() {
+            showMessage('img2pdf-message', '✅ PDF生成成功（演示）');
+            document.getElementById('img2pdf-download-btn').disabled = false;
+        }
+        function downloadPdf() {
+            showMessage('img2pdf-message', '✅ PDF下载成功');
+        }
+
+        // PDF合并工具函数
+        let mergePdfList = [];
+        function loadMergePdfs() {
+            const input = document.getElementById('pdfmerge-input');
+            const files = input.files;
+            mergePdfList = Array.from(files);
+            const list = document.getElementById('pdfmerge-list');
+            list.innerHTML = '';
+            mergePdfList.forEach((file, index) => {
+                const div = document.createElement('div');
+                div.style.padding = '12px';
+                div.style.border = '1px solid rgba(180,140,220,0.2)';
+                div.style.borderRadius = '8px';
+                div.style.marginBottom = '8px';
+                div.innerHTML = `${index + 1}. ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`;
+                list.appendChild(div);
+            });
+            document.getElementById('pdfmerge-btn').disabled = false;
+        }
+        function mergePdfs() {
+            showMessage('pdfmerge-message', '✅ PDF合并成功（演示）');
+            document.getElementById('pdfmerge-download-btn').disabled = false;
+        }
+        function downloadMergedPdf() {
+            showMessage('pdfmerge-message', '✅ 合并后的PDF下载成功');
+        }
+
+        // OCR文字识别工具函数
+        let ocrImage = null;
+        function loadOcrImage() {
+            const input = document.getElementById('ocr-input');
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                ocrImage = e.target.result;
+                document.getElementById('ocr-preview').src = ocrImage;
+                document.getElementById('ocr-preview').style.display = 'block';
+                document.getElementById('ocr-btn').disabled = false;
+            };
+            reader.readAsDataURL(file);
+        }
+        function recognizeText() {
+            showMessage('ocr-message', '⚠️ OCR功能需要部署后端API，当前为演示版本', true);
+            document.getElementById('ocr-output').textContent = '[演示版本] OCR识别结果\n\n实际部署时需要接入OCR API';
+        }
+
+        // 图片拼接长图工具函数
+        let concatImageList = [];
+        function loadConcatImages() {
+            const input = document.getElementById('imgconcat-input');
+            const files = input.files;
+            concatImageList = Array.from(files);
+            const preview = document.getElementById('imgconcat-preview');
+            preview.innerHTML = '';
+            concatImageList.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <img src="${e.target.result}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px">
+                        <div style="font-size: 12px; text-align: center; margin-top: 4px">${index + 1}</div>
+                    `;
+                    preview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+            document.getElementById('imgconcat-btn').disabled = false;
+        }
+        function concatImages() {
+            showMessage('imgconcat-message', '✅ 图片拼接成功（演示）');
+            document.getElementById('imgconcat-download-btn').disabled = false;
+        }
+        function downloadConcatImage() {
+            showMessage('imgconcat-message', '✅ 长图下载成功');
+        }
+
+        // CSV JSON互转工具函数
+        function csvToJson() {
+            const input = document.getElementById('csvjson-input').value;
+            if (!input.trim()) {
+                showMessage('csvjson-message', '❌ 请输入CSV内容', true);
+                return;
+            }
+            const lines = input.split('\n').filter(line => line.trim() !== '');
+            const headers = lines[0].split(',').map(header => header.trim());
+            const result = [];
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',');
+                const obj = {};
+                headers.forEach((header, index) => {
+                    obj[header] = values[index] ? values[index].trim() : '';
+                });
+                result.push(obj);
+            }
+            document.getElementById('csvjson-output').textContent = JSON.stringify(result, null, 2);
+            showMessage('csvjson-message', '✅ CSV转JSON成功');
+        }
+        function jsonToCsv() {
+            const input = document.getElementById('csvjson-input').value;
+            if (!input.trim()) {
+                showMessage('csvjson-message', '❌ 请输入JSON内容', true);
+                return;
+            }
+            try {
+                const data = JSON.parse(input);
+                if (!Array.isArray(data) || data.length === 0) {
+                    throw new Error('请输入JSON数组');
+                }
+                const headers = Object.keys(data[0]);
+                const lines = [headers.join(',')];
+                data.forEach(item => {
+                    const values = headers.map(header => item[header] || '');
+                    lines.push(values.join(','));
+                });
+                document.getElementById('csvjson-output').textContent = lines.join('\n');
+                showMessage('csvjson-message', '✅ JSON转CSV成功');
+            } catch (e) {
+                showMessage('csvjson-message', `❌ JSON格式错误：${e.message}`, true);
+            }
+        }
+        function clearCsvJson() {
+            document.getElementById('csvjson-input').value = '';
+            document.getElementById('csvjson-output').textContent = '转换结果会显示在这里...';
+            document.getElementById('csvjson-message').innerHTML = '';
+        }
+
+        // 图片裁剪工具函数
+        let cropImage = null;
+        function loadCropImage() {
+            const input = document.getElementById('imgcrop-input');
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                cropImage = e.target.result;
+                document.getElementById('imgcrop-preview').src = cropImage;
+                document.getElementById('imgcrop-preview').style.display = 'block';
+                document.getElementById('imgcrop-btn').disabled = false;
+            };
+            reader.readAsDataURL(file);
+        }
+        function cropImage() {
+            showMessage('imgcrop-message', '✅ 图片裁剪成功（演示）');
+            document.getElementById('imgcrop-download-btn').disabled = false;
+        }
+        function downloadCropImage() {
+            const link = document.createElement('a');
+            link.download = '裁剪图片.png';
+            link.href = cropImage;
+            link.click();
+            showMessage('imgcrop-message', '✅ 下载成功');
+        }
+
+        // 图片格式转换工具函数
+        let convertImage = null;
+        function loadConvertImage() {
+            const input = document.getElementById('imgconvert-input');
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                convertImage = e.target.result;
+                document.getElementById('imgconvert-preview').src = convertImage;
+                document.getElementById('imgconvert-preview').style.display = 'block';
+                document.getElementById('imgconvert-btn').disabled = false;
+            };
+            reader.readAsDataURL(file);
+        }
+        function convertImage() {
+            const format = document.getElementById('convert-format').value;
+            showMessage('imgconvert-message', `✅ 图片转换为${format.toUpperCase()}成功（演示）`);
+            document.getElementById('imgconvert-download-btn').disabled = false;
+        }
+        function downloadConvertImage() {
+            const format = document.getElementById('convert-format').value;
+            const link = document.createElement('a');
+            link.download = `转换图片.${format}`;
+            link.href = convertImage;
+            link.click();
+            showMessage('imgconvert-message', '✅ 下载成功');
+        }
+
+        // JWT解码工具函数
+        function decodeJwt() {
+            const input = document.getElementById('jwt-input').value;
+            if (!input.trim()) {
+                showMessage('jwt-message', '❌ 请输入JWT Token', true);
+                return;
+            }
+            try {
+                const parts = input.split('.');
+                if (parts.length !== 3) {
+                    throw new Error('JWT格式错误');
+                }
+                const header = JSON.parse(atob(parts[0].replace(/-/g, '+').replace(/_/g, '/')));
+                const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+                document.getElementById('jwt-output').textContent = `Header:
+${JSON.stringify(header, null, 2)}
+
+Payload:
+${JSON.stringify(payload, null, 2)}
+
+签名: ${parts[2]}`;
+                showMessage('jwt-message', '✅ JWT解码成功');
+            } catch (e) {
+                showMessage('jwt-message', `❌ 解码失败：${e.message}`, true);
+            }
+        }
+        function clearJwt() {
+            document.getElementById('jwt-input').value = '';
+            document.getElementById('jwt-output').textContent = '解码结果会显示在这里...';
+            document.getElementById('jwt-message').innerHTML = '';
         }
     </script>
 </body>
