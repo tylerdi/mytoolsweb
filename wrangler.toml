@@ -1,0 +1,12 @@
+# Cloudflare Pages 配置文件
+name = "mytoolsweb"
+compatibility_date = "2024-03-12"
+
+# 环境变量（需要在Cloudflare后台配置SUPABASE_URL和SUPABASE_ANON_KEY）
+[vars]
+SUPABASE_URL = "https://twyosmombfrcheyjujvb.supabase.co"
+SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eW9zbW9tYmZyY2hleWp1anZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjAwMDQsImV4cCI6MjA4ODIzNjAwNH0.70lVXwcjRqVNLDwkvIwEJHB5rRLBQttiWrW2hKi1bwo"
+
+# Functions 配置
+[functions]
+node_compat = true

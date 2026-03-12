@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后端接口测试</title>
+    <style>
+        body {
+            background: #f5f3ff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .container {
+            background: rgba(255,255,255,0.75);
+            border: 1px solid rgba(180,140,220,0.2);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(124,58,237,0.15);
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff9fd2 0%, #ff6ba8 40%, #7c3aed 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #ff2d78, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        .btn:hover {
+            opacity: 0.9;
+            box-shadow: 0 0 20px rgba(255,45,120,0.2);
+            transform: translateY(-2px);
+        }
+        .output {
+            background: #2d3748;
+            color: #f7fafc;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            min-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 后端接口测试</h1>
+        <button class="btn" onclick="testBackend()">调用后端接口</button>
+        <pre class="output" id="output">点击上面的按钮测试后端接口...</pre>
+    </div>
+
+    <script>
+        async function testBackend() {
+            const output = document.getElementById('output');
+            output.textContent = '正在调用后端接口...';
+            
+            try {
+                const res = await fetch('/api/hello', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name: 'Tyler' })
+                });
+                
+                const data = await res.json();
+                output.textContent = JSON.stringify(data, null, 2);
+            } catch (e) {
+                output.textContent = `❌ 调用失败: ${e.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
