@@ -3112,11 +3112,12 @@ ${matches.join('\n')}`;
         // 初始化热度
         function initHotCounts() {
             const cards = document.querySelectorAll('.card');
+            console.log('找到卡片数量:', cards.length);
+            
             cards.forEach((card, index) => {
                 // 从href提取toolId
                 const href = card.getAttribute('href');
                 const toolId = href ? href.replace('#', '') : `tool_${index}`;
-                console.log('初始化工具:', toolId);
                 
                 const count = getHotCount(toolId);
                 const hotTag = card.querySelector('.hot-count');
@@ -3126,25 +3127,25 @@ ${matches.join('\n')}`;
                 }
                 
                 // 点击卡片时增加热度
-                card.addEventListener('click', (e) => {
+                card.addEventListener('click', function(e) {
                     // 先更新热度再跳转
                     e.preventDefault();
-                    const oldCount = getHotCount(toolId);
-                    const newCount = increaseHotCount(toolId);
-                    console.log(`工具 ${toolId} 热度更新: ${oldCount} -> ${newCount}`);
+                    const currentHref = this.getAttribute('href');
+                    const currentToolId = currentHref ? currentHref.replace('#', '') : `tool_${index}`;
                     
-                    // 重新获取hotTag元素，防止分页导致的引用失效
-                    const currentHotTag = e.currentTarget.querySelector('.hot-count');
+                    const oldCount = getHotCount(currentToolId);
+                    const newCount = increaseHotCount(currentToolId);
+                    console.log(`工具 ${currentToolId} 热度更新: ${oldCount} -> ${newCount}`);
+                    
+                    // 更新当前卡片的热度
+                    const currentHotTag = this.querySelector('.hot-count');
                     if (currentHotTag) {
                         currentHotTag.textContent = newCount;
                     }
                     
-                    // 验证localStorage
-                    console.log('localStorage验证:', localStorage.getItem(`hot_${toolId}`));
-                    
                     // 跳转
                     setTimeout(() => {
-                        window.location.hash = href;
+                        window.location.hash = currentHref;
                     }, 100);
                 });
             });
