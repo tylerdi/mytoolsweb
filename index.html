@@ -211,6 +211,7 @@
                 
                 if (error) {
                     console.error('数据库查询错误:', error);
+                    alert('数据库错误:' + JSON.stringify(error));
                     // 数据库出错，使用静态切换
                     updateToolCardsLanguageStatic();
                     return;
