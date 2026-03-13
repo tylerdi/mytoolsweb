@@ -350,6 +350,9 @@
 
         // 切换语言时重新加载工具
         function updateToolCardsLanguage() {
+            // 优先用静态切换，保证一定能成功
+            updateToolCardsLanguageStatic();
+            // 异步尝试数据库加载
             loadToolsFromDB();
         }
         
