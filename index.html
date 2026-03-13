@@ -417,13 +417,13 @@
             display: none !important;
         }
 
-        /* 工具页激活时隐藏右上角用户菜单 */
-        .tool-page:target ~ .user-menu {
+        /* 当工具页激活时，隐藏右上角用户菜单 */
+        body:has(.tool-page:target) .user-menu {
             display: none !important;
         }
 
-        /* 设置页激活时隐藏右上角用户菜单 */
-        .settings-page.active ~ .user-menu {
+        /* 当设置页激活时，隐藏右上角用户菜单 */
+        body:has(.settings-page.active) .user-menu {
             display: none !important;
         }
 
