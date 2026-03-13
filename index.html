@@ -189,10 +189,68 @@
             }
         }
 
-        // 页面加载时初始化语言
+        // 页面加载时初始化
         document.addEventListener('DOMContentLoaded', () => {
             updateUI();
+            // 从数据库加载工具
+            loadToolsFromDB();
         });
+
+        // 从数据库加载工具列表
+        async function loadToolsFromDB() {
+            try {
+                const { data, error } = await sb
+                    .from('tools')
+                    .select('*')
+                    .eq('is_active', true)
+                    .order('hot_count', { ascending: false })
+                    .order('sort_order', { ascending: true });
+                
+                if (error || !data || data.length === 0) {
+                    console.log('数据库无工具，使用静态数据');
+                    return;
+                }
+
+                // 渲染工具卡片
+                const container = document.querySelector('.cards');
+                container.innerHTML = '';
+                
+                data.forEach(tool => {
+                    const card = document.createElement('a');
+                    card.href = `#${tool.id}`;
+                    card.className = 'card';
+                    card.style.position = 'relative';
+                    
+                    let html = '';
+                    // 热度标签
+                    if (tool.is_hot) {
+                        html += `<div class="hot-tag">🔥 <span class="hot-count">${Math.ceil(tool.hot_count / 10)}</span></div>`;
+                    }
+                    // 收藏按钮
+                    html += `<div class="card-favorite" onclick="toggleFavorite(event, '${tool.id}')">${favorites.has(tool.id) ? '♥' : '♡'}</div>`;
+                    // 工具内容
+                    const title = currentLang === 'zh' ? tool.title_zh : tool.title_en;
+                    const desc = currentLang === 'zh' ? tool.desc_zh : tool.desc_en;
+                    html += `
+                        <div class="card-icon">${tool.icon}</div>
+                        <div class="card-name">${title}</div>
+                        <div class="card-desc">${desc}</div>
+                    `;
+                    
+                    card.innerHTML = html;
+                    container.appendChild(card);
+                });
+
+                console.log('工具从数据库加载成功，共' + data.length + '个');
+            } catch (e) {
+                console.error('加载数据库工具失败，使用静态数据:', e);
+            }
+        }
+
+        // 切换语言时重新加载工具
+        function updateToolCardsLanguage() {
+            loadToolsFromDB();
+        }
         
         // 立即初始化Supabase，不要等DOM加载
         const supabaseUrl = 'https://twyosmombfrcheyjujvb.supabase.co';
