@@ -8,15 +8,15 @@
     <!-- 提前加载Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // 全局变量提前声明
-        let supabase;
+        // 全局变量提前声明，避免命名冲突
+        let sb;
         let currentUser = null;
         let favorites = new Set();
         
         // 立即初始化Supabase，不要等DOM加载
         const supabaseUrl = 'https://twyosmombfrcheyjujvb.supabase.co';
         const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eW9zbW9tYmZyY2hleWp1anZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjAwMDQsImV4cCI6MjA4ODIzNjAwNH0.70lVXwcjRqVNLDwkvIwEJHB5rRLBQttiWrW2hKi1bwo';
-        supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+        sb = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
         
         // SDK加载完成后初始化
         document.addEventListener('DOMContentLoaded', () => {
@@ -4510,7 +4510,7 @@ BMI指数：${bmi.toFixed(1)}
         // 初始化认证状态
         async function initAuth() {
             // 检查Supabase认证状态
-            const { data: { session } } = await supabase.auth.getSession();
+            const { data: { session } } = await sb.auth.getSession();
             
             if (session) {
                 currentUser = session.user;
@@ -4521,7 +4521,7 @@ BMI指数：${bmi.toFixed(1)}
             }
 
             // 监听认证状态变化
-            supabase.auth.onAuthStateChange((event, session) => {
+            sb.auth.onAuthStateChange((event, session) => {
                 if (session) {
                     currentUser = session.user;
                     updateUserUI();
@@ -4607,7 +4607,7 @@ BMI指数：${bmi.toFixed(1)}
             try {
                 messageEl.innerHTML = '<div class="success">🔄 正在登录...</div>';
                 
-                const { data, error } = await supabase.auth.signInWithPassword({
+                const { data, error } = await sb.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
@@ -4651,7 +4651,7 @@ BMI指数：${bmi.toFixed(1)}
             try {
                 messageEl.innerHTML = '<div class="success">🔄 正在注册...</div>';
                 
-                const { data, error } = await supabase.auth.signUp({
+                const { data, error } = await sb.auth.signUp({
                     email: email,
                     password: password,
                     options: {
@@ -4679,7 +4679,7 @@ BMI指数：${bmi.toFixed(1)}
         // 退出登录
         async function logout() {
             try {
-                await supabase.auth.signOut();
+                await sb.auth.signOut();
                 document.getElementById('userDropdown').classList.remove('active');
                 showMessage('', '✅ 已退出登录');
             } catch (e) {
@@ -4697,7 +4697,7 @@ BMI指数：${bmi.toFixed(1)}
 
             try {
                 // 获取用户资料
-                const { data: profile, error } = await supabase
+                const { data: profile, error } = await sb
                     .from('profiles')
                     .select('*')
                     .eq('id', currentUser.id)
@@ -4777,7 +4777,7 @@ BMI指数：${bmi.toFixed(1)}
             try {
                 if (favorites.has(toolId)) {
                     // 取消收藏
-                    await supabase
+                    await sb
                         .from('tool_favorites')
                         .delete()
                         .eq('user_id', currentUser.id)
@@ -4789,7 +4789,7 @@ BMI指数：${bmi.toFixed(1)}
                     showMessage('', `💔 已取消收藏`);
                 } else {
                     // 添加收藏
-                    await supabase
+                    await sb
                         .from('tool_favorites')
                         .insert({
                             user_id: currentUser.id,
@@ -4815,7 +4815,7 @@ BMI指数：${bmi.toFixed(1)}
             }
 
             try {
-                const { data, error } = await supabase
+                const { data, error } = await sb
                     .from('tool_favorites')
                     .select('tool_id')
                     .eq('user_id', currentUser.id);
