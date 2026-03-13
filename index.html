@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI工具箱 · Tyler</title>
     <link rel="icon" type="image/png" href="resource/easyclaw.png">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // 全局变量提前声明
+        let sb;
+        let currentUser = null;
+        let favorites = new Set();
+        let currentLang = localStorage.getItem('language') || 'zh';
+        
+        // 立即初始化Supabase
+        const supabaseUrl = 'https://twyosmombfrcheyjujvb.supabase.co';
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eW9zbW9tYmZyY2hleWp1anZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjAwMDQsImV4cCI6MjA4ODIzNjAwNH0.70lVXwcjRqVNLDwkvIwEJHB5rRLBQttiWrW2hKi1bwo';
+        sb = supabase.createClient(supabaseUrl, supabaseAnonKey);
+    </script>
     <!-- 提前加载Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -12,6 +25,177 @@
         let sb;
         let currentUser = null;
         let favorites = new Set();
+        let currentLang = localStorage.getItem('language') || 'zh';
+        
+        // 多语言配置
+        const i18n = {
+            site_title: { zh: 'AI工具箱', en: 'AI Toolkit' },
+            site_subtitle: { zh: 'Design by Tyler · 全能开发工具集', en: 'Design by Tyler · All-in-One Developer Toolset' },
+            search_placeholder: { zh: '搜索工具... 例如：JSON、密码、二维码', en: 'Search tools... e.g. JSON, Password, QR Code' },
+            login: { zh: '登录', en: 'Login' },
+            register: { zh: '注册', en: 'Register' },
+            email: { zh: '邮箱', en: 'Email' },
+            password: { zh: '密码', en: 'Password' },
+            confirm_password: { zh: '确认密码', en: 'Confirm Password' },
+            no_account: { zh: '还没有账号？', en: 'Don\'t have an account?' },
+            has_account: { zh: '已有账号？', en: 'Already have an account?' },
+            register_now: { zh: '立即注册', en: 'Register Now' },
+            login_now: { zh: '立即登录', en: 'Login Now' },
+            confirm_logout: { zh: '确认退出登录？', en: 'Confirm logout?' },
+            logout_tip: { zh: '退出后您的收藏和个性化设置将暂时无法访问', en: 'Your favorites and preferences will be temporarily unavailable after logout' },
+            cancel: { zh: '取消', en: 'Cancel' },
+            confirm: { zh: '确认', en: 'Confirm' },
+            back_to_home: { zh: '← 返回首页', en: '← Back to Home' },
+            settings: { zh: '设置中心', en: 'Settings' },
+            personal_info: { zh: '个人信息', en: 'Personal Info' },
+            personal_info_desc: { zh: '查看和修改个人资料', en: 'View and edit your profile' },
+            my_favorites: { zh: '我的收藏', en: 'My Favorites' },
+            my_favorites_desc: { zh: '管理收藏的工具', en: 'Manage your favorite tools' },
+            account_security: { zh: '账号安全', en: 'Account Security' },
+            account_security_desc: { zh: '修改密码、邮箱验证', en: 'Change password, email verification' },
+            preferences: { zh: '偏好设置', en: 'Preferences' },
+            preferences_desc: { zh: '主题、布局个性化', en: 'Customize theme and layout' },
+            no_favorites: { zh: '暂无收藏的工具', en: 'No favorite tools yet' }
+        };
+
+        // 切换语言
+        function toggleLanguage() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            localStorage.setItem('language', currentLang);
+            updateUI();
+        }
+
+        // 更新界面文字
+        function updateUI() {
+            // 更新语言按钮
+            document.getElementById('langSwitch').textContent = currentLang === 'zh' ? 'En' : '中';
+            
+            // 更新页面标题
+            document.querySelector('h1').textContent = i18n.site_title[currentLang];
+            document.querySelector('.title').textContent = i18n.site_subtitle[currentLang];
+            
+            // 更新搜索框
+            document.getElementById('search-input').placeholder = i18n.search_placeholder[currentLang];
+            
+            // 更新登录按钮
+            document.getElementById('loginBtn').textContent = i18n.login[currentLang];
+            
+            // 更新登录模态框
+            document.getElementById('loginTitle').textContent = i18n.login[currentLang];
+            document.getElementById('emailLabel').textContent = i18n.email[currentLang];
+            document.getElementById('passwordLabel').textContent = i18n.password[currentLang];
+            document.getElementById('loginBtnText').textContent = i18n.login[currentLang];
+            document.getElementById('noAccountText').textContent = i18n.no_account[currentLang];
+            document.getElementById('registerNowText').textContent = i18n.register_now[currentLang];
+            
+            // 更新注册模态框
+            document.getElementById('registerTitle').textContent = i18n.register[currentLang];
+            document.getElementById('regEmailLabel').textContent = i18n.email[currentLang];
+            document.getElementById('regPasswordLabel').textContent = i18n.password[currentLang];
+            document.getElementById('regConfirmPasswordLabel').textContent = i18n.confirm_password[currentLang];
+            document.getElementById('registerBtnText').textContent = i18n.register[currentLang];
+            document.getElementById('hasAccountText').textContent = i18n.has_account[currentLang];
+            document.getElementById('loginNowText').textContent = i18n.login_now[currentLang];
+            
+            // 更新退出确认
+            document.getElementById('confirmLogoutTitle').textContent = i18n.confirm_logout[currentLang];
+            document.getElementById('logoutTipText').textContent = i18n.logout_tip[currentLang];
+            document.getElementById('cancelText').textContent = i18n.cancel[currentLang];
+            document.getElementById('confirmText').textContent = i18n.confirm[currentLang];
+            
+            // 更新设置页面
+            document.getElementById('backToHomeText').textContent = i18n.back_to_home[currentLang];
+            document.getElementById('settingsTitle').textContent = '⚙️ ' + i18n.settings[currentLang];
+            document.getElementById('personalInfoText').textContent = i18n.personal_info[currentLang];
+            document.getElementById('personalInfoDesc').textContent = i18n.personal_info_desc[currentLang];
+            document.getElementById('myFavoritesText').textContent = i18n.my_favorites[currentLang];
+            document.getElementById('myFavoritesDesc').textContent = i18n.my_favorites_desc[currentLang];
+            document.getElementById('accountSecurityText').textContent = i18n.account_security[currentLang];
+            document.getElementById('accountSecurityDesc').textContent = i18n.account_security_desc[currentLang];
+            document.getElementById('preferencesText').textContent = i18n.preferences[currentLang];
+            document.getElementById('preferencesDesc').textContent = i18n.preferences_desc[currentLang];
+            document.getElementById('personalInfoTitle').textContent = '👤 ' + i18n.personal_info[currentLang];
+            document.getElementById('myFavoritesTitle').textContent = '⭐ ' + i18n.my_favorites[currentLang];
+            
+            // 更新工具卡片文字
+            updateToolCardsLanguage();
+        }
+
+        // 更新工具卡片语言
+        function updateToolCardsLanguage() {
+            const toolNames = {
+                'JSON格式化': 'JSON Formatter',
+                'Base64编解码': 'Base64 Converter',
+                'URL编解码': 'URL Encode/Decode',
+                '时间戳转换': 'Timestamp Converter',
+                '密码生成器': 'Password Generator',
+                'UUID生成': 'UUID Generator',
+                '字数统计': 'Word Counter',
+                '进制转换': 'Base Converter',
+                '笑话生成器': 'Joke Generator',
+                '颜色转换': 'Color Converter',
+                '时间差计算': 'Time Calculator',
+                '图片Base64转换': 'Image to Base64',
+                '摩斯密码': 'Morse Code',
+                '拼音转换': 'Pinyin Converter',
+                '加密解密': 'Encrypt/Decrypt',
+                '二维码生成': 'QR Code Generator',
+                '正则测试': 'Regex Tester',
+                'Markdown预览': 'Markdown Preview',
+                '单位换算': 'Unit Converter',
+                '假文生成器': 'Lorem Ipsum',
+                '随机数生成': 'Random Number',
+                'CRON表达式解析': 'CRON Parser'
+            };
+
+            const toolDescs = {
+                'JSON字符串格式化/压缩/校验，自动缩进高亮显示': 'Format, compress and validate JSON strings with auto-indent',
+                '字符串和Base64格式互转，支持中文和特殊字符': 'Encode/decode strings to/from Base64, support Chinese',
+                'URL地址编码解码，解决中文乱码问题': 'Encode/decode URL addresses, fix Chinese garbled characters',
+                '时间戳和日期格式互转，支持秒和毫秒': 'Convert between timestamp and date format, support seconds and milliseconds',
+                '随机生成高强度密码，支持自定义长度和字符类型': 'Generate strong random passwords, customizable length and character types',
+                '一键生成UUID/GUID，支持多个批量生成': 'Generate UUID/GUID with one click, support batch generation',
+                '统计文本字数、字符数、行数、段落数': 'Count words, characters, lines and paragraphs in text',
+                '二进制/八进制/十进制/十六进制互转': 'Convert between binary, octal, decimal and hexadecimal',
+                '随机生成各种搞笑段子，摸鱼必备神器': 'Generate random funny jokes, perfect for work breaks',
+                'HEX/RGB/HSL颜色格式互转，支持调色预览': 'Convert between HEX/RGB/HSL color formats, with preview',
+                '计算两个日期之间的天数、小时、分钟差': 'Calculate days, hours, minutes between two dates',
+                '上传图片转Base64编码，支持批量转换': 'Upload images and convert to Base64, support batch conversion',
+                '摩斯密码编码解码，支持自定义间隔': 'Encode/decode Morse code, customizable interval',
+                '汉字转拼音，支持多音字和声调': 'Convert Chinese characters to pinyin, support polyphonic characters',
+                'AES/DES/MD5等多种加密方式': 'Multiple encryption methods: AES, DES, MD5, etc.',
+                '输入文本生成二维码，支持自定义尺寸和logo': 'Generate QR code from text, customizable size and logo',
+                '正则表达式在线测试，支持匹配高亮显示': 'Test regular expressions online with match highlighting',
+                '实时预览Markdown渲染效果，支持导出HTML': 'Live preview Markdown rendering, support HTML export',
+                '长度/重量/温度/面积等多种单位换算': 'Convert between length, weight, temperature, area units',
+                '生成随机占位文本，支持自定义长度和语言': 'Generate placeholder text, customizable length and language',
+                '生成指定范围内的随机数，支持批量生成': 'Generate random numbers in specified range, support batch',
+                '解析CRON表达式，显示未来执行时间': 'Parse CRON expression and show future execution times'
+            };
+
+            if (currentLang === 'en') {
+                document.querySelectorAll('.card-name').forEach(el => {
+                    const zhText = el.textContent;
+                    if (toolNames[zhText]) {
+                        el.textContent = toolNames[zhText];
+                    }
+                });
+                document.querySelectorAll('.card-desc').forEach(el => {
+                    const zhText = el.textContent;
+                    if (toolDescs[zhText]) {
+                        el.textContent = toolDescs[zhText];
+                    }
+                });
+            } else {
+                // 刷新页面恢复中文
+                location.reload();
+            }
+        }
+
+        // 页面加载时初始化语言
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+        });
         
         // 立即初始化Supabase，不要等DOM加载
         const supabaseUrl = 'https://twyosmombfrcheyjujvb.supabase.co';
@@ -335,6 +519,34 @@
             color: rgba(60,30,80,0.5);
             font-size: 12px;
             letter-spacing: 0.1em;
+        }
+
+        /* 语言切换按钮 */
+        .lang-switch {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.9);
+            border: 2px solid #ff2d78;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #ff2d78;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lang-switch:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255,45,120,0.2);
+        }
+
+        /* 工具页/设置页隐藏语言按钮 */
+        body:has(.tool-page:target) .lang-switch,
+        body:has(.settings-page.active) .lang-switch {
+            display: none !important;
         }
         .tool-title {
             font-size: 32px;
@@ -791,6 +1003,9 @@
     </style>
 </head>
 <body>
+    <!-- 语言切换按钮 -->
+    <button class="lang-switch" id="langSwitch" onclick="toggleLanguage()">中</button>
+
     <!-- 用户菜单 -->
     <div class="user-menu">
         <button class="login-btn" id="loginBtn" onclick="openModal('loginModal')">登录</button>
