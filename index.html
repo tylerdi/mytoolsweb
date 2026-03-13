@@ -5,7 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI工具箱 · Tyler</title>
     <link rel="icon" type="image/png" href="resource/easyclaw.png">
+    <!-- 提前加载Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // 全局变量提前声明
+        let supabase;
+        let currentUser = null;
+        let favorites = new Set();
+        
+        // SDK加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 初始化Supabase
+            const supabaseUrl = 'https://twyosmombfrcheyjujvb.supabase.co';
+            const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eW9zbW9tYmZyY2hleWp1anZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjAwMDQsImV4cCI6MjA4ODIzNjAwNH0.70lVXwcjRqVNLDwkvIwEJHB5rRLBQttiWrW2hKi1bwo';
+            supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+            
+            // 绑定登录按钮事件
+            const loginBtn = document.getElementById('loginBtn');
+            if (loginBtn) {
+                loginBtn.onclick = () => {
+                    document.getElementById('loginModal').classList.add('active');
+                };
+            }
+            
+            // 初始化其他功能
+            initAuth();
+            addFavoriteButtons();
+            loadFavorites();
+        });
+    </script>
     <style>
         * {
             margin: 0;
@@ -1991,9 +2019,8 @@ console.log('Hello World');
             </div>
 
             <div class="cards">
-                <a href="#json" class="card" style="position: relative;">
+                <a href="#json" class="card">
                     <div class="hot-tag">🔥 <span class="hot-count">1</span></div>
-                    <div class="card-favorite" onclick="toggleFavorite(event, 'json')">♡</div>
                     <div class="card-icon">✨</div>
                     <div class="card-name">JSON格式化</div>
                     <div class="card-desc">JSON字符串格式化/压缩/校验，自动缩进高亮显示</div>
@@ -4479,28 +4506,6 @@ BMI指数：${bmi.toFixed(1)}
         }
 
         // ==================== 用户系统 ====================
-        // 初始化Supabase客户端
-        const supabaseUrl = 'https://twyosmombfrcheyjujvb.supabase.co';
-        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eW9zbW9tYmZyY2hleWp1anZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjAwMDQsImV4cCI6MjA4ODIzNjAwNH0.70lVXwcjRqVNLDwkvIwEJHB5rRLBQttiWrW2hKi1bwo';
-        const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
-
-        let currentUser = null;
-        let favorites = new Set();
-
-        // 页面加载时初始化
-        window.addEventListener('load', () => {
-            initAuth();
-            addFavoriteButtons();
-            loadFavorites();
-        });
-
-        // 临时修复：直接给登录按钮绑定点击事件
-        setTimeout(() => {
-            const loginBtn = document.getElementById('loginBtn');
-            if (loginBtn) {
-                loginBtn.onclick = () => openModal('loginModal');
-            }
-        }, 100);
 
         // 初始化认证状态
         async function initAuth() {
@@ -4738,9 +4743,16 @@ BMI指数：${bmi.toFixed(1)}
 
         // 给所有卡片添加收藏按钮
         function addFavoriteButtons() {
-            const cards = document.querySelectorAll('.card');
+            const cards = document.querySelectorAll('a.card');
+            console.log('找到卡片数量:', cards.length); // 调试日志
             cards.forEach(card => {
-                const toolId = card.getAttribute('href').substring(1);
+                const href = card.getAttribute('href');
+                if (!href || !href.startsWith('#')) return;
+                
+                const toolId = href.substring(1);
+                // 避免重复添加
+                if (card.querySelector('.card-favorite')) return;
+                
                 const favoriteBtn = document.createElement('div');
                 favoriteBtn.className = 'card-favorite';
                 favoriteBtn.innerHTML = '♡';
