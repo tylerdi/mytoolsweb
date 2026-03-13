@@ -201,6 +201,7 @@
         // 从数据库加载工具列表
         async function loadToolsFromDB() {
             try {
+                console.log('开始加载数据库工具，当前语言:', currentLang);
                 const { data, error } = await sb
                     .from('tools')
                     .select('*')
@@ -208,10 +209,21 @@
                     .order('hot_count', { ascending: false })
                     .order('sort_order', { ascending: true });
                 
-                if (error || !data || data.length === 0) {
-                    console.log('数据库无工具，使用静态数据');
+                if (error) {
+                    console.error('数据库查询错误:', error);
+                    // 数据库出错，使用静态切换
+                    updateToolCardsLanguageStatic();
                     return;
                 }
+                
+                if (!data || data.length === 0) {
+                    console.log('数据库无工具数据，使用静态切换');
+                    updateToolCardsLanguageStatic();
+                    return;
+                }
+
+                console.log('数据库返回工具数量:', data.length);
+                console.log('第一个工具数据:', data[0]);
 
                 // 渲染工具卡片
                 const container = document.querySelector('.cards');
@@ -243,9 +255,96 @@
                     container.appendChild(card);
                 });
 
-                console.log('工具从数据库加载成功，共' + data.length + '个');
+                console.log('工具从数据库渲染完成，当前语言:', currentLang);
             } catch (e) {
-                console.error('加载数据库工具失败，使用静态数据:', e);
+                console.error('加载数据库工具异常:', e);
+                // 异常时使用静态切换
+                updateToolCardsLanguageStatic();
+            }
+        }
+
+        // 静态切换工具语言（兜底方案）
+        function updateToolCardsLanguageStatic() {
+            console.log('使用静态语言切换');
+            // 工具名称映射
+            const nameMap = {
+                'JSON格式化': 'JSON Formatter',
+                'Base64编解码': 'Base64 Converter',
+                'URL编解码': 'URL Encode/Decode',
+                '时间戳转换': 'Timestamp Converter',
+                '密码生成器': 'Password Generator',
+                'UUID生成': 'UUID Generator',
+                '字数统计': 'Word Counter',
+                '进制转换': 'Base Converter',
+                '笑话生成器': 'Joke Generator',
+                '颜色转换': 'Color Converter',
+                '时间差计算': 'Time Calculator',
+                '图片Base64转换': 'Image to Base64',
+                '摩斯密码': 'Morse Code',
+                '拼音转换': 'Pinyin Converter',
+                '加密解密': 'Encrypt/Decrypt',
+                '二维码生成': 'QR Code Generator',
+                '正则测试': 'Regex Tester',
+                'Markdown预览': 'Markdown Preview',
+                '单位换算': 'Unit Converter',
+                '假文生成器': 'Lorem Ipsum',
+                '随机数生成': 'Random Number',
+                'CRON表达式解析': 'CRON Parser'
+            };
+
+            // 工具描述映射
+            const descMap = {
+                'JSON字符串格式化/压缩/校验，自动缩进高亮显示': 'Format, compress and validate JSON strings with auto-indent',
+                '字符串和Base64格式互转，支持中文和特殊字符': 'Encode/decode strings to/from Base64, support Chinese',
+                'URL地址编码解码，解决中文乱码问题': 'Encode/decode URL addresses, fix Chinese garbled characters',
+                '时间戳和日期格式互转，支持秒和毫秒': 'Convert between timestamp and date format, support seconds and milliseconds',
+                '随机生成高强度密码，支持自定义长度和字符类型': 'Generate strong random passwords, customizable length and character types',
+                '一键生成UUID/GUID，支持多个批量生成': 'Generate UUID/GUID with one click, support batch generation',
+                '统计文本字数、字符数、行数、段落数': 'Count words, characters, lines and paragraphs in text',
+                '二进制/八进制/十进制/十六进制互转': 'Convert between binary, octal, decimal and hexadecimal',
+                '随机生成各种搞笑段子，摸鱼必备神器': 'Generate random funny jokes, perfect for work breaks',
+                'HEX/RGB/HSL颜色格式互转，支持调色预览': 'Convert between HEX/RGB/HSL color formats, with preview',
+                '计算两个日期之间的天数、小时、分钟差': 'Calculate days, hours, minutes between two dates',
+                '上传图片转Base64编码，支持批量转换': 'Upload images and convert to Base64, support batch conversion',
+                '摩斯密码编码解码，支持自定义间隔': 'Encode/decode Morse code, customizable interval',
+                '汉字转拼音，支持多音字和声调': 'Convert Chinese characters to pinyin, support polyphonic characters',
+                'AES/DES/MD5等多种加密方式': 'Multiple encryption methods: AES, DES, MD5, etc.',
+                '输入文本生成二维码，支持自定义尺寸和logo': 'Generate QR code from text, customizable size and logo',
+                '正则表达式在线测试，支持匹配高亮显示': 'Test regular expressions online with match highlighting',
+                '实时预览Markdown渲染效果，支持导出HTML': 'Live preview Markdown rendering, support HTML export',
+                '长度/重量/温度/面积等多种单位换算': 'Convert between length, weight, temperature, area units',
+                '生成随机占位文本，支持自定义长度和语言': 'Generate placeholder text, customizable length and language',
+                '生成指定范围内的随机数，支持批量生成': 'Generate random numbers in specified range, support batch',
+                '解析CRON表达式，显示未来执行时间': 'Parse CRON expression and show future execution times'
+            };
+
+            // 构建反向映射
+            const reverseNameMap = {};
+            const reverseDescMap = {};
+            Object.keys(nameMap).forEach(key => reverseNameMap[nameMap[key]] = key);
+            Object.keys(descMap).forEach(key => reverseDescMap[descMap[key]] = key);
+
+            // 切换语言
+            if (currentLang === 'en') {
+                // 中文转英文
+                document.querySelectorAll('.card-name').forEach(el => {
+                    const text = el.textContent.trim();
+                    if (nameMap[text]) el.textContent = nameMap[text];
+                });
+                document.querySelectorAll('.card-desc').forEach(el => {
+                    const text = el.textContent.trim();
+                    if (descMap[text]) el.textContent = descMap[text];
+                });
+            } else {
+                // 英文转中文
+                document.querySelectorAll('.card-name').forEach(el => {
+                    const text = el.textContent.trim();
+                    if (reverseNameMap[text]) el.textContent = reverseNameMap[text];
+                });
+                document.querySelectorAll('.card-desc').forEach(el => {
+                    const text = el.textContent.trim();
+                    if (reverseDescMap[text]) el.textContent = reverseDescMap[text];
+                });
             }
         }
 
