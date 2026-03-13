@@ -324,25 +324,41 @@
             z-index: 1000;
         }
 
-        .user-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            border: 3px solid #ff2d78;
+        .login-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #ff2d78, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            background: linear-gradient(135deg, #ff2d78, #7c3aed);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .login-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255,45,120,0.3);
+        }
+
+        .user-avatar {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 2px solid #ff2d78;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(255,255,255,0.9);
+            color: #ff2d78;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 16px;
         }
 
         .user-avatar:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(255,45,120,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255,45,120,0.2);
         }
 
         .user-dropdown {
@@ -493,6 +509,13 @@
             z-index: 10;
         }
 
+        .hot-tag {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 9;
+        }
+
         .card-favorite:hover {
             transform: scale(1.2);
         }
@@ -552,7 +575,8 @@
 <body>
     <!-- 用户菜单 -->
     <div class="user-menu">
-        <div class="user-avatar" onclick="toggleUserMenu()" id="userAvatar">👤</div>
+        <button class="login-btn" id="loginBtn" onclick="openModal('loginModal')">登录</button>
+        <div class="user-avatar" onclick="toggleUserMenu()" id="userAvatar" style="display: none;">👤</div>
         <div class="user-dropdown" id="userDropdown">
             <div class="user-dropdown-item" onclick="openProfile()">👤 个人中心</div>
             <div class="user-dropdown-item" onclick="openFavorites()">⭐ 我的收藏</div>
@@ -4479,8 +4503,7 @@ BMI指数：${bmi.toFixed(1)}
                 updateUserUI();
             } else {
                 // 未登录状态
-                document.getElementById('userAvatar').textContent = '👤';
-                document.getElementById('userAvatar').onclick = () => openModal('loginModal');
+                updateUserUI();
             }
 
             // 监听认证状态变化
@@ -4492,8 +4515,7 @@ BMI指数：${bmi.toFixed(1)}
                 } else {
                     currentUser = null;
                     favorites.clear();
-                    document.getElementById('userAvatar').textContent = '👤';
-                    document.getElementById('userAvatar').onclick = () => openModal('loginModal');
+                    updateUserUI();
                     updateFavoriteButtons();
                 }
             });
@@ -4501,11 +4523,22 @@ BMI指数：${bmi.toFixed(1)}
 
         // 更新用户UI
         function updateUserUI() {
+            const loginBtn = document.getElementById('loginBtn');
+            const userAvatar = document.getElementById('userAvatar');
+            
             if (currentUser) {
-                // 显示用户头像首字母
+                // 已登录：显示用户头像，隐藏登录按钮
+                loginBtn.style.display = 'none';
+                userAvatar.style.display = 'block';
+                // 显示用户邮箱首字母
                 const firstLetter = currentUser.email.charAt(0).toUpperCase();
-                document.getElementById('userAvatar').textContent = firstLetter;
-                document.getElementById('userAvatar').onclick = toggleUserMenu;
+                userAvatar.textContent = firstLetter;
+                userAvatar.onclick = toggleUserMenu;
+            } else {
+                // 未登录：显示登录按钮，隐藏用户头像
+                loginBtn.style.display = 'block';
+                userAvatar.style.display = 'none';
+                loginBtn.onclick = () => openModal('loginModal');
             }
         }
 
