@@ -4905,9 +4905,10 @@ BMI指数：${bmi.toFixed(1)}
                     const toolName = card.querySelector('.card-name').textContent;
                     const toolIcon = card.querySelector('.card-icon').textContent;
                     
-                    const item = document.createElement('div');
-                    item.style = 'background: rgba(255,255,255,0.8); border: 1px solid rgba(180,140,220,0.2); border-radius: 8px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s;';
-                    item.onclick = () => { window.location.hash = toolId; };
+                    const item = document.createElement('a');
+                    item.href = `#${toolId}`;
+                    item.style = 'background: rgba(255,255,255,0.8); border: 1px solid rgba(180,140,220,0.2); border-radius: 8px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; text-decoration: none; color: inherit;';
+                    item.onclick = () => { backToHome(); }; // 先返回首页再跳转，确保页面正常显示
                     item.onmouseover = () => { item.style.borderColor = '#ff2d78'; item.style.transform = 'translateY(-2px)'; };
                     item.onmouseout = () => { item.style.borderColor = 'rgba(180,140,220,0.2)'; item.style.transform = 'translateY(0)'; };
                     item.innerHTML = `
