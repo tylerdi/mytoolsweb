@@ -405,6 +405,12 @@
             display: block;
         }
 
+        /* 激活设置页时隐藏首页和工具页 */
+        .settings-page.active ~ .home-page,
+        .settings-page.active ~ .tool-page {
+            display: none !important;
+        }
+
         .settings-container {
             background: rgba(255,255,255,0.75);
             border: 1px solid rgba(180,140,220,0.2);
