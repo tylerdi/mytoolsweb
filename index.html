@@ -4929,14 +4929,9 @@ BMI指数：${bmi.toFixed(1)}
                         // 完全关闭设置页
                         const settingsPage = document.getElementById('settings');
                         settingsPage.classList.remove('active');
-                        settingsPage.style.display = 'none';
+                        settingsPage.style.removeProperty('display');
                         // 跳转到对应工具
                         window.location.hash = toolId;
-                        // 强制显示首页和工具页
-                        document.querySelector('.home-page').style.display = 'block';
-                        document.querySelectorAll('.tool-page').forEach(page => {
-                            page.style.display = '';
-                        });
                     };
                     item.onmouseover = () => { item.style.borderColor = '#ff2d78'; item.style.transform = 'translateY(-2px)'; };
                     item.onmouseout = () => { item.style.borderColor = 'rgba(180,140,220,0.2)'; item.style.transform = 'translateY(0)'; };
