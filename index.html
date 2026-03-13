@@ -13,13 +13,13 @@
         let currentUser = null;
         let favorites = new Set();
         
+        // 立即初始化Supabase，不要等DOM加载
+        const supabaseUrl = 'https://twyosmombfrcheyjujvb.supabase.co';
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eW9zbW9tYmZyY2hleWp1anZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjAwMDQsImV4cCI6MjA4ODIzNjAwNH0.70lVXwcjRqVNLDwkvIwEJHB5rRLBQttiWrW2hKi1bwo';
+        supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+        
         // SDK加载完成后初始化
         document.addEventListener('DOMContentLoaded', () => {
-            // 初始化Supabase
-            const supabaseUrl = 'https://twyosmombfrcheyjujvb.supabase.co';
-            const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eW9zbW9tYmZyY2hleWp1anZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjAwMDQsImV4cCI6MjA4ODIzNjAwNH0.70lVXwcjRqVNLDwkvIwEJHB5rRLBQttiWrW2hKi1bwo';
-            supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
-            
             // 绑定登录按钮事件
             const loginBtn = document.getElementById('loginBtn');
             if (loginBtn) {
