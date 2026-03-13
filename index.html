@@ -107,7 +107,8 @@
 
         // 更新工具卡片语言
         function updateToolCardsLanguage() {
-            const toolNames = {
+            // 工具名称映射
+            const nameMap = {
                 'JSON格式化': 'JSON Formatter',
                 'Base64编解码': 'Base64 Converter',
                 'URL编解码': 'URL Encode/Decode',
@@ -132,7 +133,8 @@
                 'CRON表达式解析': 'CRON Parser'
             };
 
-            const toolDescs = {
+            // 工具描述映射
+            const descMap = {
                 'JSON字符串格式化/压缩/校验，自动缩进高亮显示': 'Format, compress and validate JSON strings with auto-indent',
                 '字符串和Base64格式互转，支持中文和特殊字符': 'Encode/decode strings to/from Base64, support Chinese',
                 'URL地址编码解码，解决中文乱码问题': 'Encode/decode URL addresses, fix Chinese garbled characters',
@@ -157,82 +159,32 @@
                 '解析CRON表达式，显示未来执行时间': 'Parse CRON expression and show future execution times'
             };
 
+            // 构建反向映射
+            const reverseNameMap = {};
+            const reverseDescMap = {};
+            Object.keys(nameMap).forEach(key => reverseNameMap[nameMap[key]] = key);
+            Object.keys(descMap).forEach(key => reverseDescMap[descMap[key]] = key);
+
+            // 切换语言
             if (currentLang === 'en') {
+                // 中文转英文
                 document.querySelectorAll('.card-name').forEach(el => {
-                    const zhText = el.textContent;
-                    if (toolNames[zhText]) {
-                        el.textContent = toolNames[zhText];
-                    }
+                    const text = el.textContent.trim();
+                    if (nameMap[text]) el.textContent = nameMap[text];
                 });
                 document.querySelectorAll('.card-desc').forEach(el => {
-                    const zhText = el.textContent;
-                    if (toolDescs[zhText]) {
-                        el.textContent = toolDescs[zhText];
-                    }
+                    const text = el.textContent.trim();
+                    if (descMap[text]) el.textContent = descMap[text];
                 });
             } else {
-                // 切换回中文
-                const toolNames = {
-                    'JSON Formatter': 'JSON格式化',
-                    'Base64 Converter': 'Base64编解码',
-                    'URL Encode/Decode': 'URL编解码',
-                    'Timestamp Converter': '时间戳转换',
-                    'Password Generator': '密码生成器',
-                    'UUID Generator': 'UUID生成',
-                    'Word Counter': '字数统计',
-                    'Base Converter': '进制转换',
-                    'Joke Generator': '笑话生成器',
-                    'Color Converter': '颜色转换',
-                    'Time Calculator': '时间差计算',
-                    'Image to Base64': '图片Base64转换',
-                    'Morse Code': '摩斯密码',
-                    'Pinyin Converter': '拼音转换',
-                    'Encrypt/Decrypt': '加密解密',
-                    'QR Code Generator': '二维码生成',
-                    'Regex Tester': '正则测试',
-                    'Markdown Preview': 'Markdown预览',
-                    'Unit Converter': '单位换算',
-                    'Lorem Ipsum': '假文生成器',
-                    'Random Number': '随机数生成',
-                    'CRON Parser': 'CRON表达式解析'
-                };
-
-                const toolDescs = {
-                    'Format, compress and validate JSON strings with auto-indent': 'JSON字符串格式化/压缩/校验，自动缩进高亮显示',
-                    'Encode/decode strings to/from Base64, support Chinese': '字符串和Base64格式互转，支持中文和特殊字符',
-                    'Encode/decode URL addresses, fix Chinese garbled characters': 'URL地址编码解码，解决中文乱码问题',
-                    'Convert between timestamp and date format, support seconds and milliseconds': '时间戳和日期格式互转，支持秒和毫秒',
-                    'Generate strong random passwords, customizable length and character types': '随机生成高强度密码，支持自定义长度和字符类型',
-                    'Generate UUID/GUID with one click, support batch generation': '一键生成UUID/GUID，支持多个批量生成',
-                    'Count words, characters, lines and paragraphs in text': '统计文本字数、字符数、行数、段落数',
-                    'Convert between binary, octal, decimal and hexadecimal': '二进制/八进制/十进制/十六进制互转',
-                    'Generate random funny jokes, perfect for work breaks': '随机生成各种搞笑段子，摸鱼必备神器',
-                    'Convert between HEX/RGB/HSL color formats, with preview': 'HEX/RGB/HSL颜色格式互转，支持调色预览',
-                    'Calculate days, hours, minutes between two dates': '计算两个日期之间的天数、小时、分钟差',
-                    'Upload images and convert to Base64, support batch conversion': '上传图片转Base64编码，支持批量转换',
-                    'Encode/decode Morse code, customizable interval': '摩斯密码编码解码，支持自定义间隔',
-                    'Convert Chinese characters to pinyin, support polyphonic characters': '汉字转拼音，支持多音字和声调',
-                    'Multiple encryption methods: AES, DES, MD5, etc.': 'AES/DES/MD5等多种加密方式',
-                    'Generate QR code from text, customizable size and logo': '输入文本生成二维码，支持自定义尺寸和logo',
-                    'Test regular expressions online with match highlighting': '正则表达式在线测试，支持匹配高亮显示',
-                    'Live preview Markdown rendering, support HTML export': '实时预览Markdown渲染效果，支持导出HTML',
-                    'Convert between length, weight, temperature, area units': '长度/重量/温度/面积等多种单位换算',
-                    'Generate placeholder text, customizable length and language': '生成随机占位文本，支持自定义长度和语言',
-                    'Generate random numbers in specified range, support batch': '生成指定范围内的随机数，支持批量生成',
-                    'Parse CRON expression and show future execution times': '解析CRON表达式，显示未来执行时间'
-                };
-
+                // 英文转中文
                 document.querySelectorAll('.card-name').forEach(el => {
-                    const enText = el.textContent;
-                    if (toolNames[enText]) {
-                        el.textContent = toolNames[enText];
-                    }
+                    const text = el.textContent.trim();
+                    if (reverseNameMap[text]) el.textContent = reverseNameMap[text];
                 });
                 document.querySelectorAll('.card-desc').forEach(el => {
-                    const enText = el.textContent;
-                    if (toolDescs[enText]) {
-                        el.textContent = toolDescs[enText];
-                    }
+                    const text = el.textContent.trim();
+                    if (reverseDescMap[text]) el.textContent = reverseDescMap[text];
                 });
             }
         }
