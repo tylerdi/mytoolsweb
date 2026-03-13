@@ -4833,11 +4833,6 @@ BMI指数：${bmi.toFixed(1)}
 
         // 打开设置页面
         function openSettings() {
-            // 隐藏首页和工具页
-            document.querySelector('.home-page').style.display = 'none';
-            document.querySelectorAll('.tool-page').forEach(page => {
-                page.style.display = 'none';
-            });
             // 显示设置页
             document.getElementById('settings').classList.add('active');
             // 加载个人信息
@@ -4908,11 +4903,10 @@ BMI指数：${bmi.toFixed(1)}
                     const item = document.createElement('div');
                     item.style = 'background: rgba(255,255,255,0.8); border: 1px solid rgba(180,140,220,0.2); border-radius: 8px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s;';
                     item.onclick = () => { 
-                        // 隐藏设置页，显示工具页
+                        // 关闭设置页
                         document.getElementById('settings').classList.remove('active');
-                        document.querySelector('.home-page').style.display = 'block';
-                        // 跳转到对应工具
-                        window.location.hash = toolId;
+                        // 直接跳转到对应工具
+                        window.location.href = `#${toolId}`;
                     };
                     item.onmouseover = () => { item.style.borderColor = '#ff2d78'; item.style.transform = 'translateY(-2px)'; };
                     item.onmouseout = () => { item.style.borderColor = 'rgba(180,140,220,0.2)'; item.style.transform = 'translateY(0)'; };
