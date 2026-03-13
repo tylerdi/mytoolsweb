@@ -374,7 +374,8 @@
         }
 
         .user-avatar {
-            padding: 10px 16px;
+            width: 44px;
+            height: 44px;
             border-radius: 8px;
             border: 2px solid #ff2d78;
             cursor: pointer;
@@ -382,12 +383,176 @@
             background: rgba(255,255,255,0.9);
             color: #ff2d78;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .user-avatar:hover {
             transform: translateY(-2px);
             box-shadow: 0 0 20px rgba(255,45,120,0.2);
+        }
+
+        /* 设置页面样式 */
+        .settings-page {
+            display: none;
+        }
+
+        .settings-page.active {
+            display: block;
+        }
+
+        .settings-container {
+            background: rgba(255,255,255,0.75);
+            border: 1px solid rgba(180,140,220,0.2);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(124,58,237,0.15);
+            margin-bottom: 30px;
+        }
+
+        .settings-title {
+            font-size: 32px;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #ff2d78, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        .settings-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .settings-item {
+            background: rgba(255,255,255,0.9);
+            border: 1px solid rgba(180,140,220,0.2);
+            border-radius: 12px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .settings-item:hover {
+            transform: translateY(-2px);
+            border-color: #ff2d78;
+            box-shadow: 0 8px 24px rgba(255,45,120,0.15);
+        }
+
+        .settings-item-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .settings-item-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: rgba(60,30,80,0.9);
+            margin-bottom: 8px;
+        }
+
+        .settings-item-desc {
+            font-size: 14px;
+            color: rgba(60,30,80,0.6);
+        }
+
+        .settings-content {
+            background: rgba(255,255,255,0.9);
+            border: 1px solid rgba(180,140,220,0.2);
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .settings-content-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: rgba(60,30,80,0.9);
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(180,140,220,0.1);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: rgba(60,30,80,0.7);
+        }
+
+        .info-value {
+            color: rgba(60,30,80,0.9);
+        }
+
+        /* 确认弹层 */
+        .confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            display: none;
+        }
+
+        .confirm-modal.active {
+            display: flex;
+        }
+
+        .confirm-content {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .confirm-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: rgba(60,30,80,0.9);
+        }
+
+        .confirm-desc {
+            font-size: 14px;
+            color: rgba(60,30,80,0.6);
+            margin-bottom: 30px;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            box-shadow: 0 0 20px rgba(239,68,68,0.3);
         }
 
         .user-dropdown {
@@ -605,12 +770,7 @@
     <!-- 用户菜单 -->
     <div class="user-menu">
         <button class="login-btn" id="loginBtn" onclick="openModal('loginModal')">登录</button>
-        <div class="user-avatar" onclick="toggleUserMenu()" id="userAvatar" style="display: none;">👤</div>
-        <div class="user-dropdown" id="userDropdown">
-            <div class="user-dropdown-item" onclick="openProfile()">👤 个人中心</div>
-            <div class="user-dropdown-item" onclick="openFavorites()">⭐ 我的收藏</div>
-            <div class="user-dropdown-item" onclick="logout()">🚪 退出登录</div>
-        </div>
+        <div class="user-avatar" id="userAvatar" style="display: none;">⚙️</div>
     </div>
 
     <!-- 登录模态框 -->
@@ -659,7 +819,122 @@
         </div>
     </div>
 
+    <!-- 退出确认弹层 -->
+    <div class="confirm-modal" id="logoutConfirm">
+        <div class="confirm-content">
+            <div class="confirm-title">确认退出登录？</div>
+            <div class="confirm-desc">退出后您的收藏和个性化设置将暂时无法访问</div>
+            <div class="confirm-buttons">
+                <button class="btn secondary" onclick="closeConfirm()">取消</button>
+                <button class="btn btn-danger" onclick="confirmLogout()">确认退出</button>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
+        <!-- 设置页面 -->
+        <div id="settings" class="settings-page">
+            <a href="#" class="back-btn" onclick="backToHome()">← 返回首页</a>
+            <h2 class="settings-title">⚙️ 设置中心</h2>
+            
+            <div class="settings-menu" id="settingsMenu">
+                <div class="settings-item" onclick="openSettingPage('profile')">
+                    <div class="settings-item-icon">👤</div>
+                    <div class="settings-item-name">个人信息</div>
+                    <div class="settings-item-desc">查看和修改个人资料</div>
+                </div>
+                <div class="settings-item" onclick="openSettingPage('favorites')">
+                    <div class="settings-item-icon">⭐</div>
+                    <div class="settings-item-name">我的收藏</div>
+                    <div class="settings-item-desc">管理收藏的工具</div>
+                </div>
+                <div class="settings-item" onclick="openSettingPage('security')">
+                    <div class="settings-item-icon">🔐</div>
+                    <div class="settings-item-name">账号安全</div>
+                    <div class="settings-item-desc">修改密码、邮箱验证</div>
+                </div>
+                <div class="settings-item" onclick="openSettingPage('preferences')">
+                    <div class="settings-item-icon">🎨</div>
+                    <div class="settings-item-name">偏好设置</div>
+                    <div class="settings-item-desc">主题、布局个性化</div>
+                </div>
+            </div>
+
+            <!-- 个人信息子页面 -->
+            <div class="settings-content" id="profilePage" style="display: none;">
+                <h3 class="settings-content-title">👤 个人信息</h3>
+                <div class="info-item">
+                    <span class="info-label">邮箱</span>
+                    <span class="info-value" id="profileEmail">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">用户ID</span>
+                    <span class="info-value" id="profileId">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">注册时间</span>
+                    <span class="info-value" id="profileCreatedAt">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">收藏工具数</span>
+                    <span class="info-value" id="profileFavoritesCount">-</span>
+                </div>
+            </div>
+
+            <!-- 我的收藏子页面 -->
+            <div class="settings-content" id="favoritesPage" style="display: none;">
+                <h3 class="settings-content-title">⭐ 我的收藏</h3>
+                <div id="favoritesList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+                    <!-- 收藏的工具会动态加载到这里 -->
+                </div>
+            </div>
+
+            <!-- 账号安全子页面 -->
+            <div class="settings-content" id="securityPage" style="display: none;">
+                <h3 class="settings-content-title">🔐 账号安全</h3>
+                <div class="info-item">
+                    <span class="info-label">邮箱验证状态</span>
+                    <span class="info-value" id="emailVerified">-</span>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="btn secondary" onclick="sendVerificationEmail()" style="margin-right: 10px;">重新发送验证邮件</button>
+                    <button class="btn secondary" onclick="resetPassword()">重置密码</button>
+                </div>
+            </div>
+
+            <!-- 偏好设置子页面 -->
+            <div class="settings-content" id="preferencesPage" style="display: none;">
+                <h3 class="settings-content-title">🎨 偏好设置</h3>
+                <div class="info-item">
+                    <span class="info-label">主题模式</span>
+                    <select style="width: auto; min-height: auto; height: 40px;">
+                        <option>默认</option>
+                        <option>深色模式</option>
+                        <option>浅色模式</option>
+                    </select>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">卡片布局</span>
+                    <select style="width: auto; min-height: auto; height: 40px;">
+                        <option>瀑布流</option>
+                        <option>网格</option>
+                        <option>列表</option>
+                    </select>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">默认显示</span>
+                    <select style="width: auto; min-height: auto; height: 40px;">
+                        <option>全部工具</option>
+                        <option>我的收藏</option>
+                        <option>常用工具</option>
+                    </select>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="btn">保存设置</button>
+                </div>
+            </div>
+        </div>
+
         <!-- 工具页面 -->
         <div id="json" class="tool-page">
             <a href="#" class="back-btn">← 返回首页</a>
@@ -4541,13 +4816,11 @@ BMI指数：${bmi.toFixed(1)}
             const userAvatar = document.getElementById('userAvatar');
             
             if (currentUser) {
-                // 已登录：显示用户头像，隐藏登录按钮
+                // 已登录：显示设置齿轮图标，隐藏登录按钮
                 loginBtn.style.display = 'none';
-                userAvatar.style.display = 'block';
-                // 显示用户邮箱首字母
-                const firstLetter = currentUser.email.charAt(0).toUpperCase();
-                userAvatar.textContent = firstLetter;
-                userAvatar.onclick = toggleUserMenu;
+                userAvatar.style.display = 'flex';
+                userAvatar.textContent = '⚙️';
+                userAvatar.onclick = openSettings;
             } else {
                 // 未登录：显示登录按钮，隐藏用户头像
                 loginBtn.style.display = 'block';
@@ -4556,17 +4829,158 @@ BMI指数：${bmi.toFixed(1)}
             }
         }
 
-        // 切换用户菜单
-        function toggleUserMenu() {
-            const dropdown = document.getElementById('userDropdown');
-            dropdown.classList.toggle('active');
+        // 打开设置页面
+        function openSettings() {
+            // 隐藏首页和工具页
+            document.querySelector('.home-page').style.display = 'none';
+            document.querySelectorAll('.tool-page').forEach(page => {
+                page.style.display = 'none';
+            });
+            // 显示设置页
+            document.getElementById('settings').classList.add('active');
+            // 加载个人信息
+            loadProfileInfo();
+            // 隐藏所有设置子页面
+            hideAllSettingPages();
+            document.getElementById('settingsMenu').style.display = 'grid';
+        }
+
+        // 返回首页
+        function backToHome() {
+            // 隐藏设置页
+            document.getElementById('settings').classList.remove('active');
+            // 显示首页
+            document.querySelector('.home-page').style.display = 'block';
+        }
+
+        // 隐藏所有设置子页面
+        function hideAllSettingPages() {
+            document.getElementById('profilePage').style.display = 'none';
+            document.getElementById('favoritesPage').style.display = 'none';
+            document.getElementById('securityPage').style.display = 'none';
+            document.getElementById('preferencesPage').style.display = 'none';
+        }
+
+        // 打开设置子页面
+        function openSettingPage(pageName) {
+            hideAllSettingPages();
+            document.getElementById('settingsMenu').style.display = 'none';
+            const page = document.getElementById(`${pageName}Page`);
+            page.style.display = 'block';
+
+            if (pageName === 'profile') {
+                loadProfileInfo();
+            } else if (pageName === 'favorites') {
+                loadFavoritesList();
+            } else if (pageName === 'security') {
+                loadSecurityInfo();
+            }
+        }
+
+        // 加载个人信息
+        function loadProfileInfo() {
+            if (!currentUser) return;
+            
+            document.getElementById('profileEmail').textContent = currentUser.email;
+            document.getElementById('profileId').textContent = currentUser.id.substring(0, 8) + '...';
+            document.getElementById('profileCreatedAt').textContent = new Date(currentUser.created_at).toLocaleString();
+            document.getElementById('profileFavoritesCount').textContent = favorites.size + ' 个';
+        }
+
+        // 加载收藏列表
+        function loadFavoritesList() {
+            const container = document.getElementById('favoritesList');
+            container.innerHTML = '';
+
+            if (favorites.size === 0) {
+                container.innerHTML = '<p style="text-align: center; color: rgba(60,30,80,0.5); grid-column: 1/-1;">暂无收藏的工具</p>';
+                return;
+            }
+
+            favorites.forEach(toolId => {
+                const card = document.querySelector(`a[href="#${toolId}"]`);
+                if (card) {
+                    const toolName = card.querySelector('.card-name').textContent;
+                    const toolIcon = card.querySelector('.card-icon').textContent;
+                    
+                    const item = document.createElement('div');
+                    item.style = 'background: rgba(255,255,255,0.8); border: 1px solid rgba(180,140,220,0.2); border-radius: 8px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s;';
+                    item.onclick = () => { window.location.hash = toolId; };
+                    item.onmouseover = () => { item.style.borderColor = '#ff2d78'; item.style.transform = 'translateY(-2px)'; };
+                    item.onmouseout = () => { item.style.borderColor = 'rgba(180,140,220,0.2)'; item.style.transform = 'translateY(0)'; };
+                    item.innerHTML = `
+                        <div style="font-size: 32px; margin-bottom: 8px;">${toolIcon}</div>
+                        <div style="font-weight: 600; font-size: 14px; color: rgba(60,30,80,0.9);">${toolName}</div>
+                    `;
+                    container.appendChild(item);
+                }
+            });
+        }
+
+        // 加载安全信息
+        function loadSecurityInfo() {
+            if (!currentUser) return;
+            
+            const verified = currentUser.email_confirmed_at ? '✅ 已验证' : '❌ 未验证';
+            document.getElementById('emailVerified').textContent = verified;
+        }
+
+        // 发送验证邮件
+        async function sendVerificationEmail() {
+            if (!currentUser) return;
+            
+            try {
+                const { error } = await sb.auth.resend({
+                    type: 'signup',
+                    email: currentUser.email
+                });
+                
+                if (error) throw error;
+                showMessage('', '✅ 验证邮件已发送，请查收');
+            } catch (e) {
+                showMessage('', `❌ 发送失败：${e.message}`, true);
+            }
+        }
+
+        // 重置密码
+        async function resetPassword() {
+            if (!currentUser) return;
+            
+            try {
+                const { error } = await sb.auth.resetPasswordForEmail(currentUser.email);
+                
+                if (error) throw error;
+                showMessage('', '✅ 密码重置邮件已发送，请查收');
+            } catch (e) {
+                showMessage('', `❌ 发送失败：${e.message}`, true);
+            }
         }
 
         // 打开模态框
         function openModal(modalId) {
             document.getElementById(modalId).classList.add('active');
-            // 关闭用户菜单
-            document.getElementById('userDropdown').classList.remove('active');
+        }
+
+        // 打开退出确认
+        function logout() {
+            document.getElementById('logoutConfirm').classList.add('active');
+        }
+
+        // 关闭确认弹层
+        function closeConfirm() {
+            document.getElementById('logoutConfirm').classList.remove('active');
+        }
+
+        // 确认退出
+        async function confirmLogout() {
+            closeConfirm();
+            try {
+                await sb.auth.signOut();
+                backToHome(); // 退出后返回首页
+                showMessage('', '✅ 已退出登录');
+            } catch (e) {
+                showMessage('', `❌ 退出失败：${e.message}`, true);
+            }
         }
 
         // 关闭模态框
@@ -4687,59 +5101,7 @@ BMI指数：${bmi.toFixed(1)}
             }
         }
 
-        // 个人中心
-        async function openProfile() {
-            document.getElementById('userDropdown').classList.remove('active');
-            if (!currentUser) {
-                openModal('loginModal');
-                return;
-            }
 
-            try {
-                // 获取用户资料
-                const { data: profile, error } = await sb
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', currentUser.id)
-                    .single();
-
-                if (error && error.code !== 'PGRST116') throw error;
-
-                const joinDate = new Date(currentUser.created_at).toLocaleString();
-                const username = profile?.username || '未设置';
-                
-                alert(`👤 个人中心
-邮箱：${currentUser.email}
-用户名：${username}
-注册时间：${joinDate}
-收藏工具：${favorites.size}个`);
-            } catch (e) {
-                alert(`获取个人信息失败：${e.message}`);
-            }
-        }
-
-        // 我的收藏
-        function openFavorites() {
-            document.getElementById('userDropdown').classList.remove('active');
-            if (!currentUser) {
-                openModal('loginModal');
-                return;
-            }
-
-            if (favorites.size === 0) {
-                alert('你还没有收藏任何工具');
-                return;
-            }
-
-            // 显示收藏的工具列表
-            const favoriteList = Array.from(favorites).map(toolId => {
-                // 获取工具名称
-                const card = document.querySelector(`a[href="#${toolId}"] .card-name`);
-                return card ? card.textContent : toolId;
-            }).join('\n');
-
-            alert(`⭐ 我的收藏（${favorites.size}个）：\n\n${favoriteList}`);
-        }
 
         // 给所有卡片添加收藏按钮
         function addFavoriteButtons() {
