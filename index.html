@@ -4908,11 +4908,19 @@ BMI指数：${bmi.toFixed(1)}
                     
                     const item = document.createElement('div');
                     item.style = 'background: rgba(255,255,255,0.8); border: 1px solid rgba(180,140,220,0.2); border-radius: 8px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s;';
-                    item.onclick = () => { 
-                        // 关闭设置页
-                        document.getElementById('settings').classList.remove('active');
-                        // 直接跳转到对应工具
-                        window.location.href = `#${toolId}`;
+                    item.onclick = (e) => {
+                        e.preventDefault();
+                        // 完全关闭设置页
+                        const settingsPage = document.getElementById('settings');
+                        settingsPage.classList.remove('active');
+                        settingsPage.style.display = 'none';
+                        // 跳转到对应工具
+                        window.location.hash = toolId;
+                        // 强制显示首页和工具页
+                        document.querySelector('.home-page').style.display = 'block';
+                        document.querySelectorAll('.tool-page').forEach(page => {
+                            page.style.display = '';
+                        });
                     };
                     item.onmouseover = () => { item.style.borderColor = '#ff2d78'; item.style.transform = 'translateY(-2px)'; };
                     item.onmouseout = () => { item.style.borderColor = 'rgba(180,140,220,0.2)'; item.style.transform = 'translateY(0)'; };
