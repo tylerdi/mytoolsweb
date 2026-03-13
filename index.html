@@ -5,26 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI工具箱 · Tyler</title>
     <link rel="icon" type="image/png" href="resource/easyclaw.png">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        // 全局变量提前声明
-        let sb;
-        let currentUser = null;
-        let favorites = new Set();
-        let currentLang = localStorage.getItem('language') || 'zh';
-        
-        // 立即初始化Supabase
-        const supabaseUrl = 'https://twyosmombfrcheyjujvb.supabase.co';
-        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eW9zbW9tYmZyY2hleWp1anZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjAwMDQsImV4cCI6MjA4ODIzNjAwNH0.70lVXwcjRqVNLDwkvIwEJHB5rRLBQttiWrW2hKi1bwo';
-        sb = supabase.createClient(supabaseUrl, supabaseAnonKey);
-    </script>
     <!-- 提前加载Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         // 全局变量提前声明，避免命名冲突
-        let sb;
-        let currentUser = null;
-        let favorites = new Set();
         let currentLang = localStorage.getItem('language') || 'zh';
         
         // 多语言配置
@@ -455,6 +439,7 @@
         }
         input[type="number"], select {
             min-height: auto;
+        let currentLang = localStorage.getItem('language') || 'zh';
             height: 44px;
         }
         .btn-group {
