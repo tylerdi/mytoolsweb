@@ -47,6 +47,8 @@
             currentLang = currentLang === 'zh' ? 'en' : 'zh';
             localStorage.setItem('language', currentLang);
             updateUI();
+            // 重新加载工具，适配当前语言
+            loadToolsFromDB();
         }
 
         // 更新界面文字
