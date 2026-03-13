@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI工具箱 · Tyler</title>
     <link rel="icon" type="image/png" href="resource/easyclaw.png">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -4453,6 +4454,11 @@ BMI指数：${bmi.toFixed(1)}
         }
 
         // ==================== 用户系统 ====================
+        // 初始化Supabase客户端
+        const supabaseUrl = 'https://twyosmombfrcheyjujvb.supabase.co';
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eW9zbW9tYmZyY2hleWp1anZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjAwMDQsImV4cCI6MjA4ODIzNjAwNH0.70lVXwcjRqVNLDwkvIwEJHB5rRLBQttiWrW2hKi1bwo';
+        const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+
         let currentUser = null;
         let favorites = new Set();
 
@@ -4464,17 +4470,33 @@ BMI指数：${bmi.toFixed(1)}
         });
 
         // 初始化认证状态
-        function initAuth() {
-            // 检查本地存储的用户信息
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
+        async function initAuth() {
+            // 检查Supabase认证状态
+            const { data: { session } } = await supabase.auth.getSession();
+            
+            if (session) {
+                currentUser = session.user;
                 updateUserUI();
             } else {
                 // 未登录状态
                 document.getElementById('userAvatar').textContent = '👤';
                 document.getElementById('userAvatar').onclick = () => openModal('loginModal');
             }
+
+            // 监听认证状态变化
+            supabase.auth.onAuthStateChange((event, session) => {
+                if (session) {
+                    currentUser = session.user;
+                    updateUserUI();
+                    loadFavorites();
+                } else {
+                    currentUser = null;
+                    favorites.clear();
+                    document.getElementById('userAvatar').textContent = '👤';
+                    document.getElementById('userAvatar').onclick = () => openModal('loginModal');
+                    updateFavoriteButtons();
+                }
+            });
         }
 
         // 更新用户UI
@@ -4525,7 +4547,7 @@ BMI指数：${bmi.toFixed(1)}
         }
 
         // 登录函数
-        function login() {
+        async function login() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
             const messageEl = document.getElementById('loginMessage');
@@ -4535,26 +4557,30 @@ BMI指数：${bmi.toFixed(1)}
                 return;
             }
 
-            // 简单本地登录演示（实际项目中应调用后端API）
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const user = users.find(u => u.email === email && u.password === password);
+            try {
+                messageEl.innerHTML = '<div class="success">🔄 正在登录...</div>';
+                
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
 
-            if (user) {
-                currentUser = user;
-                localStorage.setItem('currentUser', JSON.stringify(user));
+                if (error) {
+                    messageEl.innerHTML = `<div class="error">❌ 登录失败：${error.message}</div>`;
+                    return;
+                }
+
                 messageEl.innerHTML = '<div class="success">✅ 登录成功，正在跳转...</div>';
                 setTimeout(() => {
                     closeModal('loginModal');
-                    updateUserUI();
-                    loadFavorites();
                 }, 1000);
-            } else {
-                messageEl.innerHTML = '<div class="error">❌ 邮箱或密码错误</div>';
+            } catch (e) {
+                messageEl.innerHTML = `<div class="error">❌ 登录失败：${e.message}</div>`;
             }
         }
 
         // 注册函数
-        function register() {
+        async function register() {
             const email = document.getElementById('registerEmail').value.trim();
             const password = document.getElementById('registerPassword').value.trim();
             const confirmPassword = document.getElementById('registerConfirmPassword').value.trim();
@@ -4575,53 +4601,74 @@ BMI指数：${bmi.toFixed(1)}
                 return;
             }
 
-            // 简单本地注册演示（实际项目中应调用后端API）
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            
-            if (users.find(u => u.email === email)) {
-                messageEl.innerHTML = '<div class="error">❌ 该邮箱已被注册</div>';
-                return;
+            try {
+                messageEl.innerHTML = '<div class="success">🔄 正在注册...</div>';
+                
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            email: email
+                        }
+                    }
+                });
+
+                if (error) {
+                    messageEl.innerHTML = `<div class="error">❌ 注册失败：${error.message}</div>`;
+                    return;
+                }
+
+                messageEl.innerHTML = '<div class="success">✅ 注册成功！请检查邮箱验证后登录</div>';
+                setTimeout(() => {
+                    closeModal('registerModal');
+                    openModal('loginModal');
+                }, 2000);
+            } catch (e) {
+                messageEl.innerHTML = `<div class="error">❌ 注册失败：${e.message}</div>`;
             }
-
-            const newUser = {
-                id: Date.now().toString(),
-                email: email,
-                password: password,
-                createdAt: new Date().toISOString()
-            };
-
-            users.push(newUser);
-            localStorage.setItem('users', JSON.stringify(users));
-
-            messageEl.innerHTML = '<div class="success">✅ 注册成功，正在跳转到登录...</div>';
-            setTimeout(() => {
-                closeModal('registerModal');
-                openModal('loginModal');
-            }, 1500);
         }
 
         // 退出登录
-        function logout() {
-            currentUser = null;
-            localStorage.removeItem('currentUser');
-            favorites.clear();
-            document.getElementById('userDropdown').classList.remove('active');
-            document.getElementById('userAvatar').textContent = '👤';
-            document.getElementById('userAvatar').onclick = () => openModal('loginModal');
-            updateFavoriteButtons();
-            showMessage('', '✅ 已退出登录');
+        async function logout() {
+            try {
+                await supabase.auth.signOut();
+                document.getElementById('userDropdown').classList.remove('active');
+                showMessage('', '✅ 已退出登录');
+            } catch (e) {
+                showMessage('', `❌ 退出失败：${e.message}`, true);
+            }
         }
 
         // 个人中心
-        function openProfile() {
+        async function openProfile() {
             document.getElementById('userDropdown').classList.remove('active');
             if (!currentUser) {
                 openModal('loginModal');
                 return;
             }
 
-            // 跳转到个人中心页面（这里用alert演示）
-            alert(`个人中心\n邮箱：${currentUser.email}\n注册时间：${new Date(currentUser.createdAt).toLocaleString()}`);
+            try {
+                // 获取用户资料
+                const { data: profile, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                if (error && error.code !== 'PGRST116') throw error;
+
+                const joinDate = new Date(currentUser.created_at).toLocaleString();
+                const username = profile?.username || '未设置';
+                
+                alert(`👤 个人中心
+邮箱：${currentUser.email}
+用户名：${username}
+注册时间：${joinDate}
+收藏工具：${favorites.size}个`);
+            } catch (e) {
+                alert(`获取个人信息失败：${e.message}`);
+            }
         }
 
         // 我的收藏
@@ -4637,7 +4684,14 @@ BMI指数：${bmi.toFixed(1)}
                 return;
             }
 
-            alert(`我的收藏（${favorites.size}个）：\n${Array.from(favorites).join('\n')}`);
+            // 显示收藏的工具列表
+            const favoriteList = Array.from(favorites).map(toolId => {
+                // 获取工具名称
+                const card = document.querySelector(`a[href="#${toolId}"] .card-name`);
+                return card ? card.textContent : toolId;
+            }).join('\n');
+
+            alert(`⭐ 我的收藏（${favorites.size}个）：\n\n${favoriteList}`);
         }
 
         // 给所有卡片添加收藏按钮
@@ -4655,7 +4709,7 @@ BMI指数：${bmi.toFixed(1)}
         }
 
         // 切换收藏状态
-        function toggleFavorite(event, toolId) {
+        async function toggleFavorite(event, toolId) {
             event.preventDefault();
             event.stopPropagation();
 
@@ -4666,39 +4720,59 @@ BMI指数：${bmi.toFixed(1)}
 
             const favoriteBtn = event.currentTarget;
             
-            if (favorites.has(toolId)) {
-                favorites.delete(toolId);
-                favoriteBtn.classList.remove('active');
-                favoriteBtn.innerHTML = '♡';
-                showMessage('', `💔 已取消收藏`);
-            } else {
-                favorites.add(toolId);
-                favoriteBtn.classList.add('active');
-                favoriteBtn.innerHTML = '♥';
-                showMessage('', `♥ 收藏成功`);
-            }
-
-            saveFavorites();
-        }
-
-        // 保存收藏到本地存储
-        function saveFavorites() {
-            if (currentUser) {
-                localStorage.setItem(`favorites_${currentUser.id}`, JSON.stringify(Array.from(favorites)));
+            try {
+                if (favorites.has(toolId)) {
+                    // 取消收藏
+                    await supabase
+                        .from('tool_favorites')
+                        .delete()
+                        .eq('user_id', currentUser.id)
+                        .eq('tool_id', toolId);
+                    
+                    favorites.delete(toolId);
+                    favoriteBtn.classList.remove('active');
+                    favoriteBtn.innerHTML = '♡';
+                    showMessage('', `💔 已取消收藏`);
+                } else {
+                    // 添加收藏
+                    await supabase
+                        .from('tool_favorites')
+                        .insert({
+                            user_id: currentUser.id,
+                            tool_id: toolId
+                        });
+                    
+                    favorites.add(toolId);
+                    favoriteBtn.classList.add('active');
+                    favoriteBtn.innerHTML = '♥';
+                    showMessage('', `♥ 收藏成功`);
+                }
+            } catch (e) {
+                showMessage('', `❌ 操作失败：${e.message}`, true);
             }
         }
 
         // 加载收藏
-        function loadFavorites() {
-            if (currentUser) {
-                const savedFavorites = localStorage.getItem(`favorites_${currentUser.id}`);
-                if (savedFavorites) {
-                    favorites = new Set(JSON.parse(savedFavorites));
-                }
-            } else {
+        async function loadFavorites() {
+            if (!currentUser) {
                 favorites.clear();
+                updateFavoriteButtons();
+                return;
             }
-            updateFavoriteButtons();
+
+            try {
+                const { data, error } = await supabase
+                    .from('tool_favorites')
+                    .select('tool_id')
+                    .eq('user_id', currentUser.id);
+
+                if (error) throw error;
+
+                favorites = new Set(data.map(item => item.tool_id));
+                updateFavoriteButtons();
+            } catch (e) {
+                console.error('加载收藏失败:', e);
+            }
         }
 
         // 更新收藏按钮状态
