@@ -23,7 +23,6 @@
                     animation: {
                         'glow': 'glow 2s ease-in-out infinite alternate',
                         'float': 'float 3s ease-in-out infinite',
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     },
                     keyframes: {
                         glow: {
@@ -39,36 +38,29 @@
             }
         }
     </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .bg-gradient-cyber {
-                background: linear-gradient(135deg, #0d0221 0%, #1a063a 100%);
-            }
-            .card-glow {
-                box-shadow: 0 0 15px rgba(255, 42, 109, 0.5), 0 0 30px rgba(211, 0, 197, 0.3);
-            }
-            .card-glow:hover {
-                box-shadow: 0 0 25px rgba(255, 42, 109, 0.8), 0 0 40px rgba(211, 0, 197, 0.6);
-            }
-            .text-gradient {
-                background: linear-gradient(90deg, #ff2a6d, #d300c5, #05d9e8);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-            }
-            .border-cyber {
-                border: 1px solid rgba(255, 42, 109, 0.3);
+    <style>
+        .game-cell {
+            width: 20px;
+            height: 20px;
+            border: 1px solid rgba(255, 42, 109, 0.2);
+        }
+        @media (min-width: 640px) {
+            .game-cell {
+                width: 25px;
+                height: 25px;
             }
         }
+        .snake { background: #05d9e8 !important; }
+        .food { background: #ff2a6d !important; border-radius: 50%; }
     </style>
 </head>
-<body class="bg-gradient-cyber min-h-screen text-white font-sans">
+<body class="bg-gradient-to-br from-cyber-dark to-cyber-darker min-h-screen text-white font-sans">
     <!-- 导航栏 -->
     <nav class="bg-cyber-darker/80 backdrop-blur-md border-b border-cyber-pink/30 sticky top-0 z-50">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
             <a href="/" class="flex items-center space-x-2">
                 <i class="fa fa-gamepad text-2xl text-cyber-pink"></i>
-                <h1 class="text-2xl font-bold text-gradient">游戏合集</h1>
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-cyber-pink via-cyber-purple to-cyber-blue bg-clip-text text-transparent">游戏合集</h1>
             </a>
             <div class="flex items-center space-x-4">
                 <a href="/" class="px-4 py-2 rounded-lg bg-cyber-pink/20 hover:bg-cyber-pink/30 text-white transition-all">
@@ -81,136 +73,43 @@
     <!-- 游戏列表 -->
     <div class="container mx-auto px-4 py-12">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- 俄罗斯方块 -->
-            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
-                <div class="h-48 bg-gradient-to-br from-cyber-pink/40 to-cyber-purple/40 flex items-center justify-center relative overflow-hidden">
-                    <i class="fa fa-th text-6xl text-white/80 animate-float"></i>
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-3 text-cyber-pink">俄罗斯方块</h3>
-                    <p class="text-sm text-gray-300 mb-4">经典俄罗斯方块游戏，支持键盘和触屏操作</p>
-                    <button class="w-full px-4 py-2 rounded-lg bg-cyber-pink text-white text-sm hover:bg-cyber-pink/80 transition-all">
-                        <i class="fa fa-play mr-2"></i>开始游戏
-                    </button>
-                </div>
-            </div>
-
             <!-- 贪吃蛇 -->
-            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
-                <div class="h-48 bg-gradient-to-br from-cyber-blue/40 to-cyber-pink/40 flex items-center justify-center relative overflow-hidden">
+            <div class="bg-cyber-dark/80 rounded-xl overflow-hidden border border-cyber-pink/30 shadow-lg hover:shadow-cyber-pink/20 transition-all duration-300 hover:-translate-y-1">
+                <div class="h-48 bg-gradient-to-br from-cyber-blue/40 to-cyber-pink/40 flex items-center justify-center">
                     <i class="fa fa-long-arrow-right text-6xl text-white/80 animate-float"></i>
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
                 </div>
                 <div class="p-6">
-                    <h3 class="text-xl font-bold mb-3 text-cyber-blue">贪吃蛇</h3>
+                    <h3 class="text-xl font-bold mb-3 text-cyber-blue">🐍 贪吃蛇</h3>
                     <p class="text-sm text-gray-300 mb-4">经典贪吃蛇游戏，吃食物变长，不要撞墙和自己</p>
-                    <button class="w-full px-4 py-2 rounded-lg bg-cyber-blue text-white text-sm hover:bg-cyber-blue/80 transition-all">
+                    <button onclick="startGame('snake')" class="w-full px-4 py-2 rounded-lg bg-cyber-blue hover:bg-cyber-blue/80 text-white font-medium transition-all">
                         <i class="fa fa-play mr-2"></i>开始游戏
                     </button>
                 </div>
             </div>
 
             <!-- 2048 -->
-            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
-                <div class="h-48 bg-gradient-to-br from-cyber-purple/40 to-cyber-blue/40 flex items-center justify-center relative overflow-hidden">
+            <div class="bg-cyber-dark/80 rounded-xl overflow-hidden border border-cyber-pink/30 shadow-lg hover:shadow-cyber-pink/20 transition-all duration-300 hover:-translate-y-1">
+                <div class="h-48 bg-gradient-to-br from-cyber-purple/40 to-cyber-blue/40 flex items-center justify-center">
                     <i class="fa fa-cubes text-6xl text-white/80 animate-float"></i>
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
                 </div>
                 <div class="p-6">
-                    <h3 class="text-xl font-bold mb-3 text-cyber-purple">2048</h3>
+                    <h3 class="text-xl font-bold mb-3 text-cyber-purple">🔢 2048</h3>
                     <p class="text-sm text-gray-300 mb-4">数字合成游戏，合并相同数字得到2048</p>
-                    <button class="w-full px-4 py-2 rounded-lg bg-cyber-purple text-white text-sm hover:bg-cyber-purple/80 transition-all">
-                        <i class="fa fa-play mr-2"></i>开始游戏
-                    </button>
-                </div>
-            </div>
-
-            <!-- 消消乐 -->
-            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
-                <div class="h-48 bg-gradient-to-br from-cyber-pink/40 to-cyber-blue/40 flex items-center justify-center relative overflow-hidden">
-                    <i class="fa fa-gem text-6xl text-white/80 animate-float"></i>
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-3 text-cyber-pink">消消乐</h3>
-                    <p class="text-sm text-gray-300 mb-4">三个相同图案连线消除，经典消除游戏</p>
-                    <button class="w-full px-4 py-2 rounded-lg bg-cyber-pink text-white text-sm hover:bg-cyber-pink/80 transition-all">
-                        <i class="fa fa-play mr-2"></i>开始游戏
-                    </button>
-                </div>
-            </div>
-
-            <!-- 恐龙跑酷 -->
-            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
-                <div class="h-48 bg-gradient-to-br from-cyber-blue/40 to-cyber-purple/40 flex items-center justify-center relative overflow-hidden">
-                    <i class="fa fa-dinosaur text-6xl text-white/80 animate-float"></i>
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-3 text-cyber-blue">恐龙跑酷</h3>
-                    <p class="text-sm text-gray-300 mb-4">Chrome小恐龙游戏，按空格跳跃躲避仙人掌</p>
-                    <button class="w-full px-4 py-2 rounded-lg bg-cyber-blue text-white text-sm hover:bg-cyber-blue/80 transition-all">
-                        <i class="fa fa-play mr-2"></i>开始游戏
-                    </button>
-                </div>
-            </div>
-
-            <!-- 扫雷 -->
-            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
-                <div class="h-48 bg-gradient-to-br from-cyber-purple/40 to-cyber-pink/40 flex items-center justify-center relative overflow-hidden">
-                    <i class="fa fa-bomb text-6xl text-white/80 animate-float"></i>
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-3 text-cyber-purple">扫雷</h3>
-                    <p class="text-sm text-gray-300 mb-4">经典扫雷游戏，找出所有地雷不要踩到</p>
-                    <button class="w-full px-4 py-2 rounded-lg bg-cyber-purple text-white text-sm hover:bg-cyber-purple/80 transition-all">
-                        <i class="fa fa-play mr-2"></i>开始游戏
-                    </button>
-                </div>
-            </div>
-
-            <!-- 五子棋 -->
-            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
-                <div class="h-48 bg-gradient-to-br from-cyber-pink/40 to-cyber-purple/40 flex items-center justify-center relative overflow-hidden">
-                    <i class="fa fa-chess-board text-6xl text-white/80 animate-float"></i>
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-3 text-cyber-pink">五子棋</h3>
-                    <p class="text-sm text-gray-300 mb-4">双人五子棋游戏，五子连珠获胜</p>
-                    <button class="w-full px-4 py-2 rounded-lg bg-cyber-pink text-white text-sm hover:bg-cyber-pink/80 transition-all">
-                        <i class="fa fa-play mr-2"></i>开始游戏
-                    </button>
-                </div>
-            </div>
-
-            <!-- 拼图游戏 -->
-            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
-                <div class="h-48 bg-gradient-to-br from-cyber-blue/40 to-cyber-pink/40 flex items-center justify-center relative overflow-hidden">
-                    <i class="fa fa-puzzle-piece text-6xl text-white/80 animate-float"></i>
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold mb-3 text-cyber-blue">拼图游戏</h3>
-                    <p class="text-sm text-gray-300 mb-4">数字拼图游戏，将打乱的数字按顺序排列</p>
-                    <button class="w-full px-4 py-2 rounded-lg bg-cyber-blue text-white text-sm hover:bg-cyber-blue/80 transition-all">
+                    <button onclick="startGame('2048')" class="w-full px-4 py-2 rounded-lg bg-cyber-purple hover:bg-cyber-purple/80 text-white font-medium transition-all">
                         <i class="fa fa-play mr-2"></i>开始游戏
                     </button>
                 </div>
             </div>
 
             <!-- 更多游戏 -->
-            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
-                <div class="h-48 bg-gradient-to-br from-cyber-purple/40 to-cyber-blue/40 flex items-center justify-center relative overflow-hidden">
+            <div class="bg-cyber-dark/80 rounded-xl overflow-hidden border border-cyber-pink/30 shadow-lg hover:shadow-cyber-pink/20 transition-all duration-300 hover:-translate-y-1 opacity-70">
+                <div class="h-48 bg-gradient-to-br from-cyber-pink/40 to-cyber-purple/40 flex items-center justify-center">
                     <i class="fa fa-plus text-6xl text-white/80 animate-float"></i>
-                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
                 </div>
                 <div class="p-6">
-                    <h3 class="text-xl font-bold mb-3 text-cyber-purple">更多游戏</h3>
+                    <h3 class="text-xl font-bold mb-3 text-cyber-pink">🎮 更多游戏</h3>
                     <p class="text-sm text-gray-300 mb-4">更多好玩游戏正在开发中，敬请期待</p>
-                    <button disabled class="w-full px-4 py-2 rounded-lg bg-gray-600 text-white text-sm cursor-not-allowed">
+                    <button disabled class="w-full px-4 py-2 rounded-lg bg-gray-600 text-white font-medium cursor-not-allowed">
                         <i class="fa fa-clock-o mr-2"></i>开发中
                     </button>
                 </div>
@@ -218,29 +117,34 @@
         </div>
     </div>
 
-    <!-- 游戏模态框 -->
-    <div id="game-modal" class="fixed inset-0 bg-black/95 z-50 hidden flex items-center justify-center">
-        <div class="w-full max-w-4xl mx-4 bg-cyber-dark rounded-xl border-cyber p-6 relative">
-            <button id="close-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl transition-all">
+    <!-- 游戏弹窗 -->
+    <div id="game-modal" class="fixed inset-0 bg-black/95 z-50 hidden items-center justify-center">
+        <div class="w-full max-w-2xl mx-4 bg-cyber-dark rounded-xl border border-cyber-pink/30 p-6 relative">
+            <button onclick="closeGame()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl transition-all">
                 <i class="fa fa-times"></i>
             </button>
-            <h2 id="game-title" class="text-2xl font-bold mb-4 text-gradient text-center"></h2>
-            <div id="game-content" class="bg-black/30 rounded-lg p-4 min-h-[500px] flex items-center justify-center">
-                <!-- 游戏内容会动态插入这里 -->
+            <h2 id="game-title" class="text-2xl font-bold mb-4 text-center bg-gradient-to-r from-cyber-pink to-cyber-blue bg-clip-text text-transparent"></h2>
+            <div id="game-content" class="bg-black/30 rounded-lg p-4 flex flex-col items-center justify-center min-h-[400px]">
+                <!-- 游戏内容在这里 -->
             </div>
             <div class="mt-4 flex justify-between items-center text-gray-300">
                 <div>
                     <span class="mr-4">得分: <span id="game-score" class="text-cyber-pink font-bold">0</span></span>
-                    <span>最高分: <span id="game-high-score" class="text-cyber-blue font-bold">0</span></span>
                 </div>
                 <div class="space-x-2">
-                    <button id="pause-btn" class="px-4 py-2 rounded-lg bg-cyber-purple/80 hover:bg-cyber-purple text-white transition-all">
-                        <i class="fa fa-pause mr-2"></i>暂停
-                    </button>
-                    <button id="restart-btn" class="px-4 py-2 rounded-lg bg-cyber-pink/80 hover:bg-cyber-pink text-white transition-all">
+                    <button onclick="restartGame()" class="px-4 py-2 rounded-lg bg-cyber-pink hover:bg-cyber-pink/80 text-white transition-all">
                         <i class="fa fa-refresh mr-2"></i>重新开始
                     </button>
                 </div>
+            </div>
+            <!-- 移动端控制按钮 -->
+            <div class="mt-6 grid grid-cols-3 gap-2 md:hidden">
+                <div></div>
+                <button onclick="mobileControl('up')" class="py-3 bg-cyber-purple/50 hover:bg-cyber-purple rounded-lg text-white">↑</button>
+                <div></div>
+                <button onclick="mobileControl('left')" class="py-3 bg-cyber-purple/50 hover:bg-cyber-purple rounded-lg text-white">←</button>
+                <button onclick="mobileControl('down')" class="py-3 bg-cyber-purple/50 hover:bg-cyber-purple rounded-lg text-white">↓</button>
+                <button onclick="mobileControl('right')" class="py-3 bg-cyber-purple/50 hover:bg-cyber-purple rounded-lg text-white">→</button>
             </div>
         </div>
     </div>
@@ -256,109 +160,77 @@
     <script>
         const gameModal = document.getElementById('game-modal');
         const gameContent = document.getElementById('game-content');
-        const closeModal = document.getElementById('close-modal');
         const gameTitle = document.getElementById('game-title');
         const gameScore = document.getElementById('game-score');
-        const gameHighScore = document.getElementById('game-high-score');
-        const pauseBtn = document.getElementById('pause-btn');
-        const restartBtn = document.getElementById('restart-btn');
+        
+        let currentGame = null;
+        let gameInterval = null;
+        let score = 0;
+        let dx = 1, dy = 0; // 贪吃蛇方向
+        let nextDx = 1, nextDy = 0;
 
-        // 游戏状态
-        let gameState = {
-            currentGame: null,
-            score: 0,
-            highScore: parseInt(localStorage.getItem('game_high_score') || 0),
-            isPaused: false,
-            gameInterval: null
-        };
-
-        // 关闭模态框
-        function closeGameModal() {
-            clearInterval(gameState.gameInterval);
+        // 关闭游戏
+        function closeGame() {
+            clearInterval(gameInterval);
             gameModal.classList.add('hidden');
-            gameState.currentGame = null;
+            currentGame = null;
         }
 
-        closeModal.addEventListener('click', closeGameModal);
-        gameModal.addEventListener('click', (e) => {
-            if (e.target === gameModal) closeGameModal();
-        });
-
-        // 暂停/继续游戏
-        pauseBtn.addEventListener('click', () => {
-            gameState.isPaused = !gameState.isPaused;
-            pauseBtn.innerHTML = gameState.isPaused 
-                ? '<i class="fa fa-play mr-2"></i>继续' 
-                : '<i class="fa fa-pause mr-2"></i>暂停';
-        });
-
-        // 重新开始游戏
-        restartBtn.addEventListener('click', () => {
-            if (gameState.currentGame) {
-                startGame(gameState.currentGame);
+        // 重新开始
+        function restartGame() {
+            if (currentGame) {
+                startGame(currentGame);
             }
-        });
+        }
 
-        // 更新分数
-        function updateScore(points) {
-            gameState.score += points;
-            gameScore.textContent = gameState.score;
-            if (gameState.score > gameState.highScore) {
-                gameState.highScore = gameState.score;
-                gameHighScore.textContent = gameState.highScore;
-                localStorage.setItem('game_high_score', gameState.highScore);
-            }
+        // 移动端控制
+        function mobileControl(dir) {
+            changeDirection(dir);
         }
 
         // ==================== 贪吃蛇游戏 ====================
         function startSnake() {
-            gameState.score = 0;
-            gameState.isPaused = false;
+            score = 0;
             gameScore.textContent = '0';
-            gameHighScore.textContent = gameState.highScore;
-            pauseBtn.innerHTML = '<i class="fa fa-pause mr-2"></i>暂停';
-            clearInterval(gameState.gameInterval);
+            clearInterval(gameInterval);
 
             const GRID_SIZE = 20;
-            const CELL_SIZE = Math.min(25, Math.floor(window.innerWidth / 30));
             
             // 创建网格
-            let html = `<div class="grid gap-0" style="grid-template-columns: repeat(${GRID_SIZE}, ${CELL_SIZE}px);">`;
-            for (let i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
-                html += `<div class="game-cell" id="cell-${i}"></div>`;
+            let html = `<div class="grid gap-0">`;
+            for (let y = 0; y < GRID_SIZE; y++) {
+                html += `<div class="flex">`;
+                for (let x = 0; x < GRID_SIZE; x++) {
+                    html += `<div class="game-cell" id="cell-${x}-${y}"></div>`;
+                }
+                html += `</div>`;
             }
-            html += '</div>';
+            html += `</div>`;
             gameContent.innerHTML = html;
 
             // 游戏数据
             let snake = [{x: 10, y: 10}];
-            let dx = 1;
-            let dy = 0;
-            let food = {x: Math.floor(Math.random() * GRID_SIZE), y: Math.floor(Math.random() * GRID_SIZE)};
-            let nextDx = 1;
-            let nextDy = 0;
+            let food = {x: 5, y: 5};
+            dx = 1; dy = 0;
+            nextDx = 1; nextDy = 0;
 
             // 绘制
             function draw() {
                 document.querySelectorAll('.game-cell').forEach(cell => {
-                    cell.classList.remove('snake-cell', 'snake-food');
+                    cell.classList.remove('snake', 'food');
                 });
 
                 // 绘制蛇
                 snake.forEach(segment => {
-                    const index = segment.y * GRID_SIZE + segment.x;
-                    document.getElementById(`cell-${index}`).classList.add('snake-cell');
+                    document.getElementById(`cell-${segment.x}-${segment.y}`).classList.add('snake');
                 });
 
                 // 绘制食物
-                const foodIndex = food.y * GRID_SIZE + food.x;
-                document.getElementById(`cell-${foodIndex}`).classList.add('snake-food');
+                document.getElementById(`cell-${food.x}-${food.y}`).classList.add('food');
             }
 
             // 移动
             function move() {
-                if (gameState.isPaused) return;
-
                 dx = nextDx;
                 dy = nextDy;
 
@@ -366,15 +238,15 @@
 
                 // 撞墙
                 if (head.x < 0 || head.x >= GRID_SIZE || head.y < 0 || head.y >= GRID_SIZE) {
-                    clearInterval(gameState.gameInterval);
-                    alert(`游戏结束！得分: ${gameState.score}`);
+                    clearInterval(gameInterval);
+                    alert(`游戏结束！得分: ${score}`);
                     return;
                 }
 
                 // 撞自己
-                if (snake.some(segment => segment.x === head.x && segment.y === head.y)) {
-                    clearInterval(gameState.gameInterval);
-                    alert(`游戏结束！得分: ${gameState.score}`);
+                if (snake.some(seg => seg.x === head.x && seg.y === head.y)) {
+                    clearInterval(gameInterval);
+                    alert(`游戏结束！得分: ${score}`);
                     return;
                 }
 
@@ -382,11 +254,15 @@
 
                 // 吃食物
                 if (head.x === food.x && head.y === food.y) {
-                    updateScore(10);
+                    score += 10;
+                    gameScore.textContent = score;
                     // 生成新食物
                     do {
-                        food = {x: Math.floor(Math.random() * GRID_SIZE), y: Math.floor(Math.random() * GRID_SIZE)};
-                    } while (snake.some(segment => segment.x === food.x && segment.y === food.y));
+                        food = {
+                            x: Math.floor(Math.random() * GRID_SIZE),
+                            y: Math.floor(Math.random() * GRID_SIZE)
+                        };
+                    } while (snake.some(seg => seg.x === food.x && seg.y === food.y));
                 } else {
                     snake.pop();
                 }
@@ -396,76 +272,39 @@
 
             // 键盘控制
             function handleKeydown(e) {
-                if (gameState.isPaused) return;
-                
                 switch(e.key) {
-                    case 'ArrowUp':
-                        e.preventDefault();
-                        if (dy !== 1) {
-                            nextDx = 0;
-                            nextDy = -1;
-                        }
-                        break;
-                    case 'ArrowDown':
-                        e.preventDefault();
-                        if (dy !== -1) {
-                            nextDx = 0;
-                            nextDy = 1;
-                        }
-                        break;
-                    case 'ArrowLeft':
-                        e.preventDefault();
-                        if (dx !== 1) {
-                            nextDx = -1;
-                            nextDy = 0;
-                        }
-                        break;
-                    case 'ArrowRight':
-                        e.preventDefault();
-                        if (dx !== -1) {
-                            nextDx = 1;
-                            nextDy = 0;
-                        }
-                        break;
+                    case 'ArrowUp': e.preventDefault(); changeDirection('up'); break;
+                    case 'ArrowDown': e.preventDefault(); changeDirection('down'); break;
+                    case 'ArrowLeft': e.preventDefault(); changeDirection('left'); break;
+                    case 'ArrowRight': e.preventDefault(); changeDirection('right'); break;
+                }
+            }
+
+            // 改变方向
+            function changeDirection(dir) {
+                switch(dir) {
+                    case 'up': if (dy !== 1) { nextDx = 0; nextDy = -1; } break;
+                    case 'down': if (dy !== -1) { nextDx = 0; nextDy = 1; } break;
+                    case 'left': if (dx !== 1) { nextDx = -1; nextDy = 0; } break;
+                    case 'right': if (dx !== -1) { nextDx = 1; nextDy = 0; } break;
                 }
             }
 
             // 触屏控制
-            let touchStartX = 0;
-            let touchStartY = 0;
-            
-            gameContent.addEventListener('touchstart', (e) => {
+            let touchStartX = 0, touchStartY = 0;
+            gameContent.addEventListener('touchstart', e => {
                 touchStartX = e.touches[0].clientX;
                 touchStartY = e.touches[0].clientY;
                 e.preventDefault();
             }, {passive: false});
-
-            gameContent.addEventListener('touchend', (e) => {
-                if (gameState.isPaused) return;
+            gameContent.addEventListener('touchend', e => {
+                const dxTouch = e.changedTouches[0].clientX - touchStartX;
+                const dyTouch = e.changedTouches[0].clientY - touchStartY;
                 
-                const touchEndX = e.changedTouches[0].clientX;
-                const touchEndY = e.changedTouches[0].clientY;
-                const dx = touchEndX - touchStartX;
-                const dy = touchEndY - touchStartY;
-
-                if (Math.abs(dx) > Math.abs(dy)) {
-                    // 水平滑动
-                    if (dx > 0 && dx !== -1) { // 右滑
-                        nextDx = 1;
-                        nextDy = 0;
-                    } else if (dx < 0 && dx !== 1) { // 左滑
-                        nextDx = -1;
-                        nextDy = 0;
-                    }
+                if (Math.abs(dxTouch) > Math.abs(dyTouch)) {
+                    changeDirection(dxTouch > 0 ? 'right' : 'left');
                 } else {
-                    // 垂直滑动
-                    if (dy > 0 && dy !== -1) { // 下滑
-                        nextDx = 0;
-                        nextDy = 1;
-                    } else if (dy < 0 && dy !== 1) { // 上滑
-                        nextDx = 0;
-                        nextDy = -1;
-                    }
+                    changeDirection(dyTouch > 0 ? 'down' : 'up');
                 }
                 e.preventDefault();
             }, {passive: false});
@@ -475,27 +314,24 @@
 
             // 开始游戏
             draw();
-            gameState.gameInterval = setInterval(move, 150);
+            gameInterval = setInterval(move, 200);
         }
 
         // ==================== 2048游戏 ====================
         function start2048() {
-            gameState.score = 0;
-            gameState.isPaused = false;
+            score = 0;
             gameScore.textContent = '0';
-            gameHighScore.textContent = gameState.highScore;
-            pauseBtn.innerHTML = '<i class="fa fa-pause mr-2"></i>暂停';
-            clearInterval(gameState.gameInterval);
+            clearInterval(gameInterval);
 
             const GRID_SIZE = 4;
-            const CELL_SIZE = 80;
+            const CELL_SIZE = Math.min(80, Math.floor(window.innerWidth / 5));
             
             // 创建网格
             let html = `<div class="grid gap-3 p-3 bg-gray-800 rounded-lg" style="grid-template-columns: repeat(${GRID_SIZE}, ${CELL_SIZE}px);">`;
             for (let i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
-                html += `<div class="game-cell flex items-center justify-center text-2xl font-bold rounded-lg bg-gray-700" id="cell-${i}"></div>`;
+                html += `<div class="w-[${CELL_SIZE}px] h-[${CELL_SIZE}px] flex items-center justify-center text-2xl font-bold rounded-lg bg-gray-700" id="cell-${i}"></div>`;
             }
-            html += '</div>';
+            html += `</div>`;
             gameContent.innerHTML = html;
 
             // 游戏数据
@@ -539,7 +375,7 @@
                         const cell = document.getElementById(`cell-${i * GRID_SIZE + j}`);
                         const value = grid[i][j];
                         cell.textContent = value || '';
-                        cell.className = `game-cell flex items-center justify-center text-2xl font-bold rounded-lg ${colors[value] || 'bg-purple-600 text-white'}`;
+                        cell.className = `w-[${CELL_SIZE}px] h-[${CELL_SIZE}px] flex items-center justify-center text-2xl font-bold rounded-lg ${colors[value] || 'bg-purple-600 text-white'}`;
                     }
                 }
             }
@@ -552,7 +388,8 @@
                     for (let j = 0; j < row.length - 1; j++) {
                         if (row[j] === row[j + 1]) {
                             row[j] *= 2;
-                            updateScore(row[j]);
+                            score += row[j];
+                            gameScore.textContent = score;
                             row.splice(j + 1, 1);
                             moved = true;
                         }
@@ -575,7 +412,8 @@
                     for (let j = row.length - 1; j > 0; j--) {
                         if (row[j] === row[j - 1]) {
                             row[j] *= 2;
-                            updateScore(row[j]);
+                            score += row[j];
+                            gameScore.textContent = score;
                             row.splice(j - 1, 1);
                             moved = true;
                         }
@@ -603,7 +441,8 @@
                     for (let i = 0; i < col.length - 1; i++) {
                         if (col[i] === col[i + 1]) {
                             col[i] *= 2;
-                            updateScore(col[i]);
+                            score += col[i];
+                            gameScore.textContent = score;
                             col.splice(i + 1, 1);
                             moved = true;
                         }
@@ -633,7 +472,8 @@
                     for (let i = col.length - 1; i > 0; i--) {
                         if (col[i] === col[i - 1]) {
                             col[i] *= 2;
-                            updateScore(col[i]);
+                            score += col[i];
+                            gameScore.textContent = score;
                             col.splice(i - 1, 1);
                             moved = true;
                         }
@@ -665,71 +505,48 @@
 
             // 键盘控制
             function handleKeydown(e) {
-                if (gameState.isPaused) return;
-
                 let moved = false;
                 switch(e.key) {
-                    case 'ArrowUp':
-                        moved = moveUp();
-                        break;
-                    case 'ArrowDown':
-                        moved = moveDown();
-                        break;
-                    case 'ArrowLeft':
-                        moved = moveLeft();
-                        break;
-                    case 'ArrowRight':
-                        moved = moveRight();
-                        break;
+                    case 'ArrowUp': e.preventDefault(); moved = moveUp(); break;
+                    case 'ArrowDown': e.preventDefault(); moved = moveDown(); break;
+                    case 'ArrowLeft': e.preventDefault(); moved = moveLeft(); break;
+                    case 'ArrowRight': e.preventDefault(); moved = moveRight(); break;
                 }
 
                 if (moved) {
                     addRandomTile();
                     draw();
                     if (isGameOver()) {
-                        alert(`游戏结束！得分: ${gameState.score}`);
+                        alert(`游戏结束！得分: ${score}`);
                     }
                 }
             }
 
             // 触屏控制
-            let touchStartX = 0;
-            let touchStartY = 0;
-            
-            gameContent.addEventListener('touchstart', (e) => {
+            let touchStartX = 0, touchStartY = 0;
+            gameContent.addEventListener('touchstart', e => {
                 touchStartX = e.touches[0].clientX;
                 touchStartY = e.touches[0].clientY;
                 e.preventDefault();
             }, {passive: false});
-
-            gameContent.addEventListener('touchend', (e) => {
-                if (gameState.isPaused) return;
-                
-                const touchEndX = e.changedTouches[0].clientX;
-                const touchEndY = e.changedTouches[0].clientY;
-                const dx = touchEndX - touchStartX;
-                const dy = touchEndY - touchStartY;
+            gameContent.addEventListener('touchend', e => {
+                const dxTouch = e.changedTouches[0].clientX - touchStartX;
+                const dyTouch = e.changedTouches[0].clientY - touchStartY;
 
                 let moved = false;
-                if (Math.abs(dx) > Math.abs(dy)) {
-                    if (dx > 50) { // 右滑
-                        moved = moveRight();
-                    } else if (dx < -50) { // 左滑
-                        moved = moveLeft();
-                    }
+                if (Math.abs(dxTouch) > Math.abs(dyTouch)) {
+                    if (dxTouch > 50) moved = moveRight();
+                    else if (dxTouch < -50) moved = moveLeft();
                 } else {
-                    if (dy > 50) { // 下滑
-                        moved = moveDown();
-                    } else if (dy < -50) { // 上滑
-                        moved = moveUp();
-                    }
+                    if (dyTouch > 50) moved = moveDown();
+                    else if (dyTouch < -50) moved = moveUp();
                 }
 
                 if (moved) {
                     addRandomTile();
                     draw();
                     if (isGameOver()) {
-                        alert(`游戏结束！得分: ${gameState.score}`);
+                        alert(`游戏结束！得分: ${score}`);
                     }
                 }
                 e.preventDefault();
@@ -744,30 +561,19 @@
             draw();
         }
 
-        // 游戏卡片点击事件
-        document.querySelectorAll('.game-card button').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const gameName = this.closest('.game-card').querySelector('h3').textContent;
-                gameTitle.textContent = gameName;
-                gameState.currentGame = gameName;
-                gameModal.classList.remove('hidden');
-
-                // 启动对应游戏
-                switch(gameName) {
-                    case '贪吃蛇':
-                        startSnake();
-                        break;
-                    case '2048':
-                        start2048();
-                        break;
-                    default:
-                        gameContent.innerHTML = `<div class="text-center text-xl text-gray-300">
-                            <i class="fa fa-cogs text-4xl mb-4 text-cyber-pink"></i>
-                            <p>${gameName} 功能开发中，敬请期待！</p>
-                        </div>`;
-                }
-            });
-        });
+        // 启动游戏
+        function startGame(gameName) {
+            currentGame = gameName;
+            gameTitle.textContent = gameName === 'snake' ? '🐍 贪吃蛇' : '🔢 2048';
+            gameModal.classList.remove('hidden');
+            gameModal.style.display = 'flex';
+            
+            if (gameName === 'snake') {
+                startSnake();
+            } else if (gameName === '2048') {
+                start2048();
+            }
+        }
     </script>
 </body>
 </html>
