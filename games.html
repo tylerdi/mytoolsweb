@@ -118,7 +118,7 @@
     </div>
 
     <!-- 游戏弹窗 -->
-    <div id="game-modal" class="fixed inset-0 bg-black/95 z-50 hidden items-center justify-center">
+    <div id="game-modal" class="fixed inset-0 bg-black/95 z-50 hidden flex items-center justify-center">
         <div class="w-full max-w-2xl mx-4 bg-cyber-dark rounded-xl border border-cyber-pink/30 p-6 relative">
             <button onclick="closeGame()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl transition-all">
                 <i class="fa fa-times"></i>
@@ -172,7 +172,7 @@
         // 关闭游戏
         function closeGame() {
             clearInterval(gameInterval);
-            gameModal.classList.add('hidden');
+            gameModal.style.display = 'none';
             currentGame = null;
         }
 
@@ -565,7 +565,6 @@
         function startGame(gameName) {
             currentGame = gameName;
             gameTitle.textContent = gameName === 'snake' ? '🐍 贪吃蛇' : '🔢 2048';
-            gameModal.classList.remove('hidden');
             gameModal.style.display = 'flex';
             
             if (gameName === 'snake') {
