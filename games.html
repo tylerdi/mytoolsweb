@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏合集 - AI工具箱</title>
+    <link rel="icon" type="image/png" href="resource/easyclaw.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            pink: '#ff2a6d',
+                            purple: '#d300c5',
+                            blue: '#05d9e8',
+                            dark: '#0d0221',
+                            darker: '#090119',
+                        }
+                    },
+                    animation: {
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        glow: {
+                            '0%': { textShadow: '0 0 5px #ff2a6d, 0 0 10px #ff2a6d' },
+                            '100%': { textShadow: '0 0 10px #ff2a6d, 0 0 20px #ff2a6d, 0 0 30px #d300c5' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .bg-gradient-cyber {
+                background: linear-gradient(135deg, #0d0221 0%, #1a063a 100%);
+            }
+            .card-glow {
+                box-shadow: 0 0 15px rgba(255, 42, 109, 0.5), 0 0 30px rgba(211, 0, 197, 0.3);
+            }
+            .card-glow:hover {
+                box-shadow: 0 0 25px rgba(255, 42, 109, 0.8), 0 0 40px rgba(211, 0, 197, 0.6);
+            }
+            .text-gradient {
+                background: linear-gradient(90deg, #ff2a6d, #d300c5, #05d9e8);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            .border-cyber {
+                border: 1px solid rgba(255, 42, 109, 0.3);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-cyber min-h-screen text-white font-sans">
+    <!-- 导航栏 -->
+    <nav class="bg-cyber-darker/80 backdrop-blur-md border-b border-cyber-pink/30 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="/" class="flex items-center space-x-2">
+                <i class="fa fa-gamepad text-2xl text-cyber-pink"></i>
+                <h1 class="text-2xl font-bold text-gradient">游戏合集</h1>
+            </a>
+            <div class="flex items-center space-x-4">
+                <a href="/" class="px-4 py-2 rounded-lg bg-cyber-pink/20 hover:bg-cyber-pink/30 text-white transition-all">
+                    <i class="fa fa-home mr-2"></i>返回首页
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 游戏列表 -->
+    <div class="container mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- 俄罗斯方块 -->
+            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
+                <div class="h-48 bg-gradient-to-br from-cyber-pink/40 to-cyber-purple/40 flex items-center justify-center relative overflow-hidden">
+                    <i class="fa fa-th text-6xl text-white/80 animate-float"></i>
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-3 text-cyber-pink">俄罗斯方块</h3>
+                    <p class="text-sm text-gray-300 mb-4">经典俄罗斯方块游戏，支持键盘和触屏操作</p>
+                    <button class="w-full px-4 py-2 rounded-lg bg-cyber-pink text-white text-sm hover:bg-cyber-pink/80 transition-all">
+                        <i class="fa fa-play mr-2"></i>开始游戏
+                    </button>
+                </div>
+            </div>
+
+            <!-- 贪吃蛇 -->
+            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
+                <div class="h-48 bg-gradient-to-br from-cyber-blue/40 to-cyber-pink/40 flex items-center justify-center relative overflow-hidden">
+                    <i class="fa fa-long-arrow-right text-6xl text-white/80 animate-float"></i>
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-3 text-cyber-blue">贪吃蛇</h3>
+                    <p class="text-sm text-gray-300 mb-4">经典贪吃蛇游戏，吃食物变长，不要撞墙和自己</p>
+                    <button class="w-full px-4 py-2 rounded-lg bg-cyber-blue text-white text-sm hover:bg-cyber-blue/80 transition-all">
+                        <i class="fa fa-play mr-2"></i>开始游戏
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2048 -->
+            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
+                <div class="h-48 bg-gradient-to-br from-cyber-purple/40 to-cyber-blue/40 flex items-center justify-center relative overflow-hidden">
+                    <i class="fa fa-cubes text-6xl text-white/80 animate-float"></i>
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-3 text-cyber-purple">2048</h3>
+                    <p class="text-sm text-gray-300 mb-4">数字合成游戏，合并相同数字得到2048</p>
+                    <button class="w-full px-4 py-2 rounded-lg bg-cyber-purple text-white text-sm hover:bg-cyber-purple/80 transition-all">
+                        <i class="fa fa-play mr-2"></i>开始游戏
+                    </button>
+                </div>
+            </div>
+
+            <!-- 消消乐 -->
+            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
+                <div class="h-48 bg-gradient-to-br from-cyber-pink/40 to-cyber-blue/40 flex items-center justify-center relative overflow-hidden">
+                    <i class="fa fa-gem text-6xl text-white/80 animate-float"></i>
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-3 text-cyber-pink">消消乐</h3>
+                    <p class="text-sm text-gray-300 mb-4">三个相同图案连线消除，经典消除游戏</p>
+                    <button class="w-full px-4 py-2 rounded-lg bg-cyber-pink text-white text-sm hover:bg-cyber-pink/80 transition-all">
+                        <i class="fa fa-play mr-2"></i>开始游戏
+                    </button>
+                </div>
+            </div>
+
+            <!-- 恐龙跑酷 -->
+            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
+                <div class="h-48 bg-gradient-to-br from-cyber-blue/40 to-cyber-purple/40 flex items-center justify-center relative overflow-hidden">
+                    <i class="fa fa-dinosaur text-6xl text-white/80 animate-float"></i>
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-3 text-cyber-blue">恐龙跑酷</h3>
+                    <p class="text-sm text-gray-300 mb-4">Chrome小恐龙游戏，按空格跳跃躲避仙人掌</p>
+                    <button class="w-full px-4 py-2 rounded-lg bg-cyber-blue text-white text-sm hover:bg-cyber-blue/80 transition-all">
+                        <i class="fa fa-play mr-2"></i>开始游戏
+                    </button>
+                </div>
+            </div>
+
+            <!-- 扫雷 -->
+            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
+                <div class="h-48 bg-gradient-to-br from-cyber-purple/40 to-cyber-pink/40 flex items-center justify-center relative overflow-hidden">
+                    <i class="fa fa-bomb text-6xl text-white/80 animate-float"></i>
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-3 text-cyber-purple">扫雷</h3>
+                    <p class="text-sm text-gray-300 mb-4">经典扫雷游戏，找出所有地雷不要踩到</p>
+                    <button class="w-full px-4 py-2 rounded-lg bg-cyber-purple text-white text-sm hover:bg-cyber-purple/80 transition-all">
+                        <i class="fa fa-play mr-2"></i>开始游戏
+                    </button>
+                </div>
+            </div>
+
+            <!-- 五子棋 -->
+            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
+                <div class="h-48 bg-gradient-to-br from-cyber-pink/40 to-cyber-purple/40 flex items-center justify-center relative overflow-hidden">
+                    <i class="fa fa-chess-board text-6xl text-white/80 animate-float"></i>
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-3 text-cyber-pink">五子棋</h3>
+                    <p class="text-sm text-gray-300 mb-4">双人五子棋游戏，五子连珠获胜</p>
+                    <button class="w-full px-4 py-2 rounded-lg bg-cyber-pink text-white text-sm hover:bg-cyber-pink/80 transition-all">
+                        <i class="fa fa-play mr-2"></i>开始游戏
+                    </button>
+                </div>
+            </div>
+
+            <!-- 拼图游戏 -->
+            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
+                <div class="h-48 bg-gradient-to-br from-cyber-blue/40 to-cyber-pink/40 flex items-center justify-center relative overflow-hidden">
+                    <i class="fa fa-puzzle-piece text-6xl text-white/80 animate-float"></i>
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-3 text-cyber-blue">拼图游戏</h3>
+                    <p class="text-sm text-gray-300 mb-4">数字拼图游戏，将打乱的数字按顺序排列</p>
+                    <button class="w-full px-4 py-2 rounded-lg bg-cyber-blue text-white text-sm hover:bg-cyber-blue/80 transition-all">
+                        <i class="fa fa-play mr-2"></i>开始游戏
+                    </button>
+                </div>
+            </div>
+
+            <!-- 更多游戏 -->
+            <div class="game-card group bg-cyber-dark rounded-xl overflow-hidden border-cyber card-glow transition-all duration-300 hover:scale-105 cursor-pointer">
+                <div class="h-48 bg-gradient-to-br from-cyber-purple/40 to-cyber-blue/40 flex items-center justify-center relative overflow-hidden">
+                    <i class="fa fa-plus text-6xl text-white/80 animate-float"></i>
+                    <div class="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all"></div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-bold mb-3 text-cyber-purple">更多游戏</h3>
+                    <p class="text-sm text-gray-300 mb-4">更多好玩游戏正在开发中，敬请期待</p>
+                    <button disabled class="w-full px-4 py-2 rounded-lg bg-gray-600 text-white text-sm cursor-not-allowed">
+                        <i class="fa fa-clock-o mr-2"></i>开发中
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="bg-cyber-darker/80 border-t border-cyber-pink/30 py-8 mt-16">
+        <div class="container mx-auto px-4 text-center text-gray-400">
+            <p>© 2026 AI工具箱 · 游戏合集</p>
+            <p class="mt-2 text-sm">所有游戏均为本地运行，无需联网即可畅玩</p>
+        </div>
+    </footer>
+
+    <script>
+        // 游戏卡片点击事件
+        document.querySelectorAll('.game-card button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const gameName = this.closest('.game-card').querySelector('h3').textContent;
+                alert(`${gameName} 功能开发中，敬请期待！`);
+            });
+        });
+    </script>
+</body>
+</html>

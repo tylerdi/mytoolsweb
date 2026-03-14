@@ -18,6 +18,7 @@
             search_placeholder: { zh: '搜索工具... 例如：JSON、密码、二维码', en: 'Search tools... e.g. JSON, Password, QR Code' },
             login: { zh: '登录', en: 'Login' },
             register: { zh: '注册', en: 'Register' },
+            games: { zh: '🎮 游戏', en: '🎮 Games' },
             email: { zh: '邮箱', en: 'Email' },
             password: { zh: '密码', en: 'Password' },
             confirm_password: { zh: '确认密码', en: 'Confirm Password' },
@@ -65,6 +66,7 @@
             
             // 更新登录按钮
             document.getElementById('loginBtn').textContent = i18n.login[currentLang];
+            document.getElementById('gameBtn').textContent = currentLang === 'zh' ? '🎮 游戏' : '🎮 Games';
             
             // 更新登录模态框
             document.getElementById('loginTitle').textContent = i18n.login[currentLang];
@@ -704,9 +706,11 @@
             box-shadow: 0 0 20px rgba(255,45,120,0.2);
         }
 
-        /* 工具页/设置页隐藏语言按钮 */
+        /* 工具页/设置页隐藏语言按钮和游戏按钮 */
         body:has(.tool-page:target) .lang-switch,
-        body:has(.settings-page.active) .lang-switch {
+        body:has(.tool-page:target) .game-btn,
+        body:has(.settings-page.active) .lang-switch,
+        body:has(.settings-page.active) .game-btn {
             display: none !important;
         }
         .tool-title {
@@ -724,8 +728,30 @@
         .user-menu {
             position: fixed;
             top: 20px;
-            right: 20px;
+            right: 120px;
             z-index: 1000;
+        }
+        
+        .game-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #7c3aed, #06b6d4);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .game-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(124,58,237,0.3);
         }
 
         .login-btn {
@@ -1172,6 +1198,9 @@
         <button class="login-btn" id="loginBtn" onclick="openModal('loginModal')">登录</button>
         <div class="user-avatar" id="userAvatar" style="display: none;">⚙️</div>
     </div>
+    
+    <!-- 游戏入口按钮 -->
+    <button class="game-btn" id="gameBtn" onclick="window.location.href='games.html'">🎮 游戏</button>
 
     <!-- 登录模态框 -->
     <div class="modal" id="loginModal">
