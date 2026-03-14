@@ -400,24 +400,28 @@
                 
                 switch(e.key) {
                     case 'ArrowUp':
+                        e.preventDefault();
                         if (dy !== 1) {
                             nextDx = 0;
                             nextDy = -1;
                         }
                         break;
                     case 'ArrowDown':
+                        e.preventDefault();
                         if (dy !== -1) {
                             nextDx = 0;
                             nextDy = 1;
                         }
                         break;
                     case 'ArrowLeft':
+                        e.preventDefault();
                         if (dx !== 1) {
                             nextDx = -1;
                             nextDy = 0;
                         }
                         break;
                     case 'ArrowRight':
+                        e.preventDefault();
                         if (dx !== -1) {
                             nextDx = 1;
                             nextDy = 0;
@@ -446,19 +450,19 @@
 
                 if (Math.abs(dx) > Math.abs(dy)) {
                     // 水平滑动
-                    if (dx > 0 && gameState.dx !== -1) { // 右滑
+                    if (dx > 0 && dx !== -1) { // 右滑
                         nextDx = 1;
                         nextDy = 0;
-                    } else if (dx < 0 && gameState.dx !== 1) { // 左滑
+                    } else if (dx < 0 && dx !== 1) { // 左滑
                         nextDx = -1;
                         nextDy = 0;
                     }
                 } else {
                     // 垂直滑动
-                    if (dy > 0 && gameState.dy !== -1) { // 下滑
+                    if (dy > 0 && dy !== -1) { // 下滑
                         nextDx = 0;
                         nextDy = 1;
-                    } else if (dy < 0 && gameState.dy !== 1) { // 上滑
+                    } else if (dy < 0 && dy !== 1) { // 上滑
                         nextDx = 0;
                         nextDy = -1;
                     }
