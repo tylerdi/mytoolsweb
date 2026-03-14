@@ -2,7 +2,9 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>游戏合集 - AI工具箱</title>
     <link rel="icon" type="image/png" href="resource/easyclaw.png">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -140,11 +142,11 @@
             <!-- 移动端控制按钮 -->
             <div class="mt-6 grid grid-cols-3 gap-2 md:hidden">
                 <div></div>
-                <button onclick="mobileControl('up')" class="py-3 bg-cyber-purple/50 hover:bg-cyber-purple rounded-lg text-white">↑</button>
+                <button ontouchstart="event.preventDefault(); mobileControl('up');" onclick="event.preventDefault(); mobileControl('up');" class="py-4 bg-cyber-purple rounded-lg text-white text-xl font-bold active:bg-cyber-purple/70">↑</button>
                 <div></div>
-                <button onclick="mobileControl('left')" class="py-3 bg-cyber-purple/50 hover:bg-cyber-purple rounded-lg text-white">←</button>
-                <button onclick="mobileControl('down')" class="py-3 bg-cyber-purple/50 hover:bg-cyber-purple rounded-lg text-white">↓</button>
-                <button onclick="mobileControl('right')" class="py-3 bg-cyber-purple/50 hover:bg-cyber-purple rounded-lg text-white">→</button>
+                <button ontouchstart="event.preventDefault(); mobileControl('left');" onclick="event.preventDefault(); mobileControl('left');" class="py-4 bg-cyber-purple rounded-lg text-white text-xl font-bold active:bg-cyber-purple/70">←</button>
+                <button ontouchstart="event.preventDefault(); mobileControl('down');" onclick="event.preventDefault(); mobileControl('down');" class="py-4 bg-cyber-purple rounded-lg text-white text-xl font-bold active:bg-cyber-purple/70">↓</button>
+                <button ontouchstart="event.preventDefault(); mobileControl('right');" onclick="event.preventDefault(); mobileControl('right');" class="py-4 bg-cyber-purple rounded-lg text-white text-xl font-bold active:bg-cyber-purple/70">→</button>
             </div>
         </div>
     </div>
@@ -185,7 +187,24 @@
 
         // 移动端控制
         function mobileControl(dir) {
-            changeDirection(dir);
+            if (currentGame === 'snake') {
+                changeDirection(dir);
+            } else if (currentGame === '2048') {
+                let moved = false;
+                switch(dir) {
+                    case 'up': moved = moveUp(); break;
+                    case 'down': moved = moveDown(); break;
+                    case 'left': moved = moveLeft(); break;
+                    case 'right': moved = moveRight(); break;
+                }
+                if (moved) {
+                    addRandomTile();
+                    draw();
+                    if (isGameOver()) {
+                        alert(`游戏结束！得分: ${score}`);
+                    }
+                }
+            }
         }
 
         // ==================== 贪吃蛇游戏 ====================
