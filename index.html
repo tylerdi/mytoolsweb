@@ -3161,11 +3161,22 @@ console.log('Hello World');
 
         <!-- 互动区域 -->
         <style>
+            .互动-grid {
+                max-width: 960px; margin: 32px auto; padding: 0 20px;
+                display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+            }
             @media (max-width: 768px) {
-                .互动-grid { grid-template-columns: 1fr !important; }
+                .互动-grid { grid-template-columns: 1fr; }
+            }
+            .互动-title {
+                text-align: center; margin-bottom: 8px;
+                font-size: 14px; color: #888;
             }
         </style>
-        <div class="互动-grid" style="max-width: 960px; margin: 32px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div class="互动-title">✨ 和小鱼儿互动一下</div>
+        <div class="互动-grid">
+            <div id="fish-music"></div>
+            <div id="fish-challenge"></div>
             <div id="mood-diary"></div>
             <div id="daily-question"></div>
         </div>
@@ -5860,5 +5871,7 @@ ${ua}
 <script src="/fish-ai.js"></script>
 <script src="/fish-mood.js"></script>
 <script src="/fish-question.js"></script>
+<script src="/fish-music.js"></script>
+<script src="/fish-challenge.js"></script>
 </body>
 </html>
