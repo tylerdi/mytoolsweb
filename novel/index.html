@@ -361,70 +361,117 @@
         }
     }
 
-    // TTS 朗读
-    let ttsUtterance = null;
+    // TTS 朗读（小米 MIMO TTS）
+    let ttsAudio = null;
     let ttsPlaying = false;
 
-    function toggleTTS() {
+    async function toggleTTS() {
         if (ttsPlaying) {
             stopTTS();
         } else {
-            startTTS();
+            await startTTS();
         }
     }
 
-    function startTTS() {
+    async function startTTS() {
+        const btn = document.getElementById('tts-btn');
+        const content = document.getElementById('reader-content').textContent;
+        if (!content.trim()) return;
+
+        btn.textContent = '⏳ 生成语音...';
+        btn.disabled = true;
+
+        try {
+            // 限制文本长度
+            const text = content.slice(0, 2000);
+            const rate = parseFloat(document.getElementById('tts-rate').value);
+
+            const res = await fetch('/api/tts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text, voice: 'nova', speed: rate }),
+            });
+
+            if (!res.ok) throw new Error('TTS 请求失败');
+
+            const blob = await res.blob();
+            if (blob.size < 100) throw new Error('音频数据为空');
+
+            // 用 data URL 播放
+            const dataUrl = await new Promise((resolve, reject) => {
+                const r = new FileReader();
+                r.onloadend = () => resolve(r.result);
+                r.onerror = reject;
+                r.readAsDataURL(blob);
+            });
+
+            ttsAudio = new Audio();
+            ttsAudio.preload = 'auto';
+
+            await new Promise((resolve, reject) => {
+                ttsAudio.addEventListener('canplaythrough', resolve, { once: true });
+                ttsAudio.addEventListener('error', () => reject(new Error('音频加载失败')), { once: true });
+                ttsAudio.src = dataUrl;
+            });
+
+            ttsPlaying = true;
+            btn.textContent = '⏸️ 停止朗读';
+            btn.disabled = false;
+            ttsAudio.onended = () => stopTTS();
+            ttsAudio.play();
+
+        } catch (err) {
+            console.warn('[Novel TTS] MIMO 失败，回退浏览器 TTS:', err.message);
+            // 回退到浏览器原生 TTS
+            fallbackTTS();
+        }
+    }
+
+    function fallbackTTS() {
         if (!('speechSynthesis' in window)) {
-            alert('浏览器不支持语音朗读');
+            const btn = document.getElementById('tts-btn');
+            btn.textContent = '❌ 朗读失败';
+            btn.disabled = false;
             return;
         }
         window.speechSynthesis.cancel();
-
         const content = document.getElementById('reader-content').textContent;
         const rate = parseFloat(document.getElementById('tts-rate').value);
-
-        // 分段朗读（浏览器 TTS 对长文本有限制）
-        const segments = splitText(content, 200);
+        const segments = splitText(content.slice(0, 500), 200);
         let idx = 0;
 
         function speakNext() {
-            if (idx >= segments.length || !ttsPlaying) {
-                stopTTS();
-                return;
-            }
-            ttsUtterance = new SpeechSynthesisUtterance(segments[idx]);
-            ttsUtterance.lang = 'zh-CN';
-            ttsUtterance.rate = rate;
-            ttsUtterance.onend = () => { idx++; speakNext(); };
-            ttsUtterance.onerror = () => stopTTS();
-            window.speechSynthesis.speak(ttsUtterance);
+            if (idx >= segments.length || !ttsPlaying) { stopTTS(); return; }
+            const u = new SpeechSynthesisUtterance(segments[idx]);
+            u.lang = 'zh-CN'; u.rate = rate;
+            u.onend = () => { idx++; speakNext(); };
+            u.onerror = () => stopTTS();
+            window.speechSynthesis.speak(u);
         }
 
         ttsPlaying = true;
-        document.getElementById('tts-btn').textContent = '⏸️ 停止朗读';
+        document.getElementById('tts-btn').textContent = '⏸️ 停止朗读（浏览器）';
         speakNext();
     }
 
     function stopTTS() {
         ttsPlaying = false;
-        window.speechSynthesis.cancel();
+        if (ttsAudio) { ttsAudio.pause(); ttsAudio = null; }
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
         document.getElementById('tts-btn').textContent = '🔊 朗读本章';
+        document.getElementById('tts-btn').disabled = false;
     }
 
     function splitText(text, maxLen) {
-        const segments = [];
-        const sentences = text.replace(/\s+/g, ' ').split(/[。！？；\n]/);
-        let current = '';
-        for (const s of sentences) {
-            if ((current + s).length > maxLen && current) {
-                segments.push(current);
-                current = s;
-            } else {
-                current += s;
-            }
+        const segs = [];
+        const sents = text.replace(/\s+/g, ' ').split(/[。！？；\n]/);
+        let cur = '';
+        for (const s of sents) {
+            if ((cur + s).length > maxLen && cur) { segs.push(cur); cur = s; }
+            else cur += s;
         }
-        if (current) segments.push(current);
-        return segments.filter(s => s.trim());
+        if (cur) segs.push(cur);
+        return segs.filter(s => s.trim());
     }
 
     // 语速显示
