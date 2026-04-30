@@ -57,6 +57,50 @@
 
 ---
 
+## 2026-05-01 (03:50) — 修复：统计系统全面恢复
+
+### 问题现象
+网站统计（PV/UV/签到/心情）从上线起就无法正常工作：
+- 页面访问不记录，PV/UV 始终为 0
+- 签到、心情、胶囊等功能全部报错
+
+### 根因分析
+三个问题叠加导致统计系统完全失效：
+
+1. **Supabase Key 变量名错误**
+   - `_supabase.js` 读取 `SUPABASE_SECRET`，但该变量从未配置
+   - 实际应使用 `SUPABASE_ANON_KEY`（定义在 `wrangler.toml` 中）
+
+2. **Cloudflare Pages 环境变量机制**
+   - `wrangler.toml` 的 `[vars]` 在本地开发可用，但生产环境不自动注入为全局变量
+   - 改为硬编码 anon key 作为 fallback（anon key 本身是公开密钥，RLS 控制数据安全）
+
+3. **Supabase RLS 策略从未创建**
+   - 所有表都开启了 RLS（行级安全），但 INSERT 策略从未建过
+   - 读操作返回空，写操作直接报 42501 拦截
+
+### 修复内容
+
+| 文件 | 变更 |
+|------|------|
+| `functions/api/_supabase.js` | 变量名 `SUPABASE_SECRET` → `SUPABASE_ANON_KEY`；新增 `createDb(env)` 工厂函数，通过 `context.env` 传递环境变量；硬编码 anon key fallback |
+| `functions/api/stats.js` | 改用 `createDb(context.env)` |
+| `functions/api/checkin.js` | 同上 |
+| `functions/api/mood.js` | 同上 |
+| `functions/api/capsule.js` | 同上 |
+| `functions/api/comments.js` | 同上 |
+| `functions/api/guestbook.js` | 同上 |
+| `fix_rls.sql` | 新增：RLS 策略修复 SQL 脚本 |
+| Supabase Dashboard | 手动执行 SQL 创建所有表的 RLS 读写策略 |
+
+### 经验教训
+- Supabase anon key 是公开的，安全靠 RLS 策略而不是隐藏 key
+- Cloudflare Pages 的 `[vars]` 不等于生产环境变量，需要在 Dashboard 配置或代码硬编码
+- RLS 开了但没建策略 = 所有操作被默认拒绝
+- 上线后应立即验证 API 端到端，不能只看前端页面能打开
+
+---
+
 ## 2026-05-01 (02:30) — 接入 Supabase 后端
 
 ### 背景
