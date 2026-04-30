@@ -17,6 +17,7 @@
       this.audio = null;
       this.playing = false;
       this.loading = false;
+      this.useBrowserTTS = false; // 是否用浏览器原生 TTS
 
       this.btn = document.createElement('button');
       this.btn.className = 'fish-listen-btn';
@@ -37,10 +38,72 @@
       await this.generate();
     }
 
-    // 浏览器原生 TTS 兜底
+    async generate() {
+      this.loading = true;
+      this.btn.innerHTML = '⏳ 生成中...';
+      this.btn.disabled = true;
+
+      // 先尝试 MIMO TTS API
+      try {
+        console.log('[TTS] 尝试 MIMO TTS，文字长度:', this.text.length);
+
+        const res = await fetch(`${API_BASE}/tts`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: this.text, voice: 'nova', speed: 1.0 }),
+        });
+
+        console.log('[TTS] 响应:', res.status);
+
+        if (!res.ok) {
+          let msg = `HTTP ${res.status}`;
+          try { const err = await res.json(); msg = err.error || msg; } catch {}
+          throw new Error(msg);
+        }
+
+        const blob = await res.blob();
+        console.log('[TTS] blob:', blob.size, 'bytes, type:', blob.type);
+
+        if (blob.size < 100) throw new Error('音频数据为空');
+
+        // 用 data URL（兼容性最好）
+        const dataUrl = await new Promise((resolve, reject) => {
+          const r = new FileReader();
+          r.onloadend = () => resolve(r.result);
+          r.onerror = reject;
+          r.readAsDataURL(blob);
+        });
+
+        this.audio = new Audio();
+        this.audio.preload = 'auto';
+
+        await new Promise((resolve, reject) => {
+          this.audio.addEventListener('canplaythrough', () => {
+            console.log('[TTS] 音频就绪');
+            resolve();
+          }, { once: true });
+          this.audio.addEventListener('error', (e) => {
+            console.error('[TTS] 音频错误:', this.audio.error);
+            reject(new Error('音频加载失败'));
+          }, { once: true });
+          this.audio.src = dataUrl;
+        });
+
+        this.audio.onended = () => this.stop();
+        this.play();
+
+      } catch (err) {
+        console.warn('[TTS] MIMO 失败，回退浏览器 TTS:', err.message);
+        this.fallbackSpeak();
+      }
+    }
+
+    // 浏览器原生 TTS
     fallbackSpeak() {
       if (!('speechSynthesis' in window)) {
         this.btn.innerHTML = '❌ 浏览器不支持语音';
+        this.btn.disabled = false;
+        this.loading = false;
         return;
       }
       window.speechSynthesis.cancel();
@@ -50,82 +113,16 @@
       utter.onstart = () => {
         this.playing = true;
         this.btn.innerHTML = '⏸️ 暂停（浏览器朗读）';
+        this.btn.disabled = false;
       };
       utter.onend = () => this.stop();
       utter.onerror = () => {
         this.btn.innerHTML = '❌ 朗读失败';
         this.playing = false;
+        this.btn.disabled = false;
       };
       window.speechSynthesis.speak(utter);
-    }
-
-    async generate() {
-      this.loading = true;
-      this.btn.innerHTML = '⏳ 生成中...';
-      this.btn.disabled = true;
-
-      try {
-        console.log('[TTS] 开始生成，文字长度:', this.text.length);
-
-        const res = await fetch(`${API_BASE}/tts`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: this.text, voice: 'nova', speed: 1.0 }),
-        });
-
-        console.log('[TTS] 响应状态:', res.status, res.statusText);
-
-        if (!res.ok) {
-          let msg = `HTTP ${res.status}`;
-          try {
-            const err = await res.json();
-            msg = err.error || msg;
-          } catch {}
-          throw new Error(msg);
-        }
-
-        const blob = await res.blob();
-        console.log('[TTS] blob 大小:', blob.size, '类型:', blob.type);
-
-        if (blob.size < 100) {
-          throw new Error('音频数据为空');
-        }
-
-        // 用 base64 data URL 代替 blob URL（兼容性更好）
-        const reader = new FileReader();
-        const dataUrl = await new Promise((resolve) => {
-          reader.onloadend = () => resolve(reader.result);
-          reader.readAsDataURL(blob);
-        });
-        console.log('[TTS] data URL 长度:', dataUrl.length);
-
-        this.audio = new Audio();
-        this.audio.preload = 'auto';
-
-        const playOnce = () => {
-          console.log('[TTS] 音频就绪，开始播放');
-          this.play();
-        };
-
-        this.audio.addEventListener('canplaythrough', playOnce, { once: true });
-
-        this.audio.addEventListener('error', (e) => {
-          const err = this.audio.error;
-          console.error('[TTS] 音频错误:', err?.code, err?.message);
-          // 尝试浏览器原生 TTS
-          this.btn.innerHTML = '🔄 切换浏览器朗读...';
-          setTimeout(() => this.fallbackSpeak(), 300);
-        }, { once: true });
-
-        this.audio.onended = () => this.stop();
-        this.audio.src = dataUrl;
-
-      } catch (err) {
-        console.error('[TTS] 错误:', err);
-        // 尝试浏览器原生 TTS
-        this.btn.innerHTML = '🔄 切换浏览器朗读...';
-        setTimeout(() => this.fallbackSpeak(), 300);
-      }
+      this.loading = false;
     }
 
     play() {
