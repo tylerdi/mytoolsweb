@@ -7,9 +7,9 @@ export async function supabaseQuery(table, options = {}) {
   const { method = 'GET', body, filters = {}, select = '*', order, limit, offset, extraHeaders = {} } = options;
 
   // 从环境变量读取 key（在 Cloudflare Pages 设置中配置）
-  const SUPABASE_KEY = typeof SUPABASE_SECRET !== 'undefined'
-    ? SUPABASE_SECRET
-    : (typeof process !== 'undefined' && process.env?.SUPABASE_SECRET) || '';
+  const SUPABASE_KEY = typeof SUPABASE_ANON_KEY !== 'undefined'
+    ? SUPABASE_ANON_KEY
+    : (typeof process !== 'undefined' && process.env?.SUPABASE_ANON_KEY) || '';
 
   let url = `${SUPABASE_URL}/rest/v1/${table}`;
   const params = new URLSearchParams();
