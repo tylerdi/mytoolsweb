@@ -3159,6 +3159,17 @@ console.log('Hello World');
             </div>
         </div>
 
+        <!-- 互动区域 -->
+        <style>
+            @media (max-width: 768px) {
+                .互动-grid { grid-template-columns: 1fr !important; }
+            }
+        </style>
+        <div class="互动-grid" style="max-width: 960px; margin: 32px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div id="mood-diary"></div>
+            <div id="daily-question"></div>
+        </div>
+
         <div class="footer">
             <p class="footer-stats" id="total-tools">本站目前提供 <span id="tool-count">0</span> 个实用工具</p>
             <p>© 2026 AI工具箱 · 高效开发 · 快乐生活</p>
@@ -5847,5 +5858,7 @@ ${ua}
 })();
 </script>
 <script src="/fish-ai.js"></script>
+<script src="/fish-mood.js"></script>
+<script src="/fish-question.js"></script>
 </body>
 </html>
