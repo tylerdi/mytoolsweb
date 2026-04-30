@@ -52,7 +52,7 @@ export async function onRequestPost(context) {
     // 流式返回音频
     return new Response(ttsResponse.body, {
       headers: {
-        'Content-Type': 'audio/mpeg',
+        'Content-Type': 'audio/wav',
         'Cache-Control': 'public, max-age=86400',
         ...corsHeaders,
       },
