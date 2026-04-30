@@ -27,13 +27,20 @@ export async function onRequestPost(context) {
     const streak = (lastCheckin && lastCheckin.length > 0) ? lastCheckin[0].streak + 1 : 1;
 
     // 插入今天的签到
-    const result = await db.insert('checkins', {
+    await db.insert('checkins', {
       visitor_id,
       checkin_date: today,
       streak,
     });
 
-    return new Response(JSON.stringify({ ok: true, streak, total: result[0]?.id || 0 }));
+    // 获取总签到次数
+    const allCheckins = await db.get('checkins', {
+      filters: { visitor_id: `eq.${visitor_id}` },
+      select: 'id',
+    });
+    const total = allCheckins?.length || 1;
+
+    return new Response(JSON.stringify({ ok: true, streak, total }));
   } catch (err) {
     return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }

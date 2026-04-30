@@ -231,6 +231,27 @@
       }
       localStorage.setItem('mood_history', JSON.stringify(history.slice(-60)));
       this.saved = data;
+
+      // 同步到 Supabase
+      this.syncToServer(moodIdx, text, response);
+    }
+
+    async syncToServer(moodIdx, text, response) {
+      try {
+        const visitorId = localStorage.getItem('fish_visitor_id') || 'anonymous';
+        await fetch('/api/mood', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            visitor_id: visitorId,
+            mood: MOODS[moodIdx]?.emoji || '📝',
+            note: text || '',
+            ai_reply: response || '',
+          }),
+        });
+      } catch (e) {
+        console.warn('心情同步到服务器失败:', e);
+      }
     }
 
     loadToday() {
