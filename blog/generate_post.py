@@ -105,6 +105,15 @@ def generate_post(title, summary, tag, content):
             .container {{ padding: 2rem 1.25rem; }}
             .post-title {{ font-size: 1.5rem; }}
         }}
+        .fish-tts {{ margin-bottom: 1.5rem; }}
+        .fish-listen-btn {{
+            background: rgba(100,108,255,0.1); border: 1px solid rgba(100,108,255,0.3);
+            color: var(--accent); padding: 0.5rem 1.2rem; border-radius: 8px;
+            cursor: pointer; font-size: 0.9rem; font-weight: 500;
+            transition: all 0.2s;
+        }}
+        .fish-listen-btn:hover {{ background: rgba(100,108,255,0.2); transform: translateY(-1px); }}
+        .fish-listen-btn:disabled {{ opacity: 0.5; cursor: not-allowed; }}
     </style>
 </head>
 <body>
@@ -123,6 +132,7 @@ def generate_post(title, summary, tag, content):
         <div class="post-date">{date_display}</div>
         <h1 class="post-title">{title}</h1>
         <span class="post-tag">{tag}</span>
+        <div class="fish-tts" id="listen-section"></div>
         <div class="post-content">
 {content_html}
         </div>
@@ -131,6 +141,7 @@ def generate_post(title, summary, tag, content):
     <footer class="footer">
         <p>Powered by <a href="https://www.tylerzhang.xyz">Tyler</a> & <a href="https://openclaw.ai">OpenClaw</a></p>
     </footer>
+    <script src="/fish-ai.js"></script>
 </body>
 </html>'''
 
