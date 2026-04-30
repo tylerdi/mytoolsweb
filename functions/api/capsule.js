@@ -1,9 +1,10 @@
 // functions/api/capsule.js
 // 时间胶囊 API
-import { db } from './_supabase.js';
+import { createDb } from './_supabase.js';
 
 export async function onRequestPost(context) {
   try {
+    const db = createDb(context.env);
     const { visitor_id, content, open_date } = await context.request.json();
     if (!visitor_id || !content || !open_date) {
       return new Response(JSON.stringify({ error: 'missing fields' }), { status: 400 });
@@ -21,6 +22,7 @@ export async function onRequestPost(context) {
 
 export async function onRequestGet(context) {
   try {
+    const db = createDb(context.env);
     const url = new URL(context.request.url);
     const visitor_id = url.searchParams.get('visitor_id');
     if (!visitor_id) return new Response(JSON.stringify({ error: 'visitor_id required' }), { status: 400 });

@@ -1,9 +1,10 @@
 // functions/api/mood.js
 // 心情日记 API
-import { db } from './_supabase.js';
+import { createDb } from './_supabase.js';
 
 export async function onRequestPost(context) {
   try {
+    const db = createDb(context.env);
     const { visitor_id, mood, note, ai_reply } = await context.request.json();
     if (!visitor_id || !mood) {
       return new Response(JSON.stringify({ error: 'visitor_id and mood required' }), { status: 400 });
@@ -21,6 +22,7 @@ export async function onRequestPost(context) {
 
 export async function onRequestGet(context) {
   try {
+    const db = createDb(context.env);
     const url = new URL(context.request.url);
     const visitor_id = url.searchParams.get('visitor_id');
     if (!visitor_id) return new Response(JSON.stringify({ error: 'visitor_id required' }), { status: 400 });

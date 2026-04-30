@@ -3,13 +3,21 @@
 
 const SUPABASE_URL = 'https://twyosmombfrcheyjujvb.supabase.co';
 
-export async function supabaseQuery(table, options = {}) {
-  const { method = 'GET', body, filters = {}, select = '*', order, limit, offset, extraHeaders = {} } = options;
+// 从环境变量获取 Supabase Key
+function getSupabaseKey(env) {
+  // Cloudflare Pages: 通过 context.env 传入
+  if (env && env.SUPABASE_ANON_KEY) return env.SUPABASE_ANON_KEY;
+  // 全局变量兼容
+  if (typeof SUPABASE_ANON_KEY !== 'undefined') return SUPABASE_ANON_KEY;
+  // Node.js 环境
+  if (typeof process !== 'undefined' && process.env?.SUPABASE_ANON_KEY) return process.env.SUPABASE_ANON_KEY;
+  return '';
+}
 
-  // 从环境变量读取 key（在 Cloudflare Pages 设置中配置）
-  const SUPABASE_KEY = typeof SUPABASE_ANON_KEY !== 'undefined'
-    ? SUPABASE_ANON_KEY
-    : (typeof process !== 'undefined' && process.env?.SUPABASE_ANON_KEY) || '';
+export async function supabaseQuery(table, options = {}) {
+  const { method = 'GET', body, filters = {}, select = '*', order, limit, offset, extraHeaders = {}, env } = options;
+
+  const SUPABASE_KEY = getSupabaseKey(env);
 
   let url = `${SUPABASE_URL}/rest/v1/${table}`;
   const params = new URLSearchParams();
@@ -58,7 +66,18 @@ export async function supabaseQuery(table, options = {}) {
   return res.json();
 }
 
-// 便捷方法
+// 创建绑定 env 的 db 实例
+export function createDb(env) {
+  return {
+    get: (table, opts) => supabaseQuery(table, { method: 'GET', env, ...opts }),
+    insert: (table, body) => supabaseQuery(table, { method: 'POST', body, env }),
+    update: (table, body, filters) => supabaseQuery(table, { method: 'PATCH', body, filters, env }),
+    upsert: (table, body) => supabaseQuery(table, { method: 'POST', body, env, extraHeaders: { 'Prefer': 'return=representation,resolution=merge-duplicates' } }),
+    delete: (table, filters) => supabaseQuery(table, { method: 'DELETE', filters, env }),
+  };
+}
+
+// 向后兼容：不带 env 的 db（用于已有代码过渡）
 export const db = {
   get: (table, opts) => supabaseQuery(table, { method: 'GET', ...opts }),
   insert: (table, body) => supabaseQuery(table, { method: 'POST', body }),

@@ -1,9 +1,10 @@
 // functions/api/guestbook.js
 // 访客留言 API
-import { db } from './_supabase.js';
+import { createDb } from './_supabase.js';
 
 export async function onRequestPost(context) {
   try {
+    const db = createDb(context.env);
     const { visitor_id, nickname, content } = await context.request.json();
     if (!visitor_id || !content) {
       return new Response(JSON.stringify({ error: 'visitor_id and content required' }), { status: 400 });
@@ -23,6 +24,7 @@ export async function onRequestPost(context) {
 
 export async function onRequestGet(context) {
   try {
+    const db = createDb(context.env);
     const url = new URL(context.request.url);
     const limit = parseInt(url.searchParams.get('limit') || '20');
 

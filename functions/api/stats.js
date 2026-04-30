@@ -1,10 +1,11 @@
 // functions/api/stats.js
 // 网站统计 API
-import { db } from './_supabase.js';
+import { createDb } from './_supabase.js';
 
 // 记录页面访问 / 停留时间
 export async function onRequestPost(context) {
   try {
+    const db = createDb(context.env);
     const body = await context.request.json();
     const { visitor_id, page, session_id, referrer, ua, duration, type } = body;
 
@@ -14,8 +15,6 @@ export async function onRequestPost(context) {
 
     // 如果是停留时间上报
     if (type === 'duration' && duration) {
-      // 更新最近一条该页面的访问记录的停留时间
-      const today = new Date().toISOString().slice(0, 10);
       await db.insert('page_views', {
         visitor_id,
         page: page || 'unknown',
@@ -80,6 +79,7 @@ export async function onRequestPost(context) {
 // 获取统计数据
 export async function onRequestGet(context) {
   try {
+    const db = createDb(context.env);
     const url = new URL(context.request.url);
     const type = url.searchParams.get('type') || 'today';
 
@@ -89,13 +89,11 @@ export async function onRequestGet(context) {
         filters: { stat_date: `eq.${today}` },
       });
 
-      // 获取今日签到人数
       const totalCheckins = await db.get('checkins', {
         filters: { checkin_date: `eq.${today}` },
         select: 'id',
       });
 
-      // 获取今日心情数
       const todayMoods = await db.get('moods', {
         filters: { created_at: `gte.${today}T00:00:00` },
         select: 'id',
@@ -132,14 +130,12 @@ export async function onRequestGet(context) {
     }
 
     if (type === 'popular') {
-      // 热门页面排行
       const today = new Date().toISOString().slice(0, 10);
       const views = await db.get('page_views', {
         filters: { created_at: `gte.${today}T00:00:00`, type: 'is.null' },
         select: 'page',
       });
 
-      // 统计各页面访问量
       const pageCounts = {};
       (views || []).forEach(v => {
         pageCounts[v.page] = (pageCounts[v.page] || 0) + 1;

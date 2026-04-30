@@ -1,9 +1,10 @@
 // functions/api/comments.js
 // 小说评论 API
-import { db } from './_supabase.js';
+import { createDb } from './_supabase.js';
 
 export async function onRequestPost(context) {
   try {
+    const db = createDb(context.env);
     const { visitor_id, chapter_id, nickname, content } = await context.request.json();
     if (!visitor_id || !chapter_id || !content) {
       return new Response(JSON.stringify({ error: 'missing fields' }), { status: 400 });
@@ -23,6 +24,7 @@ export async function onRequestPost(context) {
 
 export async function onRequestGet(context) {
   try {
+    const db = createDb(context.env);
     const url = new URL(context.request.url);
     const chapter_id = url.searchParams.get('chapter_id');
     if (!chapter_id) return new Response(JSON.stringify({ error: 'chapter_id required' }), { status: 400 });

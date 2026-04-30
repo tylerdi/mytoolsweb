@@ -1,9 +1,10 @@
 // functions/api/checkin.js
 // 签到 API
-import { db } from './_supabase.js';
+import { createDb } from './_supabase.js';
 
 export async function onRequestPost(context) {
   try {
+    const db = createDb(context.env);
     const { visitor_id } = await context.request.json();
     if (!visitor_id) return new Response(JSON.stringify({ error: 'visitor_id required' }), { status: 400 });
 
@@ -48,6 +49,7 @@ export async function onRequestPost(context) {
 
 export async function onRequestGet(context) {
   try {
+    const db = createDb(context.env);
     const visitor_id = context.request.url.split('visitor_id=')[1];
     if (!visitor_id) return new Response(JSON.stringify({ error: 'visitor_id required' }), { status: 400 });
 
