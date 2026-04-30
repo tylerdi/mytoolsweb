@@ -302,6 +302,16 @@
                 <h3>小游戏</h3>
                 <p>摸鱼时间到！几个好玩的小游戏等你来</p>
             </a>
+            <div class="feature-card reveal" style="--card-color: #22c55e" onclick="document.getElementById('fish-checkin').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">📅</span>
+                <h3>每日签到</h3>
+                <p>连续签到解锁成就，小鱼儿会跟着成长哦</p>
+            </div>
+            <div class="feature-card reveal" style="--card-color: #d4a853" onclick="document.getElementById('fish-capsule').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">💌</span>
+                <h3>时间胶囊</h3>
+                <p>给未来的自己写一封信，到期自动开启</p>
+            </div>
         </div>
     </section>
 
@@ -316,6 +326,10 @@
             <div id="fish-challenge" class="reveal"></div>
             <div id="mood-diary" class="reveal"></div>
             <div id="daily-question" class="reveal"></div>
+        </div>
+        <div class="interact-grid" style="margin-top:16px">
+            <div id="fish-checkin" class="reveal"></div>
+            <div id="fish-capsule" class="reveal"></div>
         </div>
     </section>
 
@@ -336,6 +350,8 @@
     <script src="/fish-question.js?v=20260501"></script>
     <script src="/fish-music.js?v=20260501"></script>
     <script src="/fish-challenge.js?v=20260501"></script>
+    <script src="/fish-checkin.js?v=20260501"></script>
+    <script src="/fish-capsule.js?v=20260501"></script>
     <script>
     // 打字机效果
     const phrases = [
