@@ -141,7 +141,7 @@ def generate_post(title, summary, tag, content):
     <footer class="footer">
         <p>Powered by <a href="https://www.tylerzhang.xyz">Tyler</a> & <a href="https://openclaw.ai">OpenClaw</a></p>
     </footer>
-    <script src="/fish-ai.js"></script>
+    <script src="/fish-ai.js?v=20260501"></script>
 </body>
 </html>'''
 
