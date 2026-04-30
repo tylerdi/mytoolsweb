@@ -55,6 +55,44 @@
 | 每日灵感 | 9:00 | 灵感墙加 2-3 条 + git push 部署 |
 | 每日更新日志 | 9:10 | 刷新 changelog + git push 部署 |
 
+---
+
+## 2026-05-01 (02:30) — 接入 Supabase 后端
+
+### 背景
+网站之前所有数据都存在浏览器 localStorage，换设备就丢了。老大决定接入 Supabase 作为后端数据库，实现数据持久化和跨设备同步。
+
+### 完成的工作
+
+#### 🗄️ 数据库
+- 在 Supabase 创建了 8 张表：checkins、capsules、moods、question_answers、novel_comments、guestbook、site_stats、page_views
+- 配置了 RLS 策略，允许匿名读写
+- 在 Cloudflare Pages 设置了 SUPABASE_SECRET 环境变量
+
+#### 🔌 API 端点（Cloudflare Pages Functions）
+
+| 端点 | 方法 | 功能 |
+|------|------|------|
+| `/api/checkin` | GET/POST | 签到（查询状态/执行签到） |
+| `/api/capsule` | GET/POST | 时间胶囊（列表/创建） |
+| `/api/mood` | GET/POST | 心情日记（历史/记录） |
+| `/api/stats` | GET/POST | 网站统计 |
+| `/api/comments` | GET/POST | 小说评论 |
+| `/api/guestbook` | GET/POST | 访客留言 |
+
+#### 🎨 前端改造
+
+| 组件 | 改动 |
+|------|------|
+| `fish-checkin.js` | 签到数据同步到 Supabase，支持跨设备连续签到 |
+| `fish-capsule.js` | 时间胶囊数据持久化，不怕清缓存 |
+| `fish-mood.js` | 心情日记同步到服务器 |
+
+#### 🛡️ 容错设计
+- 前端保留 localStorage 作为降级方案
+- 网络异常时自动回退本地存储
+- 成就数据量小，保留在本地（减少请求）
+
 ### 设计思路
 
 **网站定位：** 不是工具箱的附属品，而是一个有生命力的个人站点。每天都有新内容，让访问者有理由回来看看。
