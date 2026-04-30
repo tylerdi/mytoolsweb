@@ -49,18 +49,47 @@
           body: JSON.stringify({ text: this.text, voice: 'nova', speed: 1.0 }),
         });
 
-        if (!res.ok) throw new Error('TTS 请求失败');
+        if (!res.ok) {
+          let msg = `HTTP ${res.status}`;
+          try {
+            const err = await res.json();
+            msg = err.error || msg;
+          } catch {}
+          throw new Error(msg);
+        }
 
         const blob = await res.blob();
-        this.audio = new Audio(URL.createObjectURL(blob));
+        console.log('TTS blob:', blob.size, 'bytes, type:', blob.type);
+
+        if (blob.size < 100) {
+          throw new Error('音频数据为空');
+        }
+
+        const url = URL.createObjectURL(blob);
+        this.audio = new Audio();
+        this.audio.preload = 'auto';
+
+        // 等待 canplay 事件再播放
+        this.audio.addEventListener('canplaythrough', () => {
+          this.play();
+        }, { once: true });
+
+        this.audio.addEventListener('error', (e) => {
+          console.error('Audio error:', e, this.audio.error);
+          this.btn.innerHTML = '❌ 音频加载失败，点我重试';
+          this.btn.disabled = false;
+          this.loading = false;
+        }, { once: true });
+
         this.audio.onended = () => this.stop();
-        this.play();
+        this.audio.src = url;
+
       } catch (err) {
         console.error('TTS error:', err);
-        this.btn.innerHTML = '❌ 失败，点我重试';
+        this.btn.innerHTML = `❌ ${err.message || '失败，点我重试'}`;
         this.btn.disabled = false;
+        this.loading = false;
       }
-      this.loading = false;
     }
 
     play() {
@@ -318,7 +347,19 @@
   function init() {
     // TTS：为所有 .fish-tts 元素添加听文章按钮
     document.querySelectorAll('.fish-tts').forEach((el) => {
-      const text = el.dataset.text || el.textContent.slice(0, 2000);
+      let text = el.dataset.text || el.textContent.trim();
+      // 如果元素本身没有文字，尝试从相邻的 .post-content 提取
+      if (!text) {
+        const postContent = el.closest('.container')?.querySelector('.post-content')
+          || document.querySelector('.post-content');
+        if (postContent) {
+          text = postContent.textContent.replace(/\s+/g, ' ').trim().slice(0, 2000);
+        }
+      }
+      if (!text) {
+        console.warn('fish-tts: 未找到可朗读的文字内容');
+        return;
+      }
       new ListenButton(el, text);
     });
 

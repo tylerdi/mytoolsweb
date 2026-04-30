@@ -1,11 +1,10 @@
 // Cloudflare Pages Function - MIMO TTS 代理
 // POST /api/tts  { text, voice?, speed? }
-// 返回 mp3 音频
+// 返回 wav 音频
 
 export async function onRequestPost(context) {
-  const { request, env } = context;
+  const { request } = context;
 
-  // CORS headers
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -23,7 +22,6 @@ export async function onRequestPost(context) {
       });
     }
 
-    // 限制文本长度（避免滥用）
     const trimmed = text.slice(0, 2000);
 
     // 调用 MIMO TTS API
@@ -43,16 +41,19 @@ export async function onRequestPost(context) {
 
     if (!ttsResponse.ok) {
       const errText = await ttsResponse.text();
-      return new Response(JSON.stringify({ error: `TTS API 错误: ${ttsResponse.status}` }), {
+      return new Response(JSON.stringify({ error: `TTS API 错误: ${ttsResponse.status}`, detail: errText }), {
         status: ttsResponse.status,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
     }
 
-    // 流式返回音频
-    return new Response(ttsResponse.body, {
+    // 先读取完整响应到 ArrayBuffer，再返回（比流式更稳定）
+    const audioBuffer = await ttsResponse.arrayBuffer();
+
+    return new Response(audioBuffer, {
       headers: {
         'Content-Type': 'audio/wav',
+        'Content-Length': audioBuffer.byteLength.toString(),
         'Cache-Control': 'public, max-age=86400',
         ...corsHeaders,
       },
