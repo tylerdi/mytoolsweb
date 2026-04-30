@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于 · Tyler</title>
+    <link rel="icon" type="image/png" href="resource/easyclaw.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --surface-2: #1e1e1e;
+            --border: #2a2a2a;
+            --text: #e8e8e8;
+            --text-secondary: #888;
+            --accent: #646cff;
+            --accent-hover: #535bf2;
+            --green: #22c55e;
+            --orange: #f59e0b;
+            --pink: #ec4899;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        .header {
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+        }
+        .logo span { color: var(--accent); }
+
+        .nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .nav a:hover { color: var(--text); }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .hero {
+            margin-bottom: 4rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 .wave {
+            display: inline-block;
+            animation: wave 2.5s infinite;
+            transform-origin: 70% 70%;
+        }
+
+        @keyframes wave {
+            0%, 60%, 100% { transform: rotate(0); }
+            10% { transform: rotate(14deg); }
+            20% { transform: rotate(-8deg); }
+            30% { transform: rotate(14deg); }
+            40% { transform: rotate(-4deg); }
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+        }
+
+        .section {
+            margin-bottom: 3.5rem;
+        }
+
+        .section h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section h2 .icon {
+            font-size: 1.1rem;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1rem;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.2s;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .card .card-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        .card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tech-tag {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .manifesto {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .manifesto blockquote {
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--text);
+            line-height: 1.8;
+            border-left: 3px solid var(--accent);
+            padding-left: 1.25rem;
+        }
+
+        .manifesto .author {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 640px) {
+            .container { padding: 2rem 1.25rem; }
+            .hero h1 { font-size: 1.8rem; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">Tyler<span>.</span></a>
+            <nav class="nav">
+                <a href="/">首页</a>
+                <a href="/blog/">博客</a>
+                <a href="/about.html">关于</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1><span class="wave">👋</span> Hi, I'm Tyler</h1>
+            <p>一个喜欢折腾技术、探索 AI、偶尔写点东西的人。这里是我在互联网上的小角落，记录我的项目、想法和发现。</p>
+        </section>
+
+        <section class="section">
+            <h2><span class="icon">🧭</span> 这里有什么</h2>
+            <div class="card-grid">
+                <a href="/" class="card">
+                    <div class="card-icon">🧰</div>
+                    <h3>AI 工具箱</h3>
+                    <p>日常开发中常用的在线工具集合，JSON、加密、编码、转换一站搞定</p>
+                </a>
+                <a href="/blog/" class="card">
+                    <div class="card-icon">💡</div>
+                    <h3>每日创意</h3>
+                    <p>每天一个新点子，AI 生成 + 人工筛选，创业、技术、产品、脑洞不设限</p>
+                </a>
+                <a href="/games.html" class="card">
+                    <div class="card-icon">🎮</div>
+                    <h3>游戏合集</h3>
+                    <p>几个好玩的小游戏，摸鱼必备，赛博朋克风格</p>
+                </a>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2><span class="icon">🛠️</span> 技术栈</h2>
+            <div class="tech-stack">
+                <span class="tech-tag">HTML/CSS/JS</span>
+                <span class="tech-tag">Cloudflare Pages</span>
+                <span class="tech-tag">Supabase</span>
+                <span class="tech-tag">OpenClaw</span>
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">AI/LLM</span>
+                <span class="tech-tag">Node.js</span>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2><span class="icon">💭</span> 我相信</h2>
+            <div class="manifesto">
+                <blockquote>
+                    技术的价值不在于它有多复杂，而在于它能为多少人解决问题。<br><br>
+                    最好的工具是用完就忘的那种 —— 它帮你完成任务，然后安静地退场。<br><br>
+                    AI 不会取代人类，但会用 AI 的人会取代不用的人。
+                </blockquote>
+                <div class="author">— Tyler, 2026</div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2><span class="icon">🔗</span> 链接</h2>
+            <div class="card-grid">
+                <a href="https://github.com/tylerdi" class="card" target="_blank">
+                    <div class="card-icon">🐙</div>
+                    <h3>GitHub</h3>
+                    <p>代码仓库和开源项目</p>
+                </a>
+                <a href="https://www.tylerzhang.xyz" class="card" target="_blank">
+                    <div class="card-icon">🌐</div>
+                    <h3>主页</h3>
+                    <p>tylerzhang.xyz</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Built with ❤️ by <a href="https://www.tylerzhang.xyz">Tyler</a> & <a href="https://openclaw.ai">OpenClaw</a></p>
+    </footer>
+</body>
+</html>
