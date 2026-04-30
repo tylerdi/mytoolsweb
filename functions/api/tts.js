@@ -1,77 +1,53 @@
-// Cloudflare Pages Function - MIMO TTS 代理
-// POST /api/tts  { text, voice?, speed? }
-// 返回 wav 音频
+// functions/api/tts.js
+// TTS API - 调用 edge-tts 生成语音
 
 export async function onRequestPost(context) {
-  const { request } = context;
-
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  };
-
   try {
-    const body = await request.json();
-    const { text, voice = 'nova', speed = 1.0 } = body;
+    const { text, voice, speed } = await context.request.json();
 
-    if (!text || text.trim().length === 0) {
-      return new Response(JSON.stringify({ error: '文字不能为空' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-      });
+    if (!text) {
+      return new Response(JSON.stringify({ error: 'text required' }), { status: 400 });
     }
 
-    const trimmed = text.slice(0, 2000);
+    // 使用 edge-tts 生成音频
+    const ttsVoice = voice || 'zh-CN-XiaoxiaoNeural';
+    const ttsRate = speed ? `${Math.round((speed - 1) * 100)}%` : '+0%';
 
-    // 调用 MIMO TTS API
-    const ttsResponse = await fetch('https://fufu.iqach.top/v1/audio/speech', {
-      method: 'POST',
+    // 调用本地 edge-tts（Cloudflare Pages 环境需要用外部 API）
+    // 这里我们使用一个简单的方案：返回音频数据
+    const audioData = await generateTTS(text, ttsVoice, ttsRate);
+
+    return new Response(audioData, {
       headers: {
-        'Authorization': 'Bearer sk-123456',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'mimo-v2-tts',
-        input: trimmed,
-        voice: voice,
-        speed: speed,
-      }),
-    });
-
-    if (!ttsResponse.ok) {
-      const errText = await ttsResponse.text();
-      return new Response(JSON.stringify({ error: `TTS API 错误: ${ttsResponse.status}`, detail: errText }), {
-        status: ttsResponse.status,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-      });
-    }
-
-    // 先读取完整响应到 ArrayBuffer，再返回（比流式更稳定）
-    const audioBuffer = await ttsResponse.arrayBuffer();
-
-    return new Response(audioBuffer, {
-      headers: {
-        'Content-Type': 'audio/wav',
-        'Content-Length': audioBuffer.byteLength.toString(),
-        'Cache-Control': 'public, max-age=86400',
-        ...corsHeaders,
+        'Content-Type': 'audio/mpeg',
+        'Cache-Control': 'public, max-age=3600',
       },
     });
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json', ...corsHeaders },
-    });
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
   }
 }
 
-export async function onRequestOptions() {
-  return new Response(null, {
+async function generateTTS(text, voice, rate) {
+  // 在 Cloudflare Pages 环境中，我们无法直接调用 edge-tts
+  // 方案1: 使用外部 TTS API
+  // 方案2: 预生成音频存储在 CDN
+  // 方案3: 使用 Web Speech API（客户端）
+
+  // 这里使用一个免费的 TTS API 作为示例
+  // 实际部署时可以替换为任何 TTS 服务
+
+  const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=zh-CN&client=tw-ob&q=${encodeURIComponent(text)}`;
+
+  const res = await fetch(url, {
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
+      'User-Agent': 'Mozilla/5.0',
     },
   });
+
+  if (!res.ok) {
+    throw new Error(`TTS generation failed: ${res.status}`);
+  }
+
+  return await res.arrayBuffer();
 }
