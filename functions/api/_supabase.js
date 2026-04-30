@@ -3,6 +3,9 @@
 
 const SUPABASE_URL = 'https://twyosmombfrcheyjujvb.supabase.co';
 
+// Supabase anon key（公开密钥，RLS 保护数据安全）
+const FALLBACK_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eW9zbW9tYmZyY2hleWp1anZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjAwMDQsImV4cCI6MjA4ODIzNjAwNH0.70lVXwcjRqVNLDwkvIwEJHB5rRLBQttiWrW2hKi1bwo';
+
 // 从环境变量获取 Supabase Key
 function getSupabaseKey(env) {
   // Cloudflare Pages: 通过 context.env 传入
@@ -11,7 +14,8 @@ function getSupabaseKey(env) {
   if (typeof SUPABASE_ANON_KEY !== 'undefined') return SUPABASE_ANON_KEY;
   // Node.js 环境
   if (typeof process !== 'undefined' && process.env?.SUPABASE_ANON_KEY) return process.env.SUPABASE_ANON_KEY;
-  return '';
+  // Fallback: 硬编码的 anon key
+  return FALLBACK_KEY;
 }
 
 export async function supabaseQuery(table, options = {}) {
