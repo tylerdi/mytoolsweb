@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灵感墙 · Tyler</title>
+    <link rel="icon" type="image/png" href="resource/easyclaw.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --border: #2a2a2a;
+            --text: #e8e8e8;
+            --text-secondary: #888;
+            --accent: #646cff;
+            --colors: #646cff, #ec4899, #22c55e, #f59e0b, #06b6d4, #8b5cf6, #ef4444, #14b8a6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .header {
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+        }
+        .logo span { color: var(--accent); }
+
+        .nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .nav a:hover { color: var(--text); }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .masonry {
+            columns: 2;
+            column-gap: 1rem;
+        }
+
+        @media (max-width: 640px) {
+            .masonry { columns: 1; }
+            .container { padding: 2rem 1.25rem; }
+        }
+
+        .idea-card {
+            break-inside: avoid;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+            cursor: default;
+        }
+
+        .idea-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .idea-card .emoji {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .idea-card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.01em;
+        }
+
+        .idea-card p {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .idea-card .tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            margin-top: 0.75rem;
+            font-weight: 500;
+        }
+
+        .idea-card .date {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            opacity: 0.6;
+        }
+
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 2rem;
+        }
+
+        .footer a { color: var(--accent); text-decoration: none; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">Tyler<span>.</span></a>
+            <nav class="nav">
+                <a href="/">首页</a>
+                <a href="/blog/">博客</a>
+                <a href="/ideas.html">灵感</a>
+                <a href="/about.html">关于</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>⚡ 灵感墙</h1>
+            <p>快速闪现的点子，不需要长篇大论，一个想法就值得记录</p>
+        </div>
+
+        <div class="masonry" id="ideas">
+            <!-- Ideas injected by script -->
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Powered by <a href="https://www.tylerzhang.xyz">Tyler</a> & <a href="https://openclaw.ai">OpenClaw</a></p>
+    </footer>
+
+    <script>
+        const ideas = [
+            // IDEAS_PLACEHOLDER
+            { emoji: "🎨", title: "配色方案生成器", desc: "上传一张照片，AI 提取配色方案并生成 UI 设计稿", tag: "设计", date: "2026-05-01" },
+            { emoji: "🔧", title: "代码考古工具", desc: "自动分析 git 历史，找出每个 bug 是谁在什么情境下引入的", tag: "技术", date: "2026-05-01" },
+            { emoji: "⏰", title: "时间胶囊社交", desc: "给未来的自己或朋友写信，指定时间才能打开，比朋友圈更有仪式感", tag: "生活", date: "2026-05-01" },
+            { emoji: "🎭", title: "AI 剧本杀", desc: "用大模型当主持人，每个人有自己的秘密和任务，无限剧本", tag: "创业", date: "2026-05-01" },
+            { emoji: "🌱", title: "碳足迹可视化", desc: "扫码任何商品，立刻看到它从工厂到你手上的碳排放轨迹", tag: "产品", date: "2026-05-01" },
+            { emoji: "🧠", title: "记忆搜索引擎", desc: "把你的笔记、聊天、日记变成可搜索的个人知识图谱", tag: "AI", date: "2026-05-01" },
+        ];
+
+        const colors = ['#646cff', '#ec4899', '#22c55e', '#f59e0b', '#06b6d4', '#8b5cf6', '#ef4444', '#14b8a6'];
+        const container = document.getElementById('ideas');
+
+        if (ideas.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-secondary);text-align:center;padding:3rem;">灵感正在路上 ✨</p>';
+        } else {
+            ideas.forEach((idea, i) => {
+                const color = colors[i % colors.length];
+                const card = document.createElement('div');
+                card.className = 'idea-card';
+                card.innerHTML = `
+                    <div class="emoji">${idea.emoji}</div>
+                    <h3>${idea.title}</h3>
+                    <p>${idea.desc}</p>
+                    <span class="tag" style="color:${color};background:${color}15">${idea.tag}</span>
+                    <div class="date">${idea.date}</div>
+                `;
+                container.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
