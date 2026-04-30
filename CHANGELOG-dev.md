@@ -117,6 +117,18 @@
 - 访客写下回答后，AI 给出点评
 - 本地缓存，每天只生成一次
 
+#### 🎵 每日音乐推荐（灵感来源：ai6666.com）
+- 30首精选歌曲（摇滚、爵士、古典、流行、民谣...）
+- AI 每天推荐一首，生成推荐理由
+- 音频可视化动画
+- 深色渐变 UI（模仿音乐播放器风格）
+
+#### 🎯 每日挑战（灵感来源：ai6666.com 任务系统）
+- 18个创意挑战，3个难度等级（🌟轻松/⚡进阶/🔥地狱）
+- 6种类型：文字/互动/思考/音乐/创作/挑战
+- 完成后 AI 评分和评价
+- 连续挑战天数统计
+
 ### 技术架构
 
 | 文件 | 说明 |
@@ -124,6 +136,8 @@
 | `fish-ai.js` | 前端组件（TTS + 聊天，纯原生 JS，零依赖） |
 | `fish-mood.js` | AI心情日记组件 |
 | `fish-question.js` | 每日一问组件 |
+| `fish-music.js` | 每日音乐推荐组件 |
+| `fish-challenge.js` | 每日挑战组件 |
 | `functions/api/tts.js` | Cloudflare Pages Function — TTS 代理 |
 | `functions/api/chat.js` | Cloudflare Pages Function — Chat 代理（SSE 流式） |
 
@@ -136,6 +150,7 @@
 ### 对标 sanwan.ai 改进清单
 - [x] AI 交互能力（TTS + 聊天）
 - [x] 互动组件（心情日记 + 每日一问）
+- [x] 每日音乐推荐 + 每日挑战（参考 ai6666.com）
 - [ ] 统一视觉风格（手绘风/温暖风格）
 - [ ] SEO 优化（JSON-LD、Open Graph、sitemap）
 - [ ] 日记/成长记录系统
