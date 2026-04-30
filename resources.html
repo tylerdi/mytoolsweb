@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资源库 · Tyler</title>
+    <link rel="icon" type="image/png" href="resource/easyclaw.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg: #0a0a0a;
+            --surface: #141414;
+            --surface-2: #1e1e1e;
+            --border: #2a2a2a;
+            --text: #e8e8e8;
+            --text-secondary: #888;
+            --accent: #646cff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        .header {
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { font-size: 1.25rem; font-weight: 700; color: var(--text); text-decoration: none; }
+        .logo span { color: var(--accent); }
+
+        .nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        .nav a:hover { color: var(--text); }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 0.85rem 1.25rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 0.95rem;
+            outline: none;
+            margin-bottom: 2rem;
+            transition: border-color 0.2s;
+        }
+
+        .search-box:focus { border-color: var(--accent); }
+        .search-box::placeholder { color: var(--text-secondary); }
+
+        .category {
+            margin-bottom: 2.5rem;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .category-header .icon { font-size: 1.1rem; }
+        .category-header h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .resource-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.2s;
+            display: block;
+        }
+
+        .resource-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .resource-item .name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .resource-item .desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .resource-item .url {
+            font-size: 0.7rem;
+            color: var(--accent);
+            margin-top: 0.4rem;
+            opacity: 0.7;
+        }
+
+        .tag-free {
+            display: inline-block;
+            font-size: 0.6rem;
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+            margin-left: 0.4rem;
+            vertical-align: middle;
+        }
+
+        .tag-paid {
+            display: inline-block;
+            font-size: 0.6rem;
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+            margin-left: 0.4rem;
+            vertical-align: middle;
+        }
+
+        .footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem 0;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 2rem;
+        }
+
+        .footer a { color: var(--accent); text-decoration: none; }
+
+        @media (max-width: 640px) {
+            .container { padding: 2rem 1.25rem; }
+            .page-header h1 { font-size: 1.5rem; }
+            .resource-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">Tyler<span>.</span></a>
+            <nav class="nav">
+                <a href="/">首页</a>
+                <a href="/blog/">博客</a>
+                <a href="/ideas.html">灵感</a>
+                <a href="/resources.html">资源</a>
+                <a href="/about.html">关于</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>📚 资源库</h1>
+            <p>精选工具、网站和资源，经过筛选和验证，值得收藏</p>
+        </div>
+
+        <input type="text" class="search-box" placeholder="搜索资源..." id="search" oninput="filterResources()">
+
+        <div id="resources">
+            <div class="category" data-cat="ai">
+                <div class="category-header">
+                    <span class="icon">🤖</span>
+                    <h2>AI 工具</h2>
+                </div>
+                <div class="resource-grid">
+                    <a href="https://chat.openai.com" target="_blank" class="resource-item" data-keywords="chatgpt openai 对话">
+                        <div class="name">ChatGPT <span class="tag-paid">付费</span></div>
+                        <div class="desc">OpenAI 旗舰对话模型，GPT-4o 多模态</div>
+                        <div class="url">chat.openai.com</div>
+                    </a>
+                    <a href="https://claude.ai" target="_blank" class="resource-item" data-keywords="claude anthropic 对话">
+                        <div class="name">Claude <span class="tag-paid">付费</span></div>
+                        <div class="desc">Anthropic 出品，长上下文、推理能力强</div>
+                        <div class="url">claude.ai</div>
+                    </a>
+                    <a href="https://cursor.sh" target="_blank" class="resource-item" data-keywords="cursor ide 编程">
+                        <div class="name">Cursor <span class="tag-free">免费</span></div>
+                        <div class="desc">AI 原生代码编辑器，基于 VSCode</div>
+                        <div class="url">cursor.sh</div>
+                    </a>
+                    <a href="https://v0.dev" target="_blank" class="resource-item" data-keywords="v0 vercel 前端 ui">
+                        <div class="name">v0 <span class="tag-free">免费</span></div>
+                        <div class="desc">Vercel AI 前端生成器，描述需求出 UI</div>
+                        <div class="url">v0.dev</div>
+                    </a>
+                    <a href="https://openclaw.ai" target="_blank" class="resource-item" data-keywords="openclaw agent 助手">
+                        <div class="name">OpenClaw <span class="tag-free">开源</span></div>
+                        <div class="desc">开源 AI Agent 平台，连接各种渠道</div>
+                        <div class="url">openclaw.ai</div>
+                    </a>
+                    <a href="https://ollama.ai" target="_blank" class="resource-item" data-keywords="ollama 本地 模型">
+                        <div class="name">Ollama <span class="tag-free">开源</span></div>
+                        <div class="desc">本地运行大模型，一行命令搞定</div>
+                        <div class="url">ollama.ai</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="category" data-cat="dev">
+                <div class="category-header">
+                    <span class="icon">🛠️</span>
+                    <h2>开发工具</h2>
+                </div>
+                <div class="resource-grid">
+                    <a href="https://github.com" target="_blank" class="resource-item" data-keywords="github git 代码">
+                        <div class="name">GitHub <span class="tag-free">免费</span></div>
+                        <div class="desc">全球最大代码托管平台</div>
+                        <div class="url">github.com</div>
+                    </a>
+                    <a href="https://vercel.com" target="_blank" class="resource-item" data-keywords="vercel 部署 前端">
+                        <div class="name">Vercel <span class="tag-free">免费</span></div>
+                        <div class="desc">前端部署平台，秒级发布，自带 CI/CD</div>
+                        <div class="url">vercel.com</div>
+                    </a>
+                    <a href="https://cloudflare.com" target="_blank" class="resource-item" data-keywords="cloudflare cdn 部署">
+                        <div class="name">Cloudflare <span class="tag-free">免费</span></div>
+                        <div class="desc">CDN + Pages + Workers，全能边缘平台</div>
+                        <div class="url">cloudflare.com</div>
+                    </a>
+                    <a href="https://supabase.com" target="_blank" class="resource-item" data-keywords="supabase 数据库 后端">
+                        <div class="name">Supabase <span class="tag-free">免费</span></div>
+                        <div class="desc">开源 Firebase 替代，PostgreSQL + 实时</div>
+                        <div class="url">supabase.com</div>
+                    </a>
+                    <a href="https://railway.app" target="_blank" class="resource-item" data-keywords="railway 部署 后端">
+                        <div class="name">Railway <span class="tag-free">免费额度</span></div>
+                        <div class="desc">一键部署后端服务，支持多种语言</div>
+                        <div class="url">railway.app</div>
+                    </a>
+                    <a href="https://ngrok.com" target="_blank" class="resource-item" data-keywords="ngrok 内网穿透">
+                        <div class="name">ngrok <span class="tag-free">免费</span></div>
+                        <div class="desc">内网穿透神器，本地服务秒变公网</div>
+                        <div class="url">ngrok.com</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="category" data-cat="design">
+                <div class="category-header">
+                    <span class="icon">🎨</span>
+                    <h2>设计资源</h2>
+                </div>
+                <div class="resource-grid">
+                    <a href="https://figma.com" target="_blank" class="resource-item" data-keywords="figma 设计 ui">
+                        <div class="name">Figma <span class="tag-free">免费</span></div>
+                        <div class="desc">在线 UI 设计工具，协作首选</div>
+                        <div class="url">figma.com</div>
+                    </a>
+                    <a href="https://excalidraw.com" target="_blank" class="resource-item" data-keywords="excalidraw 手绘 图">
+                        <div class="name">Excalidraw <span class="tag-free">免费</span></div>
+                        <div class="desc">手绘风格白板，画架构图、流程图超好用</div>
+                        <div class="url">excalidraw.com</div>
+                    </a>
+                    <a href="https://tweakcn.com" target="_blank" class="resource-item" data-keywords="tweakcn 主题 配色">
+                        <div class="name">tweakcn <span class="tag-free">免费</span></div>
+                        <div class="desc">Tailwind CSS 主题生成器，一键换肤</div>
+                        <div class="url">tweakcn.com</div>
+                    </a>
+                    <a href="https://coolors.co" target="_blank" class="resource-item" data-keywords="coolors 配色 颜色">
+                        <div class="name">Coolors <span class="tag-free">免费</span></div>
+                        <div class="desc">配色方案生成器，按空格随机换色</div>
+                        <div class="url">coolors.co</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="category" data-cat="learn">
+                <div class="category-header">
+                    <span class="icon">📖</span>
+                    <h2>学习资源</h2>
+                </div>
+                <div class="resource-grid">
+                    <a href="https://roadmap.sh" target="_blank" class="resource-item" data-keywords="roadmap 学习路线">
+                        <div class="name">Roadmap.sh <span class="tag-free">免费</span></div>
+                        <div class="desc">开发者学习路线图，前端/后端/DevOps</div>
+                        <div class="url">roadmap.sh</div>
+                    </a>
+                    <a href="https://leetcode.cn" target="_blank" class="resource-item" data-keywords="leetcode 算法 刷题">
+                        <div class="name">LeetCode <span class="tag-free">免费</span></div>
+                        <div class="desc">算法题库，面试必备</div>
+                        <div class="url">leetcode.cn</div>
+                    </a>
+                    <a href="https://developer.mozilla.org" target="_blank" class="resource-item" data-keywords="mdn 文档 web">
+                        <div class="name">MDN <span class="tag-free">免费</span></div>
+                        <div class="desc">Web 开发权威文档，HTML/CSS/JS</div>
+                        <div class="url">developer.mozilla.org</div>
+                    </a>
+                    <a href="https://linux.do" target="_blank" class="resource-item" data-keywords="linuxdo 社区 技术">
+                        <div class="name">Linux.do <span class="tag-free">免费</span></div>
+                        <div class="desc">高质量技术社区，AI/开发/折腾</div>
+                        <div class="url">linux.do</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="category" data-cat="productivity">
+                <div class="category-header">
+                    <span class="icon">⚡</span>
+                    <h2>效率工具</h2>
+                </div>
+                <div class="resource-grid">
+                    <a href="https://notion.so" target="_blank" class="resource-item" data-keywords="notion 笔记 知识库">
+                        <div class="name">Notion <span class="tag-free">免费</span></div>
+                        <div class="desc">全能笔记和知识库工具</div>
+                        <div class="url">notion.so</div>
+                    </a>
+                    <a href="https://raycast.com" target="_blank" class="resource-item" data-keywords="raycast mac 效率 启动器">
+                        <div class="name">Raycast <span class="tag-free">免费</span></div>
+                        <div class="desc">Mac 效率启动器，替代 Spotlight</div>
+                        <div class="url">raycast.com</div>
+                    </a>
+                    <a href="https://obsidian.md" target="_blank" class="resource-item" data-keywords="obsidian 笔记 markdown">
+                        <div class="name">Obsidian <span class="tag-free">免费</span></div>
+                        <div class="desc">本地 Markdown 笔记，双向链接，插件生态</div>
+                        <div class="url">obsidian.md</div>
+                    </a>
+                    <a href="https://1password.com" target="_blank" class="resource-item" data-keywords="1password 密码 安全">
+                        <div class="name">1Password <span class="tag-paid">付费</span></div>
+                        <div class="desc">密码管理器，跨平台同步，安全省心</div>
+                        <div class="url">1password.com</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>持续更新中 · 欢迎推荐好资源 · Powered by <a href="https://www.tylerzhang.xyz">Tyler</a></p>
+    </footer>
+
+    <script>
+        function filterResources() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const items = document.querySelectorAll('.resource-item');
+            const categories = document.querySelectorAll('.category');
+
+            items.forEach(item => {
+                const text = (item.textContent + ' ' + (item.dataset.keywords || '')).toLowerCase();
+                item.style.display = text.includes(query) ? '' : 'none';
+            });
+
+            categories.forEach(cat => {
+                const visibleItems = cat.querySelectorAll('.resource-item:not([style*="display: none"])');
+                cat.style.display = visibleItems.length > 0 ? '' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>

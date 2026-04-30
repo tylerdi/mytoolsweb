@@ -2721,6 +2721,7 @@ console.log('Hello World');
                 <h1>AI工具箱</h1>
                 <p class="title">Design by Tyler · 全能开发工具集</p>
             </div>
+            <div id="daily-wisdom" style="text-align:center;margin:1rem 0 1.5rem;padding:0.8rem 1.5rem;background:rgba(100,108,255,0.08);border:1px solid rgba(100,108,255,0.15);border-radius:10px;font-size:0.9rem;color:#e8e8e8;line-height:1.6;"></div>
             <div class="search-box">
                 <input type="text" id="search-input" placeholder="搜索工具... 例如：JSON、密码、二维码" oninput="searchTools()">
             </div>
@@ -5814,5 +5815,36 @@ ${ua}
             document.getElementById('jwt-message').innerHTML = '';
         }
     </script>
+<script>
+// Daily Wisdom
+(function() {
+    const wisdoms = [
+        '💡 最好的学习方法是教别人。',
+        '🚀 不要等到完美才发布，发布后才变完美。',
+        '🎯 专注是把分散的注意力收回到一件事上的能力。',
+        '🌱 每天进步 1%，一年后你会变强 37 倍。',
+        '🧠 AI 不会取代你，但会用 AI 的人会。',
+        '⚡ 简单是终极的复杂。—— 达芬奇',
+        '🔥 行动是焦虑的解药。',
+        '🌊 代码如诗，简洁而有力。',
+        '🎨 设计不是看起来怎样，而是用起来怎样。',
+        '💎 好的工具是用完就忘的那种。',
+        '🔑 问题的价值大于答案。',
+        '🌊 技术的价值在于它解决了多少人的问题。',
+        '🎭 每个 bug 都是一个隐藏的 feature。',
+        '🌟 没有无聊的项目，只有无聊的方法。',
+        '🧭 不确定性是创造力的朋友。',
+        '🎯 做 less，但做 better。',
+        '💡 今天学到的东西，是明天创新的基础。',
+        '🔥 完成比完美更重要。',
+        '🌱 持续积累，复利效应会给你惊喜。',
+        '🧠 好的架构不是设计出来的，是长出来的。'
+    ];
+    const today = new Date();
+    const index = (today.getFullYear() * 366 + today.getMonth() * 31 + today.getDate()) % wisdoms.length;
+    const el = document.getElementById('daily-wisdom');
+    if (el) el.textContent = wisdoms[index];
+})();
+</script>
 </body>
 </html>
