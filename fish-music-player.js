@@ -65,13 +65,26 @@
           duration: s.duration || 0, rid: s.rid, artwork: '', type: 'kuwo'
         }));
         this.idx = 0;
+        this.isSearch = true;
         this.renderList();
         this.updateTrack();
         this.updateSongCount();
+        this.showBackBtn();
       } catch (e) {
         console.error('search failed:', e);
         this.showStatus('⚠️ 搜索失败');
       }
+    }
+
+    showBackBtn() {
+      const bar = this.el.querySelector('.search-box');
+      if (!bar || bar.querySelector('.back-btn')) return;
+      const btn = document.createElement('button');
+      btn.className = 'back-btn';
+      btn.textContent = '🔥 热歌';
+      btn.style.cssText = 'background:rgba(255,107,157,.15);border:1px solid rgba(255,107,157,.3);border-radius:8px;padding:8px 12px;color:#ff6b9d;cursor:pointer;font-size:.8rem;font-family:inherit;white-space:nowrap';
+      btn.onclick = () => { this.isSearch = false; btn.remove(); this.loadHot(); };
+      bar.appendChild(btn);
     }
 
     // ===== 播放 =====
@@ -81,7 +94,6 @@
       if (!t) return;
       this.saveState();
       try {
-        this.showStatus('⏳ 获取播放链接...');
         const proxyUrl = `/api/kuwo-proxy?rid=${t.rid}`;
         // 直接用代理流播放，不需要先拿链接
         this.audio.src = proxyUrl;
@@ -232,18 +244,16 @@
       const fav = this.el.querySelector('.ctrl-fav');
       const sh = this.el.querySelector('.ctrl-shuffle');
       const rp = this.el.querySelector('.ctrl-repeat');
-      const mt = this.el.querySelector('.ctrl-mute');
       const disc = this.el.querySelector('.disc');
       if (btn) btn.innerHTML = this.playing ? '⏸' : '▶';
       if (fav) fav.innerHTML = this.favs.includes(this.playlist[this.idx]?.id) ? '❤️' : '🤍';
       if (sh) sh.classList.toggle('on', this.shuffle);
       if (rp) { rp.classList.toggle('on', this.repeat!=='off'); rp.innerHTML = this.repeat==='one' ? '🔂' : '🔁'; }
-      if (mt) mt.innerHTML = this.muted ? '🔇' : this.volume>0.5 ? '🔊' : '🔉';
       if (disc) disc.classList.toggle('spin', this.playing);
     }
     showStatus(msg) {
       const list = this.el.querySelector('.pl-list');
-      if (list) list.innerHTML = `<div style="text-align:center;padding:40px;color:#646cff">${msg}</div>`;
+      if (list) list.innerHTML = `<div style="text-align:center;padding:40px;color:#646cff"><div class="disc" style="width:40px;height:40px;margin:0 auto 12px;border:2px solid rgba(100,108,255,.3);border-top-color:#646cff;animation:spin 1s linear infinite"></div>${msg}</div>`;
     }
     updateSongCount() {
       const el = this.el.querySelector('.song-count');
@@ -296,13 +306,12 @@
         .ctrl-btn.on{color:#646cff}
         .ctrl-play{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#646cff,#ff6b9d);border:none;color:#fff;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(100,108,255,.3);transition:transform .2s}
         .ctrl-play:hover{transform:scale(1.05)}
-        .vol-area{display:flex;align-items:center;gap:8px;padding:0 20px 12px}
-        .vol-area input[type=range]{flex:1;height:3px;accent-color:#646cff}
+
         .search-box{display:flex;padding:12px 16px;gap:8px}
         .search-box input{flex:1;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:8px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none}
         .search-box input:focus{border-color:#646cff}
         .search-box button{background:#646cff;border:none;border-radius:8px;padding:8px 14px;color:#fff;cursor:pointer;font-size:.8rem}
-        .pl-list{max-height:280px;overflow-y:auto;padding:8px 0}
+        .pl-list{max-height:350px;overflow-y:auto;padding:8px 0;-webkit-overflow-scrolling:touch}
         .pl-list::-webkit-scrollbar{width:3px}
         .pl-list::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
         .pl-item{display:flex;align-items:center;gap:10px;padding:8px 16px;cursor:pointer;transition:background .2s}
@@ -316,7 +325,20 @@
         .pl-artist{font-size:.65rem;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         .pl-dur{font-size:.65rem;color:#555}
         .mp-footer{text-align:center;padding:10px;font-size:.6rem;color:#444;border-top:1px solid rgba(255,255,255,.04)}
-        @media(max-width:480px){.mp-wrap{border-radius:12px;margin:0 8px}.disc{width:140px;height:140px}}
+        @media(max-width:480px){
+          .mp-wrap{border-radius:12px;margin:0 8px}
+          .disc{width:140px;height:140px}
+          .controls{gap:12px;padding:10px 16px}
+          .ctrl-play{width:44px;height:44px;font-size:1.1rem}
+          .search-box{padding:10px 12px}
+          .pl-list{max-height:300px}
+          .pl-item{padding:8px 12px}
+          .track-title{font-size:.9rem}
+          .lyrics-area{max-height:80px}
+        }
+        @media(min-width:481px) and (max-width:768px){
+          .mp-wrap{max-width:420px}
+        }
       </style>
       <div class="mp-wrap">
         <div class="mp-header">
@@ -346,10 +368,7 @@
           <button class="ctrl-btn ctrl-repeat" onclick="this.closest('.mp-wrap').__player.toggleRepeat()" title="循环">🔁</button>
           <button class="ctrl-btn ctrl-fav" onclick="this.closest('.mp-wrap').__player.toggleFav()" title="收藏">🤍</button>
         </div>
-        <div class="vol-area">
-          <button class="ctrl-btn ctrl-mute" onclick="this.closest('.mp-wrap').__player.toggleMute()" style="font-size:.9rem">🔊</button>
-          <input type="range" min="0" max="1" step="0.05" value="0.6" oninput="this.closest('.mp-wrap').__player.setVolume(this.value)">
-        </div>
+
         <div class="search-box" style="display:flex">
           <input placeholder="搜索歌曲、歌手..." onkeydown="if(event.key==='Enter')this.closest('.mp-wrap').__player.search(this.value)">
           <button onclick="this.closest('.mp-wrap').__player.search(this.previousElementSibling.value)">🔍</button>
@@ -360,10 +379,20 @@
           <span style="font-size:.65rem;color:#666;display:flex;align-items:center;margin-left:auto" class="song-count"></span>
         </div>
         <div class="pl-list"><div style="text-align:center;padding:40px;color:#666">🎵 加载中...</div></div>
-        <div class="mp-footer">🐟 小鱼儿音乐台 · 酷我音乐 · 空格播放/暂停</div>
+        <div class="mp-footer">🐟 小鱼儿音乐台 · 酷我音乐 · 空格播放 · ↑↓切歌 · ←→快进退</div>
       </div>`;
 
       this.el.querySelector('.mp-wrap').__player = this;
+
+      // 键盘快捷键
+      document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        if (e.code === 'Space') { e.preventDefault(); this.toggle(); }
+        else if (e.code === 'ArrowLeft') { e.preventDefault(); this.audio.currentTime = Math.max(0, this.audio.currentTime - 5); }
+        else if (e.code === 'ArrowRight') { e.preventDefault(); this.audio.currentTime = Math.min(this.audio.duration || 0, this.audio.currentTime + 5); }
+        else if (e.code === 'ArrowUp') { e.preventDefault(); this.prev(); }
+        else if (e.code === 'ArrowDown') { e.preventDefault(); this.next(); }
+      });
     }
   }
 

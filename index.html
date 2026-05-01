@@ -70,7 +70,7 @@
         .card-grid{display:grid;gap:16px}
         .card-grid-3{grid-template-columns:repeat(3,1fr)}
         .card-grid-2{grid-template-columns:1fr 1fr}
-        .card-grid-4{grid-template-columns:repeat(4,1fr)}
+        .card-grid-4{grid-template-columns:repeat(3,1fr)}
         .feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 24px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;text-decoration:none;color:inherit;display:block;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
         .feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--card-color,var(--accent)),transparent);opacity:0;transition:opacity .3s}
         .feature-card:hover{border-color:var(--card-color,var(--accent));transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
@@ -192,7 +192,9 @@
 
     <!-- ===== 音乐播放器（突出展示） ===== -->
     <section class="section" style="padding-top:40px;padding-bottom:40px">
-        <div id="fish-music-player" class="reveal"></div>
+        <div style="max-width:480px;margin:0 auto">
+            <div id="fish-music-player" class="reveal"></div>
+        </div>
     </section>
 
     <hr class="divider">
@@ -405,7 +407,7 @@
     <script src="/fish-capsule.js?v=20260501d"></script>
     <script src="/fish-tracker.js?v=20260501d"></script>
     <script src="/fish-stats.js?v=20260501d"></script>
-    <script src="/fish-music-player.js?v=20260501e"></script>
+    <script src="/fish-music-player.js?v=20260501f"></script>
     <script src="/fish-tts-player.js?v=20260501d"></script>
     <script src="/fish-guestbook.js?v=20260501d"></script>
     <script src="/fish-daily-poem.js?v=20260501d"></script>
