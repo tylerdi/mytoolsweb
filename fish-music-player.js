@@ -308,7 +308,7 @@
         .ctrl-play:hover{transform:scale(1.05)}
 
         .search-box{display:flex;padding:12px 16px;gap:6px}
-        .search-box input{width:70%;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:8px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none}
+        .search-box input{width:75%;flex:0 0 auto;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:8px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none}
         .search-box input:focus{border-color:#646cff}
         .search-box button{background:#646cff;border:none;border-radius:8px;padding:8px 14px;color:#fff;cursor:pointer;font-size:.8rem;flex-shrink:0;min-width:40px}
         .pl-list{max-height:350px;overflow-y:auto;padding:8px 0;-webkit-overflow-scrolling:touch}
@@ -372,7 +372,7 @@
 
         <div class="search-box" style="display:flex">
           <input placeholder="搜索歌曲、歌手..." onkeydown="if(event.key==='Enter')this.closest('.mp-wrap').__player.search(this.value)">
-          <button style="flex-shrink:0;min-width:36px;width:36px;background:#646cff;border:none;border-radius:8px;padding:6px 0;color:#fff;cursor:pointer;font-size:.85rem" onclick="this.closest('.mp-wrap').__player.search(this.previousElementSibling.value)">🔍</button>
+          <button style="flex-shrink:0;width:36px;height:36px;background:#646cff;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:.9rem;position:relative;z-index:999" onclick="this.closest('.mp-wrap').__player.search(this.previousElementSibling.value)">🔍</button>
         </div>
         <div style="display:flex;gap:8px;padding:0 16px 8px;flex-wrap:wrap">
           <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.playAll()" style="font-size:.75rem;background:rgba(100,108,255,.15);border:1px solid rgba(100,108,255,.3);border-radius:6px;padding:4px 10px;cursor:pointer">▶ 播放全部</button>
