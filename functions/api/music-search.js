@@ -83,7 +83,13 @@ async function searchNetease(q, limit) {
 
 async function searchQQ(q, limit) {
   const res = await fetch(
-    `https://c.y.qq.com/soso/fcgi-bin/client_search_cp?w=${encodeURIComponent(q)}&format=json&limit=${limit}`
+    `https://c.y.qq.com/soso/fcgi-bin/client_search_cp?w=${encodeURIComponent(q)}&format=json&limit=${limit}`,
+    {
+      headers: {
+        'Referer': 'https://y.qq.com/',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+      },
+    }
   );
 
   if (!res.ok) throw new Error(`QQ Music HTTP ${res.status}`);
