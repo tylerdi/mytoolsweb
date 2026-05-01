@@ -82,20 +82,16 @@
       this.saveState();
       try {
         this.showStatus('⏳ 获取播放链接...');
-        const res = await fetch(`/api/music-play?rid=${t.rid}`);
-        const data = await res.json();
-        if (data.success && data.url) {
-          this.audio.src = data.url;
-          await this.audio.play();
-          this.playing = true;
-          this.setupVisualizer();
-          this.updateUI();
-          this.updateMediaSession();
-          this.loadLyrics(t.rid);
-          return;
-        }
-        this.showStatus('⚠️ 无法播放，跳过...');
-        setTimeout(() => this.next(), 1500);
+        const proxyUrl = `/api/kuwo-proxy?rid=${t.rid}`;
+        // 直接用代理流播放，不需要先拿链接
+        this.audio.src = proxyUrl;
+        await this.audio.play();
+        this.playing = true;
+        this.setupVisualizer();
+        this.updateUI();
+        this.updateMediaSession();
+        this.loadLyrics(t.rid);
+        return;
       } catch (e) {
         console.error('play failed:', e);
         this.showStatus('⚠️ 播放失败');

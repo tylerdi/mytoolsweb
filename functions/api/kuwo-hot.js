@@ -29,7 +29,7 @@ export async function onRequestGet(context) {
         album: item.album || '',
         duration: item.duration || 0,
         rid: item.rid,
-        artwork: item.pic || item.albumpic || '',
+        artwork: item.pic ? `https://img1.kuwo.cn/star/albumcover/${item.pic.replace(/^\//, '')}` : (item.albumpic || ''),
         source: 'kuwo',
       }));
       return Response.json({ success: true, total: data.data.num || songs.length, songs });
