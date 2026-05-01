@@ -86,13 +86,12 @@
     async searchTracks(q) {
       if (!q.trim()) { this.loadTrending(); return; }
       this.showLoading();
-      const [audius, netease, qq] = await Promise.allSettled([
-        this._searchAudius(q), this._searchNetease(q), this._searchQQ(q),
+      const [audius, kuwo] = await Promise.allSettled([
+        this._searchAudius(q), this._searchKuwo(q),
       ]);
       const aList = audius.status === 'fulfilled' ? audius.value : [];
-      const nList = netease.status === 'fulfilled' ? netease.value : [];
-      const qList = qq.status === 'fulfilled' ? qq.value : [];
-      this.playlist = [...nList, ...qList, ...aList];
+      const kList = kuwo.status === 'fulfilled' ? kuwo.value : [];
+      this.playlist = [...kList, ...aList];
       if (!this.playlist.length) this.playlist = GENERATED;
       this.idx = 0;
       this.renderList();
@@ -108,19 +107,16 @@
       } catch { return []; }
     }
 
-    async _searchNetease(q) {
+    async _searchKuwo(q) {
       try {
-        const res = await fetch(`/api/music-search?q=${encodeURIComponent(q)}&source=netease&limit=20`);
+        const res = await fetch(`/api/music-search?q=${encodeURIComponent(q)}&rn=20`);
         const data = await res.json();
-        return data.ok ? (data.data?.netease || []) : [];
-      } catch { return []; }
-    }
-
-    async _searchQQ(q) {
-      try {
-        const res = await fetch(`/api/music-search?q=${encodeURIComponent(q)}&source=qq&limit=20`);
-        const data = await res.json();
-        return data.ok ? (data.data?.qq || []) : [];
+        if (!data.success) return [];
+        return (data.songs || []).map(s => ({
+          id: s.rid, title: s.name, artist: s.artist, album: s.album || '',
+          genre: '', mood: '', duration: s.duration || 0, artwork: '',
+          type: 'kuwo', rid: s.rid,
+        }));
       } catch { return []; }
     }
 
@@ -141,7 +137,7 @@
       this.stopGen();
       this.saveState();
       if (t.type === 'generated') { this.playGen(t.style); this.playing = true; this.updateUI(); return; }
-      if (t.type === 'netease' || t.type === 'qq') { await this.playCN(t); return; }
+      if (t.type === 'kuwo') { await this.playKuwo(t); return; }
       try {
         this.audio.src = `${AUDIUS_API}/tracks/${t.id}/stream?app_name=${APP_NAME}`;
         await this.audio.play();
@@ -151,6 +147,54 @@
       this.updateUI();
       this.updateMediaSession();
       this.loadLyrics(t.title, t.artist);
+    }
+
+    async playKuwo(t) {
+      try {
+        this.showPlayingStatus('⏳ 获取播放链接...');
+        const res = await fetch(`/api/music-play?rid=${t.rid}`);
+        const data = await res.json();
+        if (data.success && data.url) {
+          this.audio.src = data.url;
+          await this.audio.play();
+          this.playing = true;
+          this.setupVisualizer();
+          this.updateUI();
+          this.updateMediaSession();
+          this.loadKuwoLyrics(t.rid);
+          return;
+        }
+        // fallback: try Audius
+        await this.playCNFallback(t);
+      } catch (e) {
+        console.error('Play Kuwo failed:', e);
+        await this.playCNFallback(t);
+      }
+    }
+
+    async playCNFallback(t) {
+      try {
+        const queries = [t.title, `${t.title} ${t.artist}`];
+        for (const q of queries) {
+          const res = await fetch(`${AUDIUS_API}/tracks/search?query=${encodeURIComponent(q)}&limit=10&app_name=${APP_NAME}`);
+          const data = await res.json();
+          const tracks = data.data || [];
+          const exact = tracks.find(tr => tr.title?.toLowerCase().includes(t.title.toLowerCase()));
+          const best = exact || tracks[0];
+          if (best) {
+            this.audio.src = `${AUDIUS_API}/tracks/${best.id}/stream?app_name=${APP_NAME}`;
+            await this.audio.play();
+            this.playing = true;
+            this.setupVisualizer();
+            this.updateUI();
+            this.updateMediaSession();
+            this.loadKuwoLyrics(t.rid);
+            return;
+          }
+        }
+        this.showPlayingStatus('⚠️ 无法播放，跳过...');
+        setTimeout(() => this.next(), 1500);
+      } catch (e) { console.error('Fallback play failed:', e); }
     }
 
     toggle() {
@@ -251,6 +295,25 @@
       if (t) t.textContent = this.fmt(this.audio.duration);
     }
     // ===== 歌词 =====
+    async loadKuwoLyrics(rid) {
+      this.lyrics = [];
+      this.lyricIdx = -1;
+      const el = this.el.querySelector('.lyrics-lines');
+      if (el) el.innerHTML = '<span style="color:#555">正在加载歌词...</span>';
+      try {
+        const res = await fetch(`/api/music-lyrics?rid=${rid}`);
+        const data = await res.json();
+        if (data.success && data.lyrics?.length) {
+          this.lyrics = data.lyrics;
+          this.renderLyrics();
+        } else {
+          if (el) el.innerHTML = '<span style="color:#555">暂无歌词</span>';
+        }
+      } catch {
+        if (el) el.innerHTML = '<span style="color:#555">歌词加载失败</span>';
+      }
+    }
+
     async loadLyrics(title, artist) {
       this.lyrics = [];
       this.lyricIdx = -1;
@@ -420,40 +483,7 @@
     }
 
     // 播放中文歌曲：通过 Audius 搜索同名歌曲
-    async playCN(t) {
-      try {
-        // 只用歌名搜索Audius，不用歌手名，提高匹配率
-        const queries = [t.title, `${t.title} ${t.artist}`];
-        for (const q of queries) {
-          const res = await fetch(`${AUDIUS_API}/tracks/search?query=${encodeURIComponent(q)}&limit=10&app_name=${APP_NAME}`);
-          const data = await res.json();
-          const tracks = data.data || [];
-          // 优先找标题完全匹配的
-          const exact = tracks.find(tr => tr.title?.toLowerCase().includes(t.title.toLowerCase()));
-          const best = exact || tracks[0];
-          if (best) {
-            this.audio.src = `${AUDIUS_API}/tracks/${best.id}/stream?app_name=${APP_NAME}`;
-            await this.audio.play();
-            this.playing = true;
-            this.setupVisualizer();
-            this.updateUI();
-            this.updateMediaSession();
-            this.loadLyrics(t.title, t.artist);
-            return;
-          }
-        }
-        // Audius找不到，显示提示并跳下一首
-        const list = this.el.querySelector('.pl-list');
-        if (list) {
-          const item = list.querySelector(`.pl-item[data-idx="${this.idx}"]`);
-          if (item) {
-            const info = item.querySelector('.pl-artist');
-            if (info) info.textContent = '⚠️ 无法播放，跳过...';
-          }
-        }
-        setTimeout(() => this.next(), 1500);
-      } catch (e) { console.error('PlayCN failed:', e); }
-    }
+    // playCN / playCNFallback moved to playKuwo + playCNFallback above
 
     switchTab(tab) {
       this.tab = tab;
@@ -538,7 +568,7 @@
       <div class="mp-wrap">
         <div class="mp-header">
           <h2>🐟 音乐台</h2>
-          <span class="badge">Audius + 网易/QQ</span>
+          <span class="badge">Kuwo + Audius</span>
         </div>
         <div class="disc-area">
           <div class="disc"><div class="disc-art"></div><div class="disc-hole"></div></div>

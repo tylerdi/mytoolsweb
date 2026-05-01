@@ -1,123 +1,62 @@
-// functions/api/music-search.js
-// 音乐搜索代理：网易云 + QQ音乐（解决 CORS 问题）
-
-const CORS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
-
-function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { 'Content-Type': 'application/json', ...CORS },
-  });
-}
-
-export async function onRequestOptions() {
-  return new Response(null, { headers: CORS });
-}
+// Cloudflare Pages Function: Kuwo Music Search
+// GET /api/music-search?q=keyword&pn=1&rn=10
 
 export async function onRequestGet(context) {
-  try {
-    const url = new URL(context.request.url);
-    const q = url.searchParams.get('q');
-    const source = url.searchParams.get('source') || 'all'; // all, netease, qq
-    const limit = parseInt(url.searchParams.get('limit') || '20');
+  const { searchParams } = new URL(context.request.url);
+  const q = searchParams.get('q');
+  const pn = parseInt(searchParams.get('pn') || '1');
+  const rn = parseInt(searchParams.get('rn') || '10');
 
-    if (!q) return json({ ok: false, error: 'q parameter required' }, 400);
-
-    const results = { netease: [], qq: [] };
-
-    // 并行搜索
-    const tasks = [];
-
-    if (source === 'all' || source === 'netease') {
-      tasks.push(
-        searchNetease(q, limit).then(r => { results.netease = r; }).catch(() => {})
-      );
-    }
-
-    if (source === 'all' || source === 'qq') {
-      tasks.push(
-        searchQQ(q, limit).then(r => { results.qq = r; }).catch(() => {})
-      );
-    }
-
-    await Promise.all(tasks);
-
-    return json({ ok: true, data: results });
-  } catch (err) {
-    return json({ ok: false, error: err.message }, 500);
+  if (!q) {
+    return Response.json({ error: 'Missing query parameter "q"' }, { status: 400 });
   }
-}
 
-async function searchNetease(q, limit) {
-  const res = await fetch(
-    `https://music.163.com/api/search/get?s=${encodeURIComponent(q)}&type=1&limit=${limit}&offset=0`,
-    {
+  try {
+    const offset = (pn - 1) * rn;
+    const url = `http://search.kuwo.cn/r.s?all=${encodeURIComponent(q)}&ft=music&itemset=web_2013&client=kt&pn=${offset}&rn=${rn}&rformat=json&encoding=utf8`;
+
+    const resp = await fetch(url, {
       headers: {
-        'Referer': 'https://music.163.com',
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+        'Referer': 'http://www.kuwo.cn/',
       },
-    }
-  );
+    });
 
-  if (!res.ok) throw new Error(`NetEase HTTP ${res.status}`);
+    const raw = await resp.text();
 
-  const data = await res.json();
-  const songs = data.result?.songs || [];
+    // Kuwo returns JS object literal with single quotes, not valid JSON.
+    // Strategy: wrap keys/values in proper JSON by replacing single quotes
+    // Only replace quotes that are object delimiters (not inside values)
+    let jsonStr = '';
+    let inString = false;
+    let quoteChar = '';
+    let i = 0;
 
-  return songs.map(s => ({
-    id: `ne_${s.id}`,
-    title: s.name,
-    artist: s.artists?.[0]?.name || '未知',
-    duration: Math.round((s.duration || 0) / 1000),
-    artwork: s.album?.picUrl ? s.album.picUrl + '?param=300y300' : '',
-    type: 'netease',
-    neId: s.id,
-    neName: s.name,
-    neArtist: s.artists?.[0]?.name || '',
-  }));
-}
+    // Simple approach: replace single quotes with double quotes, handling escapes
+    // Since Kuwo values don't contain unescaped single quotes, this is safe
+    jsonStr = raw.replace(/'/g, '"');
 
-async function searchQQ(q, limit) {
-  // 使用新版QQ音乐API
-  const payload = {
-    req_0: {
-      module: 'music.search.SearchCgiService',
-      method: 'DoSearchForQQMusicDesktop',
-      param: {
-        query: q,
-        page_num: 1,
-        num_per_page: limit,
-      },
-    },
-  };
+    const data = JSON.parse(jsonStr);
 
-  const res = await fetch(
-    `https://u.y.qq.com/cgi-bin/musicu.fcg?data=${encodeURIComponent(JSON.stringify(payload))}`,
-    {
-      headers: {
-        'Referer': 'https://y.qq.com/',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
-      },
-    }
-  );
+    const songs = (data.abslist || []).map((item) => {
+      const rid = (item.MUSICRID || '').replace('MUSIC_', '');
+      return {
+        id: rid,
+        name: item.SONGNAME || item.NAME || '',
+        artist: item.ARTIST || '',
+        album: item.ALBUM || '',
+        duration: parseInt(item.DURATION || '0'),
+        rid: rid,
+        source: 'kuwo',
+      };
+    });
 
-  if (!res.ok) throw new Error(`QQ Music HTTP ${res.status}`);
-
-  const data = await res.json();
-  const songs = data.req_0?.data?.body?.song?.list || [];
-
-  return songs.map(s => ({
-    id: `qq_${s.songid || s.id}`,
-    title: s.title || s.songname || s.name,
-    artist: s.singer?.[0]?.name || '未知',
-    duration: s.interval || 0,
-    artwork: s.album?.mid ? `https://y.gtimg.cn/music/photo_new/T002R300x300M000${s.album.mid}.jpg` : '',
-    type: 'qq',
-    qqName: s.title || s.songname || s.name,
-    qqArtist: s.singer?.[0]?.name || '',
-  }));
+    return Response.json({
+      success: true,
+      total: parseInt(data.TOTAL || '0'),
+      songs,
+    });
+  } catch (err) {
+    return Response.json({ error: err.message }, { status: 500 });
+  }
 }
