@@ -281,7 +281,7 @@
       this.el.innerHTML = `
       <style>
         .mp-wrap{background:linear-gradient(135deg,#0f0f1e 0%,#1a0f2e 50%,#0f0f1e 100%);border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;font-family:'LXGW WenKai',-apple-system,sans-serif;color:#e8e8e8;max-width:480px;width:100%;margin:0 auto}
-        .mp-header{padding:20px 20px 0;display:flex;align-items:center;gap:10px}
+        .mp-header{padding:20px 20px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
         .mp-header h2{font-size:1rem;font-weight:700;margin:0}
         .mp-header .badge{font-size:.65rem;background:rgba(100,108,255,.2);color:#646cff;padding:2px 8px;border-radius:6px}
         .disc-area{padding:24px 20px;text-align:center;position:relative}
@@ -337,7 +337,7 @@
         <div class="mp-header">
           <h2>🐟 音乐台</h2>
           <span class="badge">酷我音乐</span>
-          <input id="fish-search-input" placeholder="🔍 搜索..." style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:6px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none;margin:0 0 0 8px;width:56px;min-width:56px" onkeydown="if(event.key==='Enter')this.closest('.mp-wrap').__player.search(this.value)">        </div>
+          <input id="fish-search-input" placeholder="🔍 搜索..." style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:6px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none;margin:0 0 0 8px;width:56px;min-width:56px;max-width:120px;flex-shrink:0" onkeydown="if(event.key==='Enter')this.closest('.mp-wrap').__player.search(this.value)">        </div>
         <div class="disc-area">
           <div class="disc"><div class="disc-art"></div><div class="disc-hole"></div></div>
           <div class="track-info">
