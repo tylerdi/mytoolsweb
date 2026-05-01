@@ -57,6 +57,13 @@ def generate_chapter(chapter_num):
             last = chapters[-1]
             prev_summary = f"\n\n【上一章回顾】\n第{last['id']}章 {last['title']}：{last.get('summary', '（无摘要）')}"
 
+    # 收集已有标题，防止重复
+    existing_titles = ""
+    if os.path.exists(CHAPTERS_JSON):
+        with open(CHAPTERS_JSON, "r", encoding="utf-8") as f:
+            for ch in json.load(f):
+                existing_titles += f"\n- {ch['title']}"
+
     prompt = f"""你是一位武侠小说大师，擅长古龙式意境和金庸式叙事。
 请为小说《{NOVEL_TITLE}》撰写第{chapter_num}章。
 
@@ -64,13 +71,16 @@ def generate_chapter(chapter_num):
 {prev_summary}
 
 【要求】
-1. 章节标题要有诗意，符合武侠风格
+1. 章节标题要有诗意，符合武侠风格，且必须与已有章节标题不同
 2. 正文 1500-2500 字
 3. 文风：古龙的短句意境 + 金庸的武功描写
 4. 每段开头空两格（用全角空格）
 5. 可以有诗词/剑诀穿插
 6. 情节要有推进，结尾要有悬念
 7. 用中文
+8. 第一句话不要重复之前章节的开头
+
+【已有章节标题，请勿重复】{existing_titles}
 
 【输出格式】
 先输出章节标题（不含"第X章"前缀），然后空一行，再输出正文。
@@ -143,9 +153,12 @@ def save_chapter(chapter_num, content):
         with open(CHAPTERS_JSON, "r", encoding="utf-8") as f:
             chapters = json.load(f)
 
-    # 生成摘要（取前50字）
+    # 生成摘要（取第2-4段的关键内容，避免千篇一律的开头）
     plain_text = body_html.replace("<p>", "").replace("</p>", "").replace('<p class="poem">', "")
-    summary = plain_text[:80].replace("\n", " ") + "..."
+    paras = [p.strip() for p in plain_text.split("\n") if p.strip()]
+    # 跳过第一段（通常是环境描写），从第2段开始取
+    summary_text = " ".join(paras[1:4]) if len(paras) > 3 else " ".join(paras[:3])
+    summary = summary_text[:80] + "..." if len(summary_text) > 80 else summary_text + "..."
 
     chapter_data = {
         "id": chapter_num,
