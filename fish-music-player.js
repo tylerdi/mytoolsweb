@@ -82,7 +82,7 @@
       const btn = document.createElement('button');
       btn.className = 'back-btn';
       btn.textContent = '🔥 热歌';
-      btn.style.cssText = 'background:rgba(255,107,157,.15);border:1px solid rgba(255,107,157,.3);border-radius:8px;padding:8px 12px;color:#ff6b9d;cursor:pointer;font-size:.8rem;font-family:inherit;white-space:nowrap';
+      btn.style.cssText = 'background:rgba(255,107,157,.15);border:1px solid rgba(255,107,157,.3);border-radius:8px;padding:8px 12px;color:#ff6b9d;cursor:pointer;font-size:.8rem;font-family:inherit;white-space:nowrap;flex-shrink:0';
       btn.onclick = () => { this.isSearch = false; btn.remove(); this.loadHot(); };
       bar.appendChild(btn);
     }
@@ -310,7 +310,7 @@
         .search-box{display:flex;padding:12px 16px;gap:8px}
         .search-box input{flex:1;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:8px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none}
         .search-box input:focus{border-color:#646cff}
-        .search-box button{background:#646cff;border:none;border-radius:8px;padding:8px 14px;color:#fff;cursor:pointer;font-size:.8rem}
+        .search-box button{background:#646cff;border:none;border-radius:8px;padding:8px 14px;color:#fff;cursor:pointer;font-size:.8rem;flex-shrink:0;min-width:40px}
         .pl-list{max-height:350px;overflow-y:auto;padding:8px 0;-webkit-overflow-scrolling:touch}
         .pl-list::-webkit-scrollbar{width:3px}
         .pl-list::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
@@ -330,7 +330,8 @@
           .disc{width:140px;height:140px}
           .controls{gap:12px;padding:10px 16px}
           .ctrl-play{width:44px;height:44px;font-size:1.1rem}
-          .search-box{padding:10px 12px}
+          .search-box{padding:10px 12px;gap:6px}
+          .search-box button{padding:8px 10px;font-size:.75rem}
           .pl-list{max-height:300px}
           .pl-item{padding:8px 12px}
           .track-title{font-size:.9rem}
