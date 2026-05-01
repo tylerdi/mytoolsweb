@@ -25,7 +25,7 @@
       this.audio.volume = this.volume;
       this.audio.ontimeupdate = () => { this.updateProgress(); this.syncLyrics(); };
       this.audio.onended = () => this.handleEnded();
-      this.audio.onerror = () => { this.showStatus('⚠️ 播放失败'); setTimeout(() => this.next(), 1200); };
+      this.audio.onerror = () => { console.warn('播放失败，跳下一首'); setTimeout(() => this.next(), 500); };
       this.audio.onloadedmetadata = () => this.updateDuration();
 
       this.render();
@@ -106,7 +106,7 @@
         return;
       } catch (e) {
         console.error('play failed:', e);
-        this.showStatus('⚠️ 播放失败');
+        setTimeout(() => this.next(), 500);
       }
     }
 
