@@ -361,12 +361,13 @@
         }
     }
 
-    // TTS 朗读（流式分段 + 预加载，无缝衔接）
+    // TTS 朗读（流式分段 + 激进预加载，无缝衔接）
     let ttsChunks = [];
     let ttsCache = new Map();
     let ttsIdx = 0;
     let ttsPlaying = false;
     let ttsAborted = false;
+    const PRELOAD_AHEAD = 3; // 提前预加载3段
 
     async function toggleTTS() {
         if (ttsPlaying) { stopTTS(); } else { await startTTS(); }
@@ -376,19 +377,19 @@
         const chunks = [];
         for (const para of text.split(/\n+/)) {
             if (!para.trim()) continue;
-            if (para.length <= 120) { chunks.push(para.trim()); continue; }
+            if (para.length <= 100) { chunks.push(para.trim()); continue; }
             const sents = para.match(/[^。！？.!?,，；;]+[。！？.!?,，；;]?/g) || [para];
             let buf = '';
             for (const s of sents) {
-                if (buf.length + s.length > 120 && buf.length) { chunks.push(buf.trim()); buf = s; }
+                if (buf.length + s.length > 100 && buf.length) { chunks.push(buf.trim()); buf = s; }
                 else buf += s;
             }
             if (buf.trim()) chunks.push(buf.trim());
         }
-        // 合并过短段
+        // 合并过短段（<50字合并）
         const merged = [];
         for (const c of chunks) {
-            if (merged.length && merged[merged.length-1].length + c.length < 80)
+            if (merged.length && merged[merged.length-1].length + c.length < 60)
                 merged[merged.length-1] += c;
             else merged.push(c);
         }
@@ -409,10 +410,34 @@
         btn.textContent = '⏳ 准备中...';
         btn.disabled = true;
 
-        // 立即生成并播放第一段
-        await playTTSChunk(0);
-        // 后台预加载第二段
-        preloadTTS(1);
+        // 生成第一段（必须等）
+        const first = await genTTSChunk(ttsChunks[0]);
+        if (!first || ttsAborted) return;
+        ttsCache.set(0, first);
+
+        // 后台并行预加载后续段（不等待）
+        for (let i = 1; i <= PRELOAD_AHEAD && i < ttsChunks.length; i++) {
+            preloadOne(i);
+        }
+
+        // 立即播放第一段
+        playTTSChunk(0);
+    }
+
+    // 后台预加载单个chunk（fire-and-forget）
+    async function preloadOne(idx) {
+        if (idx >= ttsChunks.length || ttsAborted || ttsCache.has(idx)) return;
+        try {
+            const a = await genTTSChunk(ttsChunks[idx]);
+            if (a && !ttsAborted) ttsCache.set(idx, a);
+        } catch {}
+    }
+
+    // 保持预加载队列：确保当前播放idx之后有N段已缓存
+    function ensurePreload(currentIdx) {
+        for (let i = 1; i <= PRELOAD_AHEAD; i++) {
+            preloadOne(currentIdx + i);
+        }
     }
 
     async function playTTSChunk(idx) {
@@ -423,16 +448,37 @@
         btn.disabled = false;
 
         let audio = ttsCache.get(idx);
+
         if (!audio) {
-            audio = await genTTSChunk(ttsChunks[idx]);
-            if (!audio || ttsAborted) return;
-            ttsCache.set(idx, audio);
+            // 还没缓存好，等一下（最多2秒）
+            btn.textContent = `⏳ 加载中 (${idx+1}/${ttsChunks.length})`;
+            for (let w = 0; w < 20; w++) {
+                if (ttsAborted) return;
+                audio = ttsCache.get(idx);
+                if (audio) break;
+                await new Promise(r => setTimeout(r, 100));
+            }
+            if (!audio) {
+                // 还是没有，现场生成
+                audio = await genTTSChunk(ttsChunks[idx]);
+                if (!audio || ttsAborted) return;
+                ttsCache.set(idx, audio);
+            }
         }
         if (ttsAborted) return;
 
-        audio.onended = () => playTTSChunk(idx + 1);
+        // 播放当前段
+        audio.onended = () => {
+            // 播完立即播下一段，同时确保更后面的段在预加载
+            ensurePreload(idx + 1);
+            playTTSChunk(idx + 1);
+        };
         audio.onerror = () => playTTSChunk(idx + 1);
+
         try { await audio.play(); } catch { playTTSChunk(idx + 1); }
+
+        // 播放开始后，确保后续段在预加载
+        ensurePreload(idx + 1);
     }
 
     async function genTTSChunk(text) {
@@ -477,10 +523,9 @@
     }
 
     async function preloadTTS(from) {
-        for (let i = 0; i < 1; i++) {
-            const idx = from + i;
-            if (idx >= ttsChunks.length || ttsAborted || ttsCache.has(idx)) continue;
-            try { const a = await genTTSChunk(ttsChunks[idx]); if (a && !ttsAborted) ttsCache.set(idx, a); } catch {}
+        // 保留兼容，实际用 ensurePreload
+        for (let i = 0; i < PRELOAD_AHEAD; i++) {
+            preloadOne(from + i);
         }
     }
 
