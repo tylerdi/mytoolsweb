@@ -171,6 +171,8 @@
       this.idx = this.shuffle ? Math.random()*this.playlist.length|0 : (this.idx+1)%this.playlist.length;
       this.play();
     }
+    playAll() { if (!this.playlist.length) return; this.idx = 0; this.play(); }
+    shufflePlay() { if (!this.playlist.length) return; this.shuffle = true; this.idx = Math.random()*this.playlist.length|0; this.play(); this.updateUI(); }
     handleEnded() { if (this.repeat==='one') this.play(); else if (this.repeat==='all'||this.idx<this.playlist.length-1) this.next(); else { this.playing=false; this.updateUI(); } }
     seek(e) { const r=e.currentTarget.getBoundingClientRect(); this.audio.currentTime=((e.clientX-r.left)/r.width)*(this.audio.duration||0); }
     setVolume(v) { this.volume=parseFloat(v); this.audio.volume=this.muted?0:this.volume; this.updateUI(); }
@@ -500,6 +502,10 @@
           <button onclick="this.closest('.mp-wrap').__player.searchTracks(this.previousElementSibling.value)">🔍</button>
         </div>
         <div class="genre-bar">${GENRES.map(g=>`<span class="genre-chip" onclick="this.closest('.mp-wrap').__player.loadTrending('${g}')">${g}</span>`).join('')}</div>
+        <div style="display:flex;gap:8px;padding:0 16px 8px">
+          <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.playAll()" style="font-size:.75rem;background:rgba(100,108,255,.15);border:1px solid rgba(100,108,255,.3);border-radius:6px;padding:4px 10px;cursor:pointer">▶ 播放全部</button>
+          <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.shufflePlay()" style="font-size:.75rem;background:rgba(255,107,157,.15);border:1px solid rgba(255,107,157,.3);border-radius:6px;padding:4px 10px;cursor:pointer">🔀 随机播放</button>
+        </div>
         <div class="pl-list"><div style="text-align:center;padding:40px;color:#666">🎵 加载中...</div></div>
         <div class="mp-footer">🐟 小鱼儿音乐台 · Powered by Audius · 空格播放/暂停</div>
       </div>`;
