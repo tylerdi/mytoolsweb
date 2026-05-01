@@ -10,6 +10,16 @@
   const APP_NAME = 'fishplayer';
   const GENRES = ['Electronic','Hip-Hop/Rap','Pop','Rock','Jazz','Classical','R&B/Soul','Ambient','Metal','World','Folk','Disco','Funk','Reggae','Latin'];
 
+  // 网易云音乐热歌榜
+  const NETEASE_PLAYLISTS = [
+    { id: 3778678, name: '热歌榜', icon: '🔥', desc: '实时热门' },
+    { id: 19723756, name: '飙升榜', icon: '🚀', desc: '快速上升' },
+    { id: 2884035, name: '华语流行', icon: '🎤', desc: '流行精选' },
+    { id: 5046787, name: '摇滚榜', icon: '🎸', desc: '摇滚力量' },
+    { id: 1163078, name: '民谣榜', icon: '🎵', desc: '民谣清新' },
+    { id: 2809513768, name: '欧美新歌', icon: '🌍', desc: '欧美热门' },
+  ];
+
   // Web Audio 后备
   const GENERATED = [
     { id:'g1', title:'Lo-fi Dreams', artist:'AI 生成', genre:'Lo-fi', type:'generated', style:'lofi' },
@@ -71,15 +81,55 @@
     async searchTracks(q) {
       if (!q.trim()) { this.loadTrending(); return; }
       this.showLoading();
+      const [audius, netease, qq] = await Promise.allSettled([
+        this._searchAudius(q), this._searchNetease(q), this._searchQQ(q),
+      ]);
+      const aList = audius.status === 'fulfilled' ? audius.value : [];
+      const nList = netease.status === 'fulfilled' ? netease.value : [];
+      const qList = qq.status === 'fulfilled' ? qq.value : [];
+      this.playlist = [...nList, ...qList, ...aList];
+      if (!this.playlist.length) this.playlist = GENERATED;
+      this.idx = 0;
+      this.renderList();
+      this.updateTrack();
+    }
+
+    async _searchAudius(q) {
       try {
-        const res = await fetch(`${AUDIUS_API}/tracks/search?query=${encodeURIComponent(q)}&limit=30&app_name=${APP_NAME}`);
+        const res = await fetch(`${AUDIUS_API}/tracks/search?query=${encodeURIComponent(q)}&limit=20&app_name=${APP_NAME}`);
         const data = await res.json();
-        this.playlist = (data.data || []).map(t => this.mapTrack(t));
-        if (!this.playlist.length) this.playlist = GENERATED;
-        this.idx = 0;
-        this.renderList();
-        this.updateTrack();
-      } catch (e) { console.error('Search failed:', e); }
+        return (data.data || []).map(t => this.mapTrack(t));
+      } catch { return []; }
+    }
+
+    async _searchNetease(q) {
+      try {
+        const res = await fetch(`https://music.163.com/api/search/get?s=${encodeURIComponent(q)}&type=1&limit=20&offset=0`, {
+          headers: { 'Referer': 'https://music.163.com' }
+        });
+        const data = await res.json();
+        return (data.result?.songs || []).map(s => ({
+          id: `ne_${s.id}`, title: s.name,
+          artist: s.artists?.[0]?.name || '未知', genre: '华语', mood: '',
+          duration: Math.round((s.duration || 0) / 1000),
+          artwork: s.album?.picUrl ? s.album.picUrl + '?param=300y300' : '',
+          type: 'netease', neId: s.id, neName: s.name, neArtist: s.artists?.[0]?.name || '',
+        }));
+      } catch { return []; }
+    }
+
+    async _searchQQ(q) {
+      try {
+        const res = await fetch(`https://c.y.qq.com/soso/fcgi-bin/client_search_cp?w=${encodeURIComponent(q)}&format=json&limit=20`);
+        const data = await res.json();
+        return (data.data?.song?.list || []).map(s => ({
+          id: `qq_${s.songid}`, title: s.songname,
+          artist: s.singer?.[0]?.name || '未知', genre: '华语', mood: '',
+          duration: s.interval || 0,
+          artwork: s.albummid ? `https://y.gtimg.cn/music/photo_new/T002R300x300M000${s.albummid}.jpg` : '',
+          type: 'qq',
+        }));
+      } catch { return []; }
     }
 
     mapTrack(t) {
@@ -98,6 +148,7 @@
       if (!t) return;
       this.stopGen();
       if (t.type === 'generated') { this.playGen(t.style); this.playing = true; this.updateUI(); return; }
+      if (t.type === 'netease' || t.type === 'qq') { await this.playCN(t); return; }
       try {
         this.audio.src = `${AUDIUS_API}/tracks/${t.id}/stream?app_name=${APP_NAME}`;
         await this.audio.play();
@@ -252,6 +303,78 @@
       list.querySelectorAll('.pl-item').forEach(el => el.onclick = () => this.play(+el.dataset.idx));
     }
 
+    // ===== 网易云音乐榜单 =====
+    async loadNeteasePlaylist(plId) {
+      this.showLoading();
+      try {
+        const res = await fetch(`https://music.163.com/api/playlist/detail?id=${plId}`, {
+          headers: { 'Referer': 'https://music.163.com' }
+        });
+        const data = await res.json();
+        const tracks = data.result?.tracks || data.playlist?.tracks || [];
+        this.playlist = tracks.slice(0, 30).map(t => ({
+          id: `ne_${t.id}`, title: t.name,
+          artist: t.artists?.[0]?.name || '未知', genre: '华语', mood: '',
+          duration: Math.round((t.duration || 0) / 1000),
+          artwork: t.album?.picUrl ? t.album.picUrl + '?param=300y300' : '',
+          type: 'netease', neId: t.id, neName: t.name, neArtist: t.artists?.[0]?.name || '',
+        }));
+        if (!this.playlist.length) this.playlist = GENERATED;
+        this.idx = 0;
+        this.renderList();
+        this.updateTrack();
+      } catch (e) {
+        console.error('NetEase playlist failed:', e);
+        this.playlist = GENERATED;
+        this.renderList();
+      }
+    }
+
+    renderNecards() {
+      const list = this.el.querySelector('.pl-list');
+      if (!list) return;
+      list.innerHTML = `
+        <div style="padding:12px 16px;font-size:.75rem;color:#888">选择榜单，歌曲通过 Audius 播放</div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:0 12px 12px">
+          ${NETEASE_PLAYLISTS.map(p => `
+            <div class="ne-card" data-id="${p.id}" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px;cursor:pointer;transition:all .2s">
+              <div style="font-size:1.2rem">${p.icon}</div>
+              <div style="font-size:.8rem;font-weight:600;margin-top:4px">${p.name}</div>
+              <div style="font-size:.6rem;color:#888;margin-top:2px">${p.desc}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      list.querySelectorAll('.ne-card').forEach(el => {
+        el.onclick = () => this.loadNeteasePlaylist(+el.dataset.id);
+        el.onmouseenter = () => el.style.borderColor = '#646cff';
+        el.onmouseleave = () => el.style.borderColor = 'rgba(255,255,255,.06)';
+      });
+    }
+
+    // 播放中文歌曲：通过 Audius 搜索同名歌曲
+    async playCN(t) {
+      try {
+        const q = `${t.neName || t.title} ${t.neArtist || t.artist}`;
+        const res = await fetch(`${AUDIUS_API}/tracks/search?query=${encodeURIComponent(q)}&limit=5&app_name=${APP_NAME}`);
+        const data = await res.json();
+        const found = data.data?.[0];
+        if (found) {
+          this.playlist[this.idx] = this.mapTrack(found);
+          this.play();
+        } else {
+          const list = this.el.querySelector('.pl-list');
+          if (list) {
+            const item = list.querySelector(`.pl-item[data-idx="${this.idx}"]`);
+            if (item) {
+              const info = item.querySelector('.pl-artist');
+              if (info) info.textContent = '⚠️ Audius 无此歌曲';
+            }
+          }
+        }
+      } catch (e) { console.error('PlayCN failed:', e); }
+    }
+
     switchTab(tab) {
       this.tab = tab;
       this.el.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
@@ -260,6 +383,7 @@
       if (searchBox) searchBox.style.display = tab === 'search' ? 'flex' : 'none';
       if (genreBar) genreBar.style.display = tab === 'genre' ? 'flex' : 'none';
       if (tab === 'trending') this.loadTrending();
+      else if (tab === 'cn') { this.renderNecards(); }
       else if (tab === 'genre') { /* show genre chips */ }
       else if (tab === 'fav') { this.playlist = GENERATED.filter(t => this.favs.includes(t.id)).concat(this.playlist.filter(t => this.favs.includes(t.id))); this.renderList(); }
     }
@@ -337,7 +461,7 @@
       <div class="mp-wrap">
         <div class="mp-header">
           <h2>🐟 音乐台</h2>
-          <span class="badge">Audius 免费全曲</span>
+          <span class="badge">Audius + 网易/QQ</span>
         </div>
         <div class="disc-area">
           <div class="disc"><div class="disc-art"></div><div class="disc-hole"></div></div>
@@ -366,6 +490,7 @@
         </div>
         <div class="tabs">
           <button class="tab-btn active" data-tab="trending" onclick="this.closest('.mp-wrap').__player.switchTab('trending')">🔥 热门</button>
+          <button class="tab-btn" data-tab="cn" onclick="this.closest('.mp-wrap').__player.switchTab('cn')">🇨🇳 中文</button>
           <button class="tab-btn" data-tab="search" onclick="this.closest('.mp-wrap').__player.switchTab('search')">🔍 搜索</button>
           <button class="tab-btn" data-tab="genre" onclick="this.closest('.mp-wrap').__player.switchTab('genre')">🎸 分类</button>
           <button class="tab-btn" data-tab="fav" onclick="this.closest('.mp-wrap').__player.switchTab('fav')">❤️ 收藏</button>
