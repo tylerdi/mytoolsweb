@@ -29,6 +29,8 @@
       this.audio.onloadedmetadata = () => this.updateDuration();
 
       this.render();
+      // 确保播放器可见（防止 reveal 动画未触发）
+      this.el.classList.add('visible');
       this.loadHot();
     }
 
@@ -299,12 +301,12 @@
         .search-box input{flex:1;min-width:0;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:8px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none}
         .search-box input:focus{border-color:#646cff}
         .search-box button{background:#646cff;border:none;border-radius:8px;padding:8px 14px;color:#fff;cursor:pointer;font-size:.8rem;flex-shrink:0}
-        .action-bar{display:flex;gap:6px;padding:0 16px 8px;flex-wrap:wrap;align-items:center}
-        .action-bar .act-btn{font-size:.75rem;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:5px 10px;cursor:pointer;flex-shrink:0;white-space:nowrap;background:none;color:#e8e8e8;font-family:inherit;transition:all .2s}
+        .action-bar{display:flex;gap:6px;padding:8px 16px;flex-wrap:wrap;align-items:center}
+        .action-bar .act-btn{font-size:.8rem;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;flex-shrink:0;white-space:nowrap;font-family:inherit;transition:all .2s;font-weight:600}
         .action-bar .act-btn:active{transform:scale(0.95)}
-        .action-bar .act-play{background:rgba(100,108,255,.15);border-color:rgba(100,108,255,.3)}
-        .action-bar .act-shuffle{background:rgba(255,107,157,.15);border-color:rgba(255,107,157,.3)}
-        .action-bar .act-hot{background:rgba(255,107,157,.2);border-color:rgba(255,107,157,.5);color:#ff6b9d}
+        .action-bar .act-play{background:rgba(100,108,255,.25);color:#8b8eff}
+        .action-bar .act-shuffle{background:rgba(255,107,157,.2);color:#ff8ab5}
+        .action-bar .act-hot{background:#ff6b9d;color:#fff;font-weight:700}
         .pl-list{max-height:350px;overflow-y:auto;padding:8px 0;-webkit-overflow-scrolling:touch}
         .pl-list::-webkit-scrollbar{width:3px}
         .pl-list::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
@@ -327,8 +329,8 @@
           .search-box{padding:10px 12px;gap:6px}
           .search-box input{padding:7px 10px;font-size:.75rem}
           .search-box button{padding:7px 10px;font-size:.75rem}
-          .action-bar{padding:0 12px 8px;gap:5px}
-          .action-bar .act-btn{padding:4px 8px;font-size:.7rem}
+          .action-bar{padding:8px 12px;gap:6px}
+          .action-bar .act-btn{padding:7px 12px;font-size:.8rem}
           .pl-list{max-height:300px}
           .pl-item{padding:8px 12px}
           .track-title{font-size:.9rem}
