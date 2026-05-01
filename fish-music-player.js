@@ -308,12 +308,10 @@
       this.updateTrack();
       const btn = this.el.querySelector('.ctrl-play');
       const fav = this.el.querySelector('.ctrl-fav');
-      const sh = this.el.querySelector('.ctrl-shuffle');
       const rp = this.el.querySelector('.ctrl-repeat');
       const disc = this.el.querySelector('.disc');
       if (btn) btn.innerHTML = this.playing ? '⏸' : '▶';
       if (fav) fav.innerHTML = this.favs.includes(this.playlist[this.idx]?.id) ? '❤️' : '🤍';
-      if (sh) sh.classList.toggle('on', this.shuffle);
       if (rp) { rp.classList.toggle('on', this.repeat!=='off'); rp.innerHTML = this.repeat==='one' ? '🔂' : '🔁'; }
       if (disc) disc.classList.toggle('spin', this.playing);
     }
@@ -441,7 +439,6 @@
           <div class="prog-time"><span class="time-cur">0:00</span><span class="time-total">0:00</span></div>
         </div>
         <div class="controls">
-          <button class="ctrl-btn ctrl-shuffle" onclick="this.closest('.mp-wrap').__player.toggleShuffle()" title="随机">🔀</button>
           <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.prev()" title="上一首">⏮</button>
           <button class="ctrl-play" onclick="this.closest('.mp-wrap').__player.toggle()" title="播放/暂停">▶</button>
           <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.next()" title="下一首">⏭</button>
