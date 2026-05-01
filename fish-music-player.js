@@ -34,28 +34,30 @@
       this.audio = new Audio();
       this.audio.crossOrigin = 'anonymous';
       this.audio.preload = 'metadata';
-      this.audio.volume = 0.6;
-      this.playlist = [];
-      this.idx = 0;
-      this.playing = false;
       this.volume = 0.6;
       this.muted = false;
       this.shuffle = false;
-      this.repeat = 'off'; // off/all/one
+      this.repeat = 'off';
       this.favs = JSON.parse(localStorage.getItem('fm_fav') || '[]');
-      this.syncFavsFromDb();
+      this.playlist = [];
+      this.idx = 0;
+      this.playing = false;
       this.tab = 'trending';
       this.ctx = null; this.analyser = null; this.genNodes = {};
       this.searchTimer = null;
 
+      this.restoreState();
+      this.audio.volume = this.muted ? 0 : this.volume;
+
       this.audio.ontimeupdate = () => this.updateProgress();
       this.audio.onended = () => this.handleEnded();
-      this.audio.onerror = () => { setTimeout(() => this.next(), 800); };
+      this.audio.onerror = () => { this.showPlayingStatus('⚠️ 播放失败'); setTimeout(() => this.next(), 1200); };
       this.audio.onloadedmetadata = () => this.updateDuration();
 
       this.render();
       this.loadTrending();
       this.bindKeys();
+      this.syncFavsFromDb();
     }
 
     // ===== 数据加载 =====
@@ -70,6 +72,7 @@
         if (!this.playlist.length) this.playlist = GENERATED;
         this.idx = 0;
         this.renderList();
+        this.updateSongCount();
         if (this.playlist.length) this.updateTrack();
       } catch (e) {
         console.error('Load trending failed:', e);
@@ -91,6 +94,7 @@
       if (!this.playlist.length) this.playlist = GENERATED;
       this.idx = 0;
       this.renderList();
+      this.updateSongCount();
       this.updateTrack();
     }
 
@@ -133,6 +137,7 @@
       const t = this.playlist[this.idx];
       if (!t) return;
       this.stopGen();
+      this.saveState();
       if (t.type === 'generated') { this.playGen(t.style); this.playing = true; this.updateUI(); return; }
       if (t.type === 'netease' || t.type === 'qq') { await this.playCN(t); return; }
       try {
@@ -161,10 +166,10 @@
     shufflePlay() { if (!this.playlist.length) return; this.shuffle = true; this.idx = Math.random()*this.playlist.length|0; this.play(); this.updateUI(); }
     handleEnded() { if (this.repeat==='one') this.play(); else if (this.repeat==='all'||this.idx<this.playlist.length-1) this.next(); else { this.playing=false; this.updateUI(); } }
     seek(e) { const r=e.currentTarget.getBoundingClientRect(); this.audio.currentTime=((e.clientX-r.left)/r.width)*(this.audio.duration||0); }
-    setVolume(v) { this.volume=parseFloat(v); this.audio.volume=this.muted?0:this.volume; this.updateUI(); }
-    toggleMute() { this.muted=!this.muted; this.audio.volume=this.muted?0:this.volume; this.updateUI(); }
-    toggleShuffle() { this.shuffle=!this.shuffle; this.updateUI(); }
-    toggleRepeat() { const m=['off','all','one']; this.repeat=m[(m.indexOf(this.repeat)+1)%3]; this.updateUI(); }
+    setVolume(v) { this.volume=parseFloat(v); this.audio.volume=this.muted?0:this.volume; this.saveState(); this.updateUI(); }
+    toggleMute() { this.muted=!this.muted; this.audio.volume=this.muted?0:this.volume; this.saveState(); this.updateUI(); }
+    toggleShuffle() { this.shuffle=!this.shuffle; this.saveState(); this.updateUI(); }
+    toggleRepeat() { const m=['off','all','one']; this.repeat=m[(m.indexOf(this.repeat)+1)%3]; this.saveState(); this.updateUI(); }
     toggleFav() { const t=this.playlist[this.idx]; if(!t)return; const i=this.favs.indexOf(t.id); if(i>=0){this.favs.splice(i,1); this._dbRemoveFav(t.id); } else { this.favs.push(t.id); this._dbAddFav(t); } localStorage.setItem('fm_fav',JSON.stringify(this.favs)); this.updateUI(); }
     _getVisitorId() { let id=localStorage.getItem('vid'); if(!id){id='v_'+Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('vid',id);} return id; }
     async syncFavsFromDb() { try { const r=await fetch(`/api/favorites?visitor_id=${this._getVisitorId()}&type=music`); const j=await r.json(); if(j.ok&&j.data?.length){ const ids=j.data.map(d=>d.item_id); const merged=[...new Set([...ids,...this.favs])]; this.favs=merged; localStorage.setItem('fm_fav',JSON.stringify(merged)); this.updateUI(); } } catch{} }
@@ -273,6 +278,36 @@
       const list = this.el.querySelector('.pl-list');
       if (list) list.innerHTML = '<div style="text-align:center;padding:40px;color:#666">🎵 加载中...</div>';
     }
+    showPlayingStatus(msg) {
+      const list = this.el.querySelector('.pl-list');
+      if (list) list.innerHTML = `<div style="text-align:center;padding:40px;color:#646cff">${msg}</div>`;
+    }
+    updateSongCount() {
+      const el = this.el.querySelector('.song-count');
+      if (el) el.textContent = this.playlist.length ? `共 ${this.playlist.length} 首` : '';
+    }
+    saveState() {
+      try {
+        localStorage.setItem('fm_state', JSON.stringify({
+          volume: this.volume,
+          mute: this.muted,
+          shuffle: this.shuffle,
+          repeat: this.repeat,
+          idx: this.idx,
+          title: this.playlist[this.idx]?.title || '',
+          artist: this.playlist[this.idx]?.artist || '',
+        }));
+      } catch {}
+    }
+    restoreState() {
+      try {
+        const s = JSON.parse(localStorage.getItem('fm_state') || '{}');
+        if (s.volume !== undefined) { this.volume = s.volume; this.audio.volume = this.muted ? 0 : this.volume; }
+        if (s.mute !== undefined) this.muted = s.mute;
+        if (s.shuffle !== undefined) this.shuffle = s.shuffle;
+        if (s.repeat !== undefined) this.repeat = s.repeat;
+      } catch {}
+    }
     renderList() {
       const list = this.el.querySelector('.pl-list');
       if (!list) return;
@@ -334,33 +369,42 @@
     // 播放中文歌曲：通过 Audius 搜索同名歌曲
     async playCN(t) {
       try {
-        const q = `${t.neName || t.title} ${t.neArtist || t.artist}`;
-        const res = await fetch(`${AUDIUS_API}/tracks/search?query=${encodeURIComponent(q)}&limit=5&app_name=${APP_NAME}`);
-        const data = await res.json();
-        const found = data.data?.[0];
-        if (found) {
-          this.playlist[this.idx] = this.mapTrack(found);
-          this.play();
-        } else {
-          const list = this.el.querySelector('.pl-list');
-          if (list) {
-            const item = list.querySelector(`.pl-item[data-idx="${this.idx}"]`);
-            if (item) {
-              const info = item.querySelector('.pl-artist');
-              if (info) info.textContent = '⚠️ Audius 无此歌曲';
-            }
+        // 只用歌名搜索Audius，不用歌手名，提高匹配率
+        const queries = [t.title, `${t.title} ${t.artist}`];
+        for (const q of queries) {
+          const res = await fetch(`${AUDIUS_API}/tracks/search?query=${encodeURIComponent(q)}&limit=10&app_name=${APP_NAME}`);
+          const data = await res.json();
+          const tracks = data.data || [];
+          // 优先找标题完全匹配的
+          const exact = tracks.find(tr => tr.title?.toLowerCase().includes(t.title.toLowerCase()));
+          const best = exact || tracks[0];
+          if (best) {
+            this.audio.src = `${AUDIUS_API}/tracks/${best.id}/stream?app_name=${APP_NAME}`;
+            await this.audio.play();
+            this.playing = true;
+            this.setupVisualizer();
+            this.updateUI();
+            this.updateMediaSession();
+            return;
           }
         }
+        // Audius找不到，显示提示并跳下一首
+        const list = this.el.querySelector('.pl-list');
+        if (list) {
+          const item = list.querySelector(`.pl-item[data-idx="${this.idx}"]`);
+          if (item) {
+            const info = item.querySelector('.pl-artist');
+            if (info) info.textContent = '⚠️ 无法播放，跳过...';
+          }
+        }
+        setTimeout(() => this.next(), 1500);
       } catch (e) { console.error('PlayCN failed:', e); }
     }
 
     switchTab(tab) {
       this.tab = tab;
       this.el.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-      const searchBox = this.el.querySelector('.search-box');
-      const genreBar = this.el.querySelector('.genre-bar');
-      if (searchBox) searchBox.style.display = tab === 'search' ? 'flex' : 'none';
-      if (genreBar) genreBar.style.display = tab === 'genre' ? 'flex' : 'none';
+      // 搜索框始终可见，不随标签页切换
       if (tab === 'trending') this.loadTrending();
       else if (tab === 'cn') { this.renderNecards(); }
       else if (tab === 'genre') { /* show genre chips */ }
@@ -474,14 +518,17 @@
           <button class="tab-btn" data-tab="genre" onclick="this.closest('.mp-wrap').__player.switchTab('genre')">🎸 分类</button>
           <button class="tab-btn" data-tab="fav" onclick="this.closest('.mp-wrap').__player.switchTab('fav')">❤️ 收藏</button>
         </div>
-        <div class="search-box">
+        <div class="search-box" style="display:flex">
           <input placeholder="搜索歌曲、歌手..." onkeydown="if(event.key==='Enter')this.closest('.mp-wrap').__player.searchTracks(this.value)">
           <button onclick="this.closest('.mp-wrap').__player.searchTracks(this.previousElementSibling.value)">🔍</button>
         </div>
-        <div class="genre-bar">${GENRES.map(g=>`<span class="genre-chip" onclick="this.closest('.mp-wrap').__player.loadTrending('${g}')">${g}</span>`).join('')}</div>
-        <div style="display:flex;gap:8px;padding:0 16px 8px">
+        <div class="genre-bar" style="display:flex;overflow-x:auto;gap:6px;padding:0 16px 8px">
+          ${GENRES.map(g=>`<span class="genre-chip" onclick="this.closest('.mp-wrap').__player.loadTrending('${g}')">${g}</span>`).join('')}
+        </div>
+        <div style="display:flex;gap:8px;padding:0 16px 8px;flex-wrap:wrap">
           <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.playAll()" style="font-size:.75rem;background:rgba(100,108,255,.15);border:1px solid rgba(100,108,255,.3);border-radius:6px;padding:4px 10px;cursor:pointer">▶ 播放全部</button>
           <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.shufflePlay()" style="font-size:.75rem;background:rgba(255,107,157,.15);border:1px solid rgba(255,107,157,.3);border-radius:6px;padding:4px 10px;cursor:pointer">🔀 随机播放</button>
+          <span style="font-size:.65rem;color:#666;display:flex;align-items:center;margin-left:auto" class="song-count"></span>
         </div>
         <div class="pl-list"><div style="text-align:center;padding:40px;color:#666">🎵 加载中...</div></div>
         <div class="mp-footer">🐟 小鱼儿音乐台 · Powered by Audius · 空格播放/暂停</div>
