@@ -2,10 +2,11 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>资源库 · Tyler</title>
     <link rel="icon" type="image/png" href="resource/easyclaw.png">
     <style>
+        a, button, .card, .chapter-item { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
@@ -24,6 +25,10 @@
             color: var(--text);
             line-height: 1.7;
             min-height: 100vh;
+            height: 100dvh;
+            min-height: 100dvh;
+            -webkit-tap-highlight-color: transparent;
+            overscroll-behavior: none;
         }
 
         .header {
