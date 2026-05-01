@@ -307,8 +307,8 @@
         .ctrl-play{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#646cff,#ff6b9d);border:none;color:#fff;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(100,108,255,.3);transition:transform .2s}
         .ctrl-play:hover{transform:scale(1.05)}
 
-        .search-box{display:flex;padding:12px 16px;gap:8px}
-        .search-box input{width:calc(100% - 48px);background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:8px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none}
+        .search-box{display:flex;flex-wrap:wrap;padding:12px 16px;gap:8px}
+        .search-box input{flex:1;min-width:0;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:8px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none}
         .search-box input:focus{border-color:#646cff}
         .search-box button{background:#646cff;border:none;border-radius:8px;padding:8px 14px;color:#fff;cursor:pointer;font-size:.8rem;flex-shrink:0;min-width:40px}
         .pl-list{max-height:350px;overflow-y:auto;padding:8px 0;-webkit-overflow-scrolling:touch}
@@ -372,7 +372,7 @@
 
         <div class="search-box" style="display:flex">
           <input placeholder="搜索歌曲、歌手..." onkeydown="if(event.key==='Enter')this.closest('.mp-wrap').__player.search(this.value)">
-          <button style="flex-shrink:0;min-width:40px;width:40px;background:#646cff;border:none;border-radius:8px;padding:8px 0;color:#fff;cursor:pointer;font-size:.9rem" onclick="this.closest('.mp-wrap').__player.search(this.previousElementSibling.value)">🔍</button>
+          <button style="flex-shrink:0;min-width:36px;width:36px;background:#646cff;border:none;border-radius:8px;padding:6px 0;color:#fff;cursor:pointer;font-size:.85rem" onclick="this.closest('.mp-wrap').__player.search(this.previousElementSibling.value)">🔍</button>
         </div>
         <div style="display:flex;gap:8px;padding:0 16px 8px;flex-wrap:wrap">
           <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.playAll()" style="font-size:.75rem;background:rgba(100,108,255,.15);border:1px solid rgba(100,108,255,.3);border-radius:6px;padding:4px 10px;cursor:pointer">▶ 播放全部</button>
