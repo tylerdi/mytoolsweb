@@ -308,7 +308,7 @@
         .ctrl-play:hover{transform:scale(1.05)}
 
         .search-box{display:flex;padding:12px 16px;gap:8px}
-        .search-box input{flex:1;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:8px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none}
+        .search-box input{flex:1;min-width:0;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:8px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none}
         .search-box input:focus{border-color:#646cff}
         .search-box button{background:#646cff;border:none;border-radius:8px;padding:8px 14px;color:#fff;cursor:pointer;font-size:.8rem;flex-shrink:0;min-width:40px}
         .pl-list{max-height:350px;overflow-y:auto;padding:8px 0;-webkit-overflow-scrolling:touch}
