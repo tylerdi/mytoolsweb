@@ -104,31 +104,17 @@
 
     async _searchNetease(q) {
       try {
-        const res = await fetch(`https://music.163.com/api/search/get?s=${encodeURIComponent(q)}&type=1&limit=20&offset=0`, {
-          headers: { 'Referer': 'https://music.163.com' }
-        });
+        const res = await fetch(`/api/music-search?q=${encodeURIComponent(q)}&source=netease&limit=20`);
         const data = await res.json();
-        return (data.result?.songs || []).map(s => ({
-          id: `ne_${s.id}`, title: s.name,
-          artist: s.artists?.[0]?.name || '未知', genre: '华语', mood: '',
-          duration: Math.round((s.duration || 0) / 1000),
-          artwork: s.album?.picUrl ? s.album.picUrl + '?param=300y300' : '',
-          type: 'netease', neId: s.id, neName: s.name, neArtist: s.artists?.[0]?.name || '',
-        }));
+        return data.ok ? (data.data?.netease || []) : [];
       } catch { return []; }
     }
 
     async _searchQQ(q) {
       try {
-        const res = await fetch(`https://c.y.qq.com/soso/fcgi-bin/client_search_cp?w=${encodeURIComponent(q)}&format=json&limit=20`);
+        const res = await fetch(`/api/music-search?q=${encodeURIComponent(q)}&source=qq&limit=20`);
         const data = await res.json();
-        return (data.data?.song?.list || []).map(s => ({
-          id: `qq_${s.songid}`, title: s.songname,
-          artist: s.singer?.[0]?.name || '未知', genre: '华语', mood: '',
-          duration: s.interval || 0,
-          artwork: s.albummid ? `https://y.gtimg.cn/music/photo_new/T002R300x300M000${s.albummid}.jpg` : '',
-          type: 'qq',
-        }));
+        return data.ok ? (data.data?.qq || []) : [];
       } catch { return []; }
     }
 
@@ -309,18 +295,9 @@
     async loadNeteasePlaylist(plId) {
       this.showLoading();
       try {
-        const res = await fetch(`https://music.163.com/api/playlist/detail?id=${plId}`, {
-          headers: { 'Referer': 'https://music.163.com' }
-        });
+        const res = await fetch(`/api/netease-playlist?id=${plId}`);
         const data = await res.json();
-        const tracks = data.result?.tracks || data.playlist?.tracks || [];
-        this.playlist = tracks.slice(0, 30).map(t => ({
-          id: `ne_${t.id}`, title: t.name,
-          artist: t.artists?.[0]?.name || '未知', genre: '华语', mood: '',
-          duration: Math.round((t.duration || 0) / 1000),
-          artwork: t.album?.picUrl ? t.album.picUrl + '?param=300y300' : '',
-          type: 'netease', neId: t.id, neName: t.name, neArtist: t.artists?.[0]?.name || '',
-        }));
+        this.playlist = data.ok ? (data.data || []) : GENERATED;
         if (!this.playlist.length) this.playlist = GENERATED;
         this.idx = 0;
         this.renderList();
