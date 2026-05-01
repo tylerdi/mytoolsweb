@@ -124,7 +124,7 @@
         // 根据来源选择播放路径
         let src;
         if (t.type === 'audius' && t.streamUrl) {
-          src = `/api/audius-stream?url=${encodeURIComponent(t.streamUrl)}`;
+          src = t.streamUrl;
         } else {
           src = `/api/kuwo-proxy?rid=${t.rid}`;
         }
