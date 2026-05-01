@@ -38,21 +38,18 @@ export async function onRequestGet(context) {
 
     const audioRes = await fetch(playUrl, { headers: fetchHeaders });
 
-    const headers = new Headers();
-    headers.set('Access-Control-Allow-Origin', '*');
-    headers.set('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
-    headers.set('Access-Control-Allow-Headers', 'Range');
-    headers.set('Cache-Control', 'public, max-age=3600');
-    headers.set('Content-Type', 'audio/mpeg');
-    headers.set('Accept-Ranges', 'bytes');
-    const cl = audioRes.headers.get('Content-Length');
-    if (cl) headers.set('Content-Length', cl);
-    const cr = audioRes.headers.get('Content-Range');
-    if (cr) headers.set('Content-Range', cr);
+    // 直接构造新响应，保留原始状态和必要的头
+    const respHeaders = new Headers(audioRes.headers);
+    respHeaders.set('Access-Control-Allow-Origin', '*');
+    respHeaders.set('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+    respHeaders.set('Access-Control-Allow-Headers', 'Range');
+    respHeaders.set('Cache-Control', 'public, max-age=3600');
+    respHeaders.set('Content-Type', 'audio/mpeg');
+    respHeaders.set('Accept-Ranges', 'bytes');
 
     return new Response(audioRes.body, {
       status: audioRes.status,
-      headers,
+      headers: respHeaders,
     });
   } catch (err) {
     return new Response('Proxy error: ' + err.message, { status: 500 });
