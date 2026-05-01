@@ -366,8 +366,7 @@
         <div style="display:flex;gap:8px;padding:0 16px 8px;flex-wrap:wrap">
           <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.playAll()" style="font-size:.75rem;background:rgba(100,108,255,.15);border:1px solid rgba(100,108,255,.3);border-radius:6px;padding:4px 10px;cursor:pointer">▶ 播放全部</button>
           <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.shufflePlay()" style="font-size:.75rem;background:rgba(255,107,157,.15);border:1px solid rgba(255,107,157,.3);border-radius:6px;padding:4px 10px;cursor:pointer">🔀 随机播放</button>
-          <button style="flex-shrink:0;width:32px;height:32px;background:#646cff;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:.85rem" onclick="event.stopPropagation();var i=document.querySelector('#fish-search-input');if(i){i.scrollIntoView({behavior:'smooth'});setTimeout(()=>i.focus(),300)}">🔍</button>
-          <span style="font-size:.65rem;color:#666;display:flex;align-items:center;margin-left:auto" class="song-count"></span>
+          <button onclick="document.querySelector('#fish-search-input').focus()" style="width:32px;height:32px;background:#646cff;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:.85rem;flex-shrink:0">🔍</button>
         </div>
         <div class="pl-list"><div style="text-align:center;padding:40px;color:#666">🎵 加载中...</div></div>
         <div class="mp-footer">🐟 小鱼儿音乐台 · 酷我音乐 · 空格播放 · ↑↓切歌 · ←→快进退</div>
