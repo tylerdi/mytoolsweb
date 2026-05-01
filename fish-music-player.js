@@ -417,7 +417,6 @@
           .pl-list{max-height:300px}
           .pl-item{padding:8px 12px}
           .track-title{font-size:.9rem}
-          .lyrics-area{max-height:80px}
         }
         @media(min-width:481px) and (max-width:768px){
           .mp-wrap{max-width:420px}
@@ -433,9 +432,6 @@
           <div class="track-info">
             <div class="track-title">加载中...</div>
             <div class="track-artist">—</div>
-          </div>
-          <div class="lyrics-area" style="max-height:120px;overflow-y:auto;margin-top:10px;text-align:center;-webkit-overflow-scrolling:touch">
-            <div class="lyrics-lines" style="font-size:.75rem;color:#666;line-height:1.8"></div>
           </div>
           <div class="visualizer">${Array.from({length:20},()=>'<div class="vis-bar"></div>').join('')}</div>
         </div>
