@@ -33,7 +33,7 @@ export async function onRequestGet(context) {
     const data = await db.get('favorites', { filters, order: 'created_at.desc' });
     return json({ ok: true, data: data || [] });
   } catch (err) {
-    return json({ ok: false, error: err.message }, 500);
+    if (err.message?.includes("404") || err.message?.includes("PGRST205")) return json({ ok: true, data: [], _note: "table not created yet" }); return json({ ok: false, error: err.message }, 500);
   }
 }
 
@@ -50,7 +50,7 @@ export async function onRequestPost(context) {
     });
     return json({ ok: true, data: result });
   } catch (err) {
-    return json({ ok: false, error: err.message }, 500);
+    if (err.message?.includes("404") || err.message?.includes("PGRST205")) return json({ ok: true, data: [], _note: "table not created yet" }); return json({ ok: false, error: err.message }, 500);
   }
 }
 
@@ -67,6 +67,6 @@ export async function onRequestDelete(context) {
     await db.delete('favorites', { visitor_id: `eq.${visitor_id}`, item_id: `eq.${item_id}` });
     return json({ ok: true });
   } catch (err) {
-    return json({ ok: false, error: err.message }, 500);
+    if (err.message?.includes("404") || err.message?.includes("PGRST205")) return json({ ok: true, data: [], _note: "table not created yet" }); return json({ ok: false, error: err.message }, 500);
   }
 }

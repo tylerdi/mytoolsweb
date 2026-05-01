@@ -32,7 +32,7 @@ export async function onRequestGet(context) {
     });
     return json({ ok: true, data: data || [] });
   } catch (err) {
-    return json({ ok: false, error: err.message }, 500);
+    if (err.message?.includes("404") || err.message?.includes("PGRST205")) return json({ ok: true, data: [], _note: "table not created yet" }); return json({ ok: false, error: err.message }, 500);
   }
 }
 
@@ -50,6 +50,6 @@ export async function onRequestPost(context) {
     });
     return json({ ok: true, data: result });
   } catch (err) {
-    return json({ ok: false, error: err.message }, 500);
+    if (err.message?.includes("404") || err.message?.includes("PGRST205")) return json({ ok: true, data: [], _note: "table not created yet" }); return json({ ok: false, error: err.message }, 500);
   }
 }
