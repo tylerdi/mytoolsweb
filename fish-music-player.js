@@ -36,7 +36,7 @@
     async loadHot() {
       this.showStatus('🎵 加载中...');
       try {
-        const res = await fetch('/api/kuwo-hot?rn=30');
+        const res = await fetch('/api/kuwo-hot?rn=100');
         const data = await res.json();
         this.playlist = data.success ? data.songs.map(s => ({
           id: s.rid, title: s.name, artist: s.artist, album: s.album || '',
@@ -77,7 +77,7 @@
     }
 
     showBackBtn() {
-      const bar = this.el.querySelector('.search-box');
+      const bar = this.el.querySelector('.mp-header');
       if (!bar || bar.querySelector('.back-btn')) return;
       const btn = document.createElement('button');
       btn.className = 'back-btn';
@@ -306,11 +306,6 @@
         .ctrl-btn.on{color:#646cff}
         .ctrl-play{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#646cff,#ff6b9d);border:none;color:#fff;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(100,108,255,.3);transition:transform .2s}
         .ctrl-play:hover{transform:scale(1.05)}
-
-        .search-box{display:flex;padding:12px 16px;gap:6px}
-        .search-box input{width:75%;flex:0 0 auto;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:8px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none}
-        .search-box input:focus{border-color:#646cff}
-        .search-box button{background:#646cff;border:none;border-radius:8px;padding:8px 14px;color:#fff;cursor:pointer;font-size:.8rem;flex-shrink:0;min-width:40px}
         .pl-list{max-height:350px;overflow-y:auto;padding:8px 0;-webkit-overflow-scrolling:touch}
         .pl-list::-webkit-scrollbar{width:3px}
         .pl-list::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
@@ -330,8 +325,6 @@
           .disc{width:140px;height:140px}
           .controls{gap:12px;padding:10px 16px}
           .ctrl-play{width:44px;height:44px;font-size:1.1rem}
-          .search-box{padding:10px 12px;gap:6px}
-          .search-box button{padding:8px 10px;font-size:.75rem}
           .pl-list{max-height:300px}
           .pl-item{padding:8px 12px}
           .track-title{font-size:.9rem}
@@ -345,7 +338,7 @@
         <div class="mp-header">
           <h2>🐟 音乐台</h2>
           <span class="badge">酷我音乐</span>
-        </div>
+          <input id="fish-search-input" placeholder="🔍 搜索..." style="flex:1;min-width:0;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:6px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none;margin-left:auto" onkeydown="if(event.key==='Enter')this.closest('.mp-wrap').__player.search(this.value)">        </div>
         <div class="disc-area">
           <div class="disc"><div class="disc-art"></div><div class="disc-hole"></div></div>
           <div class="track-info">
@@ -370,14 +363,10 @@
           <button class="ctrl-btn ctrl-fav" onclick="this.closest('.mp-wrap').__player.toggleFav()" title="收藏">🤍</button>
         </div>
 
-        <div class="search-box" style="display:flex">
-          <input placeholder="搜索歌曲、歌手..." onkeydown="if(event.key==='Enter')this.closest('.mp-wrap').__player.search(this.value)">
-          <button style="flex-shrink:0;width:36px;height:36px;background:#646cff;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:.9rem;position:relative;z-index:999" onclick="this.closest('.mp-wrap').__player.search(this.previousElementSibling.value)">🔍</button>
-        </div>
         <div style="display:flex;gap:8px;padding:0 16px 8px;flex-wrap:wrap">
           <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.playAll()" style="font-size:.75rem;background:rgba(100,108,255,.15);border:1px solid rgba(100,108,255,.3);border-radius:6px;padding:4px 10px;cursor:pointer">▶ 播放全部</button>
           <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.shufflePlay()" style="font-size:.75rem;background:rgba(255,107,157,.15);border:1px solid rgba(255,107,157,.3);border-radius:6px;padding:4px 10px;cursor:pointer">🔀 随机播放</button>
-          <button style="flex-shrink:0;width:32px;height:32px;background:#646cff;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:.85rem" onclick="event.stopPropagation();var i=document.querySelector('#fish-music-player .search-box input');if(i){i.scrollIntoView({behavior:'smooth'});setTimeout(()=>i.focus(),300)}">🔍</button>
+          <button style="flex-shrink:0;width:32px;height:32px;background:#646cff;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:.85rem" onclick="event.stopPropagation();var i=document.querySelector('#fish-search-input');if(i){i.scrollIntoView({behavior:'smooth'});setTimeout(()=>i.focus(),300)}">🔍</button>
           <span style="font-size:.65rem;color:#666;display:flex;align-items:center;margin-left:auto" class="song-count"></span>
         </div>
         <div class="pl-list"><div style="text-align:center;padding:40px;color:#666">🎵 加载中...</div></div>

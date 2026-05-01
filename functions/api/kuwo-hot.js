@@ -4,7 +4,7 @@
 export async function onRequestGet(context) {
   const { searchParams } = new URL(context.request.url);
   const pn = parseInt(searchParams.get('pn') || '1');
-  const rn = parseInt(searchParams.get('rn') || '30');
+  const rn = parseInt(searchParams.get('rn') || '100');
 
   try {
     // 酷我热歌榜 (bangId=93)
