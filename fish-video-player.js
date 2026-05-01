@@ -11,18 +11,26 @@
   const PEXELS_KEY = 'DqKEbBsmBik7vOSGk4HDJxsfKqK8aXvUJrXw0Sg25e0ZvJSn9c90YpcE';
 
   const CATEGORIES = [
-    { id: 'nature',    label: '🌿 自然',     query: 'nature forest landscape' },
-    { id: 'cinematic', label: '🎬 电影感',   query: 'cinematic aerial drone' },
-    { id: 'city',      label: '🌆 城市',     query: 'city urban night skyline' },
-    { id: 'animals',   label: '🐾 动物',     query: 'animals wildlife cute' },
-    { id: 'ocean',     label: '🌊 海洋',     query: 'ocean sea waves underwater' },
-    { id: 'abstract',  label: '🔬 抽象',     query: 'abstract light particles' },
+    { id: 'nature',    label: '🌿 自然',     query: 'nature forest landscape mountain' },
+    { id: 'cinematic', label: '🎬 电影感',   query: 'cinematic aerial drone timelapse' },
+    { id: 'city',      label: '🌆 城市',     query: 'city urban night skyline traffic' },
+    { id: 'animals',   label: '🐾 动物',     query: 'animals wildlife cute pet dog cat' },
+    { id: 'ocean',     label: '🌊 海洋',     query: 'ocean sea waves underwater beach sunset' },
+    { id: 'abstract',  label: '🔬 抽象',     query: 'abstract light particles neon glow' },
+    { id: 'food',      label: '🍕 美食',     query: 'food cooking kitchen coffee' },
+    { id: 'space',     label: '🚀 太空',     query: 'space stars galaxy universe night sky' },
+    { id: 'sport',     label: '⚽ 运动',     query: 'sport fitness running workout' },
+    { id: 'travel',    label: '✈️ 旅行',     query: 'travel adventure road journey' },
+    { id: 'rain',      label: '🌧️ 雨天',     query: 'rain drops water splash' },
+    { id: 'fire',      label: '🔥 火焰',     query: 'fire flame campfire candle' },
   ];
 
-  // 备用视频（Pexels 无 API key 时的 fallback）
+  // 备用视频（Pexels API 失败时的 fallback）
   const FALLBACK_VIDEOS = [
-    { id: 'f1', thumbnail: '', title: '自然风光', videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4', duration: 10, author: 'W3Schools', width: 640, height: 360 },
-    { id: 'f2', thumbnail: '', title: '城市夜景', videoUrl: 'https://www.w3schools.com/html/movie.mp4', duration: 12, author: 'W3Schools', width: 640, height: 360 },
+    { id: 'f1', thumbnail: 'https://images.pexels.com/videos/31019280/pictures/preview-0.jpg', title: '森林树冠', videoUrl: 'https://videos.pexels.com/video-files/31019280/13258714_720_1280_60fps.mp4', duration: 10, author: 'Pexels', width: 720, height: 1280 },
+    { id: 'f2', thumbnail: 'https://images.pexels.com/videos/10691963/pictures/preview-0.jpeg', title: '溪流石头', videoUrl: 'https://videos.pexels.com/video-files/10691963/10691963-hd_1280_720_30fps.mp4', duration: 9, author: 'Pexels', width: 1280, height: 720 },
+    { id: 'f3', thumbnail: '', title: '示例视频A', videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4', duration: 10, author: 'W3Schools', width: 640, height: 360 },
+    { id: 'f4', thumbnail: '', title: '示例视频B', videoUrl: 'https://www.w3schools.com/html/movie.mp4', duration: 12, author: 'W3Schools', width: 640, height: 360 },
   ];
 
   class FishVideoPlayer {
@@ -50,7 +58,7 @@
       this.highlightTab(catId);
       this.showSkeleton();
       try {
-        const res = await fetch(`${PEXELS_API}?query=${encodeURIComponent(cat.query)}&per_page=18`, {
+        const res = await fetch(`${PEXELS_API}?query=${encodeURIComponent(cat.query)}&per_page=24`, {
           headers: { Authorization: PEXELS_KEY }
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -67,7 +75,7 @@
       if (!q.trim()) { this.loadCategory(this.currentCat); return; }
       this.showSkeleton();
       try {
-        const res = await fetch(`${PEXELS_API}?query=${encodeURIComponent(q)}&per_page=18`, {
+        const res = await fetch(`${PEXELS_API}?query=${encodeURIComponent(q)}&per_page=24`, {
           headers: { Authorization: PEXELS_KEY }
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
