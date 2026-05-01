@@ -82,8 +82,21 @@ async function searchNetease(q, limit) {
 }
 
 async function searchQQ(q, limit) {
+  // 使用新版QQ音乐API
+  const payload = {
+    req_0: {
+      module: 'music.search.SearchCgiService',
+      method: 'DoSearchForQQMusicDesktop',
+      param: {
+        query: q,
+        page_num: 1,
+        num_per_page: limit,
+      },
+    },
+  };
+
   const res = await fetch(
-    `https://c.y.qq.com/soso/fcgi-bin/client_search_cp?w=${encodeURIComponent(q)}&format=json&limit=${limit}`,
+    `https://u.y.qq.com/cgi-bin/musicu.fcg?data=${encodeURIComponent(JSON.stringify(payload))}`,
     {
       headers: {
         'Referer': 'https://y.qq.com/',
@@ -95,16 +108,16 @@ async function searchQQ(q, limit) {
   if (!res.ok) throw new Error(`QQ Music HTTP ${res.status}`);
 
   const data = await res.json();
-  const songs = data.data?.song?.list || [];
+  const songs = data.req_0?.data?.body?.song?.list || [];
 
   return songs.map(s => ({
-    id: `qq_${s.songid}`,
-    title: s.songname,
+    id: `qq_${s.songid || s.id}`,
+    title: s.title || s.songname || s.name,
     artist: s.singer?.[0]?.name || '未知',
     duration: s.interval || 0,
-    artwork: s.albummid ? `https://y.gtimg.cn/music/photo_new/T002R300x300M000${s.albummid}.jpg` : '',
+    artwork: s.album?.mid ? `https://y.gtimg.cn/music/photo_new/T002R300x300M000${s.album.mid}.jpg` : '',
     type: 'qq',
-    qqName: s.songname,
+    qqName: s.title || s.songname || s.name,
     qqArtist: s.singer?.[0]?.name || '',
   }));
 }
