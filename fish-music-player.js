@@ -77,7 +77,7 @@
     }
 
     showBackBtn() {
-      const bar = this.el.querySelector('.mp-header');
+      const bar = this.el.querySelector('.hot-bar');
       if (!bar || bar.querySelector('.back-btn')) return;
       const btn = document.createElement('button');
       btn.className = 'back-btn';
@@ -338,7 +338,7 @@
         <div class="mp-header">
           <h2>🐟 音乐台</h2>
           <span class="badge">酷我音乐</span>
-          <input id="fish-search-input" placeholder="🔍 搜索..." style="flex:0 0 100px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:6px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none;margin-left:auto" onkeydown="if(event.key==='Enter')this.closest('.mp-wrap').__player.search(this.value)">        </div>
+          <input id="fish-search-input" placeholder="🔍 搜索..." style="background:rgba(255,255,255,.08);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:6px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none;margin-left:auto" onkeydown="if(event.key==='Enter')this.closest('.mp-wrap').__player.search(this.value)">        </div>
         <div class="disc-area">
           <div class="disc"><div class="disc-art"></div><div class="disc-hole"></div></div>
           <div class="track-info">
@@ -363,7 +363,7 @@
           <button class="ctrl-btn ctrl-fav" onclick="this.closest('.mp-wrap').__player.toggleFav()" title="收藏">🤍</button>
         </div>
 
-        <div style="display:flex;gap:8px;padding:0 16px 8px;flex-wrap:wrap">
+        <div class="hot-bar" style="display:flex;gap:8px;padding:0 16px 8px;flex-wrap:wrap">
           <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.playAll()" style="font-size:.75rem;background:rgba(100,108,255,.15);border:1px solid rgba(100,108,255,.3);border-radius:6px;padding:4px 10px;cursor:pointer">▶ 播放全部</button>
           <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.shufflePlay()" style="font-size:.75rem;background:rgba(255,107,157,.15);border:1px solid rgba(255,107,157,.3);border-radius:6px;padding:4px 10px;cursor:pointer">🔀 随机播放</button>
           <button onclick="document.querySelector('#fish-search-input').focus()" style="width:32px;height:32px;background:#646cff;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:.85rem;flex-shrink:0">🔍</button>
