@@ -462,6 +462,8 @@
         // Restore reading progress
         const savedPct = await loadReadingProgress(String(ch.id));
         stopTTS();
+        // Load comments
+        loadComments(ch.id);
         // Scroll after content loads
         requestAnimationFrame(() => {
             if (savedPct > 0.01) {
@@ -484,6 +486,99 @@
         if (newIdx >= 0 && newIdx < chapters.length) {
             readChapter(newIdx);
         }
+    }
+
+    // ===== 评论功能 =====
+    let currentChapterId = null;
+
+    async function loadComments(chapterId) {
+        currentChapterId = chapterId;
+        const list = document.getElementById('comment-list');
+        const countEl = document.getElementById('comment-count');
+        list.innerHTML = '<div class="comment-empty">加载中...</div>';
+
+        try {
+            const res = await fetch(`/api/comments?chapter_id=${chapterId}`);
+            const data = await res.json();
+            const comments = data.comments || [];
+
+            countEl.textContent = comments.length > 0 ? `(${comments.length})` : '';
+
+            if (comments.length === 0) {
+                list.innerHTML = '<div class="comment-empty">还没有评论，来抢沙发吧 🐟</div>';
+                return;
+            }
+
+            list.innerHTML = comments.map(c => {
+                const time = new Date(c.created_at).toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                const nick = c.nickname || '匿名读者';
+                const avatar = nick.charAt(0);
+                return `
+                    <div class="comment-item">
+                        <div class="comment-header">
+                            <span class="comment-nick">${avatar} ${escHtml(nick)}</span>
+                            <span class="comment-time">${time}</span>
+                        </div>
+                        <div class="comment-body">${escHtml(c.content)}</div>
+                    </div>
+                `;
+            }).join('');
+        } catch {
+            list.innerHTML = '<div class="comment-empty">评论加载失败</div>';
+            countEl.textContent = '';
+        }
+    }
+
+    async function submitComment() {
+        const nickEl = document.getElementById('comment-nick');
+        const textEl = document.getElementById('comment-text');
+        const btn = document.getElementById('comment-submit');
+        const content = textEl.value.trim();
+
+        if (!content) { textEl.focus(); return; }
+        if (!currentChapterId) return;
+
+        btn.disabled = true;
+        btn.textContent = '发送中...';
+
+        try {
+            // 获取或生成 visitor_id
+            let visitorId = localStorage.getItem('novel_visitor_id');
+            if (!visitorId) {
+                visitorId = 'v_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+                localStorage.setItem('novel_visitor_id', visitorId);
+            }
+
+            const res = await fetch('/api/comments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    visitor_id: visitorId,
+                    chapter_id: String(currentChapterId),
+                    nickname: nickEl.value.trim() || '匿名读者',
+                    content: content,
+                }),
+            });
+
+            const data = await res.json();
+            if (data.ok) {
+                textEl.value = '';
+                loadComments(currentChapterId);
+            } else {
+                alert('评论失败：' + (data.error || '未知错误'));
+            }
+        } catch {
+            alert('网络错误，请稍后再试');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '发表评论';
+        }
+    }
+
+    function escHtml(str) {
+        const d = document.createElement('div');
+        d.textContent = str;
+        return d.innerHTML;
     }
 
     // TTS 朗读（流式分段 + 激进预加载，无缝衔接）
