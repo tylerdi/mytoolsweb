@@ -184,6 +184,10 @@
         localStorage.removeItem(CACHE_KEY + '_' + this.todayKey);
         this.generate(getRandomCategory());
       };
+
+      // 绑定首次加载的点击揭晓
+      const widget = this.container.querySelector('.ff-widget');
+      if (widget) widget.__reveal = () => this.reveal();
     }
 
     renderFact(fact) {
