@@ -59,22 +59,44 @@
       if (!q.trim()) { this.loadHot(); return; }
       this.showStatus('🔍 搜索中...');
       try {
+        // 先试酷我
         const res = await fetch(`/api/music-search?q=${encodeURIComponent(q)}&rn=20`);
         const data = await res.json();
-        if (!data.success || !data.songs.length) { this.showStatus('😅 没找到'); return; }
-        this.playlist = data.songs.map(s => ({
-          id: s.rid, title: s.name, artist: s.artist, album: s.album || '',
-          duration: s.duration || 0, rid: s.rid, artwork: '', type: 'kuwo'
-        }));
-        this.idx = 0;
-        this.isSearch = true;
-        this.renderList();
-        this.updateTrack();
-        this.updateSongCount();
-      } catch (e) {
-        console.error('search failed:', e);
-        this.showStatus('⚠️ 搜索失败');
-      }
+        if (data.success && data.songs.length) {
+          this.playlist = data.songs.map(s => ({
+            id: s.rid, title: s.name, artist: s.artist, album: s.album || '',
+            duration: s.duration || 0, rid: s.rid, artwork: '', type: 'kuwo'
+          }));
+          this.idx = 0;
+          this.isSearch = true;
+          this.renderList();
+          this.updateTrack();
+          this.updateSongCount();
+          return;
+        }
+      } catch {}
+
+      // 酷我失败，试 Audius
+      this.showStatus('🔍 换源搜索...');
+      try {
+        const res2 = await fetch(`/api/audius-search?q=${encodeURIComponent(q)}&rn=20`);
+        const data2 = await res2.json();
+        if (data2.success && data2.songs.length) {
+          this.playlist = data2.songs.map(s => ({
+            id: s.rid, title: s.name, artist: s.artist, album: s.album || '',
+            duration: s.duration || 0, rid: s.rid, artwork: s.artwork || '',
+            type: 'audius', streamUrl: s.streamUrl || ''
+          }));
+          this.idx = 0;
+          this.isSearch = true;
+          this.renderList();
+          this.updateTrack();
+          this.updateSongCount();
+          return;
+        }
+      } catch {}
+
+      this.showStatus('😅 没找到');
     }
 
     // ===== 播放 =====
@@ -84,9 +106,14 @@
       if (!t) return;
       this.saveState();
       try {
-        const proxyUrl = `/api/kuwo-proxy?rid=${t.rid}`;
-        // 直接用代理流播放，不需要先拿链接
-        this.audio.src = proxyUrl;
+        // 根据来源选择播放路径
+        let src;
+        if (t.type === 'audius' && t.streamUrl) {
+          src = `/api/audius-stream?url=${encodeURIComponent(t.streamUrl)}`;
+        } else {
+          src = `/api/kuwo-proxy?rid=${t.rid}`;
+        }
+        this.audio.src = src;
         await this.audio.play();
         this.playing = true;
         this.setupVisualizer();
@@ -96,7 +123,8 @@
         return;
       } catch (e) {
         console.error('play failed:', e);
-        setTimeout(() => this.next(), 500);
+        // 播放失败自动跳下一首
+        if (this.playlist.length > 1) setTimeout(() => this.next(), 500);
       }
     }
 
@@ -258,7 +286,7 @@
           <div class="pl-idx">${i+1}</div>
           <div class="pl-art" style="background-image:url(${t.artwork||''})"></div>
           <div class="pl-info">
-            <div class="pl-title">${t.title}</div>
+            <div class="pl-title">${t.title}${t.type==='audius'?' <span style="font-size:.55rem;color:#22c55e;background:rgba(34,197,94,.15);padding:1px 5px;border-radius:4px">Audius</span>':''}</div>
             <div class="pl-artist">${t.artist}</div>
           </div>
           <div class="pl-dur">${t.duration?this.fmt(t.duration):''}</div>
@@ -297,8 +325,8 @@
         .ctrl-play{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#646cff,#ff6b9d);border:none;color:#fff;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(100,108,255,.3);transition:transform .2s}
         .ctrl-play:hover{transform:scale(1.05)}
 
-        .search-box{display:flex;padding:12px 16px;gap:8px}
-        .search-box input{flex:1;min-width:0;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:8px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none}
+        .search-box{display:flex;padding:12px 16px;gap:8px;align-items:center}
+        .search-box input{flex:1;min-width:0;width:0;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:8px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none;transition:width .3s}
         .search-box input:focus{border-color:#646cff}
         .search-box button{background:#646cff;border:none;border-radius:8px;padding:8px 14px;color:#fff;cursor:pointer;font-size:.8rem;flex-shrink:0}
         .action-bar{display:flex;gap:6px;padding:8px 16px;flex-wrap:wrap;align-items:center;overflow:hidden}
@@ -369,7 +397,7 @@
         </div>
 
         <div class="search-box">
-          <input placeholder="🔍 搜索歌曲、歌手..." onkeydown="if(event.key==='Enter')this.closest('.mp-wrap').__player.search(this.value)">
+          <input placeholder="🔍 搜索歌曲..." onkeydown="if(event.key==='Enter')this.closest('.mp-wrap').__player.search(this.value)">
           <button onclick="this.closest('.mp-wrap').__player.search(this.previousElementSibling.value)">搜索</button>
         </div>
         <div class="action-bar">
