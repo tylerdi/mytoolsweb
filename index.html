@@ -166,46 +166,90 @@
         <div class="hero-scroll">向下探索<span class="arrow">↓</span></div>
     </section>
 
-    <!-- ===== 探索花园 ===== -->
+    <!-- ===== 音乐播放器（突出展示） ===== -->
+    <section class="section" style="padding-top:40px;padding-bottom:40px">
+        <div id="fish-music-player" class="reveal"></div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ===== 快捷入口 ===== -->
     <section class="section">
         <div class="section-header reveal">
-            <div class="section-tag">Explore</div>
-            <h2 class="section-title">探索花园</h2>
-            <p class="section-desc">每天都有新内容，总有你感兴趣的</p>
+            <div class="section-tag">Quick Access</div>
+            <h2 class="section-title">快捷入口</h2>
+            <p class="section-desc">一键直达你感兴趣的功能</p>
         </div>
-        <div class="card-grid card-grid-3">
+        <div class="card-grid card-grid-4">
             <a href="/novel/" class="feature-card reveal" style="--card-color:#d4a853">
-                <span class="feature-icon">⚔️</span>
-                <span class="feature-badge">每日更新</span>
+                <span class="feature-icon">📖</span>
                 <h3>武侠连载</h3>
-                <p>《沧海剑歌》— AI 原创武侠，古龙意境金庸格局</p>
+                <p>《沧海剑歌》每日更新</p>
             </a>
-            <a href="/blog/" class="feature-card reveal" style="--card-color:#646cff">
-                <span class="feature-icon">📝</span>
-                <span class="feature-badge">每日更新</span>
-                <h3>每日创意</h3>
-                <p>每天一篇深度文章，AI、技术、创业、生活</p>
+            <a class="feature-card reveal" style="--card-color:#ff6b9d;cursor:pointer" onclick="document.getElementById('fish-video-player').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">🎬</span>
+                <h3>视频库</h3>
+                <p>Pexels 免费视频</p>
             </a>
-            <a href="/ideas.html" class="feature-card reveal" style="--card-color:#22c55e">
-                <span class="feature-icon">💡</span>
-                <span class="feature-badge">每日更新</span>
-                <h3>灵感墙</h3>
-                <p>一闪而过的点子，轻量但有启发</p>
+            <a class="feature-card reveal" style="--card-color:#646cff;cursor:pointer" onclick="document.getElementById('fish-image-gen').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">🎨</span>
+                <h3>AI 画图</h3>
+                <p>Pollinations 免费生成</p>
             </a>
-            <a href="/resources.html" class="feature-card reveal" style="--card-color:#ff6b9d">
-                <span class="feature-icon">🧰</span>
-                <h3>资源库</h3>
-                <p>精选工具和网站，分类整理</p>
-            </a>
-            <a href="/about.html" class="feature-card reveal" style="--card-color:#a78bfa">
-                <span class="feature-icon">👤</span>
-                <h3>关于</h3>
-                <p>了解这个网站的故事</p>
+            <a class="feature-card reveal" style="--card-color:#a855f7;cursor:pointer" onclick="document.getElementById('fish-music-player').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">🎵</span>
+                <h3>音乐台</h3>
+                <p>Audius 免费全曲</p>
             </a>
             <a href="/games.html" class="feature-card reveal" style="--card-color:#f97316">
                 <span class="feature-icon">🎮</span>
-                <h3>小游戏</h3>
+                <h3>游戏厅</h3>
                 <p>摸鱼时间到！</p>
+            </a>
+            <a href="/ideas.html" class="feature-card reveal" style="--card-color:#22c55e">
+                <span class="feature-icon">💡</span>
+                <h3>灵感墙</h3>
+                <p>每日灵感点子</p>
+            </a>
+            <a href="/resources.html" class="feature-card reveal" style="--card-color:#ec4899">
+                <span class="feature-icon">📚</span>
+                <h3>资源库</h3>
+                <p>精选工具网站</p>
+            </a>
+            <a href="/changelog.html" class="feature-card reveal" style="--card-color:#06b6d4">
+                <span class="feature-icon">📋</span>
+                <h3>更新日志</h3>
+                <p>网站迭代记录</p>
+            </a>
+            <a class="feature-card reveal" style="--card-color:#8b5cf6;cursor:pointer" onclick="document.getElementById('fish-guestbook').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">💬</span>
+                <h3>留言板</h3>
+                <p>小鱼儿会回复你</p>
+            </a>
+            <a class="feature-card reveal" style="--card-color:#f472b6;cursor:pointer" onclick="document.getElementById('mood-diary').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">🧘</span>
+                <h3>心情日记</h3>
+                <p>记录每一天</p>
+            </a>
+            <a class="feature-card reveal" style="--card-color:#818cf8;cursor:pointer" onclick="document.getElementById('fish-dream').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">🔮</span>
+                <h3>AI 解梦</h3>
+                <p>解读你的梦境</p>
+            </a>
+            <a class="feature-card reveal" style="--card-color:#f59e0b;cursor:pointer" onclick="document.getElementById('fish-typing-test').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">⌨️</span>
+                <h3>打字测速</h3>
+                <p>测你的 WPM</p>
+            </a>
+            <a class="feature-card reveal" style="--card-color:#d4a853;cursor:pointer" onclick="document.getElementById('fish-daily-poem').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">📅</span>
+                <h3>每日诗词</h3>
+                <p>AI 赋诗一首</p>
+            </a>
+            <a class="feature-card reveal" style="--card-color:#22d3ee;cursor:pointer" onclick="document.getElementById('fish-funfact').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">🎲</span>
+                <h3>冷知识</h3>
+                <p>每天一个冷知识</p>
             </a>
         </div>
     </section>
@@ -242,15 +286,12 @@
         </div>
         <div class="card-grid card-grid-2">
             <div id="fish-image-gen" class="reveal"></div>
-            <div id="fish-music-player" class="reveal"></div>
             <div id="fish-video-player" class="reveal"></div>
             <div id="fish-funfact" class="reveal"></div>
+            <div id="fish-joke" class="reveal"></div>
         </div>
         <div class="card-grid card-grid-2" style="margin-top:16px">
-            <div id="fish-joke" class="reveal"></div>
             <div id="fish-typing-test" class="reveal"></div>
-        </div>
-        <div style="max-width:480px;margin:16px auto 0">
             <div id="fish-dream" class="reveal"></div>
         </div>
     </section>
@@ -284,6 +325,9 @@
         <div style="margin-top:40px">
             <div id="fish-stats" class="reveal"></div>
         </div>
+        <div style="margin-top:40px">
+            <div id="fish-visitor-map" class="reveal"></div>
+        </div>
     </section>
 
     <!-- ===== 每日名言 ===== -->
@@ -310,6 +354,7 @@
 
     <!-- 浮动吉祥物 -->
     <div id="fish-float-mascot"></div>
+    <div id="fish-tts-player"></div>
 
     <!-- 脚本 -->
     <script src="/fish-ai.js?v=20260501d"></script>
