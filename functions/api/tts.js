@@ -1,9 +1,9 @@
 // functions/api/tts.js
-// TTS API - 代理小米 MIMO TTS
+// TTS API - 代理小米 MIMO TTS（流式分段用）
 
 export async function onRequestPost(context) {
   try {
-    const { text, voice, speed } = await context.request.json();
+    const { text, speed } = await context.request.json();
 
     if (!text) {
       return new Response(JSON.stringify({ error: 'text required' }), {
@@ -12,14 +12,11 @@ export async function onRequestPost(context) {
       });
     }
 
-    // 限制文本长度（MIMO TTS 有长度限制）
-    const truncated = text.slice(0, 2000);
+    // 限制文本长度
+    const truncated = text.slice(0, 500);
 
-    // 调用小米 MIMO TTS API
-    const ttsVoice = voice || 'zh-CN-XiaoxiaoNeural';
-    const ttsSpeed = speed || 1.0;
-
-    const audioData = await generateMimoTTS(truncated, ttsVoice, ttsSpeed);
+    // 调用小米 MIMO TTS API（不传 voice，用默认）
+    const audioData = await generateMimoTTS(truncated, speed || 1.0);
 
     return new Response(audioData, {
       headers: {
@@ -37,19 +34,13 @@ export async function onRequestPost(context) {
   }
 }
 
-async function generateMimoTTS(text, voice, speed) {
-  // 小米 MIMO TTS API
-  const apiUrl = 'https://fufu.iqach.top/v1/audio/speech';
-
-  const res = await fetch(apiUrl, {
+async function generateMimoTTS(text, speed) {
+  const res = await fetch('https://fufu.iqach.top/v1/audio/speech', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: 'mimo-v2-tts',
       input: text,
-      voice: voice,
       speed: speed,
     }),
   });
@@ -59,17 +50,9 @@ async function generateMimoTTS(text, voice, speed) {
     throw new Error(`MIMO TTS failed: ${res.status} ${errText.slice(0, 100)}`);
   }
 
-  const contentType = res.headers.get('content-type') || '';
-  if (!contentType.includes('audio') && !contentType.includes('octet-stream')) {
-    // 可能返回了错误 JSON
-    const errText = await res.text().catch(() => '');
-    throw new Error(`MIMO TTS returned non-audio: ${contentType} ${errText.slice(0, 100)}`);
-  }
-
   return await res.arrayBuffer();
 }
 
-// CORS preflight
 export async function onRequestOptions() {
   return new Response(null, {
     headers: {
