@@ -121,7 +121,7 @@
             border: 1px solid rgba(168,85,247,0.25);
             position: relative; overflow: hidden;
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            max-width: 480px; margin: 0 auto;
+            max-width: 480px; width:100%; margin: 0 auto;
           }
           .fm-widget::before {
             content: ''; position: absolute; inset: 0;
@@ -168,6 +168,11 @@
             animation: fmBounce var(--dur) ease-in-out infinite alternate;
           }
           @keyframes fmBounce { from { height: 4px; } to { height: var(--h); } }
+        
+        @media(max-width:480px){
+          .fm-widget{padding:16px !important;border-radius:12px !important}
+          .fm-widget *{max-width:100% !important;box-sizing:border-box}
+        }
         </style>
         <div class="fm-widget">
           <div class="fm-badge"><span class="dot"></span> 每日推荐 · ${this.todayKey}</div>
@@ -193,7 +198,7 @@
 
     renderLoading() {
       this.container.innerHTML = `
-        <div class="fm-widget" style="max-width:480px;margin:0 auto;background:linear-gradient(135deg,#0f0f1e,#1a0f2e,#2a1a4e);border-radius:20px;padding:24px;color:#f5f3ff;text-align:center;font-family:-apple-system,sans-serif;">
+        <div class="fm-widget" style="max-width:480px;width:100%;margin:0 auto;background:linear-gradient(135deg,#0f0f1e,#1a0f2e,#2a1a4e);border-radius:20px;padding:24px;color:#f5f3ff;text-align:center;font-family:-apple-system,sans-serif;">
           <div style="font-size:32px;margin-bottom:12px">🎵</div>
           <div style="color:#a78bfa;font-size:14px">小鱼儿正在选今天的歌...</div>
         </div>

@@ -51,7 +51,7 @@
         <style>
           .stats-widget {
             background: var(--surface, #141414); border: 1px solid var(--border, #2a2a2a);
-            border-radius: 16px; padding: 24px; max-width: 600px; margin: 0 auto;
+            border-radius: 16px; padding: 20px; max-width: 600px; width:100%; margin: 0 auto;
             font-family: 'LXGW WenKai', -apple-system, sans-serif;
           }
           .stats-title {
@@ -125,6 +125,11 @@
             font-size: 0.7rem; color: var(--text-muted, #555);
             text-align: center;
           }
+        
+        @media(max-width:480px){
+          .stats-widget{padding:16px !important;border-radius:12px !important}
+          .stats-widget *{max-width:100% !important;box-sizing:border-box}
+        }
         </style>
         <div class="stats-widget">
           <div class="stats-title">📊 网站数据</div>
@@ -193,10 +198,15 @@
         <style>
           .stats-widget {
             background: var(--surface, #141414); border: 1px solid var(--border, #2a2a2a);
-            border-radius: 16px; padding: 24px; max-width: 600px; margin: 0 auto;
+            border-radius: 16px; padding: 20px; max-width: 600px; width:100%; margin: 0 auto;
             font-family: 'LXGW WenKai', -apple-system, sans-serif; text-align: center;
           }
           .stats-error { color: var(--text-dim, #888); font-size: 0.85rem; }
+        
+        @media(max-width:480px){
+          .stats-widget{padding:16px !important;border-radius:12px !important}
+          .stats-widget *{max-width:100% !important;box-sizing:border-box}
+        }
         </style>
         <div class="stats-widget">
           <div class="stats-error">📊 统计数据加载中...</div>

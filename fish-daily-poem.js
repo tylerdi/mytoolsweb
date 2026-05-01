@@ -45,7 +45,7 @@
       style.textContent = `
         .dp-widget {
           background: var(--surface, #111); border: 1px solid var(--border, #2a2a2a);
-          border-radius: 20px; padding: 28px; max-width: 500px; margin: 0 auto;
+          border-radius: 20px; padding:20px; max-width: 500px; width:100%; margin: 0 auto;
           font-family: 'LXGW WenKai', -apple-system, sans-serif;
           position: relative; overflow: hidden;
         }
@@ -137,7 +137,11 @@
         }
         .dp-decor-tl { top: 10px; left: 15px; }
         .dp-decor-br { bottom: 10px; right: 15px; transform: rotate(180deg); }
-      `;
+      
+        @media(max-width:480px){
+          .dp-widget{padding:16px !important;border-radius:12px !important}
+          .dp-widget *{max-width:100% !important;box-sizing:border-box}
+        }`;
       document.head.appendChild(style);
 
       this.render();

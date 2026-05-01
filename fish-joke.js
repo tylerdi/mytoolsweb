@@ -60,13 +60,18 @@
     render() {
       this.el.innerHTML = `
       <style>
-        .jk-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:24px;text-align:center;font-family:'LXGW WenKai',-apple-system,sans-serif;max-width:480px;margin:0 auto}
+        .jk-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:24px;text-align:center;font-family:'LXGW WenKai',-apple-system,sans-serif;max-width:480px;width:100%;margin:0 auto}
         .jk-icon{font-size:2.5rem;margin-bottom:12px}
         .jk-title{font-size:.85rem;color:#888;margin-bottom:12px}
         .joke-content{font-size:1.1rem;color:var(--text,#e8e8e8);line-height:1.8;min-height:60px;padding:12px;background:rgba(255,255,255,.03);border-radius:10px}
         .jk-actions{margin-top:12px;display:flex;gap:8px;justify-content:center}
         .jk-btn{background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:6px 14px;color:#aaa;font-size:.75rem;cursor:pointer;font-family:inherit;transition:all .2s}
         .jk-btn:hover{border-color:#646cff;color:#e8e8e8}
+      
+        @media(max-width:480px){
+          .jk-wrap{padding:16px;border-radius:12px}
+          .jk-wrap *{max-width:100% !important}
+        }
       </style>
       <div class="jk-wrap">
         <div class="jk-icon">😂</div>

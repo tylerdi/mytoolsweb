@@ -36,7 +36,7 @@
       style.textContent = `
         .vm-widget {
           background: var(--surface, #111); border: 1px solid var(--border, #2a2a2a);
-          border-radius: 20px; padding: 28px; max-width: 560px; margin: 0 auto;
+          border-radius: 20px; padding:20px; max-width: 560px; width:100%; margin: 0 auto;
           font-family: 'LXGW WenKai', -apple-system, sans-serif;
           position: relative; overflow: hidden;
         }
@@ -103,10 +103,14 @@
         .vm-total-num { font-size: 1.1rem; font-weight: 800; color: var(--accent, #646cff); }
         .vm-total-label { font-size: 0.65rem; color: var(--text-dim, #666); }
 
-        .vm-loading { text-align: center; padding: 30px 0; color: var(--text-dim, #888); font-size: 0.85rem; }
+        .vm-loading { text-align: center; padding:20px 0; color: var(--text-dim, #888); font-size: 0.85rem; }
         .vm-loading .fish { font-size: 2rem; animation: vmFloat 2s ease-in-out infinite; margin-bottom: 8px; }
         @keyframes vmFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-      `;
+      
+        @media(max-width:480px){
+          .vm-widget{padding:16px !important;border-radius:12px !important}
+          .vm-widget *{max-width:100% !important;box-sizing:border-box}
+        }`;
       document.head.appendChild(style);
 
       this.container.innerHTML = `

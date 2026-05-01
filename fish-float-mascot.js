@@ -92,7 +92,7 @@
           -webkit-backdrop-filter: blur(12px);
           border: 1px solid rgba(100,108,255,0.2);
           border-radius: 14px 14px 4px 14px;
-          padding: 10px 14px; min-width: 180px; max-width: 240px;
+          padding: 10px 14px; min-width: 180px; max-width: 240px; width:100%;
           font-size: 0.78rem; color: var(--text, #e0d8c8); line-height: 1.6;
           box-shadow: 0 8px 30px rgba(0,0,0,0.4);
           opacity: 0; transform: translateY(8px) scale(0.95);
@@ -145,7 +145,11 @@
           0%,100% { transform: translateY(0); }
           50% { transform: translateY(-3px); }
         }
-      `;
+      
+        @media(max-width:480px){
+          .fm-container{padding:16px !important;border-radius:12px !important}
+          .fm-container *{max-width:100% !important;box-sizing:border-box}
+        }`;
       document.head.appendChild(style);
 
       // 主容器

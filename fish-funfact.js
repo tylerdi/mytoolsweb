@@ -43,7 +43,7 @@
       style.textContent = `
         .ff-widget {
           background: var(--surface, #111); border: 1px solid var(--border, #2a2a2a);
-          border-radius: 20px; padding: 28px; max-width: 500px; margin: 0 auto;
+          border-radius: 20px; padding:20px; max-width: 500px; width:100%; margin: 0 auto;
           font-family: 'LXGW WenKai', -apple-system, sans-serif;
           position: relative; overflow: hidden;
         }
@@ -104,7 +104,7 @@
         .ff-answer-source { font-size: 0.7rem; color: var(--text-dim, #555); margin-top: 10px; font-style: italic; }
 
         /* 加载态 */
-        .ff-loading { text-align: center; padding: 40px 0; color: var(--text-dim, #888); font-size: 0.85rem; }
+        .ff-loading { text-align: center; padding:24px 0; color: var(--text-dim, #888); font-size: 0.85rem; }
         .ff-loading .fish { font-size: 2rem; animation: ffFloat 2s ease-in-out infinite; margin-bottom: 8px; }
         @keyframes ffFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
@@ -126,7 +126,11 @@
           pointer-events: none;
         }
         @keyframes ffToast { 0% { opacity: 0; transform: translateX(-50%) translateY(8px); } 15% { opacity: 1; } 85% { opacity: 1; } 100% { opacity: 0; transform: translateX(-50%) translateY(-8px); } }
-      `;
+      
+        @media(max-width:480px){
+          .ff-widget{padding:16px !important;border-radius:12px !important}
+          .ff-widget *{max-width:100% !important;box-sizing:border-box}
+        }`;
       document.head.appendChild(style);
 
       this.render();

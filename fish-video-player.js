@@ -169,7 +169,7 @@
     render() {
       this.el.innerHTML = `
       <style>
-        .vp-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:20px;font-family:'LXGW WenKai',-apple-system,sans-serif;max-width:480px;margin:0 auto}
+        .vp-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:20px;font-family:'LXGW WenKai',-apple-system,sans-serif;max-width:480px;width:100%;margin:0 auto}
         .vp-header{display:flex;align-items:center;gap:8px;margin-bottom:16px}
         .vp-header h2{font-size:1rem;font-weight:700;margin:0}
         .vp-header .badge{font-size:.6rem;background:rgba(255,107,157,.15);color:#ff6b9d;padding:2px 8px;border-radius:6px}

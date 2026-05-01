@@ -392,7 +392,7 @@
     render() {
       this.el.innerHTML = `
       <style>
-        .mp-wrap{background:linear-gradient(135deg,#0f0f1e 0%,#1a0f2e 50%,#0f0f1e 100%);border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;font-family:'LXGW WenKai',-apple-system,sans-serif;color:#e8e8e8;max-width:480px;margin:0 auto}
+        .mp-wrap{background:linear-gradient(135deg,#0f0f1e 0%,#1a0f2e 50%,#0f0f1e 100%);border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;font-family:'LXGW WenKai',-apple-system,sans-serif;color:#e8e8e8;max-width:480px;width:100%;margin:0 auto}
         .mp-header{padding:20px 20px 0;display:flex;align-items:center;gap:10px}
         .mp-header h2{font-size:1rem;font-weight:700;margin:0}
         .mp-header .badge{font-size:.65rem;background:rgba(100,108,255,.2);color:#646cff;padding:2px 8px;border-radius:6px}

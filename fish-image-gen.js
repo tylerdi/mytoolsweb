@@ -141,7 +141,7 @@
     render() {
       this.el.innerHTML = `
       <style>
-        .ig-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:20px;font-family:'LXGW WenKai',-apple-system,sans-serif;max-width:480px;margin:0 auto}
+        .ig-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:20px;font-family:'LXGW WenKai',-apple-system,sans-serif;max-width:480px;width:100%;margin:0 auto}
         .ig-title{font-size:1rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
         .ig-title .badge{font-size:.6rem;background:rgba(100,108,255,.15);color:#646cff;padding:2px 8px;border-radius:6px}
         .ig-input-row{display:flex;gap:8px;margin-bottom:12px}
