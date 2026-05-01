@@ -40,6 +40,8 @@
       this.repeat = 'off';
       this.favs = JSON.parse(localStorage.getItem('fm_fav') || '[]');
       this.playlist = [];
+      this.lyrics = [];
+      this.lyricIdx = -1;
       this.idx = 0;
       this.playing = false;
       this.tab = 'trending';
@@ -49,7 +51,7 @@
       this.restoreState();
       this.audio.volume = this.muted ? 0 : this.volume;
 
-      this.audio.ontimeupdate = () => this.updateProgress();
+      this.audio.ontimeupdate = () => { this.updateProgress(); this.syncLyrics(); };
       this.audio.onended = () => this.handleEnded();
       this.audio.onerror = () => { this.showPlayingStatus('⚠️ 播放失败'); setTimeout(() => this.next(), 1200); };
       this.audio.onloadedmetadata = () => this.updateDuration();
@@ -148,6 +150,7 @@
       } catch (e) { console.error('Play failed:', e); this.playing = false; }
       this.updateUI();
       this.updateMediaSession();
+      this.loadLyrics(t.title, t.artist);
     }
 
     toggle() {
@@ -246,6 +249,56 @@
     updateDuration() {
       const t = this.el.querySelector('.time-total');
       if (t) t.textContent = this.fmt(this.audio.duration);
+    }
+    // ===== 歌词 =====
+    async loadLyrics(title, artist) {
+      this.lyrics = [];
+      this.lyricIdx = -1;
+      const el = this.el.querySelector('.lyrics-lines');
+      if (el) el.innerHTML = '<span style="color:#555">正在加载歌词...</span>';
+      try {
+        const res = await fetch(`/api/lyrics?title=${encodeURIComponent(title)}&artist=${encodeURIComponent(artist)}`);
+        const data = await res.json();
+        if (data.ok && data.data?.length) {
+          this.lyrics = data.data;
+          this.renderLyrics();
+        } else {
+          if (el) el.innerHTML = '<span style="color:#555">暂无歌词</span>';
+        }
+      } catch {
+        if (el) el.innerHTML = '<span style="color:#555">歌词加载失败</span>';
+      }
+    }
+    renderLyrics() {
+      const el = this.el.querySelector('.lyrics-lines');
+      if (!el || !this.lyrics.length) return;
+      el.innerHTML = this.lyrics.map((l, i) =>
+        `<div class="lrc-line" data-idx="${i}" style="padding:1px 0;transition:all .3s;color:#555">${l.text}${l.trans ? `<br><span style="font-size:.65rem;color:#444">${l.trans}</span>` : ''}</div>`
+      ).join('');
+    }
+    syncLyrics() {
+      if (!this.lyrics.length) return;
+      const ct = this.audio.currentTime;
+      let idx = -1;
+      for (let i = this.lyrics.length - 1; i >= 0; i--) {
+        if (ct >= this.lyrics[i].time) { idx = i; break; }
+      }
+      if (idx !== this.lyricIdx) {
+        this.lyricIdx = idx;
+        const lines = this.el.querySelectorAll('.lrc-line');
+        lines.forEach((l, i) => {
+          if (i === idx) {
+            l.style.color = '#646cff';
+            l.style.fontWeight = '600';
+            l.style.transform = 'scale(1.05)';
+            l.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          } else {
+            l.style.color = i < idx ? '#333' : '#555';
+            l.style.fontWeight = '400';
+            l.style.transform = 'scale(1)';
+          }
+        });
+      }
     }
     updateTrack() {
       const t = this.playlist[this.idx]; if (!t) return;
@@ -385,6 +438,7 @@
             this.setupVisualizer();
             this.updateUI();
             this.updateMediaSession();
+            this.loadLyrics(t.title, t.artist);
             return;
           }
         }
@@ -492,6 +546,9 @@
             <div class="track-title">加载中...</div>
             <div class="track-artist">—</div>
             <div class="track-genre"></div>
+          </div>
+          <div class="lyrics-area" style="max-height:120px;overflow:hidden;margin-top:10px;text-align:center;transition:all .3s">
+            <div class="lyrics-lines" style="font-size:.75rem;color:#666;line-height:1.8"></div>
           </div>
           <div class="visualizer">${Array.from({length:20},()=>'<div class="vis-bar"></div>').join('')}</div>
         </div>
