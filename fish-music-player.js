@@ -21,6 +21,8 @@
       this.playing = false;
       this.ctx = null;
       this.analyser = null;
+      this.favView = false;
+      this._fullPlaylist = null;
 
       // 恢复上次状态
       try {
@@ -62,6 +64,8 @@
         })) : [];
         if (!this.playlist.length) { this.showStatus('⚠️ 加载失败'); return; }
         this.idx = 0;
+        this.favView = false;
+        this._fullPlaylist = null;
         this.renderList();
         this.updateTrack();
         this.updateSongCount();
@@ -103,6 +107,8 @@
       this.playlist = results;
       this.idx = 0;
       this.isSearch = true;
+      this.favView = false;
+      this._fullPlaylist = null;
       this.renderList();
       this.updateTrack();
       this.updateSongCount();
@@ -200,6 +206,26 @@
     toggleShuffle() { this.shuffle=!this.shuffle; this.saveState(); this.updateUI(); }
     toggleRepeat() { const m=['off','all','one']; this.repeat=m[(m.indexOf(this.repeat)+1)%3]; this.saveState(); this.updateUI(); }
     toggleFav() { const t=this.playlist[this.idx]; if(!t)return; const i=this.favs.indexOf(t.id); if(i>=0)this.favs.splice(i,1); else this.favs.push(t.id); localStorage.setItem('fm_fav',JSON.stringify(this.favs)); this.updateUI(); }
+    toggleFavView() {
+      const btn = this.el.querySelector('.act-fav-list');
+      if (this.favView) {
+        // 退出收藏视图，恢复全部列表
+        this.favView = false;
+        this.playlist = this._fullPlaylist || this.playlist;
+        if (btn) btn.classList.remove('on');
+      } else {
+        // 进入收藏视图
+        if (!this.favs.length) { this.showStatus('还没有收藏歌曲'); return; }
+        this._fullPlaylist = this.playlist.slice();
+        this.playlist = this.playlist.filter(t => this.favs.includes(t.id));
+        if (!this.playlist.length) { this.showStatus('当前列表中没有收藏歌曲'); this.playlist = this._fullPlaylist; return; }
+        this.favView = true;
+        if (btn) btn.classList.add('on');
+      }
+      this.idx = 0;
+      this.renderList();
+      this.updateSongCount();
+    }
 
     // ===== 可视化 =====
     setupVisualizer() {
@@ -362,6 +388,8 @@
         .action-bar .act-btn:active{transform:scale(0.95)}
         .action-bar .act-play{background:rgba(100,108,255,.25);color:#8b8eff}
         .action-bar .act-shuffle{background:rgba(255,107,157,.2);color:#ff8ab5}
+        .action-bar .act-fav-list{background:rgba(255,107,157,.12);color:#ff6b9d}
+        .action-bar .act-fav-list.on{background:#ff6b9d;color:#fff}
         .pl-list{max-height:350px;overflow-y:auto;padding:8px 0;-webkit-overflow-scrolling:touch}
         .pl-list::-webkit-scrollbar{width:3px}
         .pl-list::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
@@ -431,6 +459,7 @@
         <div class="action-bar">
           <button class="act-btn act-play" onclick="this.closest('.mp-wrap').__player.playAll()">▶ 播放全部</button>
           <button class="act-btn act-shuffle" onclick="this.closest('.mp-wrap').__player.shufflePlay()">🔀 随机</button>
+          <button class="act-btn act-fav-list" onclick="this.closest('.mp-wrap').__player.toggleFavView()">❤️ 收藏</button>
           <span style="font-size:.65rem;color:#666;margin-left:auto" class="song-count"></span>
         </div>
         <div class="pl-list"><div style="text-align:center;padding:40px;color:#666">🎵 加载中...</div></div>
