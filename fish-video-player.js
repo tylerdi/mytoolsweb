@@ -1,6 +1,6 @@
 /**
  * 小鱼儿视频播放器 🐟🎬
- * Pexels 免费视频 + 分类浏览 + 全屏播放器 + 搜索
+ * Pexels 免费高清视频 + 分类浏览 + 全屏播放 + 搜索
  * 用法：<div id="fish-video-player"></div><script src="/fish-video-player.js"></script>
  */
 (function () {
@@ -10,22 +10,22 @@
   const KEY = 'DqKEbBsmBik7vOSGk4HDJxsfKqK8aXvUJrXw0Sg25e0ZvJSn9c90YpcE';
 
   const CATS = [
-    { id: 'nature',    q: 'nature forest mountain landscape',        icon: '🌿' },
-    { id: 'ocean',     q: 'ocean sea waves underwater beach sunset',  icon: '🌊' },
-    { id: 'city',      q: 'city urban skyline night traffic',         icon: '🌆' },
-    { id: 'cinematic', q: 'cinematic aerial drone timelapse',         icon: '🎬' },
-    { id: 'animals',   q: 'animals wildlife cute pet dog cat bird',   icon: '🐾' },
-    { id: 'space',     q: 'space stars galaxy night sky aurora',      icon: '🚀' },
-    { id: 'rain',      q: 'rain water drops splash puddle',           icon: '🌧️' },
-    { id: 'fire',      q: 'fire flame campfire candle torch',         icon: '🔥' },
-    { id: 'food',      q: 'food cooking coffee cake pizza sushi',     icon: '🍕' },
-    { id: 'sport',     q: 'sport fitness running yoga gym',           icon: '⚽' },
-    { id: 'travel',    q: 'travel road journey adventure van',        icon: '✈️' },
-    { id: 'abstract',  q: 'abstract light neon glow particles ink',   icon: '🔬' },
-    { id: 'flowers',   q: 'flowers garden bloom rose cherry blossom', icon: '🌸' },
-    { id: 'snow',      q: 'snow winter ice frost mountain cold',      icon: '❄️' },
-    { id: 'sunset',    q: 'sunset sunrise golden hour sky clouds',    icon: '🌅' },
-    { id: 'people',    q: 'people happy smile crowd festival',        icon: '👥' },
+    { id: 'nature',    q: 'nature forest mountain landscape',        icon: '🌿', name: '自然' },
+    { id: 'ocean',     q: 'ocean sea waves underwater beach',        icon: '🌊', name: '海洋' },
+    { id: 'city',      q: 'city urban skyline night traffic',        icon: '🌆', name: '城市' },
+    { id: 'cinematic', q: 'cinematic aerial drone timelapse',        icon: '🎬', name: '航拍' },
+    { id: 'animals',   q: 'animals wildlife cute pet dog cat bird',  icon: '🐾', name: '动物' },
+    { id: 'space',     q: 'space stars galaxy night sky aurora',     icon: '🚀', name: '宇宙' },
+    { id: 'rain',      q: 'rain water drops splash puddle',          icon: '🌧️', name: '雨景' },
+    { id: 'fire',      q: 'fire flame campfire candle',              icon: '🔥', name: '火焰' },
+    { id: 'food',      q: 'food cooking coffee cake pizza sushi',    icon: '🍕', name: '美食' },
+    { id: 'sport',     q: 'sport fitness running yoga gym',          icon: '⚽', name: '运动' },
+    { id: 'travel',    q: 'travel road journey adventure',           icon: '✈️', name: '旅行' },
+    { id: 'abstract',  q: 'abstract light neon glow particles',      icon: '🔬', name: '抽象' },
+    { id: 'flowers',   q: 'flowers garden bloom rose cherry blossom',icon: '🌸', name: '花卉' },
+    { id: 'snow',      q: 'snow winter ice frost mountain',          icon: '❄️', name: '雪景' },
+    { id: 'sunset',    q: 'sunset sunrise golden hour sky clouds',   icon: '🌅', name: '日落' },
+    { id: 'night',     q: 'night city lights neon dark moody',       icon: '🌃', name: '夜景' },
   ];
 
   class FishVideoPlayer {
@@ -34,10 +34,9 @@
       if (!this.el) return;
       this.videos = [];
       this.cat = 'nature';
-      this.searchTimer = null;
+      this.currentVideo = null;
       this.render();
       this.loadCat('nature');
-      this.bindKeys();
     }
 
     async loadCat(catId) {
@@ -66,9 +65,9 @@
         });
         const data = await res.json();
         this.videos = (data.videos || []).map(v => this.map(v));
-        if (!this.videos.length) this.videos = this.fallback();
-      } catch { this.videos = this.fallback(); }
-      this.renderGrid();
+        if (!this.videos.length) this.showEmpty();
+        else this.renderGrid();
+      } catch { this.showEmpty(); }
     }
 
     map(v) {
@@ -76,7 +75,7 @@
       const hd = files.find(f => f.width === 1280) || files.find(f => f.width === 720) || files.find(f => f.width === 640) || files[0] || {};
       return {
         id: v.id,
-        title: (v.url || '').split('/').pop()?.replace(/-/g, ' ').replace(/\d+$/, '') || `Video ${v.id}`,
+        title: this.genTitle(v),
         thumb: v.image || v.video_pictures?.[0]?.picture || '',
         url: hd.link || '',
         duration: v.duration || 0,
@@ -84,6 +83,12 @@
         w: hd.width || 640,
         h: hd.height || 360,
       };
+    }
+
+    genTitle(v) {
+      const url = v.url || '';
+      const slug = url.split('/').pop()?.replace(/-/g, ' ').replace(/\d+$/, '').trim();
+      return slug && slug.length > 3 ? slug.charAt(0).toUpperCase() + slug.slice(1) : `Video ${v.id}`;
     }
 
     fallback() {
@@ -113,6 +118,7 @@
       video.pause(); video.src = '';
       modal.classList.remove('show');
       document.body.style.overflow = '';
+      this.currentVideo = null;
     }
 
     showSkeleton() {
@@ -120,6 +126,11 @@
       grid.innerHTML = Array.from({ length: 8 }, () =>
         `<div class="vp-card"><div class="vp-skimg"></div><div class="vp-skline"></div></div>`
       ).join('');
+    }
+
+    showEmpty() {
+      const grid = this.el.querySelector('.vp-grid');
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#666">😢 没有找到视频，换个关键词试试</div>';
     }
 
     highlight(id) {
@@ -150,26 +161,10 @@
       });
     }
 
-    bindKeys() {
-      document.addEventListener('keydown', (e) => {
-        const modal = this.el?.querySelector('.vp-modal');
-        if (!modal?.classList.contains('show')) return;
-        const video = this.el.querySelector('.vp-video');
-        if (e.key === 'Escape') this.closeModal();
-        else if (e.key === ' ') { e.preventDefault(); video.paused ? video.play() : video.pause(); }
-        else if (e.key === 'ArrowRight') video.currentTime += 5;
-        else if (e.key === 'ArrowLeft') video.currentTime -= 5;
-        else if (e.key === 'f' || e.key === 'F') {
-          if (document.fullscreenElement) document.exitFullscreen();
-          else video.requestFullscreen?.();
-        }
-      });
-    }
-
     render() {
       this.el.innerHTML = `
       <style>
-        .vp-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:20px;font-family:'LXGW WenKai',-apple-system,sans-serif;max-width:480px;width:100%;margin:0 auto}
+        .vp-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:20px;font-family:'LXGW WenKai',-apple-system,sans-serif;max-width:480px;margin:0 auto;width:100%}
         .vp-header{display:flex;align-items:center;gap:8px;margin-bottom:16px}
         .vp-header h2{font-size:1rem;font-weight:700;margin:0}
         .vp-header .badge{font-size:.6rem;background:rgba(255,107,157,.15);color:#ff6b9d;padding:2px 8px;border-radius:6px}
@@ -203,19 +198,19 @@
         .vp-title{font-size:.9rem;color:#e8e8e8;font-weight:600}
         .vp-meta{font-size:.7rem;color:#888;margin-top:4px}
         .vp-hint{font-size:.6rem;color:#555;margin-top:8px}
-        @media(max-width:480px){.vp-grid{grid-template-columns:repeat(2,1fr)}.vp-wrap{padding:16px}}
+        @media(max-width:480px){.vp-wrap{padding:16px !important;border-radius:12px !important}.vp-grid{grid-template-columns:repeat(2,1fr)}.vp-wrap *{max-width:100% !important;box-sizing:border-box}}
       </style>
       <div class="vp-wrap">
         <div class="vp-header">
           <h2>🎬 视频库</h2>
-          <span class="badge">Pexels · 免费</span>
+          <span class="badge">Pexels · 免费高清</span>
         </div>
         <div class="vp-search">
           <input placeholder="搜索视频..." onkeydown="if(event.key==='Enter')this.closest('.vp-wrap').__vp.search(this.value)">
           <button onclick="this.closest('.vp-wrap').__vp.search(this.previousElementSibling.value)">🔍</button>
         </div>
         <div class="vp-cats">
-          ${CATS.map(c => `<span class="vp-chip${c.id === 'nature' ? ' active' : ''}" data-cat="${c.id}" onclick="this.closest('.vp-wrap').__vp.loadCat('${c.id}')">${c.icon} ${c.id}</span>`).join('')}
+          ${CATS.map(c => `<span class="vp-chip${c.id === 'nature' ? ' active' : ''}" data-cat="${c.id}" onclick="this.closest('.vp-wrap').__vp.loadCat('${c.id}')">${c.icon} ${c.name}</span>`).join('')}
         </div>
         <div class="vp-grid"></div>
       </div>
@@ -230,6 +225,21 @@
       </div>`;
 
       this.el.querySelector('.vp-wrap').__vp = this;
+
+      // Keyboard shortcuts for modal
+      document.addEventListener('keydown', (e) => {
+        const modal = this.el?.querySelector('.vp-modal');
+        if (!modal?.classList.contains('show')) return;
+        const video = this.el.querySelector('.vp-video');
+        if (e.key === 'Escape') this.closeModal();
+        else if (e.key === ' ') { e.preventDefault(); video.paused ? video.play() : video.pause(); }
+        else if (e.key === 'ArrowRight') video.currentTime += 5;
+        else if (e.key === 'ArrowLeft') video.currentTime -= 5;
+        else if (e.key === 'f' || e.key === 'F') {
+          if (document.fullscreenElement) document.exitFullscreen();
+          else video.requestFullscreen?.();
+        }
+      });
     }
   }
 
