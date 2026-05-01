@@ -33,6 +33,7 @@
       this.shuffle = false;
       this.repeat = 'off'; // off/all/one
       this.favs = JSON.parse(localStorage.getItem('fm_fav') || '[]');
+      this.syncFavsFromDb();
       this.tab = 'trending';
       this.ctx = null; this.analyser = null; this.genNodes = {};
       this.searchTimer = null;
@@ -125,7 +126,11 @@
     toggleMute() { this.muted=!this.muted; this.audio.volume=this.muted?0:this.volume; this.updateUI(); }
     toggleShuffle() { this.shuffle=!this.shuffle; this.updateUI(); }
     toggleRepeat() { const m=['off','all','one']; this.repeat=m[(m.indexOf(this.repeat)+1)%3]; this.updateUI(); }
-    toggleFav() { const t=this.playlist[this.idx]; if(!t)return; const i=this.favs.indexOf(t.id); if(i>=0)this.favs.splice(i,1); else this.favs.push(t.id); localStorage.setItem('fm_fav',JSON.stringify(this.favs)); this.updateUI(); }
+    toggleFav() { const t=this.playlist[this.idx]; if(!t)return; const i=this.favs.indexOf(t.id); if(i>=0){this.favs.splice(i,1); this._dbRemoveFav(t.id); } else { this.favs.push(t.id); this._dbAddFav(t); } localStorage.setItem('fm_fav',JSON.stringify(this.favs)); this.updateUI(); }
+    _getVisitorId() { let id=localStorage.getItem('vid'); if(!id){id='v_'+Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('vid',id);} return id; }
+    async syncFavsFromDb() { try { const r=await fetch(`/api/favorites?visitor_id=${this._getVisitorId()}&type=music`); const j=await r.json(); if(j.ok&&j.data?.length){ const ids=j.data.map(d=>d.item_id); const merged=[...new Set([...ids,...this.favs])]; this.favs=merged; localStorage.setItem('fm_fav',JSON.stringify(merged)); this.updateUI(); } } catch{} }
+    async _dbAddFav(t) { try { await fetch('/api/favorites',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({visitor_id:this._getVisitorId(),type:'music',item_id:String(t.id),data:{title:t.title,artist:t.artist,artwork:t.artwork}})}); } catch{} }
+    async _dbRemoveFav(id) { try { await fetch(`/api/favorites?visitor_id=${this._getVisitorId()}&item_id=${id}`,{method:'DELETE'}); } catch{} }
 
     // ===== Web Audio 可视化 =====
     setupVisualizer() {

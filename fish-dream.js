@@ -47,11 +47,15 @@
           }
         }
         resultEl.innerHTML = `<div style="font-size:.9rem;line-height:1.8;color:var(--text,#e8e8e8)">${aiText || '这个梦很特别，需要更多细节才能解读哦~'}</div>`;
+        // Save to database
+        this._saveToDb(text, aiText);
       } catch {
         resultEl.innerHTML = '<div style="color:#ff6b9d">解梦失败，请稍后再试</div>';
       }
     }
 
+    _getVisitorId() { let id=localStorage.getItem('vid'); if(!id){id='v_'+Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('vid',id);} return id; }
+    async _saveToDb(dream_text, interpretation) { try { await fetch('/api/dreams',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({visitor_id:this._getVisitorId(),dream_text,interpretation})}); } catch{} }
     render() {
       this.el.innerHTML = `
       <style>

@@ -29,6 +29,7 @@
       this.finished = false;
       this.bestWpm = parseInt(localStorage.getItem('typing_best') || '0');
       this.render();
+      this.syncBestFromDb();
     }
 
     start() {
@@ -69,6 +70,8 @@
           localStorage.setItem('typing_best', wpm);
           isNewBest = true;
         }
+        // Save score to database
+        this._saveScore(wpm, elapsed);
 
         this.el.querySelector('.tt-result').innerHTML = `
           <div style="font-size:2rem;margin-bottom:8px">🏆</div>
@@ -97,6 +100,9 @@
       this.el.querySelector('.tt-target').innerHTML = html;
     }
 
+    _getVisitorId() { let id=localStorage.getItem('vid'); if(!id){id='v_'+Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('vid',id);} return id; }
+    async _saveScore(wpm, elapsed) { try { await fetch('/api/typing-scores',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({visitor_id:this._getVisitorId(),wpm,accuracy:100,duration:Math.round(elapsed),text_sample:this.sentence})}); } catch{} }
+    async syncBestFromDb() { try { const r=await fetch(`/api/typing-scores?visitor_id=${this._getVisitorId()}&limit=20`); const j=await r.json(); if(j.ok&&j.data?.length){ const dbBest=Math.max(...j.data.map(s=>s.wpm)); if(dbBest>this.bestWpm){ this.bestWpm=dbBest; localStorage.setItem('typing_best',dbBest); const el=this.el.querySelector('.tt-best'); if(el) el.textContent=`最佳记录: ${this.bestWpm} WPM`; } } } catch{} }
     render() {
       this.el.innerHTML = `
       <style>

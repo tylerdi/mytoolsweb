@@ -47,6 +47,7 @@
       this.history = JSON.parse(localStorage.getItem('fish_img_history') || '[]');
       this.generating = false;
       this.render();
+      this.syncFromDb();
     }
 
     async generate(prompt) {
@@ -84,9 +85,11 @@
           </div>`;
 
         // 保存历史
-        this.history.unshift({ prompt, url, style: this.style, size: this.size.id, time: Date.now() });
+        const entry = { prompt, url, style: this.style, size: this.size.id, time: Date.now() };
+        this.history.unshift(entry);
         if (this.history.length > 20) this.history.pop();
         localStorage.setItem('fish_img_history', JSON.stringify(this.history));
+        this._dbSaveImage(entry);
         this.renderHistory();
       };
       img.onerror = () => {
@@ -212,6 +215,10 @@
       this.el.querySelectorAll('.ig-style-chip').forEach(c => c.classList.toggle('active', c.dataset.style === id));
     }
 
+    _getVisitorId() { let id=localStorage.getItem('vid'); if(!id){id='v_'+Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('vid',id);} return id; }
+    async syncFromDb() { try { const r=await fetch(`/api/images?visitor_id=${this._getVisitorId()}&limit=20`); const j=await r.json(); if(j.ok&&j.data?.length){ const dbHistory=j.data.map(d=>({prompt:d.prompt,url:d.url,style:d.style,size:'',time:new Date(d.created_at).getTime(),dbId:d.id})); const localIds=new Set(this.history.map(h=>h.url)); const merged=[...dbHistory.filter(d=>!localIds.has(d.url)),...this.history].sort((a,b)=>b.time-a.time).slice(0,20); this.history=merged; localStorage.setItem('fish_img_history',JSON.stringify(merged)); this.renderHistory(); } } catch{} }
+    async _dbSaveImage(e) { try { await fetch('/api/images',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({visitor_id:this._getVisitorId(),prompt:e.prompt,style:e.style,url:e.url})}); } catch{} }
+    async _dbDeleteImage(id) { try { await fetch(`/api/images?visitor_id=${this._getVisitorId()}&id=${id}`,{method:'DELETE'}); } catch{} }
     setSize(id) {
       this.size = SIZES.find(s => s.id === id) || SIZES[0];
       this.el.querySelectorAll('.ig-size-chip').forEach(c => c.classList.toggle('active', c.textContent.trim() === this.size.id));

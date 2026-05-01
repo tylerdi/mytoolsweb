@@ -304,16 +304,17 @@
         document.getElementById('total-words').textContent = totalWords;
         document.getElementById('today-date').textContent = latest ? latest.date : '-';
 
-        list.innerHTML = chapters.map((ch, i) => `
-            <a class="chapter-item" onclick="readChapter(${i})">
+        const sorted = [...chapters].map((ch, i) => ({ ...ch, origIdx: i })).reverse();
+        list.innerHTML = sorted.map(ch => `
+            <a class="chapter-item" onclick="readChapter(${ch.origIdx})">
                 <span class="chapter-num">第${ch.id}章</span>
                 <div class="chapter-info">
                     <div class="chapter-title">${ch.title.replace(/^第[一二三四五六七八九十百千]+章\s*/, '')}</div>
                     <div class="chapter-meta">${ch.date} · ${ch.words || 0} 字</div>
                 </div>
-                ${i === chapters.length - 1 ? '<span class="chapter-new">最新</span>' : ''}
+                ${ch.origIdx === chapters.length - 1 ? '<span class="chapter-new">最新</span>' : ''}
             </a>
-        `).reverse().join('');
+        `).join('');
     }
 
     async function readChapter(idx) {
@@ -344,8 +345,18 @@
         document.getElementById('next-ch').className = idx === chapters.length - 1 ? 'disabled' : '';
         document.getElementById('next-ch').textContent = idx === chapters.length - 1 ? '未完待续...' : '下一章 →';
 
-        window.scrollTo(0, 0);
+        // Restore reading progress
+        const savedPct = await loadReadingProgress(String(ch.id));
         stopTTS();
+        // Scroll after content loads
+        requestAnimationFrame(() => {
+            if (savedPct > 0.01) {
+                const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+                window.scrollTo(0, maxScroll * savedPct);
+            } else {
+                window.scrollTo(0, 0);
+            }
+        });
     }
 
     function showCatalog() {
@@ -544,6 +555,51 @@
     // 语速显示
     document.getElementById('tts-rate').addEventListener('input', (e) => {
         document.getElementById('tts-rate-label').textContent = e.target.value + 'x';
+    });
+
+    // Visitor ID helper
+    function getVisitorId() { let id=localStorage.getItem('vid'); if(!id){id='v_'+Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('vid',id);} return id; }
+
+    // Save reading progress to DB
+    let _progressTimer = null;
+    function saveReadingProgress(chapterId, scrollPct) {
+        localStorage.setItem('novel_progress_' + chapterId, scrollPct);
+        clearTimeout(_progressTimer);
+        _progressTimer = setTimeout(async () => {
+            try {
+                await fetch('/api/reading-progress', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ visitor_id: getVisitorId(), chapter_id: chapterId, scroll_pct: scrollPct }),
+                });
+            } catch {}
+        }, 500);
+    }
+
+    // Load reading progress from DB
+    async function loadReadingProgress(chapterId) {
+        // Try localStorage first
+        const local = localStorage.getItem('novel_progress_' + chapterId);
+        if (local) return parseFloat(local);
+        // Try DB
+        try {
+            const r = await fetch(`/api/reading-progress?visitor_id=${getVisitorId()}`);
+            const j = await r.json();
+            if (j.ok && j.data?.length) {
+                const p = j.data.find(d => d.chapter_id === chapterId);
+                if (p) return p.scroll_pct;
+            }
+        } catch {}
+        return 0;
+    }
+
+    // Track scroll position while reading
+    window.addEventListener('scroll', () => {
+        if (currentIdx < 0) return;
+        const ch = chapters[currentIdx];
+        if (!ch) return;
+        const scrollPct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+        saveReadingProgress(String(ch.id), Math.min(1, Math.max(0, scrollPct)));
     });
 
     // 初始化
