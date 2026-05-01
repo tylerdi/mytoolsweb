@@ -58,45 +58,38 @@
     async search(q) {
       if (!q.trim()) { this.loadHot(); return; }
       this.showStatus('🔍 搜索中...');
-      try {
-        // 先试酷我
-        const res = await fetch(`/api/music-search?q=${encodeURIComponent(q)}&rn=20`);
-        const data = await res.json();
-        if (data.success && data.songs.length) {
-          this.playlist = data.songs.map(s => ({
-            id: s.rid, title: s.name, artist: s.artist, album: s.album || '',
-            duration: s.duration || 0, rid: s.rid, artwork: '', type: 'kuwo'
-          }));
-          this.idx = 0;
-          this.isSearch = true;
-          this.renderList();
-          this.updateTrack();
-          this.updateSongCount();
-          return;
-        }
-      } catch {}
+      const results = [];
 
-      // 酷我失败，试 Audius
-      this.showStatus('🔍 换源搜索...');
-      try {
-        const res2 = await fetch(`/api/audius-search?q=${encodeURIComponent(q)}&rn=20`);
-        const data2 = await res2.json();
-        if (data2.success && data2.songs.length) {
-          this.playlist = data2.songs.map(s => ({
-            id: s.rid, title: s.name, artist: s.artist, album: s.album || '',
-            duration: s.duration || 0, rid: s.rid, artwork: s.artwork || '',
-            type: 'audius', streamUrl: s.streamUrl || ''
-          }));
-          this.idx = 0;
-          this.isSearch = true;
-          this.renderList();
-          this.updateTrack();
-          this.updateSongCount();
-          return;
-        }
-      } catch {}
+      // 同时搜酷我和 Audius
+      const [kuwoRes, audiusRes] = await Promise.allSettled([
+        fetch(`/api/music-search?q=${encodeURIComponent(q)}&rn=15`).then(r => r.json()),
+        fetch(`/api/audius-search?q=${encodeURIComponent(q)}&rn=15`).then(r => r.json())
+      ]);
 
-      this.showStatus('😅 没找到');
+      // 酷我结果
+      if (kuwoRes.status === 'fulfilled' && kuwoRes.value.success) {
+        kuwoRes.value.songs.forEach(s => results.push({
+          id: s.rid, title: s.name, artist: s.artist, album: s.album || '',
+          duration: s.duration || 0, rid: s.rid, artwork: '', type: 'kuwo'
+        }));
+      }
+
+      // Audius 结果
+      if (audiusRes.status === 'fulfilled' && audiusRes.value.success) {
+        audiusRes.value.songs.forEach(s => results.push({
+          id: s.rid, title: s.name, artist: s.artist, album: s.album || '',
+          duration: s.duration || 0, rid: s.rid, artwork: s.artwork || '',
+          type: 'audius', streamUrl: s.streamUrl || ''
+        }));
+      }
+
+      if (!results.length) { this.showStatus('😅 没找到'); return; }
+      this.playlist = results;
+      this.idx = 0;
+      this.isSearch = true;
+      this.renderList();
+      this.updateTrack();
+      this.updateSongCount();
     }
 
     // ===== 播放 =====
@@ -286,7 +279,7 @@
           <div class="pl-idx">${i+1}</div>
           <div class="pl-art" style="background-image:url(${t.artwork||''})"></div>
           <div class="pl-info">
-            <div class="pl-title">${t.title}${t.type==='audius'?' <span style="font-size:.55rem;color:#22c55e;background:rgba(34,197,94,.15);padding:1px 5px;border-radius:4px">Audius</span>':''}</div>
+            <div class="pl-title">${t.title} ${t.type==='audius'?'<span style="font-size:.55rem;color:#22c55e;background:rgba(34,197,94,.15);padding:1px 5px;border-radius:4px">Audius</span>':t.type==='kuwo'?'<span style="font-size:.55rem;color:#646cff;background:rgba(100,108,255,.15);padding:1px 5px;border-radius:4px">酷我</span>':''}</div>
             <div class="pl-artist">${t.artist}</div>
           </div>
           <div class="pl-dur">${t.duration?this.fmt(t.duration):''}</div>
