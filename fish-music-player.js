@@ -34,7 +34,7 @@
       this.repeat = 'off'; // off/all/one
       this.favs = JSON.parse(localStorage.getItem('fm_fav') || '[]');
       this.tab = 'trending';
-      this.ctx = null; this analyser = null; this.genNodes = {};
+      this.ctx = null; this.analyser = null; this.genNodes = {};
       this.searchTimer = null;
 
       this.audio.ontimeupdate = () => this.updateProgress();
