@@ -301,8 +301,8 @@
         .search-box input{flex:1;min-width:0;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:8px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none}
         .search-box input:focus{border-color:#646cff}
         .search-box button{background:#646cff;border:none;border-radius:8px;padding:8px 14px;color:#fff;cursor:pointer;font-size:.8rem;flex-shrink:0}
-        .action-bar{display:flex;gap:6px;padding:8px 16px;flex-wrap:wrap;align-items:center}
-        .action-bar .act-btn{font-size:.8rem;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;flex-shrink:0;white-space:nowrap;font-family:inherit;transition:all .2s;font-weight:600}
+        .action-bar{display:flex;gap:6px;padding:8px 16px;flex-wrap:wrap;align-items:center;overflow:hidden}
+        .action-bar .act-btn{font-size:.8rem;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .2s;font-weight:600;flex:0 1 auto;min-width:0}
         .action-bar .act-btn:active{transform:scale(0.95)}
         .action-bar .act-play{background:rgba(100,108,255,.25);color:#8b8eff}
         .action-bar .act-shuffle{background:rgba(255,107,157,.2);color:#ff8ab5}
