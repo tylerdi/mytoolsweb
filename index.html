@@ -8,221 +8,114 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐟</text></svg>">
     <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --bg: #0a0a0a; --surface: #111; --border: #1e1e1e;
-            --text: #e8e8e8; --text-dim: #666; --text-muted: #444;
-            --accent: #646cff; --accent-glow: rgba(100,108,255,0.3);
-            --gold: #d4a853; --pink: #ff6b9d; --green: #22c55e;
-        }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'LXGW WenKai', -apple-system, sans-serif;
-            background: var(--bg); color: var(--text);
-            overflow-x: hidden; line-height: 1.8;
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#0a0a0a;--surface:#111;--border:#1e1e1e;--text:#e8e8e8;--text-dim:#666;--text-muted:#444;--accent:#646cff;--accent-glow:rgba(100,108,255,0.3);--gold:#d4a853;--pink:#ff6b9d;--green:#22c55e}
+        html{scroll-behavior:smooth}
+        body{font-family:'LXGW WenKai',-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.8}
 
-        /* ===== 顶部导航 ===== */
-        .nav {
-            position: fixed; top: 0; width: 100%; z-index: 100;
-            background: rgba(10,10,10,0.8); backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            transition: all 0.3s;
-        }
-        .nav-inner {
-            max-width: 1100px; margin: 0 auto; padding: 0 24px;
-            height: 56px; display: flex; align-items: center; justify-content: space-between;
-        }
-        .nav-logo {
-            font-size: 1.1rem; font-weight: 700; color: var(--text);
-            text-decoration: none; display: flex; align-items: center; gap: 8px;
-        }
-        .nav-logo .fish { font-size: 1.3rem; animation: fishFloat 3s ease-in-out infinite; }
-        @keyframes fishFloat { 0%,100%{transform:translateY(0) rotate(0)} 50%{transform:translateY(-3px) rotate(5deg)} }
-        .nav-links { display: flex; gap: 6px; }
-        .nav-links a {
-            color: var(--text-dim); text-decoration: none; font-size: 0.85rem;
-            padding: 6px 14px; border-radius: 8px; transition: all 0.2s;
-        }
-        .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
-        .nav-links a.active { color: var(--accent); background: rgba(100,108,255,0.1); }
+        /* 导航 */
+        .nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+        .nav-logo{font-size:1.1rem;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
+        .nav-logo .fish{font-size:1.3rem;animation:fishFloat 3s ease-in-out infinite}
+        @keyframes fishFloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(5deg)}}
+        .nav-links{display:flex;gap:6px}
+        .nav-links a{color:var(--text-dim);text-decoration:none;font-size:.85rem;padding:6px 14px;border-radius:8px;transition:all .2s}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.05)}
+        .nav-links a.active{color:var(--accent);background:rgba(100,108,255,.1)}
 
-        /* ===== Hero ===== */
-        .hero {
-            min-height: 100vh; display: flex; align-items: center; justify-content: center;
-            position: relative; overflow: hidden;
-        }
-        .hero-bg {
-            position: absolute; inset: 0;
-            background:
-                radial-gradient(ellipse at 20% 50%, rgba(100,108,255,0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, rgba(255,107,157,0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 80%, rgba(212,168,83,0.05) 0%, transparent 50%);
-        }
-        .hero-particles {
-            position: absolute; inset: 0; pointer-events: none;
-        }
-        .particle {
-            position: absolute; border-radius: 50%;
-            background: var(--accent); opacity: 0.15;
-            animation: particleFloat linear infinite;
-        }
-        @keyframes particleFloat {
-            0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            10% { opacity: 0.15; }
-            90% { opacity: 0.15; }
-            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
-        }
-        .hero-content {
-            text-align: center; position: relative; z-index: 2;
-            padding: 0 24px; max-width: 700px;
-        }
-        .hero-fish {
-            font-size: 4rem; margin-bottom: 1.5rem;
-            animation: heroFish 4s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px rgba(100,108,255,0.3));
-        }
-        @keyframes heroFish { 0%,100%{transform:translateY(0) rotate(-5deg)} 50%{transform:translateY(-15px) rotate(5deg)} }
-        .hero-title {
-            font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900;
-            line-height: 1.3; margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--text), var(--accent));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .hero-subtitle {
-            font-size: 1.1rem; color: var(--text-dim);
-            margin-bottom: 2rem; line-height: 1.8;
-        }
-        .hero-typing {
-            display: inline-block; color: var(--accent); font-weight: 600;
-            border-right: 2px solid var(--accent);
-            animation: blink 0.8s step-end infinite;
-            min-width: 200px; text-align: left;
-        }
-        @keyframes blink { 50%{border-color:transparent} }
-        .hero-cta {
-            display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
-            margin-top: 2rem;
-        }
-        .btn {
-            padding: 12px 28px; border-radius: 12px; font-size: 0.95rem;
-            font-weight: 600; cursor: pointer; transition: all 0.25s;
-            text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
-            font-family: inherit;
-        }
-        .btn-primary {
-            background: var(--accent); color: #fff; border: none;
-            box-shadow: 0 4px 20px var(--accent-glow);
-        }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--accent-glow); }
-        .btn-ghost {
-            background: transparent; color: var(--text-dim);
-            border: 1px solid var(--border);
-        }
-        .btn-ghost:hover { border-color: var(--accent); color: var(--text); }
-        .hero-scroll {
-            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
-            color: var(--text-muted); font-size: 0.8rem; text-align: center;
-            animation: scrollBounce 2s ease-in-out infinite;
-        }
-        .hero-scroll .arrow { font-size: 1.2rem; display: block; margin-top: 4px; }
-        @keyframes scrollBounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+        /* 汉堡菜单 */
+        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:1.5rem;cursor:pointer;padding:8px}
+        .mobile-menu{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:#111;z-index:200;transition:right .3s ease;border-left:1px solid var(--border);padding:24px}
+        .mobile-menu.open{right:0}
+        .mobile-menu .close-btn{background:none;border:none;color:var(--text);font-size:1.5rem;cursor:pointer;float:right}
+        .mobile-menu a{display:block;color:var(--text-dim);text-decoration:none;font-size:1rem;padding:12px 0;border-bottom:1px solid var(--border)}
+        .mobile-menu a:hover{color:var(--accent)}
+        .mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;display:none}
+        .mobile-overlay.show{display:block}
 
-        /* ===== 功能区 ===== */
-        .features {
-            max-width: 1100px; margin: 0 auto; padding: 80px 24px;
-        }
-        .section-header {
-            text-align: center; margin-bottom: 48px;
-        }
-        .section-tag {
-            font-size: 0.75rem; font-weight: 700; color: var(--accent);
-            text-transform: uppercase; letter-spacing: 2px;
-            margin-bottom: 8px;
-        }
-        .section-title {
-            font-size: 1.8rem; font-weight: 900;
-        }
-        .feature-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
-        }
-        .feature-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 16px; padding: 28px 24px;
-            cursor: pointer; transition: all 0.3s;
-            position: relative; overflow: hidden;
-            text-decoration: none; color: inherit; display: block;
-        }
-        .feature-card::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0;
-            height: 3px; background: linear-gradient(90deg, var(--card-color, var(--accent)), transparent);
-            opacity: 0; transition: opacity 0.3s;
-        }
-        .feature-card:hover {
-            border-color: var(--card-color, var(--accent));
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-        }
-        .feature-card:hover::before { opacity: 1; }
-        .feature-icon {
-            font-size: 2rem; margin-bottom: 12px; display: block;
-        }
-        .feature-card h3 {
-            font-size: 1.1rem; font-weight: 700; margin-bottom: 6px;
-        }
-        .feature-card p {
-            font-size: 0.85rem; color: var(--text-dim); line-height: 1.6;
-        }
-        .feature-badge {
-            position: absolute; top: 16px; right: 16px;
-            font-size: 0.65rem; font-weight: 700; padding: 3px 8px;
-            border-radius: 6px; background: rgba(100,108,255,0.15);
-            color: var(--accent);
-        }
+        /* Hero */
+        .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+        .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(100,108,255,.08) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(255,107,157,.06) 0%,transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(212,168,83,.05) 0%,transparent 50%)}
+        .hero-particles{position:absolute;inset:0;pointer-events:none}
+        .particle{position:absolute;border-radius:50%;background:var(--accent);opacity:.15;animation:pFloat linear infinite}
+        @keyframes pFloat{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:.15}90%{opacity:.15}100%{transform:translateY(-10vh) scale(1);opacity:0}}
+        .hero-content{text-align:center;position:relative;z-index:2;padding:0 24px;max-width:700px}
+        .hero-fish{font-size:4rem;margin-bottom:1.5rem;animation:heroFish 4s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(100,108,255,.3))}
+        @keyframes heroFish{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-15px) rotate(5deg)}}
+        .hero-title{font-size:clamp(2rem,5vw,3.5rem);font-weight:900;line-height:1.3;margin-bottom:1rem;background:linear-gradient(135deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .hero-subtitle{font-size:1.1rem;color:var(--text-dim);margin-bottom:2rem;line-height:1.8}
+        .hero-typing{display:inline-block;color:var(--accent);font-weight:600;border-right:2px solid var(--accent);animation:blink .8s step-end infinite;min-width:200px;text-align:left}
+        @keyframes blink{50%{border-color:transparent}}
+        .hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:2rem}
+        .btn{padding:12px 28px;border-radius:12px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .25s;text-decoration:none;display:inline-flex;align-items:center;gap:8px;font-family:inherit}
+        .btn-primary{background:var(--accent);color:#fff;border:none;box-shadow:0 4px 20px var(--accent-glow)}
+        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-glow)}
+        .btn-ghost{background:transparent;color:var(--text-dim);border:1px solid var(--border)}
+        .btn-ghost:hover{border-color:var(--accent);color:var(--text)}
+        .hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);color:var(--text-muted);font-size:.8rem;text-align:center;animation:scrollB 2s ease-in-out infinite}
+        .hero-scroll .arrow{font-size:1.2rem;display:block;margin-top:4px}
+        @keyframes scrollB{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
 
-        /* ===== 互动区 ===== */
-        .interact {
-            max-width: 1100px; margin: 0 auto; padding: 0 24px 80px;
-        }
-        .interact-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
-        }
-        @media (max-width: 768px) {
-            .feature-grid { grid-template-columns: 1fr 1fr; }
-            .interact-grid { grid-template-columns: 1fr; }
-            .nav-links { display: none; }
-        }
-        @media (max-width: 480px) {
-            .feature-grid { grid-template-columns: 1fr; }
-        }
+        /* 通用 */
+        .section{max-width:1100px;margin:0 auto;padding:80px 24px}
+        .section-header{text-align:center;margin-bottom:48px}
+        .section-tag{font-size:.75rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+        .section-title{font-size:1.8rem;font-weight:900}
+        .reveal{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+        .reveal.visible{opacity:1;transform:translateY(0)}
 
-        /* ===== 每日格言 ===== */
-        .wisdom {
-            text-align: center; padding: 60px 24px;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-        .wisdom-text {
-            font-size: 1.2rem; color: var(--text-dim); font-style: italic;
-            max-width: 600px; margin: 0 auto;
-        }
-        .wisdom-text::before { content: '「'; color: var(--gold); }
-        .wisdom-text::after { content: '」'; color: var(--gold); }
+        /* 功能卡片区 */
+        .feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+        .feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 24px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;text-decoration:none;color:inherit;display:block}
+        .feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--card-color,var(--accent)),transparent);opacity:0;transition:opacity .3s}
+        .feature-card:hover{border-color:var(--card-color,var(--accent));transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+        .feature-card:hover::before{opacity:1}
+        .feature-icon{font-size:2rem;margin-bottom:12px;display:block}
+        .feature-card h3{font-size:1.1rem;font-weight:700;margin-bottom:6px}
+        .feature-card p{font-size:.85rem;color:var(--text-dim);line-height:1.6}
+        .feature-badge{position:absolute;top:16px;right:16px;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(100,108,255,.15);color:var(--accent)}
 
-        /* ===== Footer ===== */
-        .footer {
-            text-align: center; padding: 40px 24px;
-            color: var(--text-muted); font-size: 0.8rem;
-        }
-        .footer a { color: var(--text-dim); text-decoration: none; }
-        .footer a:hover { color: var(--accent); }
+        /* 互动区 */
+        .interact-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 
-        /* ===== 滚动动画 ===== */
-        .reveal {
-            opacity: 0; transform: translateY(30px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+        /* 数据看板 */
+        .dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center}
+        .dash-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 16px}
+        .dash-num{font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .dash-label{font-size:.75rem;color:var(--text-dim);margin-top:4px}
+
+        /* 每日名言 */
+        .wisdom{text-align:center;padding:60px 24px;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+        .wisdom-text{font-size:1.2rem;color:var(--text-dim);font-style:italic;max-width:600px;margin:0 auto;line-height:1.8}
+        .wisdom-text::before{content:'「';color:var(--gold)}
+        .wisdom-text::after{content:」';color:var(--gold)}
+        .wisdom-author{font-size:.8rem;color:var(--text-muted);margin-top:8px}
+
+        /* 友情链接 */
+        .blogroll{display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+        .blogroll a{color:var(--text-dim);text-decoration:none;font-size:.85rem;padding:8px 16px;border:1px solid var(--border);border-radius:10px;transition:all .2s}
+        .blogroll a:hover{border-color:var(--accent);color:var(--accent)}
+
+        /* Footer */
+        .footer{text-align:center;padding:40px 24px;color:var(--text-muted);font-size:.8rem}
+        .footer a{color:var(--text-dim);text-decoration:none}
+        .footer a:hover{color:var(--accent)}
+
+        /* 响应式 */
+        @media(max-width:768px){
+            .nav-links{display:none}
+            .hamburger{display:block}
+            .feature-grid{grid-template-columns:1fr 1fr}
+            .interact-grid{grid-template-columns:1fr}
+            .dashboard{grid-template-columns:1fr 1fr}
+            .section{padding:40px 16px}
         }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
+        @media(max-width:480px){
+            .feature-grid{grid-template-columns:1fr}
+            .dashboard{grid-template-columns:1fr 1fr}
+            .hero-fish{font-size:3rem}
+        }
     </style>
 </head>
 <body>
@@ -237,8 +130,22 @@
                 <a href="/resources.html">资源</a>
                 <a href="/about.html">关于</a>
             </div>
+            <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
         </div>
     </nav>
+    <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="close-btn" onclick="toggleMobileMenu()">✕</button>
+        <div style="clear:both;padding-top:16px">
+            <a href="/blog/">📝 博客</a>
+            <a href="/novel/">⚔️ 连载</a>
+            <a href="/ideas.html">💡 灵感</a>
+            <a href="/resources.html">🧰 资源</a>
+            <a href="/about.html">👤 关于</a>
+            <a href="/games.html">🎮 游戏</a>
+            <a href="/changelog.html">📋 更新日志</a>
+        </div>
+    </div>
 
     <!-- Hero -->
     <section class="hero">
@@ -256,67 +163,64 @@
                 <a href="/blog/" class="btn btn-ghost">📝 今日博客</a>
             </div>
         </div>
-        <div class="hero-scroll">
-            向下探索
-            <span class="arrow">↓</span>
-        </div>
+        <div class="hero-scroll">向下探索<span class="arrow">↓</span></div>
     </section>
 
     <!-- 功能区 -->
-    <section class="features">
+    <section class="section">
         <div class="section-header reveal">
             <div class="section-tag">Explore</div>
             <h2 class="section-title">探索花园</h2>
         </div>
         <div class="feature-grid">
-            <a href="/novel/" class="feature-card reveal" style="--card-color: #d4a853">
+            <a href="/novel/" class="feature-card reveal" style="--card-color:#d4a853">
                 <span class="feature-icon">⚔️</span>
                 <span class="feature-badge">每日更新</span>
                 <h3>武侠连载</h3>
-                <p>《沧海剑歌》— AI 原创武侠小说，古龙意境，金庸格局，支持 TTS 朗读</p>
+                <p>《沧海剑歌》— AI 原创武侠小说，古龙意境，金庸格局</p>
             </a>
-            <a href="/blog/" class="feature-card reveal" style="--card-color: #646cff">
+            <a href="/blog/" class="feature-card reveal" style="--card-color:#646cff">
                 <span class="feature-icon">📝</span>
                 <span class="feature-badge">每日更新</span>
                 <h3>每日创意</h3>
-                <p>每天一篇深度文章，AI、技术、创业、生活，总有新想法</p>
+                <p>每天一篇深度文章，AI、技术、创业、生活</p>
             </a>
-            <a href="/ideas.html" class="feature-card reveal" style="--card-color: #22c55e">
+            <a href="/ideas.html" class="feature-card reveal" style="--card-color:#22c55e">
                 <span class="feature-icon">💡</span>
                 <span class="feature-badge">每日更新</span>
                 <h3>灵感墙</h3>
-                <p>一闪而过的点子，轻量但有启发，每天 2-3 条新灵感</p>
+                <p>一闪而过的点子，轻量但有启发</p>
             </a>
-            <a href="/resources.html" class="feature-card reveal" style="--card-color: #ff6b9d">
+            <a href="/resources.html" class="feature-card reveal" style="--card-color:#ff6b9d">
                 <span class="feature-icon">🧰</span>
                 <h3>资源库</h3>
-                <p>精选工具和网站，分类整理，每个都值得收藏</p>
+                <p>精选工具和网站，分类整理</p>
             </a>
-            <a href="/about.html" class="feature-card reveal" style="--card-color: #a78bfa">
+            <a href="/about.html" class="feature-card reveal" style="--card-color:#a78bfa">
                 <span class="feature-icon">👤</span>
                 <h3>关于</h3>
-                <p>了解这个网站的故事，以及背后的小鱼儿🐟</p>
+                <p>了解这个网站的故事</p>
             </a>
-            <a href="/games.html" class="feature-card reveal" style="--card-color: #f97316">
+            <a href="/games.html" class="feature-card reveal" style="--card-color:#f97316">
                 <span class="feature-icon">🎮</span>
                 <h3>小游戏</h3>
-                <p>摸鱼时间到！几个好玩的小游戏等你来</p>
+                <p>摸鱼时间到！</p>
             </a>
-            <div class="feature-card reveal" style="--card-color: #22c55e" onclick="document.getElementById('fish-checkin').scrollIntoView({behavior:'smooth'})">
+            <div class="feature-card reveal" style="--card-color:#22c55e" onclick="document.getElementById('fish-checkin').scrollIntoView({behavior:'smooth'})">
                 <span class="feature-icon">📅</span>
                 <h3>每日签到</h3>
-                <p>连续签到解锁成就，小鱼儿会跟着成长哦</p>
+                <p>连续签到解锁成就，小鱼儿跟着成长</p>
             </div>
-            <div class="feature-card reveal" style="--card-color: #d4a853" onclick="document.getElementById('fish-capsule').scrollIntoView({behavior:'smooth'})">
+            <div class="feature-card reveal" style="--card-color:#d4a853" onclick="document.getElementById('fish-capsule').scrollIntoView({behavior:'smooth'})">
                 <span class="feature-icon">💌</span>
                 <h3>时间胶囊</h3>
-                <p>给未来的自己写一封信，到期自动开启</p>
+                <p>给未来的自己写一封信</p>
             </div>
         </div>
     </section>
 
     <!-- 互动区 -->
-    <section class="interact">
+    <section class="section">
         <div class="section-header reveal">
             <div class="section-tag">Interact</div>
             <h2 class="section-title">和小鱼儿互动</h2>
@@ -333,21 +237,78 @@
         </div>
     </section>
 
-    <!-- 格言 -->
+    <!-- 新组件区域 -->
+    <section class="section">
+        <div class="interact-grid">
+            <div id="fish-guestbook" class="reveal"></div>
+            <div id="fish-daily-poem" class="reveal"></div>
+        </div>
+        <div class="interact-grid" style="margin-top:16px">
+            <div id="fish-funfact" class="reveal"></div>
+            <div id="fish-visitor-map" class="reveal"></div>
+        </div>
+    </section>
+
+    <!-- 数据看板 -->
+    <section class="section">
+        <div class="section-header reveal">
+            <div class="section-tag">Dashboard</div>
+            <h2 class="section-title">小鱼儿的数据</h2>
+        </div>
+        <div class="dashboard reveal">
+            <div class="dash-card">
+                <div class="dash-num" id="dash-days">0</div>
+                <div class="dash-label">已上线天数</div>
+            </div>
+            <div class="dash-card">
+                <div class="dash-num" id="dash-posts">0</div>
+                <div class="dash-label">博客文章</div>
+            </div>
+            <div class="dash-card">
+                <div class="dash-num" id="dash-chapters">0</div>
+                <div class="dash-label">小说章节</div>
+            </div>
+            <div class="dash-card">
+                <div class="dash-num" id="dash-ideas">0</div>
+                <div class="dash-label">灵感点子</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI 每日名言 -->
     <section class="wisdom">
-        <div class="wisdom-text" id="daily-wisdom"></div>
+        <div class="wisdom-text" id="daily-wisdom">加载中...</div>
+        <div class="wisdom-author" id="wisdom-author"></div>
+    </section>
+
+    <!-- 音乐播放器 & TTS -->
+    <section class="section">
+        <div class="section-header reveal">
+            <div class="section-tag">Player</div>
+            <h2 class="section-title">音乐台</h2>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:24px;max-width:480px;margin:0 auto">
+            <div id="fish-music-player" class="reveal"></div>
+            <div id="fish-tts-player" class="reveal"></div>
+        </div>
     </section>
 
     <!-- 数据统计 -->
-    <section class="section" style="padding: 40px 20px">
+    <section class="section">
         <div id="fish-stats" class="reveal"></div>
     </section>
 
-    <!-- 音乐播放器 & TTS 播放器 -->
-    <section class="section" style="padding: 40px 20px">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px;margin:0 auto">
-            <div id="fish-music-player" class="reveal"></div>
-            <div id="fish-tts-player" class="reveal"></div>
+    <!-- 友情链接 -->
+    <section class="section" style="padding-top:0">
+        <div class="section-header reveal">
+            <div class="section-tag">Friends</div>
+            <h2 class="section-title">友情链接</h2>
+        </div>
+        <div class="blogroll reveal">
+            <a href="https://sanwan.ai" target="_blank">🦞 三万AI</a>
+            <a href="https://ai6666.com" target="_blank">🤖 碳基圈</a>
+            <a href="https://openclaw.ai" target="_blank">🐾 OpenClaw</a>
+            <a href="https://github.com" target="_blank">🐙 GitHub</a>
         </div>
     </section>
 
@@ -357,19 +318,34 @@
         <p style="margin-top:8px">© 2026 Tyler · <a href="/changelog.html">更新日志</a></p>
     </footer>
 
+    <!-- 浮动吉祥物 -->
+    <div id="fish-float-mascot"></div>
+
     <!-- 脚本 -->
-    <script src="/fish-ai.js?v=20260501"></script>
-    <script src="/fish-mood.js?v=20260501"></script>
-    <script src="/fish-question.js?v=20260501"></script>
-    <script src="/fish-music.js?v=20260501"></script>
-    <script src="/fish-challenge.js?v=20260501"></script>
-    <script src="/fish-checkin.js?v=20260501"></script>
-    <script src="/fish-capsule.js?v=20260501"></script>
-    <script src="/fish-tracker.js?v=20260501"></script>
-    <script src="/fish-stats.js?v=20260501"></script>
-    <script src="/fish-music-player.js?v=20260501"></script>
-    <script src="/fish-tts-player.js?v=20260501"></script>
+    <script src="/fish-ai.js?v=20260501b"></script>
+    <script src="/fish-mood.js?v=20260501b"></script>
+    <script src="/fish-question.js?v=20260501b"></script>
+    <script src="/fish-music.js?v=20260501b"></script>
+    <script src="/fish-challenge.js?v=20260501b"></script>
+    <script src="/fish-checkin.js?v=20260501b"></script>
+    <script src="/fish-capsule.js?v=20260501b"></script>
+    <script src="/fish-tracker.js?v=20260501b"></script>
+    <script src="/fish-stats.js?v=20260501b"></script>
+    <script src="/fish-music-player.js?v=20260501b"></script>
+    <script src="/fish-tts-player.js?v=20260501b"></script>
+    <script src="/fish-guestbook.js?v=20260501b"></script>
+    <script src="/fish-daily-poem.js?v=20260501b"></script>
+    <script src="/fish-funfact.js?v=20260501b"></script>
+    <script src="/fish-visitor-map.js?v=20260501b"></script>
+    <script src="/fish-float-mascot.js?v=20260501b"></script>
+
     <script>
+    // 汉堡菜单
+    function toggleMobileMenu() {
+        document.getElementById('mobileMenu').classList.toggle('open');
+        document.getElementById('mobileOverlay').classList.toggle('show');
+    }
+
     // 打字机效果
     const phrases = [
         '每天写一篇博客',
@@ -382,71 +358,102 @@
     ];
     let phraseIdx = 0, charIdx = 0, deleting = false;
     const typingEl = document.getElementById('typing');
-
     function typeLoop() {
-        const phrase = phrases[phraseIdx];
+        const cur = phrases[phraseIdx];
         if (!deleting) {
-            typingEl.textContent = phrase.slice(0, ++charIdx);
-            if (charIdx === phrase.length) {
-                setTimeout(() => { deleting = true; typeLoop(); }, 2000);
-                return;
-            }
+            typingEl.textContent = cur.slice(0, ++charIdx);
+            if (charIdx === cur.length) { deleting = true; setTimeout(typeLoop, 2000); return; }
         } else {
-            typingEl.textContent = phrase.slice(0, --charIdx);
-            if (charIdx === 0) {
-                deleting = false;
-                phraseIdx = (phraseIdx + 1) % phrases.length;
-            }
+            typingEl.textContent = cur.slice(0, --charIdx);
+            if (charIdx === 0) { deleting = false; phraseIdx = (phraseIdx + 1) % phrases.length; }
         }
-        setTimeout(typeLoop, deleting ? 30 : 80);
+        setTimeout(typeLoop, deleting ? 40 : 80);
     }
     typeLoop();
 
-    // 粒子效果
-    const particlesEl = document.getElementById('particles');
-    for (let i = 0; i < 20; i++) {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        const size = 2 + Math.random() * 4;
-        p.style.cssText = `
-            width:${size}px;height:${size}px;
-            left:${Math.random()*100}%;
-            animation-duration:${8+Math.random()*12}s;
-            animation-delay:${Math.random()*10}s;
-            background:${['var(--accent)','var(--pink)','var(--gold)'][Math.floor(Math.random()*3)]};
-        `;
-        particlesEl.appendChild(p);
-    }
+    // 粒子
+    (function() {
+        const c = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = 2 + Math.random() * 4;
+            p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*10}s`;
+            c.appendChild(p);
+        }
+    })();
 
     // 滚动显示动画
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach((e, i) => {
-            if (e.isIntersecting) {
-                setTimeout(() => e.target.classList.add('visible'), i * 80);
-                observer.unobserve(e.target);
-            }
-        });
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // 每日格言
-    const wisdoms = [
-        '好的工具是用完就忘的那种',
-        '问题的价值大于答案',
-        '技术的价值在于它解决了多少人的问题',
-        '每个 bug 都是一个隐藏的 feature',
-        '不确定性是创造力的朋友',
-        '做 less，但做 better',
-        '今天学到的东西，是明天创新的基础',
-        '完成比完美更重要',
-        '持续积累，复利效应会给你惊喜',
-        '好的架构不是设计出来的，是长出来的',
-        '代码是写给人看的，顺便给机器执行',
-        '简单是可靠的先决条件',
-    ];
-    const today = new Date();
-    const wIdx = (today.getFullYear() * 366 + today.getMonth() * 31 + today.getDate()) % wisdoms.length;
-    document.getElementById('daily-wisdom').textContent = wisdoms[wIdx];
+    // 数据看板
+    (function() {
+        const launchDate = new Date('2026-04-30');
+        const today = new Date();
+        const days = Math.ceil((today - launchDate) / 86400000);
+        document.getElementById('dash-days').textContent = days;
+        // 从本地统计获取（简化版）
+        document.getElementById('dash-posts').textContent = '5+';
+        document.getElementById('dash-chapters').textContent = '1';
+        document.getElementById('dash-ideas').textContent = '15+';
+    })();
+
+    // AI 每日名言
+    (function() {
+        const today = new Date().toISOString().slice(0, 10);
+        const cached = localStorage.getItem(`wisdom_${today}`);
+        if (cached) {
+            try {
+                const d = JSON.parse(cached);
+                document.getElementById('daily-wisdom').textContent = d.text;
+                document.getElementById('wisdom-author').textContent = d.author || '';
+                return;
+            } catch {}
+        }
+        fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                messages: [{ role: 'user', content: '请生成一句有深度的名言（可以是名人名言风格，也可以是原创），用JSON格式返回：{"text":"名言内容","author":"出处或作者"}。只返回JSON，不要其他内容。' }],
+                model: 'mimo-v2-flash',
+            }),
+        }).then(async res => {
+            const reader = res.body.getReader();
+            const decoder = new TextDecoder();
+            let text = '';
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                const chunk = decoder.decode(value, { stream: true });
+                for (const line of chunk.split('\n')) {
+                    if (!line.startsWith('data: ')) continue;
+                    const d = line.slice(6).trim();
+                    if (d === '[DONE]') continue;
+                    try {
+                        const parsed = JSON.parse(d);
+                        const delta = parsed.choices?.[0]?.delta?.content;
+                        if (delta) text += delta;
+                    } catch {}
+                }
+            }
+            try {
+                const match = text.match(/\{[\s\S]*\}/);
+                if (match) {
+                    const obj = JSON.parse(match[0]);
+                    document.getElementById('daily-wisdom').textContent = obj.text || text;
+                    document.getElementById('wisdom-author').textContent = obj.author ? `— ${obj.author}` : '';
+                    localStorage.setItem(`wisdom_${today}`, JSON.stringify(obj));
+                }
+            } catch {
+                document.getElementById('daily-wisdom').textContent = text || '生活不止眼前的苟且，还有诗和远方。';
+            }
+        }).catch(() => {
+            document.getElementById('daily-wisdom').textContent = '生活不止眼前的苟且，还有诗和远方。';
+        });
+    })();
     </script>
 </body>
 </html>
