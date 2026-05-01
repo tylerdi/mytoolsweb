@@ -34,7 +34,7 @@
       this.audio.volume = this.volume;
       this.audio.ontimeupdate = () => { this.updateProgress(); this.syncLyrics(); };
       this.audio.onended = () => this.handleEnded();
-      this.audio.onerror = () => { console.warn('播放失败，跳下一首'); setTimeout(() => this.next(), 500); };
+      this.audio.onerror = () => { console.warn('播放失败，跳下一首'); this._skipAfterFail(); };
       this.audio.onloadedmetadata = () => this.updateDuration();
       this.audio.onwaiting = () => this.setLoading(true);
       this.audio.oncanplay = () => this.setLoading(false);
@@ -120,26 +120,35 @@
       const t = this.playlist[this.idx];
       if (!t) return;
       this.saveState();
+      // 释放上一个 blob URL
+      if (this.audio.src && this.audio.src.startsWith('blob:')) URL.revokeObjectURL(this.audio.src);
       try {
         // 根据来源选择播放路径
-        let src;
-        if (t.type === 'audius' && t.streamUrl) {
-          src = t.streamUrl;
-        } else {
-          src = `/api/kuwo-proxy?rid=${t.rid}`;
+        const src0 = t.type === 'audius' && t.streamUrl ? t.streamUrl : `/api/kuwo-proxy?rid=${t.rid}`;
+        let src = src0;
+        console.log('[播放]', t.type, t.title, src);
+        // Audius 跨域流先 fetch 成 blob，避免 CORS 限制可视化
+        if (t.type === 'audius' && src.startsWith('http')) {
+          try {
+            const resp = await fetch(src);
+            const blob = await resp.blob();
+            src = URL.createObjectURL(blob);
+          } catch (e) {
+            console.warn('[Audius blob 失败，直连]', e);
+          }
         }
         this.audio.src = src;
         await this.audio.play();
+        this._failCount = 0; // 播放成功，重置失败计数
         this.playing = true;
         this.setupVisualizer();
         this.updateUI();
         this.updateMediaSession();
-        this.loadLyrics(t.rid);
+        this.loadLyrics(t.type === 'kuwo' ? t.rid : null);
         return;
       } catch (e) {
-        console.error('play failed:', e);
-        // 播放失败自动跳下一首
-        if (this.playlist.length > 1) setTimeout(() => this.next(), 500);
+        console.error('[播放失败]', t.type, t.title, e);
+        this._skipAfterFail();
       }
     }
 
@@ -147,6 +156,7 @@
     async loadLyrics(rid) {
       this.lyrics = [];
       this.lyricIdx = -1;
+      if (!rid) return;
       const el = this.el.querySelector('.lyrics-lines');
       if (el) el.innerHTML = '';
       try {
@@ -200,6 +210,18 @@
     playAll() { if (!this.playlist.length) return; this.idx = 0; this.play(); }
     shufflePlay() { if (!this.playlist.length) return; this.shuffle = true; this.idx = Math.random()*this.playlist.length|0; this.play(); this.updateUI(); }
     handleEnded() { if (this.repeat==='one') this.play(); else if (this.repeat==='all'||this.idx<this.playlist.length-1) this.next(); else { this.playing=false; this.updateUI(); } }
+    _skipAfterFail() {
+      this._failCount = (this._failCount || 0) + 1;
+      // 连续失败太多次，停止跳歌，避免死循环
+      if (this._failCount >= 5) {
+        this._failCount = 0;
+        this.playing = false;
+        this.updateUI();
+        return;
+      }
+      // 延迟跳歌，避免太快打断正在加载的歌曲
+      if (this.playlist.length > 1) setTimeout(() => this.next(), 800);
+    }
     seek(e) { const r=e.currentTarget.getBoundingClientRect(); this.audio.currentTime=((e.clientX-r.left)/r.width)*(this.audio.duration||0); }
     setVolume(v) { this.volume=parseFloat(v); this.audio.volume=this.muted?0:this.volume; this.saveState(); this.updateUI(); }
     toggleMute() { this.muted=!this.muted; this.audio.volume=this.muted?0:this.volume; this.saveState(); this.updateUI(); }
@@ -233,11 +255,23 @@
       if (this.ctx) return;
       try {
         const ac = new (window.AudioContext||window.webkitAudioContext)();
+        const resume = () => { if (ac.state === 'suspended') ac.resume(); };
+        resume();
+        // 手机端可能需要多次 resume
+        document.addEventListener('touchstart', resume, { once: true });
+        document.addEventListener('click', resume, { once: true });
         const src = ac.createMediaElementSource(this.audio);
         this.analyser = ac.createAnalyser(); this.analyser.fftSize=64;
         src.connect(this.analyser); this.analyser.connect(ac.destination);
         this.ctx = ac;
         this.drawVisual();
+        // 3秒后如果还挂起，断开可视化让声音出来
+        setTimeout(() => {
+          if (ac.state === 'suspended') {
+            try { src.disconnect(); src.connect(ac.destination); } catch {}
+            ac.resume();
+          }
+        }, 3000);
       } catch {}
     }
 
@@ -246,10 +280,17 @@
       const bars = this.el.querySelectorAll('.vis-bar');
       if (!bars.length) return;
       const data = new Uint8Array(this.analyser.frequencyBinCount);
+      const disc = this.el.querySelector('.disc');
       const loop = () => {
-        if (!this.playing) { bars.forEach(b=>b.style.height='3px'); return; }
+        if (!this.playing) { bars.forEach(b=>b.style.height='3px'); const art=this.el.querySelector('.disc-art'); if(art)art.style.transform=''; return; }
         this.analyser.getByteFrequencyData(data);
         bars.forEach((b,i) => { const v=data[i]||0; b.style.height=`${Math.max(3,v/255*40)}px`; });
+        // 低频脉冲 → 唱片封面缩放（不干扰外层旋转）
+        const art = this.el.querySelector('.disc-art');
+        if (art) {
+          const bass = (data[0]+data[1]+data[2])/(3*255);
+          art.style.transform = `scale(${1 + bass*0.08})`;
+        }
         requestAnimationFrame(loop);
       };
       loop();
@@ -310,9 +351,34 @@
       const btn = this.el.querySelector('.ctrl-play');
       const rp = this.el.querySelector('.act-loop');
       const disc = this.el.querySelector('.disc');
+      const wrap = this.el.querySelector('.mp-wrap');
+      const aurora = this.el.querySelector('.aurora');
       if (btn) { btn.innerHTML = this.playing ? '⏸' : '▶'; btn.classList.toggle('playing', this.playing); }
-      if (rp) { rp.classList.toggle('on', this.repeat!=='off'); rp.innerHTML = this.repeat==='one' ? '🔂' : '🔁'; }
+      if (rp) { rp.classList.toggle('on', this.repeat!=='off'); rp.innerHTML = (this.repeat==='one' ? '🔂' : '🔁') + ' 循环'; }
       if (disc) disc.classList.toggle('spin', this.playing);
+      if (wrap) wrap.classList.toggle('playing', this.playing);
+      if (aurora) aurora.classList.toggle('on', this.playing);
+      // 播放时定时撒音符
+      if (this.playing && !this._noteTimer) {
+        this._noteTimer = setInterval(() => this.spawnNote(), 1200);
+      } else if (!this.playing && this._noteTimer) {
+        clearInterval(this._noteTimer); this._noteTimer = null;
+      }
+    }
+    spawnNote() {
+      const container = this.el.querySelector('.float-notes');
+      if (!container) return;
+      const notes = ['♪','♫','♬','♩','🎵','🎶'];
+      const note = document.createElement('span');
+      note.className = 'float-note';
+      note.textContent = notes[Math.random()*notes.length|0];
+      note.style.left = (20 + Math.random()*60) + '%';
+      note.style.bottom = '30%';
+      note.style.setProperty('--dx', (Math.random()*60-30) + 'px');
+      note.style.setProperty('--rot', (Math.random()*40-20) + 'deg');
+      note.style.color = Math.random()>.5 ? '#646cff' : '#ff6b9d';
+      container.appendChild(note);
+      setTimeout(() => note.remove(), 3000);
     }
     showStatus(msg, spin=true) {
       const list = this.el.querySelector('.pl-list');
@@ -352,7 +418,11 @@
     render() {
       this.el.innerHTML = `
       <style>
-        .mp-wrap{background:linear-gradient(135deg,#0f0f1e 0%,#1a0f2e 50%,#0f0f1e 100%);border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;font-family:'LXGW WenKai',-apple-system,sans-serif;color:#e8e8e8;max-width:480px;width:100%;margin:0 auto;animation:player-in .6s ease-out}
+        .mp-wrap{background:linear-gradient(135deg,#0f0f1e 0%,#1a0f2e 50%,#0f0f1e 100%);border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;font-family:'LXGW WenKai',-apple-system,sans-serif;color:#e8e8e8;max-width:480px;width:100%;margin:0 auto;animation:player-in .6s ease-out;position:relative}
+        .mp-wrap::before{content:'';position:absolute;inset:-2px;border-radius:22px;background:conic-gradient(from var(--a,0deg),#646cff,#ff6b9d,#646cff,#ff6b9d,#646cff);z-index:-1;opacity:0;transition:opacity .5s;animation:rotate-border 4s linear infinite}
+        .mp-wrap.playing::before{opacity:.6}
+        @property --a{syntax:'<angle>';initial-value:0deg;inherits:false}
+        @keyframes rotate-border{to{--a:360deg}}
         @keyframes player-in{from{opacity:0;transform:translateY(20px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
         .mp-header{padding:20px 20px 0;display:flex;align-items:center;gap:10px}
         .mp-header h2{font-size:1rem;font-weight:700;margin:0;background:linear-gradient(135deg,#646cff,#ff6b9d,#646cff);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradient-text 3s ease infinite}
@@ -361,12 +431,20 @@
         .disc-area{padding:24px 20px;text-align:center;position:relative}
         .disc{width:180px;height:180px;border-radius:50%;margin:0 auto;position:relative;transition:transform .3s}
         .disc.spin{animation:spin 4s linear infinite}
-        .disc.spin::after{content:'';position:absolute;inset:-8px;border-radius:50%;background:conic-gradient(from 0deg,transparent,rgba(100,108,255,.3),transparent,rgba(255,107,157,.3),transparent);animation:spin 3s linear infinite;filter:blur(8px);z-index:-1}
+        .disc.spin::before{content:'';position:absolute;inset:-12px;border-radius:50%;background:conic-gradient(from 0deg,transparent 0%,rgba(100,108,255,.25) 25%,transparent 50%,rgba(255,107,157,.25) 75%,transparent 100%);animation:spin 3s linear infinite;filter:blur(6px);z-index:-1}
+        .disc.spin::after{content:'';position:absolute;inset:-4px;border-radius:50%;background:conic-gradient(from 180deg,transparent,rgba(255,255,255,.08),transparent,rgba(255,255,255,.08),transparent);animation:spin-reverse 5s linear infinite}
+        @keyframes spin-reverse{from{transform:rotate(360deg)}to{transform:rotate(0)}}
         @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
         @keyframes pulse-glow{0%,100%{box-shadow:0 0 20px rgba(100,108,255,.3)}50%{box-shadow:0 0 40px rgba(100,108,255,.6),0 0 60px rgba(255,107,157,.2)}}
         .disc-art{width:100%;height:100%;border-radius:50%;background-size:cover;background-position:center;background-color:#1a1a2e;box-shadow:0 0 40px rgba(100,108,255,.2);position:relative;overflow:hidden}
         .disc.spin .disc-art{animation:pulse-glow 2s ease-in-out infinite}
         .disc-art::after{content:'';position:absolute;inset:0;border-radius:50%;background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 50%,rgba(255,255,255,.05) 100%);pointer-events:none}
+        /* 黑胶纹路 */
+        .disc-art::before{content:'';position:absolute;inset:15%;border-radius:50%;background:repeating-radial-gradient(circle at center,transparent 0px,transparent 3px,rgba(0,0,0,.15) 3px,rgba(0,0,0,.15) 4px);pointer-events:none;opacity:.4}
+        /* 旋转光点 */
+        .disc.spin .disc-hole::before{content:'';position:absolute;width:4px;height:4px;background:#fff;border-radius:50%;top:-90px;left:50%;box-shadow:0 0 8px #646cff,0 0 20px rgba(100,108,255,.4);animation:sparkle-orbit 4s linear infinite}
+        .disc.spin .disc-hole::after{content:'';position:absolute;width:3px;height:3px;background:#ff6b9d;border-radius:50%;top:50%;right:-85px;box-shadow:0 0 8px #ff6b9d,0 0 15px rgba(255,107,157,.4);animation:sparkle-orbit 4s linear infinite reverse}
+        @keyframes sparkle-orbit{from{transform:rotate(0) translateX(0)}to{transform:rotate(360deg) translateX(0)}}
         .disc-art{width:100%;height:100%;border-radius:50%;background-size:cover;background-position:center;background-color:#1a1a2e;box-shadow:0 0 40px rgba(100,108,255,.2)}
         .disc-hole{position:absolute;top:50%;left:50%;width:20px;height:20px;border-radius:50%;background:#0a0a0a;transform:translate(-50%,-50%);border:2px solid #2a2a2a}
         .track-info{text-align:center;margin-top:14px}
@@ -381,6 +459,8 @@
         .prog-fill{height:100%;background:linear-gradient(90deg,#646cff,#ff6b9d);border-radius:2px;transition:width .1s;width:0;position:relative}
         .prog-fill::after{content:'';position:absolute;right:-4px;top:50%;width:10px;height:10px;border-radius:50%;background:#fff;transform:translateY(-50%);box-shadow:0 0 10px rgba(100,108,255,.6);opacity:0;transition:opacity .2s}
         .prog-bar:hover .prog-fill::after{opacity:1}
+        .prog-fill::before{content:'';position:absolute;inset:0;border-radius:2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);animation:prog-shine 2s ease-in-out infinite}
+        @keyframes prog-shine{0%,100%{transform:translateX(-100%)}50%{transform:translateX(100%)}}
         .prog-time{display:flex;justify-content:space-between;font-size:.65rem;color:#666;margin-top:4px}
         .controls{display:flex;align-items:center;justify-content:center;gap:16px;padding:12px 20px}
         .ctrl-btn{background:none;border:none;color:#e8e8e8;font-size:1.1rem;cursor:pointer;padding:6px;border-radius:8px;transition:all .2s}
@@ -391,6 +471,10 @@
         .ctrl-play:active{transform:scale(.95)}
         @keyframes play-pulse{0%,100%{box-shadow:0 4px 20px rgba(100,108,255,.3)}50%{box-shadow:0 4px 30px rgba(100,108,255,.5),0 0 50px rgba(255,107,157,.2)}}
         .ctrl-play.playing{animation:play-pulse 2s ease-in-out infinite}
+        /* 按钮涟漪 */
+        .ctrl-btn,.ctrl-play,.act-btn{position:relative;overflow:hidden}
+        .ctrl-btn::after,.ctrl-play::after,.act-btn::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--rx,50%) var(--ry,50%),rgba(255,255,255,.3),transparent 60%);opacity:0;transition:opacity .4s;pointer-events:none}
+        .ctrl-btn:active::after,.ctrl-play:active::after,.act-btn:active::after{opacity:1;transition:opacity 0s}
 
         .search-box{display:flex;padding:12px 16px;gap:8px;align-items:center}
         .search-box input{flex:1;min-width:0;width:0;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:8px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none;transition:width .3s}
@@ -417,6 +501,19 @@
         .pl-item.active .pl-title{color:#646cff}
         @keyframes active-glow{0%,100%{background:rgba(100,108,255,.08)}50%{background:rgba(100,108,255,.14)}}
         .pl-item.active{animation:active-glow 2s ease-in-out infinite}
+        .pl-item.active .pl-art{box-shadow:0 0 12px rgba(100,108,255,.4);border-radius:8px}
+        @keyframes item-enter{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+        .pl-item{animation:item-enter .3s ease-out both}
+        .pl-item:nth-child(1){animation-delay:.02s}
+        .pl-item:nth-child(2){animation-delay:.04s}
+        .pl-item:nth-child(3){animation-delay:.06s}
+        .pl-item:nth-child(4){animation-delay:.08s}
+        .pl-item:nth-child(5){animation-delay:.1s}
+        .pl-item:nth-child(6){animation-delay:.12s}
+        .pl-item:nth-child(7){animation-delay:.14s}
+        .pl-item:nth-child(8){animation-delay:.16s}
+        .pl-item:nth-child(9){animation-delay:.18s}
+        .pl-item:nth-child(10){animation-delay:.2s}
         .pl-idx{font-size:.7rem;color:#555;width:20px;text-align:center}
         .pl-art{width:36px;height:36px;border-radius:6px;background-size:cover;background-position:center;background-color:#1a1a2e;flex-shrink:0}
         .pl-info{flex:1;min-width:0}
@@ -426,6 +523,19 @@
         .pl-fav{background:none;border:none;font-size:.85rem;cursor:pointer;padding:2px 4px;flex-shrink:0;opacity:.5;transition:opacity .2s}
         .pl-fav:hover{opacity:1}
         .mp-footer{text-align:center;padding:10px;font-size:.6rem;color:#444;border-top:1px solid rgba(255,255,255,.04)}
+        /* 极光背景 */
+        .aurora{position:absolute;top:0;left:0;right:0;height:200px;overflow:hidden;pointer-events:none;opacity:0;transition:opacity 1s;z-index:0}
+        .aurora.on{opacity:1}
+        .aurora::before,.aurora::after{content:'';position:absolute;width:300px;height:300px;border-radius:50%;filter:blur(80px);opacity:.15}
+        .aurora::before{background:#646cff;top:-150px;left:-50px;animation:aurora-1 8s ease-in-out infinite}
+        .aurora::after{background:#ff6b9d;top:-100px;right:-50px;animation:aurora-2 6s ease-in-out infinite}
+        @keyframes aurora-1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(50px,30px) scale(1.2)}}
+        @keyframes aurora-2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-40px,20px) scale(1.3)}}
+        /* 浮动音符 */
+        .float-notes{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;overflow:hidden;z-index:1}
+        .float-note{position:absolute;font-size:1rem;opacity:0;animation:note-float 3s ease-out forwards}
+        @keyframes note-float{0%{opacity:0;transform:translateY(0) scale(.5)}20%{opacity:.7}100%{opacity:0;transform:translateY(-120px) translateX(var(--dx,20px)) scale(1.2) rotate(var(--rot,20deg))}}
+
         @media(max-width:480px){
           .mp-wrap{border-radius:12px;margin:0 8px}
           .disc{width:140px;height:140px}
@@ -445,6 +555,8 @@
         }
       </style>
       <div class="mp-wrap">
+        <div class="aurora"></div>
+        <div class="float-notes"></div>
         <div class="mp-header">
           <h2>🐟 音乐台</h2>
           <span class="badge">酷我 · Audius</span>

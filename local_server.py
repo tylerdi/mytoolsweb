@@ -101,7 +101,13 @@ def api_kuwo_proxy(params, handler=None):
     if cr:
         handler.send_header('Content-Range', cr)
     handler.end_headers()
-    handler.wfile.write(audio_resp.read())
+    # 流式转发，避免手机超时
+    while True:
+        chunk = audio_resp.read(8192)
+        if not chunk:
+            break
+        handler.wfile.write(chunk)
+        handler.wfile.flush()
     return None  # 已经直接响应了
 
 
@@ -124,13 +130,53 @@ def api_music_lyrics(params):
     rid = params.get('rid', '')
     if not rid:
         return {'error': 'Missing rid'}
-    url = f'http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId={rid}'
-    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-    resp = urllib.request.urlopen(req, timeout=15)
-    data = json.loads(resp.read())
-    lrc = data.get('data', {}).get('lrclist', [])
-    lyrics = [{'t': int(float(item.get('time', '0'))) * 1000, 'l': item.get('lineLyric', '')} for item in lrc]
-    return {'success': True, 'lyrics': lyrics}
+    try:
+        url = f'http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId={rid}'
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15'})
+        resp = urllib.request.urlopen(req, timeout=10)
+        data = json.loads(resp.read())
+        if data.get('status') == 200 and data.get('data'):
+            lrc = data['data'].get('lrclist', [])
+            lyrics = [{'t': int(float(item.get('time', '0'))) * 1000, 'l': item.get('lineLyric', '')} for item in lrc if item.get('lineLyric')]
+            return {'success': True, 'lyrics': lyrics}
+        return {'success': True, 'lyrics': []}
+    except Exception as e:
+        return {'success': True, 'lyrics': []}
+
+
+def api_audius_proxy(params, handler=None):
+    """Audius 音频代理（流式转发）"""
+    url = params.get('url', '')
+    if not url:
+        return {'error': 'Missing url'}, 400
+    try:
+        range_header = handler.headers.get('Range') if handler else None
+        fetch_headers = {'User-Agent': 'Mozilla/5.0'}
+        if range_header:
+            fetch_headers['Range'] = range_header
+        req = urllib.request.Request(url, headers=fetch_headers)
+        resp = urllib.request.urlopen(req, timeout=30)
+        handler.send_response(resp.status)
+        handler.send_header('Content-Type', resp.getheader('Content-Type', 'audio/mpeg'))
+        handler.send_header('Access-Control-Allow-Origin', '*')
+        handler.send_header('Accept-Ranges', 'bytes')
+        cl = resp.getheader('Content-Length')
+        if cl:
+            handler.send_header('Content-Length', cl)
+        cr = resp.getheader('Content-Range')
+        if cr:
+            handler.send_header('Content-Range', cr)
+        handler.end_headers()
+        # 流式转发，避免超时
+        while True:
+            chunk = resp.read(8192)
+            if not chunk:
+                break
+            handler.wfile.write(chunk)
+            handler.wfile.flush()
+        return None
+    except Exception as e:
+        return {'error': str(e)}, 500
 
 
 def api_audius_search(params):
@@ -139,7 +185,7 @@ def api_audius_search(params):
     rn = int(params.get('rn', '15'))
     if not q:
         return {'error': 'Missing q'}
-    url = f'https://api.audius.co/v1/tracks/search?query={q}&limit={rn}&app_name=fishplayer'
+    url = f'https://api.audius.co/v1/tracks/search?query={urllib.request.quote(q)}&limit={rn}&app_name=fishplayer'
     req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
     resp = urllib.request.urlopen(req, timeout=15)
     data = json.loads(resp.read())
@@ -194,6 +240,17 @@ class LocalHandler(SimpleHTTPRequestHandler):
             result = api_kuwo_proxy(params, self)
             if result is None:
                 return  # 已经直接响应了
+            data, status = result if isinstance(result, tuple) else (result, 200)
+            self.send_response(status)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            self.wfile.write(json.dumps(data).encode())
+            return
+
+        if path == '/api/audius-proxy':
+            result = api_audius_proxy(params, self)
+            if result is None:
+                return
             data, status = result if isinstance(result, tuple) else (result, 200)
             self.send_response(status)
             self.send_header('Content-Type', 'application/json')
