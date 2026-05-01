@@ -205,7 +205,8 @@
     toggleMute() { this.muted=!this.muted; this.audio.volume=this.muted?0:this.volume; this.saveState(); this.updateUI(); }
     toggleShuffle() { this.shuffle=!this.shuffle; this.saveState(); this.updateUI(); }
     toggleRepeat() { const m=['off','all','one']; this.repeat=m[(m.indexOf(this.repeat)+1)%3]; this.saveState(); this.updateUI(); }
-    toggleFav() { const t=this.playlist[this.idx]; if(!t)return; const i=this.favs.indexOf(t.id); if(i>=0)this.favs.splice(i,1); else this.favs.push(t.id); localStorage.setItem('fm_fav',JSON.stringify(this.favs)); this.updateUI(); }
+    toggleFav() { const t=this.playlist[this.idx]; if(!t)return; const i=this.favs.indexOf(t.id); if(i>=0)this.favs.splice(i,1); else this.favs.push(t.id); localStorage.setItem('fm_fav',JSON.stringify(this.favs)); this.updateUI(); this.renderList(); }
+    toggleFavIdx(i) { const t=this.playlist[i]; if(!t)return; const j=this.favs.indexOf(t.id); if(j>=0)this.favs.splice(j,1); else this.favs.push(t.id); localStorage.setItem('fm_fav',JSON.stringify(this.favs)); this.renderList(); }
     toggleFavView() {
       const btn = this.el.querySelector('.act-fav-list');
       if (this.favView) {
@@ -307,11 +308,9 @@
     updateUI() {
       this.updateTrack();
       const btn = this.el.querySelector('.ctrl-play');
-      const fav = this.el.querySelector('.ctrl-fav');
-      const rp = this.el.querySelector('.ctrl-repeat');
+      const rp = this.el.querySelector('.act-loop');
       const disc = this.el.querySelector('.disc');
       if (btn) btn.innerHTML = this.playing ? '⏸' : '▶';
-      if (fav) fav.innerHTML = this.favs.includes(this.playlist[this.idx]?.id) ? '❤️' : '🤍';
       if (rp) { rp.classList.toggle('on', this.repeat!=='off'); rp.innerHTML = this.repeat==='one' ? '🔂' : '🔁'; }
       if (disc) disc.classList.toggle('spin', this.playing);
     }
@@ -343,6 +342,7 @@
             <div class="pl-artist">${t.artist}</div>
           </div>
           <div class="pl-dur">${t.duration?this.fmt(t.duration):''}</div>
+          <button class="pl-fav" onclick="event.stopPropagation();this.closest('.mp-wrap').__player.toggleFavIdx(${i})" title="收藏">${this.favs.includes(t.id)?'❤️':'🤍'}</button>
         </div>
       `).join('');
       list.querySelectorAll('.pl-item').forEach(el => el.onclick = () => this.play(+el.dataset.idx));
@@ -389,6 +389,8 @@
         .action-bar .act-shuffle{background:rgba(255,107,157,.2);color:#ff8ab5}
         .action-bar .act-fav-list{background:rgba(255,107,157,.12);color:#ff6b9d}
         .action-bar .act-fav-list.on{background:#ff6b9d;color:#fff}
+        .action-bar .act-loop{background:rgba(100,108,255,.12);color:#646cff}
+        .action-bar .act-loop.on{background:#646cff;color:#fff}
         .pl-list{max-height:350px;overflow-y:auto;padding:8px 0;-webkit-overflow-scrolling:touch}
         .pl-list::-webkit-scrollbar{width:3px}
         .pl-list::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
@@ -402,6 +404,8 @@
         .pl-title{font-size:.8rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         .pl-artist{font-size:.65rem;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         .pl-dur{font-size:.65rem;color:#555}
+        .pl-fav{background:none;border:none;font-size:.85rem;cursor:pointer;padding:2px 4px;flex-shrink:0;opacity:.5;transition:opacity .2s}
+        .pl-fav:hover{opacity:1}
         .mp-footer{text-align:center;padding:10px;font-size:.6rem;color:#444;border-top:1px solid rgba(255,255,255,.04)}
         @media(max-width:480px){
           .mp-wrap{border-radius:12px;margin:0 8px}
@@ -442,8 +446,6 @@
           <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.prev()" title="上一首">⏮</button>
           <button class="ctrl-play" onclick="this.closest('.mp-wrap').__player.toggle()" title="播放/暂停">▶</button>
           <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.next()" title="下一首">⏭</button>
-          <button class="ctrl-btn ctrl-repeat" onclick="this.closest('.mp-wrap').__player.toggleRepeat()" title="循环">🔁</button>
-          <button class="ctrl-btn ctrl-fav" onclick="this.closest('.mp-wrap').__player.toggleFav()" title="收藏">🤍</button>
         </div>
 
         <div class="search-box">
@@ -453,6 +455,7 @@
         <div class="action-bar">
           <button class="act-btn act-play" onclick="this.closest('.mp-wrap').__player.playAll()">▶ 播放全部</button>
           <button class="act-btn act-shuffle" onclick="this.closest('.mp-wrap').__player.shufflePlay()">🔀 随机</button>
+          <button class="act-btn act-loop" onclick="this.closest('.mp-wrap').__player.toggleRepeat()">🔁 循环</button>
           <button class="act-btn act-fav-list" onclick="this.closest('.mp-wrap').__player.toggleFavView()">❤️ 收藏</button>
           <span style="font-size:.65rem;color:#666;margin-left:auto" class="song-count"></span>
         </div>
