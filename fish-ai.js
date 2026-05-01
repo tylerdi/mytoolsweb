@@ -1,6 +1,6 @@
 /**
  * 小鱼儿 AI 组件 🐟
- * - 听文章 TTS 按钮
+ * - TTS 朗读（MIMO TTS 优先，浏览器兜底）
  * - AI 聊天小助手
  * 用法：<script src="/fish-ai.js"></script>
  */
@@ -10,14 +10,14 @@
 
   const API_BASE = '/api';
 
-  // ==================== TTS 听文章 ====================
+  // ==================== TTS 朗读 ====================
   class ListenButton {
     constructor(container, text) {
       this.text = text;
       this.audio = null;
       this.playing = false;
       this.loading = false;
-      this.useBrowserTTS = false; // 是否用浏览器原生 TTS
+      this.mimoFailed = false;
 
       this.btn = document.createElement('button');
       this.btn.className = 'fish-listen-btn';
@@ -43,62 +43,69 @@
       this.btn.innerHTML = '⏳ 生成中...';
       this.btn.disabled = true;
 
-      // 先尝试 MIMO TTS API
-      try {
-        console.log('[TTS] 尝试 MIMO TTS，文字长度:', this.text.length);
+      // 先尝试 MIMO TTS（通过代理）
+      if (!this.mimoFailed) {
+        try {
+          console.log('[TTS] 尝试 MIMO TTS，文字长度:', this.text.length);
+          const truncated = this.text.slice(0, 2000);
 
-        const res = await fetch(`${API_BASE}/tts`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: this.text, voice: 'nova', speed: 1.0 }),
-        });
+          const res = await fetch(`${API_BASE}/tts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: truncated, speed: 1.0 }),
+          });
 
-        console.log('[TTS] 响应:', res.status);
+          console.log('[TTS] 响应:', res.status, res.headers.get('content-type'));
 
-        if (!res.ok) {
-          let msg = `HTTP ${res.status}`;
-          try { const err = await res.json(); msg = err.error || msg; } catch {}
-          throw new Error(msg);
+          if (!res.ok) {
+            let msg = `HTTP ${res.status}`;
+            try { const err = await res.json(); msg = err.error || msg; } catch {}
+            throw new Error(msg);
+          }
+
+          const blob = await res.blob();
+          console.log('[TTS] blob:', blob.size, 'bytes, type:', blob.type);
+
+          if (blob.size < 100) throw new Error('音频数据为空');
+
+          // 用 data URL（兼容性最好，包括移动端）
+          const dataUrl = await new Promise((resolve, reject) => {
+            const r = new FileReader();
+            r.onloadend = () => resolve(r.result);
+            r.onerror = reject;
+            r.readAsDataURL(blob);
+          });
+
+          this.audio = new Audio();
+          this.audio.preload = 'auto';
+
+          await new Promise((resolve, reject) => {
+            this.audio.addEventListener('canplaythrough', () => {
+              console.log('[TTS] 音频就绪');
+              resolve();
+            }, { once: true });
+            this.audio.addEventListener('error', (e) => {
+              console.error('[TTS] 音频错误:', this.audio.error);
+              reject(new Error('音频加载失败'));
+            }, { once: true });
+            this.audio.src = dataUrl;
+          });
+
+          this.audio.onended = () => this.stop();
+          this.play();
+          return;
+
+        } catch (err) {
+          console.warn('[TTS] MIMO 失败，标记后回退浏览器 TTS:', err.message);
+          this.mimoFailed = true;
         }
-
-        const blob = await res.blob();
-        console.log('[TTS] blob:', blob.size, 'bytes, type:', blob.type);
-
-        if (blob.size < 100) throw new Error('音频数据为空');
-
-        // 用 data URL（兼容性最好）
-        const dataUrl = await new Promise((resolve, reject) => {
-          const r = new FileReader();
-          r.onloadend = () => resolve(r.result);
-          r.onerror = reject;
-          r.readAsDataURL(blob);
-        });
-
-        this.audio = new Audio();
-        this.audio.preload = 'auto';
-
-        await new Promise((resolve, reject) => {
-          this.audio.addEventListener('canplaythrough', () => {
-            console.log('[TTS] 音频就绪');
-            resolve();
-          }, { once: true });
-          this.audio.addEventListener('error', (e) => {
-            console.error('[TTS] 音频错误:', this.audio.error);
-            reject(new Error('音频加载失败'));
-          }, { once: true });
-          this.audio.src = dataUrl;
-        });
-
-        this.audio.onended = () => this.stop();
-        this.play();
-
-      } catch (err) {
-        console.warn('[TTS] MIMO 失败，回退浏览器 TTS:', err.message);
-        this.fallbackSpeak();
       }
+
+      // 兜底：浏览器原生 TTS
+      this.fallbackSpeak();
     }
 
-    // 浏览器原生 TTS
+    // 浏览器原生 TTS（兜底方案）
     fallbackSpeak() {
       if (!('speechSynthesis' in window)) {
         this.btn.innerHTML = '❌ 浏览器不支持语音';
@@ -106,22 +113,32 @@
         this.loading = false;
         return;
       }
+
+      // 移动端 Safari 需要先 cancel 再 speak
       window.speechSynthesis.cancel();
+
       const utter = new SpeechSynthesisUtterance(this.text.slice(0, 500));
       utter.lang = 'zh-CN';
       utter.rate = 1.0;
+
       utter.onstart = () => {
         this.playing = true;
         this.btn.innerHTML = '⏸️ 暂停（浏览器朗读）';
         this.btn.disabled = false;
       };
       utter.onend = () => this.stop();
-      utter.onerror = () => {
+      utter.onerror = (e) => {
+        console.error('[TTS] 浏览器 TTS 错误:', e);
         this.btn.innerHTML = '❌ 朗读失败';
         this.playing = false;
         this.btn.disabled = false;
       };
-      window.speechSynthesis.speak(utter);
+
+      // 延迟一帧，确保 cancel 生效（移动端兼容）
+      setTimeout(() => {
+        window.speechSynthesis.speak(utter);
+      }, 100);
+
       this.loading = false;
     }
 
@@ -129,12 +146,20 @@
       this.playing = true;
       this.btn.innerHTML = '⏸️ 暂停';
       this.btn.disabled = false;
-      this.audio.play();
+      if (this.audio) {
+        this.audio.play().catch(e => {
+          console.error('[TTS] 播放失败:', e);
+          this.stop();
+        });
+      }
     }
 
     stop() {
       this.playing = false;
-      if (this.audio) this.audio.pause();
+      if (this.audio) {
+        this.audio.pause();
+        this.audio.currentTime = 0;
+      }
       if ('speechSynthesis' in window) window.speechSynthesis.cancel();
       this.btn.innerHTML = '🔊 听文章';
       this.btn.disabled = false;
@@ -151,7 +176,6 @@
     }
 
     build() {
-      // 注入样式
       const style = document.createElement('style');
       style.textContent = `
         .fish-chat-fab {
@@ -173,7 +197,7 @@
           border-radius: 16px; overflow: hidden;
           box-shadow: 0 8px 40px rgba(0,0,0,0.5);
           display: none; flex-direction: column;
-          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-family: 'LXGW WenKai', -apple-system, sans-serif;
         }
         .fish-chat-window.show { display: flex; animation: fishSlideUp 0.3s ease; }
         @keyframes fishSlideUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
@@ -238,7 +262,6 @@
       `;
       document.head.appendChild(style);
 
-      // FAB 按钮
       this.fab = document.createElement('button');
       this.fab.className = 'fish-chat-fab';
       this.fab.innerHTML = '🐟';
@@ -246,7 +269,6 @@
       this.fab.onclick = () => this.toggle();
       document.body.appendChild(this.fab);
 
-      // 聊天窗口
       this.win = document.createElement('div');
       this.win.className = 'fish-chat-window';
       this.win.innerHTML = `
@@ -270,7 +292,6 @@
       `;
       document.body.appendChild(this.win);
 
-      // 事件绑定
       const input = this.win.querySelector('#fish-chat-input');
       const sendBtn = this.win.querySelector('#fish-chat-send');
       input.addEventListener('keydown', (e) => {
@@ -286,9 +307,7 @@
       this.open = !this.open;
       this.win.classList.toggle('show', this.open);
       this.fab.classList.toggle('open', this.open);
-      if (this.open) {
-        this.win.querySelector('#fish-chat-input').focus();
-      }
+      if (this.open) this.win.querySelector('#fish-chat-input').focus();
     }
 
     async send() {
@@ -300,7 +319,6 @@
       this.addMsg(text, 'user');
       this.messages.push({ role: 'user', content: text });
 
-      // 禁用输入
       input.disabled = true;
       this.win.querySelector('#fish-chat-send').disabled = true;
 
@@ -321,15 +339,11 @@
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
-
           const chunk = decoder.decode(value, { stream: true });
-          const lines = chunk.split('\n');
-
-          for (const line of lines) {
+          for (const line of chunk.split('\n')) {
             if (!line.startsWith('data: ')) continue;
             const data = line.slice(6).trim();
             if (data === '[DONE]') continue;
-
             try {
               const parsed = JSON.parse(data);
               const delta = parsed.choices?.[0]?.delta?.content;
@@ -338,15 +352,11 @@
                 aiEl.querySelector('.text').textContent = aiText;
                 this.scrollBottom();
               }
-            } catch (e) {
-              // skip invalid JSON
-            }
+            } catch {}
           }
         }
 
-        if (aiText) {
-          this.messages.push({ role: 'assistant', content: aiText });
-        }
+        if (aiText) this.messages.push({ role: 'assistant', content: aiText });
       } catch (err) {
         console.error('Chat error:', err);
         this.addMsg('抱歉，出了点问题 😅 稍后再试试？', 'ai');
@@ -361,13 +371,11 @@
       const container = this.win.querySelector('#fish-chat-msgs');
       const el = document.createElement('div');
       el.className = `fish-chat-msg ${role}`;
-
       if (role === 'ai') {
         el.innerHTML = `<div class="label">🐟 小鱼儿</div><span class="text">${text}</span>`;
       } else {
         el.textContent = text;
       }
-
       container.appendChild(el);
       this.scrollBottom();
       return el;
@@ -381,31 +389,20 @@
 
   // ==================== 自动初始化 ====================
   function init() {
-    // TTS：为所有 .fish-tts 元素添加听文章按钮
     document.querySelectorAll('.fish-tts').forEach((el) => {
       let text = el.dataset.text || el.textContent.trim();
-      // 如果元素本身没有文字，尝试从相邻的 .post-content 提取
       if (!text) {
         const postContent = el.closest('.container')?.querySelector('.post-content')
           || document.querySelector('.post-content');
-        if (postContent) {
-          text = postContent.textContent.replace(/\s+/g, ' ').trim().slice(0, 2000);
-        }
+        if (postContent) text = postContent.textContent.replace(/\s+/g, ' ').trim().slice(0, 2000);
       }
-      if (!text) {
-        console.warn('fish-tts: 未找到可朗读的文字内容');
-        return;
-      }
+      if (!text) return;
       new ListenButton(el, text);
     });
 
-    // 聊天小助手（全局唯一）
-    if (!window.__fishChat) {
-      window.__fishChat = new ChatWidget();
-    }
+    if (!window.__fishChat) window.__fishChat = new ChatWidget();
   }
 
-  // 等待 DOM 就绪
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

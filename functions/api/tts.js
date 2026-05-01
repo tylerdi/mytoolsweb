@@ -1,53 +1,81 @@
 // functions/api/tts.js
-// TTS API - 调用 edge-tts 生成语音
+// TTS API - 代理小米 MIMO TTS
 
 export async function onRequestPost(context) {
   try {
     const { text, voice, speed } = await context.request.json();
 
     if (!text) {
-      return new Response(JSON.stringify({ error: 'text required' }), { status: 400 });
+      return new Response(JSON.stringify({ error: 'text required' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
 
-    // 使用 edge-tts 生成音频
-    const ttsVoice = voice || 'zh-CN-XiaoxiaoNeural';
-    const ttsRate = speed ? `${Math.round((speed - 1) * 100)}%` : '+0%';
+    // 限制文本长度（MIMO TTS 有长度限制）
+    const truncated = text.slice(0, 2000);
 
-    // 调用本地 edge-tts（Cloudflare Pages 环境需要用外部 API）
-    // 这里我们使用一个简单的方案：返回音频数据
-    const audioData = await generateTTS(text, ttsVoice, ttsRate);
+    // 调用小米 MIMO TTS API
+    const ttsVoice = voice || 'zh-CN-XiaoxiaoNeural';
+    const ttsSpeed = speed || 1.0;
+
+    const audioData = await generateMimoTTS(truncated, ttsVoice, ttsSpeed);
 
     return new Response(audioData, {
       headers: {
         'Content-Type': 'audio/mpeg',
         'Cache-Control': 'public, max-age=3600',
+        'Access-Control-Allow-Origin': '*',
       },
     });
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+    console.error('[TTS] Error:', err.message);
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }
 
-async function generateTTS(text, voice, rate) {
-  // 在 Cloudflare Pages 环境中，我们无法直接调用 edge-tts
-  // 方案1: 使用外部 TTS API
-  // 方案2: 预生成音频存储在 CDN
-  // 方案3: 使用 Web Speech API（客户端）
+async function generateMimoTTS(text, voice, speed) {
+  // 小米 MIMO TTS API
+  const apiUrl = 'https://fufu.iqach.top/v1/audio/speech';
 
-  // 这里使用一个免费的 TTS API 作为示例
-  // 实际部署时可以替换为任何 TTS 服务
-
-  const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=zh-CN&client=tw-ob&q=${encodeURIComponent(text)}`;
-
-  const res = await fetch(url, {
+  const res = await fetch(apiUrl, {
+    method: 'POST',
     headers: {
-      'User-Agent': 'Mozilla/5.0',
+      'Content-Type': 'application/json',
     },
+    body: JSON.stringify({
+      model: 'mimo-v2-tts',
+      input: text,
+      voice: voice,
+      speed: speed,
+    }),
   });
 
   if (!res.ok) {
-    throw new Error(`TTS generation failed: ${res.status}`);
+    const errText = await res.text().catch(() => '');
+    throw new Error(`MIMO TTS failed: ${res.status} ${errText.slice(0, 100)}`);
+  }
+
+  const contentType = res.headers.get('content-type') || '';
+  if (!contentType.includes('audio') && !contentType.includes('octet-stream')) {
+    // 可能返回了错误 JSON
+    const errText = await res.text().catch(() => '');
+    throw new Error(`MIMO TTS returned non-audio: ${contentType} ${errText.slice(0, 100)}`);
   }
 
   return await res.arrayBuffer();
+}
+
+// CORS preflight
+export async function onRequestOptions() {
+  return new Response(null, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
 }
