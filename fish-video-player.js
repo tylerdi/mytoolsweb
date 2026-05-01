@@ -1,31 +1,28 @@
 /**
  * 小鱼儿视频播放器 🐟🎬
- * Pexels 免费高清视频 + 分类浏览 + 全屏播放 + 搜索
+ * Pexels 免费高清视频 + 分类浏览 + 全屏播放 + 搜索 + 下载
  * 用法：<div id="fish-video-player"></div><script src="/fish-video-player.js"></script>
  */
 (function () {
   'use strict';
 
-  const API = 'https://api.pexels.com/videos/search';
-  const KEY = 'DqKEbBsmBik7vOSGk4HDJxsfKqK8aXvUJrXw0Sg25e0ZvJSn9c90YpcE';
-
   const CATS = [
-    { id: 'nature',    q: 'nature forest mountain landscape',        icon: '🌿', name: '自然' },
-    { id: 'ocean',     q: 'ocean sea waves underwater beach',        icon: '🌊', name: '海洋' },
-    { id: 'city',      q: 'city urban skyline night traffic',        icon: '🌆', name: '城市' },
-    { id: 'cinematic', q: 'cinematic aerial drone timelapse',        icon: '🎬', name: '航拍' },
-    { id: 'animals',   q: 'animals wildlife cute pet dog cat bird',  icon: '🐾', name: '动物' },
-    { id: 'space',     q: 'space stars galaxy night sky aurora',     icon: '🚀', name: '宇宙' },
-    { id: 'rain',      q: 'rain water drops splash puddle',          icon: '🌧️', name: '雨景' },
-    { id: 'fire',      q: 'fire flame campfire candle',              icon: '🔥', name: '火焰' },
-    { id: 'food',      q: 'food cooking coffee cake pizza sushi',    icon: '🍕', name: '美食' },
-    { id: 'sport',     q: 'sport fitness running yoga gym',          icon: '⚽', name: '运动' },
-    { id: 'travel',    q: 'travel road journey adventure',           icon: '✈️', name: '旅行' },
-    { id: 'abstract',  q: 'abstract light neon glow particles',      icon: '🔬', name: '抽象' },
-    { id: 'flowers',   q: 'flowers garden bloom rose cherry blossom',icon: '🌸', name: '花卉' },
-    { id: 'snow',      q: 'snow winter ice frost mountain',          icon: '❄️', name: '雪景' },
-    { id: 'sunset',    q: 'sunset sunrise golden hour sky clouds',   icon: '🌅', name: '日落' },
-    { id: 'night',     q: 'night city lights neon dark moody',       icon: '🌃', name: '夜景' },
+    { id: 'nature',    q: 'nature forest mountain landscape',        icon: '🌿', name: '自然', desc: '山川湖海，森林原野' },
+    { id: 'ocean',     q: 'ocean sea waves underwater beach',        icon: '🌊', name: '海洋', desc: '海浪沙滩，深海奇观' },
+    { id: 'city',      q: 'city urban skyline night traffic',        icon: '🌆', name: '城市', desc: '霓虹都市，车水马龙' },
+    { id: 'cinematic', q: 'cinematic aerial drone timelapse',        icon: '🎬', name: '航拍', desc: '上帝视角，壮丽俯瞰' },
+    { id: 'animals',   q: 'animals wildlife cute pet dog cat bird',  icon: '🐾', name: '动物', desc: '萌宠可爱，野性自然' },
+    { id: 'space',     q: 'space stars galaxy night sky aurora',     icon: '🚀', name: '宇宙', desc: '星辰大海，无垠深空' },
+    { id: 'rain',      q: 'rain water drops splash puddle',          icon: '🌧️', name: '雨景', desc: '雨声淅沥，意境满分' },
+    { id: 'fire',      q: 'fire flame campfire candle',              icon: '🔥', name: '火焰', desc: '篝火温暖，光影摇曳' },
+    { id: 'food',      q: 'food cooking coffee cake pizza sushi',    icon: '🍕', name: '美食', desc: '舌尖诱惑，深夜放毒' },
+    { id: 'sport',     q: 'sport fitness running yoga gym',          icon: '⚽', name: '运动', desc: '燃烧卡路里，活力满满' },
+    { id: 'travel',    q: 'travel road journey adventure',           icon: '✈️', name: '旅行', desc: '说走就走，世界很大' },
+    { id: 'abstract',  q: 'abstract light neon glow particles',      icon: '🔬', name: '抽象', desc: '光影交错，视觉艺术' },
+    { id: 'flowers',   q: 'flowers garden bloom rose cherry blossom',icon: '🌸', name: '花卉', desc: '花开四季，芬芳满园' },
+    { id: 'snow',      q: 'snow winter ice frost mountain',          icon: '❄️', name: '雪景', desc: '银装素裹，冰雪世界' },
+    { id: 'sunset',    q: 'sunset sunrise golden hour sky clouds',   icon: '🌅', name: '日落', desc: '夕阳西下，霞光万道' },
+    { id: 'night',     q: 'night city lights neon dark moody',       icon: '🌃', name: '夜景', desc: '华灯初上，夜色撩人' },
   ];
 
   class FishVideoPlayer {
@@ -46,11 +43,9 @@
       this.highlight(catId);
       this.showSkeleton();
       try {
-        const res = await fetch(`${API}?query=${encodeURIComponent(cat.q)}&per_page=24`, {
-          headers: { Authorization: KEY }
-        });
+        const res = await fetch(`/api/pexels-videos?query=${encodeURIComponent(cat.q)}&per_page=24`);
         const data = await res.json();
-        this.videos = (data.videos || []).map(v => this.map(v));
+        this.videos = data.success ? (data.videos || []).map(v => this.map(v)) : [];
         if (!this.videos.length) this.videos = this.fallback();
       } catch { this.videos = this.fallback(); }
       this.renderGrid();
@@ -60,11 +55,9 @@
       if (!q.trim()) { this.loadCat(this.cat); return; }
       this.showSkeleton();
       try {
-        const res = await fetch(`${API}?query=${encodeURIComponent(q)}&per_page=24`, {
-          headers: { Authorization: KEY }
-        });
+        const res = await fetch(`/api/pexels-videos?query=${encodeURIComponent(q)}&per_page=24`);
         const data = await res.json();
-        this.videos = (data.videos || []).map(v => this.map(v));
+        this.videos = data.success ? (data.videos || []).map(v => this.map(v)) : [];
         if (!this.videos.length) this.showEmpty();
         else this.renderGrid();
       } catch { this.showEmpty(); }
@@ -104,8 +97,10 @@
       const video = this.el.querySelector('.vp-video');
       const title = this.el.querySelector('.vp-title');
       const meta = this.el.querySelector('.vp-meta');
+      const dlBtn = this.el.querySelector('.vp-dl');
       title.textContent = v.title;
       meta.textContent = `${v.author} · ${v.duration}s · ${v.w}×${v.h}`;
+      if (dlBtn) dlBtn.href = v.url;
       video.src = v.url;
       video.play().catch(() => {});
       modal.classList.add('show');
@@ -123,7 +118,7 @@
 
     showSkeleton() {
       const grid = this.el.querySelector('.vp-grid');
-      grid.innerHTML = Array.from({ length: 8 }, () =>
+      grid.innerHTML = Array.from({ length: 9 }, () =>
         `<div class="vp-card"><div class="vp-skimg"></div><div class="vp-skline"></div></div>`
       ).join('');
     }
@@ -164,7 +159,7 @@
     render() {
       this.el.innerHTML = `
       <style>
-        .vp-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:20px;font-family:'LXGW WenKai',-apple-system,sans-serif;max-width:480px;margin:0 auto;width:100%}
+        .vp-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:20px;font-family:'LXGW WenKai',-apple-system,sans-serif;max-width:800px;margin:0 auto;width:100%}
         .vp-header{display:flex;align-items:center;gap:8px;margin-bottom:16px}
         .vp-header h2{font-size:1rem;font-weight:700;margin:0}
         .vp-header .badge{font-size:.6rem;background:rgba(255,107,157,.15);color:#ff6b9d;padding:2px 8px;border-radius:6px}
@@ -176,7 +171,7 @@
         .vp-cats::-webkit-scrollbar{display:none}
         .vp-chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:4px 10px;font-size:.7rem;color:#aaa;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .2s}
         .vp-chip:hover,.vp-chip.active{background:rgba(100,108,255,.15);border-color:#646cff;color:#646cff}
-        .vp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+        .vp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
         .vp-card{border-radius:10px;overflow:hidden;cursor:pointer;transition:transform .2s}
         .vp-card:hover{transform:translateY(-2px)}
         .vp-thumb{position:relative;aspect-ratio:16/9;background-size:cover;background-position:center;background-color:#1a1a2e}
@@ -197,8 +192,19 @@
         .vp-info{text-align:center;margin-top:12px}
         .vp-title{font-size:.9rem;color:#e8e8e8;font-weight:600}
         .vp-meta{font-size:.7rem;color:#888;margin-top:4px}
+        .vp-actions{display:flex;gap:10px;justify-content:center;margin-top:10px}
+        .vp-dl{display:inline-flex;align-items:center;gap:4px;background:rgba(100,108,255,.2);border:1px solid rgba(100,108,255,.3);border-radius:8px;padding:6px 14px;color:#646cff;font-size:.75rem;text-decoration:none;transition:all .2s}
+        .vp-dl:hover{background:rgba(100,108,255,.3)}
         .vp-hint{font-size:.6rem;color:#555;margin-top:8px}
-        @media(max-width:480px){.vp-wrap{padding:16px !important;border-radius:12px !important}.vp-grid{grid-template-columns:repeat(2,1fr)}.vp-wrap *{max-width:100% !important;box-sizing:border-box}}
+        @media(max-width:768px){
+          .vp-wrap{max-width:100%}
+          .vp-grid{grid-template-columns:repeat(2,1fr)}
+        }
+        @media(max-width:480px){
+          .vp-wrap{padding:16px !important;border-radius:12px !important}
+          .vp-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+          .vp-chip{padding:3px 8px;font-size:.65rem}
+        }
       </style>
       <div class="vp-wrap">
         <div class="vp-header">
@@ -210,7 +216,7 @@
           <button onclick="this.closest('.vp-wrap').__vp.search(this.previousElementSibling.value)">🔍</button>
         </div>
         <div class="vp-cats">
-          ${CATS.map(c => `<span class="vp-chip${c.id === 'nature' ? ' active' : ''}" data-cat="${c.id}" onclick="this.closest('.vp-wrap').__vp.loadCat('${c.id}')">${c.icon} ${c.name}</span>`).join('')}
+          ${CATS.map(c => `<span class="vp-chip${c.id === 'nature' ? ' active' : ''}" data-cat="${c.id}" onclick="this.closest('.vp-wrap').__vp.loadCat('${c.id}')" title="${c.desc}">${c.icon} ${c.name}</span>`).join('')}
         </div>
         <div class="vp-grid"></div>
       </div>
@@ -220,6 +226,9 @@
         <div class="vp-info">
           <div class="vp-title"></div>
           <div class="vp-meta"></div>
+          <div class="vp-actions">
+            <a class="vp-dl" href="#" download target="_blank">⬇ 下载视频</a>
+          </div>
           <div class="vp-hint">空格暂停 · 方向键快进 · F全屏 · Esc关闭</div>
         </div>
       </div>`;

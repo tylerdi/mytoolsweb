@@ -103,6 +103,14 @@
         .footer a{color:var(--text-dim);text-decoration:none}
         .footer a:hover{color:var(--accent)}
 
+        /* ===== 滚动进度条 ===== */
+        .scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#646cff,#ff6b9d);z-index:200;width:0;transition:width .1s}
+
+        /* ===== 回到顶部 ===== */
+        .back-top{position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:1.2rem;cursor:pointer;opacity:0;transform:translateY(20px);transition:all .3s;z-index:90;box-shadow:0 4px 20px var(--accent-glow);display:flex;align-items:center;justify-content:center}
+        .back-top.show{opacity:1;transform:translateY(0)}
+        .back-top:hover{transform:translateY(-2px)}
+
         /* ===== 响应式 ===== */
         /* ===== 移动端防溢出（只在小屏生效） ===== */
         @media(max-width:768px){
@@ -150,6 +158,7 @@
             <div class="nav-links">
                 <a href="/blog/">博客</a>
                 <a href="/novel/">连载</a>
+                <a href="/games.html">游戏</a>
                 <a href="/ideas.html">灵感</a>
                 <a href="/resources.html">资源</a>
                 <a href="/about.html">关于</a>
@@ -225,7 +234,7 @@
             <a class="feature-card reveal" style="--card-color:#a855f7;cursor:pointer" onclick="document.getElementById('fish-music-player').scrollIntoView({behavior:'smooth'})">
                 <span class="feature-icon">🎵</span>
                 <h3>音乐台</h3>
-                <p>Audius 免费全曲</p>
+                <p>酷我音乐 · 免费畅听</p>
             </a>
             <a href="/games.html" class="feature-card reveal" style="--card-color:#f97316">
                 <span class="feature-icon">🎮</span>
@@ -306,14 +315,16 @@
             <h2 class="section-title">创意空间</h2>
             <p class="section-desc">AI 能力大放送</p>
         </div>
-        <div class="card-grid card-grid-3">
+        <div class="card-grid card-grid-2">
             <div id="fish-image-gen" class="reveal"></div>
             <div id="fish-video-player" class="reveal"></div>
-            <div id="fish-daily-poem" class="reveal"></div>
         </div>
         <div class="card-grid card-grid-3" style="margin-top:16px">
+            <div id="fish-daily-poem" class="reveal"></div>
             <div id="fish-funfact" class="reveal"></div>
             <div id="fish-joke" class="reveal"></div>
+        </div>
+        <div style="margin-top:16px">
             <div id="fish-dream" class="reveal"></div>
         </div>
     </section>
@@ -396,6 +407,10 @@
     <!-- 浮动吉祥物 -->
     <div id="fish-float-mascot"></div>
     <div id="fish-tts-player"></div>
+    <!-- 滚动进度条 -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <!-- 回到顶部 -->
+    <button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
     <!-- 脚本 -->
     <script src="/fish-ai.js?v=20260501d"></script>
@@ -415,7 +430,7 @@
     <script src="/fish-visitor-map.js?v=20260501d"></script>
     <script src="/fish-float-mascot.js?v=20260501d"></script>
     <script src="/fish-image-gen.js?v=20260501d"></script>
-    <script src="/fish-video-player.js?v=20260501d"></script>
+    <script src="/fish-video-player.js?v=20260501g"></script>
     <script src="/fish-joke.js?v=20260501d"></script>
     <script src="/fish-typing-test.js?v=20260501d"></script>
     <script src="/fish-dream.js?v=20260501d"></script>
@@ -426,6 +441,18 @@
         document.getElementById('mobileMenu').classList.toggle('open');
         document.getElementById('mobileOverlay').classList.toggle('show');
     }
+
+    // 滚动进度条 + 回到顶部按钮
+    (function() {
+        const bar = document.getElementById('scrollProgress');
+        const btn = document.getElementById('backTop');
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docH = document.documentElement.scrollHeight - window.innerHeight;
+            bar.style.width = docH > 0 ? (scrollTop / docH * 100).toFixed(1) + '%' : '0%';
+            btn.classList.toggle('show', scrollTop > 400);
+        }, { passive: true });
+    })();
 
     // 打字机效果
     const phrases = ['每天写一篇博客','每天更新一章武侠小说','每天推荐一首歌','每天抛出一个问题','每天记录你的心情','每天给你一个挑战','随时陪你聊天 🐟'];
