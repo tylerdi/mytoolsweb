@@ -306,7 +306,6 @@
         .action-bar .act-btn:active{transform:scale(0.95)}
         .action-bar .act-play{background:rgba(100,108,255,.25);color:#8b8eff}
         .action-bar .act-shuffle{background:rgba(255,107,157,.2);color:#ff8ab5}
-        .action-bar .act-hot{background:#ff6b9d;color:#fff;font-weight:700}
         .pl-list{max-height:350px;overflow-y:auto;padding:8px 0;-webkit-overflow-scrolling:touch}
         .pl-list::-webkit-scrollbar{width:3px}
         .pl-list::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
@@ -376,7 +375,6 @@
         <div class="action-bar">
           <button class="act-btn act-play" onclick="this.closest('.mp-wrap').__player.playAll()">▶ 播放全部</button>
           <button class="act-btn act-shuffle" onclick="this.closest('.mp-wrap').__player.shufflePlay()">🔀 随机</button>
-          <button class="act-btn act-hot" onclick="this.closest('.mp-wrap').__player.isSearch=false;this.closest('.mp-wrap').__player.loadHot()">🔥 热歌</button>
           <span style="font-size:.65rem;color:#666;margin-left:auto" class="song-count"></span>
         </div>
         <div class="pl-list"><div style="text-align:center;padding:40px;color:#666">🎵 加载中...</div></div>
