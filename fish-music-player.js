@@ -362,11 +362,11 @@
           <button class="ctrl-btn ctrl-fav" onclick="this.closest('.mp-wrap').__player.toggleFav()" title="收藏">🤍</button>
         </div>
 
-        <div class="hot-bar" style="display:flex;gap:8px;padding:0 16px 8px;flex-wrap:nowrap">
-          <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.playAll()" style="font-size:.75rem;background:rgba(100,108,255,.15);border:1px solid rgba(100,108,255,.3);border-radius:6px;padding:4px 10px;cursor:pointer">▶ 播放全部</button>
-          <button class="ctrl-btn" onclick="this.closest('.mp-wrap').__player.shufflePlay()" style="font-size:.75rem;background:rgba(255,107,157,.15);border:1px solid rgba(255,107,157,.3);border-radius:6px;padding:4px 10px;cursor:pointer">🔀 随机播放</button>
-          <button onclick="document.querySelector('#fish-search-input').focus()" style="width:32px;height:32px;background:#646cff;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:.85rem;flex-shrink:0">🔍</button>
-          <button style="min-width:60px;height:32px;flex-shrink:0;background:rgba(255,107,157,.15);border:1px solid rgba(255,107,157,.3);border-radius:8px;padding:4px 10px;color:#ff6b9d;cursor:pointer;font-size:.75rem" onclick="this.closest('.mp-wrap').__player.isSearch=false;this.closest('.mp-wrap').__player.loadHot()">🔥 热歌</button>        </div>
+        <div class="hot-bar" style="padding:8px 16px;display:flex;gap:6px;align-items:center;overflow-x:auto;-webkit-overflow-scrolling:touch">
+          <button style="flex-shrink:0;font-size:.75rem;background:rgba(100,108,255,.15);border:1px solid rgba(100,108,255,.3);border-radius:6px;padding:4px 10px;cursor:pointer" onclick="this.closest('.mp-wrap').__player.playAll()">▶ 播放全部</button>
+          <button style="flex-shrink:0;font-size:.75rem;background:rgba(255,107,157,.15);border:1px solid rgba(255,107,157,.3);border-radius:6px;padding:4px 10px;cursor:pointer" onclick="this.closest('.mp-wrap').__player.shufflePlay()">🔀 随机播放</button>
+          <button style="flex-shrink:0;min-width:56px;font-size:.75rem;background:rgba(255,107,157,.15);border:1px solid rgba(255,107,157,.3);border-radius:6px;padding:4px 10px;cursor:pointer;color:#ff6b9d" onclick="this.closest('.mp-wrap').__player.isSearch=false;this.closest('.mp-wrap').__player.loadHot()">🔥 热歌</button>
+        </div>
         <div class="pl-list"><div style="text-align:center;padding:40px;color:#666">🎵 加载中...</div></div>
         <div class="mp-footer">🐟 小鱼儿音乐台 · 酷我音乐 · 空格播放 · ↑↓切歌 · ←→快进退</div>
       </div>`;
