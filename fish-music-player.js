@@ -326,7 +326,7 @@
         .pl-dur{font-size:.65rem;color:#555}
         .mp-footer{text-align:center;padding:10px;font-size:.6rem;color:#444;border-top:1px solid rgba(255,255,255,.04)}
         @media(max-width:480px){
-          .mp-wrap{border-radius:12px;margin:0 8px}
+          .mp-wrap{border-radius:12px;padding:0;margin:0 auto}
           .disc{width:140px;height:140px}
           .controls{gap:12px;padding:10px 16px}
           .ctrl-play{width:44px;height:44px;font-size:1.1rem}
