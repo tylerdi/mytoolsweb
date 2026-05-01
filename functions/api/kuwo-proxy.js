@@ -15,9 +15,17 @@ export async function onRequestGet(context) {
     const apiRes = await fetch(apiUrl, {
       headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' },
     });
-    const apiData = await apiRes.json();
+    const apiText = await apiRes.text();
+    let playUrl;
+    try {
+      const apiData = JSON.parse(apiText);
+      playUrl = apiData.url;
+    } catch {
+      // 有时候返回的不是JSON，直接当URL用
+      playUrl = apiText.trim();
+    }
 
-    if (!apiData.url) {
+    if (!playUrl || !playUrl.startsWith('http')) {
       return new Response('No play URL', { status: 404 });
     }
 
@@ -28,7 +36,7 @@ export async function onRequestGet(context) {
     };
     if (rangeHeader) fetchHeaders['Range'] = rangeHeader;
 
-    const audioRes = await fetch(apiData.url, { headers: fetchHeaders });
+    const audioRes = await fetch(playUrl, { headers: fetchHeaders });
 
     const headers = new Headers();
     headers.set('Access-Control-Allow-Origin', '*');
@@ -37,14 +45,16 @@ export async function onRequestGet(context) {
     headers.set('Cache-Control', 'public, max-age=3600');
     headers.set('Content-Type', 'audio/mpeg');
     headers.set('Accept-Ranges', 'bytes');
-    if (audioRes.headers.get('Content-Length')) headers.set('Content-Length', audioRes.headers.get('Content-Length'));
-    if (audioRes.headers.get('Content-Range')) headers.set('Content-Range', audioRes.headers.get('Content-Range'));
+    const cl = audioRes.headers.get('Content-Length');
+    if (cl) headers.set('Content-Length', cl);
+    const cr = audioRes.headers.get('Content-Range');
+    if (cr) headers.set('Content-Range', cr);
 
     return new Response(audioRes.body, {
       status: audioRes.status,
       headers,
     });
   } catch (err) {
-    return new Response(err.message, { status: 500 });
+    return new Response('Proxy error: ' + err.message, { status: 500 });
   }
 }
