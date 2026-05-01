@@ -140,7 +140,7 @@
         <style>
           .fc-widget {
             background: var(--surface, #141414); border: 1px solid var(--border, #2a2a2a);
-            border-radius: 16px; padding: 20px; max-width: 480px; width:100%; margin: 0 auto;
+            border-radius: 16px; padding: 20px; ; width:100%; margin: 0 auto;
             font-family: 'LXGW WenKai', -apple-system, sans-serif; text-align: center;
           }
           .fc-fish { font-size: ${fishSize}rem; margin-bottom: 12px; display: inline-block;
@@ -181,7 +181,7 @@
           @keyframes fcToastIn { from { opacity:0; transform:translateX(-50%) translateY(-20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
           @keyframes fcToastOut { to { opacity:0; transform:translateX(-50%) translateY(-20px); } }
         
-        @media(max-width:480px){
+        @media(){
           .fc-widget{padding:16px !important;border-radius:12px !important}
           .fc-widget *{max-width:100% !important;box-sizing:border-box}
         }

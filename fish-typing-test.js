@@ -106,7 +106,7 @@
     render() {
       this.el.innerHTML = `
       <style>
-        .tt-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:24px;font-family:'LXGW WenKai',-apple-system,sans-serif;max-width:480px;width:100%;margin:0 auto}
+        .tt-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:24px;font-family:'LXGW WenKai',-apple-system,sans-serif;;width:100%;margin:0 auto}
         .tt-title{font-size:1rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
         .tt-title .badge{font-size:.6rem;background:rgba(255,107,157,.15);color:#ff6b9d;padding:2px 8px;border-radius:6px}
         .tt-target{font-size:1.1rem;line-height:2;padding:16px;background:#0a0a0a;border-radius:10px;margin-bottom:12px;min-height:60px;letter-spacing:1px}
@@ -119,7 +119,7 @@
         .tt-btn{background:linear-gradient(135deg,#646cff,#ff6b9d);border:none;border-radius:10px;padding:10px 24px;color:#fff;font-size:.85rem;cursor:pointer;font-family:inherit;font-weight:600}
         .tt-best{font-size:.7rem;color:#555;text-align:center;margin-top:8px}
       
-        @media(max-width:480px){
+        @media(){
           .tt-wrap{padding:16px;border-radius:12px}
           .tt-wrap *{max-width:100% !important}
         }

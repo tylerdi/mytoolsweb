@@ -54,7 +54,7 @@
       const style = document.createElement('style');
       style.textContent = `
         .fm-container {
-          position: fixed; bottom: 24px; right: 24px; z-index: 9990;
+          position: fixed; bottom: 24px; left: 24px; z-index: 9980;
           font-family: 'LXGW WenKai', -apple-system, sans-serif;
           transition: opacity 0.3s, transform 0.3s;
         }
@@ -130,7 +130,7 @@
 
         /* 恢复按钮 */
         .fm-restore {
-          position: fixed; bottom: 24px; right: 24px; z-index: 9990;
+          position: fixed; bottom: 24px; left: 24px; z-index: 9990;
           width: 36px; height: 36px; border-radius: 50%;
           background: rgba(20,20,30,0.8); border: 1px solid rgba(100,108,255,0.2);
           color: var(--text-dim, #888); font-size: 0.9rem; cursor: pointer;
@@ -146,9 +146,11 @@
           50% { transform: translateY(-3px); }
         }
       
-        @media(max-width:480px){
-          .fm-container{padding:16px !important;border-radius:12px !important}
-          .fm-container *{max-width:100% !important;box-sizing:border-box}
+        @media(){
+          .fm-container{opacity:.4!important;transform:scale(.85)}
+          .fm-container:hover,.fm-container:active{opacity:.8!important}
+          .fm-container *{max-width:100%!important;box-sizing:border-box}
+          .fm-bubble{left:0!important;right:auto!important;max-width:200px!important}
         }`;
       document.head.appendChild(style);
 

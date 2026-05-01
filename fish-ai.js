@@ -324,13 +324,15 @@
     build() {
       const style = document.createElement('style');
       style.textContent = `
-        .fish-chat-fab{position:fixed;bottom:24px;right:24px;z-index:9999;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#646cff,#ff6b9d);border:none;cursor:pointer;font-size:28px;box-shadow:0 4px 20px rgba(100,108,255,.4);transition:transform .2s;display:flex;align-items:center;justify-content:center}
+        .fish-chat-fab{position:fixed;bottom:24px;right:24px;z-index:9999;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#646cff,#ff6b9d);border:none;cursor:pointer;font-size:28px;box-shadow:0 4px 20px rgba(100,108,255,.4);transition:transform .2s,opacity .3s;display:flex;align-items:center;justify-content:center;touch-action:none;-webkit-user-select:none;user-select:none}
         .fish-chat-fab:hover{transform:scale(1.1)}
         .fish-chat-fab.open{transform:rotate(90deg)}
-        .fish-chat-window{position:fixed;bottom:90px;right:24px;z-index:9998;width:360px;max-height:500px;background:#141414;border:1px solid #2a2a2a;border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.5);display:none;flex-direction:column;font-family:'LXGW WenKai',-apple-system,sans-serif}
+        .fish-chat-window{position:fixed;z-index:9998;width:360px;max-height:500px;background:#141414;border:1px solid #2a2a2a;border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.5);display:none;flex-direction:column;font-family:'LXGW WenKai',-apple-system,sans-serif;transition:opacity .2s}
         .fish-chat-window.show{display:flex;animation:fishSlideUp .3s ease}
         @keyframes fishSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
         .fish-chat-header{padding:14px 16px;background:#1a1a1a;border-bottom:1px solid #2a2a2a;display:flex;align-items:center;gap:10px}
+        .fish-chat-close{background:none;border:none;color:#666;font-size:1rem;cursor:pointer;margin-left:auto;padding:4px 8px;border-radius:6px;transition:all .2s}
+        .fish-chat-close:hover{color:#e8e8e8;background:rgba(255,255,255,.1)}
         .fish-chat-header .avatar{font-size:24px}
         .fish-chat-header .info h3{font-size:14px;color:#e8e8e8;margin:0}
         .fish-chat-header .info p{font-size:11px;color:#888;margin:0}
@@ -347,7 +349,11 @@
         .fish-chat-send:disabled{opacity:.5;cursor:not-allowed}
         .fish-chat-messages::-webkit-scrollbar{width:4px}
         .fish-chat-messages::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
-        @media(max-width:420px){.fish-chat-window{right:8px;left:8px;width:auto;bottom:80px}}
+        @media(){
+          .fish-chat-fab{opacity:.35;width:48px;height:48px;font-size:24px}
+          .fish-chat-fab:active{opacity:.7}
+          .fish-chat-window{width:auto;max-height:70vh}
+        }
       `;
       document.head.appendChild(style);
 
@@ -355,13 +361,49 @@
       this.fab.className = 'fish-chat-fab';
       this.fab.innerHTML = '🐟';
       this.fab.title = '和小鱼儿聊天';
-      this.fab.onclick = () => this.toggle();
+      this.fab.addEventListener('click', e => {
+        e.stopPropagation();
+        if (!isDragging && !justTouched) this.toggle();
+        justTouched = false;
+      });
       document.body.appendChild(this.fab);
+
+      // 拖拽支持（不影响点击）
+      let startX, startY, startLeft, startBottom, isDragging = false, justTouched = false;
+      const fabRect = () => this.fab.getBoundingClientRect();
+      const onMove = (ex, ey) => {
+        const dx = ex - startX, dy = ey - startY;
+        if (Math.abs(dx) + Math.abs(dy) > 5) {
+          isDragging = true;
+          this.fab.style.right = 'auto';
+          this.fab.style.left = Math.max(0, Math.min(window.innerWidth - 60, startLeft + dx)) + 'px';
+          this.fab.style.bottom = Math.max(0, Math.min(window.innerHeight - 60, startBottom - dy)) + 'px';
+        }
+      };
+      this.fab.addEventListener('mousedown', e => {
+        isDragging = false; startX = e.clientX; startY = e.clientY;
+        const r = fabRect(); startLeft = r.left; startBottom = window.innerHeight - r.bottom;
+        const onMM = e => onMove(e.clientX, e.clientY);
+        const onMU = () => { document.removeEventListener('mousemove', onMM); document.removeEventListener('mouseup', onMU); };
+        document.addEventListener('mousemove', onMM);
+        document.addEventListener('mouseup', onMU);
+      });
+      this.fab.addEventListener('touchstart', e => {
+        isDragging = false; const t = e.touches[0]; startX = t.clientX; startY = t.clientY;
+        const r = fabRect(); startLeft = r.left; startBottom = window.innerHeight - r.bottom;
+      }, { passive: true });
+      this.fab.addEventListener('touchmove', e => {
+        const t = e.touches[0]; onMove(t.clientX, t.clientY);
+      }, { passive: true });
+      this.fab.addEventListener('touchend', e => {
+        justTouched = true;
+        if (!isDragging) this.toggle();
+      }, { passive: true });
 
       this.win = document.createElement('div');
       this.win.className = 'fish-chat-window';
       this.win.innerHTML = `
-        <div class="fish-chat-header"><span class="avatar">🐟</span><div class="info"><h3>小鱼儿</h3><p>AI 助手 · 随时为你服务</p></div></div>
+        <div class="fish-chat-header"><span class="avatar">🐟</span><div class="info"><h3>小鱼儿</h3><p>AI 助手 · 随时为你服务</p></div><button class="fish-chat-close" title="关闭">✕</button></div>
         <div class="fish-chat-messages" id="fish-chat-msgs"><div class="fish-chat-msg ai"><div class="label">🐟 小鱼儿</div>你好呀！有什么想聊的？✨</div></div>
         <div class="fish-chat-input-area"><input class="fish-chat-input" placeholder="说点什么..." id="fish-chat-input" /><button class="fish-chat-send" id="fish-chat-send">➤</button></div>
       `;
@@ -370,13 +412,63 @@
       const input = this.win.querySelector('#fish-chat-input');
       input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); this.send(); } });
       this.win.querySelector('#fish-chat-send').onclick = () => this.send();
+      this.win.querySelector('.fish-chat-close').onclick = () => this.toggle();
+
+      // 手机键盘弹出时自适应
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+          if (this.open) this.positionWindow();
+        });
+      }
+      window.addEventListener('resize', () => {
+        if (this.open) this.positionWindow();
+      });
     }
 
     toggle() {
       this.open = !this.open;
       this.win.classList.toggle('show', this.open);
       this.fab.classList.toggle('open', this.open);
-      if (this.open) this.win.querySelector('#fish-chat-input').focus();
+      if (this.open) {
+        this.positionWindow();
+        this.win.querySelector('#fish-chat-input').focus();
+      }
+    }
+
+    positionWindow() {
+      const fab = this.fab.getBoundingClientRect();
+      const winW = window.innerWidth, winH = window.innerHeight;
+      const gap = 6;
+      const w = Math.min(360, winW - 16);
+      const maxH = Math.min(420, winH - 32);
+      this.win.style.width = w + 'px';
+      this.win.style.maxHeight = maxH + 'px';
+
+      // 优先上方，放不下就下方，都放不下就限制高度
+      let top, h = maxH;
+      const spaceAbove = fab.top - 16;
+      const spaceBelow = winH - fab.bottom - 16;
+
+      if (spaceAbove >= 200) {
+        top = fab.top - h - gap;
+      } else if (spaceBelow >= 200) {
+        top = fab.bottom + gap;
+      } else {
+        // 都不够，用最大可用空间
+        h = Math.max(200, Math.max(spaceAbove, spaceBelow));
+        this.win.style.maxHeight = h + 'px';
+        top = spaceAbove >= spaceBelow ? fab.top - h - gap : fab.bottom + gap;
+      }
+      top = Math.max(8, Math.min(top, winH - h - 8));
+
+      // 水平居中对齐鱼
+      let left = fab.left + fab.width / 2 - w / 2;
+      left = Math.max(8, Math.min(left, winW - w - 8));
+
+      this.win.style.top = top + 'px';
+      this.win.style.left = left + 'px';
+      this.win.style.bottom = 'auto';
+      this.win.style.right = 'auto';
     }
 
     async send() {

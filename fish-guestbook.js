@@ -53,7 +53,7 @@
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
           border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 20px; padding:20px; max-width: 560px; width:100%; margin: 0 auto;
+          border-radius: 20px; padding:20px; ; width:100%; margin: 0 auto;
           font-family: 'LXGW WenKai', -apple-system, sans-serif;
         }
         .gb-header { text-align: center; margin-bottom: 24px; }
@@ -120,7 +120,7 @@
         .gb-empty .fish { font-size: 2rem; margin-bottom: 8px; }
         .gb-count { text-align: center; font-size: 0.75rem; color: var(--text-dim, #555); margin-top: 16px; }
       
-        @media(max-width:480px){
+        @media(){
           .gb-widget{padding:16px !important;border-radius:12px !important}
           .gb-widget *{max-width:100% !important;box-sizing:border-box}
         }`;

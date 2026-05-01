@@ -343,7 +343,16 @@
       this.el.querySelectorAll('.pl-item').forEach((el, i) => {
         const active = i === this.idx;
         el.classList.toggle('active', active);
-        if (active) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        if (active) {
+          // 只在播放列表内滚动，不滚动整个页面
+          const list = this.el.querySelector('.pl-list');
+          if (list) {
+            const itemTop = el.offsetTop - list.offsetTop;
+            if (itemTop < list.scrollTop || itemTop > list.scrollTop + list.clientHeight - el.offsetHeight) {
+              list.scrollTo({ top: itemTop - 10, behavior: 'smooth' });
+            }
+          }
+        }
       });
     }
     updateUI() {
@@ -418,7 +427,7 @@
     render() {
       this.el.innerHTML = `
       <style>
-        .mp-wrap{background:linear-gradient(135deg,#0f0f1e 0%,#1a0f2e 50%,#0f0f1e 100%);border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;font-family:'LXGW WenKai',-apple-system,sans-serif;color:#e8e8e8;max-width:480px;width:100%;margin:0 auto;animation:player-in .6s ease-out;position:relative}
+        .mp-wrap{background:linear-gradient(135deg,#0f0f1e 0%,#1a0f2e 50%,#0f0f1e 100%);border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;font-family:'LXGW WenKai',-apple-system,sans-serif;color:#e8e8e8;;width:100%;margin:0 auto;animation:player-in .6s ease-out;position:relative}
         .mp-wrap::before{content:'';position:absolute;inset:-2px;border-radius:22px;background:conic-gradient(from var(--a,0deg),#646cff,#ff6b9d,#646cff,#ff6b9d,#646cff);z-index:-1;opacity:0;transition:opacity .5s;animation:rotate-border 4s linear infinite}
         .mp-wrap.playing::before{opacity:.6}
         @property --a{syntax:'<angle>';initial-value:0deg;inherits:false}
@@ -536,7 +545,7 @@
         .float-note{position:absolute;font-size:1rem;opacity:0;animation:note-float 3s ease-out forwards}
         @keyframes note-float{0%{opacity:0;transform:translateY(0) scale(.5)}20%{opacity:.7}100%{opacity:0;transform:translateY(-120px) translateX(var(--dx,20px)) scale(1.2) rotate(var(--rot,20deg))}}
 
-        @media(max-width:480px){
+        @media(){
           .mp-wrap{border-radius:12px;margin:0 8px}
           .disc{width:140px;height:140px}
           .controls{gap:12px;padding:10px 16px}
@@ -550,8 +559,8 @@
           .pl-item{padding:8px 12px}
           .track-title{font-size:.9rem}
         }
-        @media(min-width:481px) and (max-width:768px){
-          .mp-wrap{max-width:420px}
+        @media(min-width:481px) and (){
+          .mp-wrap{}
         }
       </style>
       <div class="mp-wrap">

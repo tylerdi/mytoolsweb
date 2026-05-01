@@ -76,7 +76,7 @@
         <style>
           .cap-widget {
             background: var(--surface, #141414); border: 1px solid var(--border, #2a2a2a);
-            border-radius: 16px; padding: 20px; max-width: 480px; width:100%; margin: 0 auto;
+            border-radius: 16px; padding: 20px; ; width:100%; margin: 0 auto;
             font-family: 'LXGW WenKai', -apple-system, sans-serif;
           }
           .cap-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px;
@@ -123,7 +123,7 @@
             box-shadow: 0 8px 30px rgba(212,168,83,0.4); animation: capToastIn 0.4s ease; }
           @keyframes capToastIn { from { opacity:0; transform:translateX(-50%) translateY(-20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
         
-        @media(max-width:480px){
+        @media(){
           .cap-widget{padding:16px !important;border-radius:12px !important}
           .cap-widget *{max-width:100% !important;box-sizing:border-box}
         }

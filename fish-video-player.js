@@ -159,7 +159,7 @@
     render() {
       this.el.innerHTML = `
       <style>
-        .vp-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:20px;font-family:'LXGW WenKai',-apple-system,sans-serif;max-width:800px;margin:0 auto;width:100%}
+        .vp-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:20px;font-family:'LXGW WenKai',-apple-system,sans-serif;;margin:0 auto;width:100%}
         .vp-header{display:flex;align-items:center;gap:8px;margin-bottom:16px}
         .vp-header h2{font-size:1rem;font-weight:700;margin:0}
         .vp-header .badge{font-size:.6rem;background:rgba(255,107,157,.15);color:#ff6b9d;padding:2px 8px;border-radius:6px}
@@ -196,11 +196,11 @@
         .vp-dl{display:inline-flex;align-items:center;gap:4px;background:rgba(100,108,255,.2);border:1px solid rgba(100,108,255,.3);border-radius:8px;padding:6px 14px;color:#646cff;font-size:.75rem;text-decoration:none;transition:all .2s}
         .vp-dl:hover{background:rgba(100,108,255,.3)}
         .vp-hint{font-size:.6rem;color:#555;margin-top:8px}
-        @media(max-width:768px){
+        @media(){
           .vp-wrap{max-width:100%}
           .vp-grid{grid-template-columns:repeat(2,1fr)}
         }
-        @media(max-width:480px){
+        @media(){
           .vp-wrap{padding:16px !important;border-radius:12px !important}
           .vp-grid{grid-template-columns:repeat(2,1fr);gap:8px}
           .vp-chip{padding:3px 8px;font-size:.65rem}

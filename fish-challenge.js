@@ -61,7 +61,7 @@
         <style>
           .fc-widget {
             background: #141414; border: 1px solid #2a2a2a; border-radius: 16px;
-            padding: 20px; max-width: 480px; width:100%; margin: 0 auto;
+            padding: 20px; ; width:100%; margin: 0 auto;
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
           }
           .fc-header {
@@ -134,7 +134,7 @@
           }
           .fc-skip:hover { border-color: #555; color: #aaa; }
         
-        @media(max-width:480px){
+        @media(){
           .fc-widget{padding:16px !important;border-radius:12px !important}
           .fc-widget *{max-width:100% !important;box-sizing:border-box}
         }

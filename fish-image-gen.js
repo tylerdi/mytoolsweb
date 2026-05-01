@@ -141,7 +141,7 @@
     render() {
       this.el.innerHTML = `
       <style>
-        .ig-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:20px;font-family:'LXGW WenKai',-apple-system,sans-serif;max-width:480px;width:100%;margin:0 auto}
+        .ig-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:20px;font-family:'LXGW WenKai',-apple-system,sans-serif;;width:100%;margin:0 auto}
         .ig-title{font-size:1rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
         .ig-title .badge{font-size:.6rem;background:rgba(100,108,255,.15);color:#646cff;padding:2px 8px;border-radius:6px}
         .ig-input-row{display:flex;gap:8px;margin-bottom:12px}
@@ -178,7 +178,16 @@
         .img-hist-item img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
         .img-hist-item:hover img{transform:scale(1.05)}
         .img-hist-prompt{position:absolute;bottom:0;left:0;right:0;padding:4px 6px;background:linear-gradient(transparent,rgba(0,0,0,.8));font-size:.55rem;color:#ddd;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        @media(max-width:480px){.img-history-list{grid-template-columns:repeat(3,1fr)}.ig-wrap{padding:16px}}
+        @media(){.img-history-list{grid-template-columns:repeat(3,1fr)}.ig-wrap{padding:12px}}
+        @media(){
+          .ig-wrap{max-width:100%!important;padding:12px!important}
+          .ig-input-row{flex-direction:column}
+          .ig-gen-btn,.ig-rand-btn{width:100%;text-align:center}
+          .ig-sizes{flex-wrap:wrap}
+          .ig-size-chip{flex:1;text-align:center;min-width:60px}
+          .img-history-list{grid-template-columns:repeat(3,1fr)}
+          .ig-style-chip{padding:6px 10px;font-size:.75rem}
+        }
       </style>
       <div class="ig-wrap">
         <div class="ig-title">🎨 AI 画图 <span class="badge">Pollinations · 免费</span></div>

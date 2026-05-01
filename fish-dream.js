@@ -59,7 +59,7 @@
     render() {
       this.el.innerHTML = `
       <style>
-        .dm-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:24px;font-family:'LXGW WenKai',-apple-system,sans-serif;max-width:480px;width:100%;margin:0 auto}
+        .dm-wrap{background:var(--surface,#111);border:1px solid var(--border,#1e1e1e);border-radius:16px;padding:24px;font-family:'LXGW WenKai',-apple-system,sans-serif;;width:100%;margin:0 auto}
         .dm-title{font-size:1rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
         .dm-input{width:100%;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:10px;padding:12px;color:#e8e8e8;font-size:.85rem;font-family:inherit;outline:none;resize:none;min-height:80px}
         .dm-input:focus{border-color:#646cff}
@@ -68,7 +68,7 @@
         .dm-spinner{width:24px;height:24px;border:2px solid #2a2a2a;border-top-color:#a855f7;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 8px}
         @keyframes spin{to{transform:rotate(360deg)}}
       
-        @media(max-width:480px){
+        @media(){
           .dm-wrap{padding:16px;border-radius:12px}
           .dm-wrap *{max-width:100% !important}
         }
