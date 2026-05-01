@@ -36,7 +36,7 @@
     async loadHot() {
       this.showStatus('🎵 加载中...');
       try {
-        const res = await fetch('/api/kuwo-hot?rn=100');
+        const res = await fetch('/api/kuwo-hot?rn=30');
         const data = await res.json();
         this.playlist = data.success ? data.songs.map(s => ({
           id: s.rid, title: s.name, artist: s.artist, album: s.album || '',
@@ -73,17 +73,6 @@
         console.error('search failed:', e);
         this.showStatus('⚠️ 搜索失败');
       }
-    }
-
-    showBackBtn() {
-      const bar = this.el.querySelector('.hot-bar');
-      if (!bar || bar.querySelector('.back-btn')) return;
-      const btn = document.createElement('button');
-      btn.className = 'back-btn';
-      btn.textContent = '🔥 热歌';
-      btn.style.cssText = 'background:rgba(255,107,157,.15);border:1px solid rgba(255,107,157,.3);border-radius:8px;padding:8px 12px;color:#ff6b9d;cursor:pointer;font-size:.8rem;font-family:inherit;white-space:nowrap;flex-shrink:0';
-      btn.onclick = () => { this.isSearch = false; btn.remove(); this.loadHot(); };
-      bar.appendChild(btn);
     }
 
     // ===== 播放 =====
@@ -281,7 +270,7 @@
       this.el.innerHTML = `
       <style>
         .mp-wrap{background:linear-gradient(135deg,#0f0f1e 0%,#1a0f2e 50%,#0f0f1e 100%);border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;font-family:'LXGW WenKai',-apple-system,sans-serif;color:#e8e8e8;max-width:480px;width:100%;margin:0 auto}
-        .mp-header{padding:20px 20px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .mp-header{padding:20px 20px 0;display:flex;align-items:center;gap:10px}
         .mp-header h2{font-size:1rem;font-weight:700;margin:0}
         .mp-header .badge{font-size:.65rem;background:rgba(100,108,255,.2);color:#646cff;padding:2px 8px;border-radius:6px}
         .disc-area{padding:24px 20px;text-align:center;position:relative}
@@ -305,6 +294,17 @@
         .ctrl-btn.on{color:#646cff}
         .ctrl-play{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#646cff,#ff6b9d);border:none;color:#fff;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(100,108,255,.3);transition:transform .2s}
         .ctrl-play:hover{transform:scale(1.05)}
+
+        .search-box{display:flex;padding:12px 16px;gap:8px}
+        .search-box input{flex:1;min-width:0;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:8px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none}
+        .search-box input:focus{border-color:#646cff}
+        .search-box button{background:#646cff;border:none;border-radius:8px;padding:8px 14px;color:#fff;cursor:pointer;font-size:.8rem;flex-shrink:0}
+        .action-bar{display:flex;gap:6px;padding:0 16px 8px;flex-wrap:wrap;align-items:center}
+        .action-bar .act-btn{font-size:.75rem;border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:5px 10px;cursor:pointer;flex-shrink:0;white-space:nowrap;background:none;color:#e8e8e8;font-family:inherit;transition:all .2s}
+        .action-bar .act-btn:active{transform:scale(0.95)}
+        .action-bar .act-play{background:rgba(100,108,255,.15);border-color:rgba(100,108,255,.3)}
+        .action-bar .act-shuffle{background:rgba(255,107,157,.15);border-color:rgba(255,107,157,.3)}
+        .action-bar .act-hot{background:rgba(255,107,157,.2);border-color:rgba(255,107,157,.5);color:#ff6b9d}
         .pl-list{max-height:350px;overflow-y:auto;padding:8px 0;-webkit-overflow-scrolling:touch}
         .pl-list::-webkit-scrollbar{width:3px}
         .pl-list::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
@@ -320,10 +320,15 @@
         .pl-dur{font-size:.65rem;color:#555}
         .mp-footer{text-align:center;padding:10px;font-size:.6rem;color:#444;border-top:1px solid rgba(255,255,255,.04)}
         @media(max-width:480px){
-          .mp-wrap{border-radius:12px;padding:0;margin:0 auto}
+          .mp-wrap{border-radius:12px;margin:0 8px}
           .disc{width:140px;height:140px}
           .controls{gap:12px;padding:10px 16px}
           .ctrl-play{width:44px;height:44px;font-size:1.1rem}
+          .search-box{padding:10px 12px;gap:6px}
+          .search-box input{padding:7px 10px;font-size:.75rem}
+          .search-box button{padding:7px 10px;font-size:.75rem}
+          .action-bar{padding:0 12px 8px;gap:5px}
+          .action-bar .act-btn{padding:4px 8px;font-size:.7rem}
           .pl-list{max-height:300px}
           .pl-item{padding:8px 12px}
           .track-title{font-size:.9rem}
@@ -337,7 +342,7 @@
         <div class="mp-header">
           <h2>🐟 音乐台</h2>
           <span class="badge">酷我音乐</span>
-          <input id="fish-search-input" placeholder="🔍 搜索..." style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:6px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none;margin:0 0 0 8px;width:80px" onkeydown="if(event.key==='Enter')this.closest('.mp-wrap').__player.search(this.value)">        </div>
+        </div>
         <div class="disc-area">
           <div class="disc"><div class="disc-art"></div><div class="disc-hole"></div></div>
           <div class="track-info">
@@ -362,11 +367,16 @@
           <button class="ctrl-btn ctrl-fav" onclick="this.closest('.mp-wrap').__player.toggleFav()" title="收藏">🤍</button>
         </div>
 
-        <div class="hot-bar" style="padding:8px 16px;display:flex;gap:6px;align-items:center;overflow-x:auto;-webkit-overflow-scrolling:touch">
-          <button style="flex-shrink:0;font-size:.75rem;background:rgba(100,108,255,.15);border:1px solid rgba(100,108,255,.3);border-radius:6px;padding:4px 10px;cursor:pointer" onclick="this.closest('.mp-wrap').__player.playAll()">▶ 播放全部</button>
-          <button style="flex-shrink:0;font-size:.75rem;background:rgba(255,107,157,.15);border:1px solid rgba(255,107,157,.3);border-radius:6px;padding:4px 10px;cursor:pointer" onclick="this.closest('.mp-wrap').__player.shufflePlay()">🔀 随机播放</button>
-          <button style="width:28px;height:28px;background:#646cff;border:none;border-radius:8px;color:#fff;cursor:pointer;font-size:.8rem;flex-shrink:0" onclick="this.closest('.mp-wrap').__player.el.querySelector('#fish-search-input').focus()">🔍</button>
-          <button style="flex-shrink:0;min-width:56px;font-size:.75rem;background:rgba(255,107,157,.2);border:1px solid rgba(255,107,157,.5);border-radius:6px;padding:4px 10px;cursor:pointer;color:#ff6b9d" onclick="this.closest('.mp-wrap').__player.isSearch=false;this.closest('.mp-wrap').__player.loadHot()">🔥 热歌</button>        </div>
+        <div class="search-box">
+          <input placeholder="🔍 搜索歌曲、歌手..." onkeydown="if(event.key==='Enter')this.closest('.mp-wrap').__player.search(this.value)">
+          <button onclick="this.closest('.mp-wrap').__player.search(this.previousElementSibling.value)">搜索</button>
+        </div>
+        <div class="action-bar">
+          <button class="act-btn act-play" onclick="this.closest('.mp-wrap').__player.playAll()">▶ 播放全部</button>
+          <button class="act-btn act-shuffle" onclick="this.closest('.mp-wrap').__player.shufflePlay()">🔀 随机</button>
+          <button class="act-btn act-hot" onclick="this.closest('.mp-wrap').__player.isSearch=false;this.closest('.mp-wrap').__player.loadHot()">🔥 热歌</button>
+          <span style="font-size:.65rem;color:#666;margin-left:auto" class="song-count"></span>
+        </div>
         <div class="pl-list"><div style="text-align:center;padding:40px;color:#666">🎵 加载中...</div></div>
         <div class="mp-footer">🐟 小鱼儿音乐台 · 酷我音乐 · 空格播放 · ↑↓切歌 · ←→快进退</div>
       </div>`;
