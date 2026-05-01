@@ -62,7 +62,7 @@
           id: s.rid, title: s.name, artist: s.artist, album: s.album || '',
           duration: s.duration || 0, rid: s.rid, artwork: s.artwork || '', type: 'kuwo'
         })) : [];
-        if (!this.playlist.length) { this.showStatus('⚠️ 加载失败'); return; }
+        if (!this.playlist.length) { this.showStatus('⚠️ 加载失败', false); return; }
         this.idx = 0;
         this.favView = false;
         this._fullPlaylist = null;
@@ -71,7 +71,7 @@
         this.updateSongCount();
       } catch (e) {
         console.error('loadHot failed:', e);
-        this.showStatus('⚠️ 加载失败');
+        this.showStatus('⚠️ 加载失败', false);
       }
     }
 
@@ -103,7 +103,7 @@
         }));
       }
 
-      if (!results.length) { this.showStatus('😅 没找到'); return; }
+      if (!results.length) { this.showStatus('😅 没找到', false); return; }
       this.playlist = results;
       this.idx = 0;
       this.isSearch = true;
@@ -215,10 +215,10 @@
         if (btn) btn.classList.remove('on');
       } else {
         // 进入收藏视图
-        if (!this.favs.length) { this.showStatus('还没有收藏歌曲'); return; }
+        if (!this.favs.length) { this.showStatus('还没有收藏歌曲 ❤️', false); return; }
         this._fullPlaylist = this.playlist.slice();
         this.playlist = this.playlist.filter(t => this.favs.includes(t.id));
-        if (!this.playlist.length) { this.showStatus('当前列表中没有收藏歌曲'); this.playlist = this._fullPlaylist; return; }
+        if (!this.playlist.length) { this.showStatus('当前列表中没有收藏歌曲', false); this.playlist = this._fullPlaylist; return; }
         this.favView = true;
         if (btn) btn.classList.add('on');
       }
@@ -317,9 +317,10 @@
       if (rp) { rp.classList.toggle('on', this.repeat!=='off'); rp.innerHTML = this.repeat==='one' ? '🔂' : '🔁'; }
       if (disc) disc.classList.toggle('spin', this.playing);
     }
-    showStatus(msg) {
+    showStatus(msg, spin=true) {
       const list = this.el.querySelector('.pl-list');
-      if (list) list.innerHTML = `<div style="text-align:center;padding:40px;color:#646cff"><div class="disc" style="width:40px;height:40px;margin:0 auto 12px;border:2px solid rgba(100,108,255,.3);border-top-color:#646cff;animation:spin 1s linear infinite"></div>${msg}</div>`;
+      const spinner = spin ? '<div class="disc" style="width:40px;height:40px;margin:0 auto 12px;border:2px solid rgba(100,108,255,.3);border-top-color:#646cff;animation:spin 1s linear infinite"></div>' : '';
+      if (list) list.innerHTML = `<div style="text-align:center;padding:40px;color:#646cff">${spinner}${msg}</div>`;
     }
     updateSongCount() {
       const el = this.el.querySelector('.song-count');
