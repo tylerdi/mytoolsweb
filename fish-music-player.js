@@ -37,6 +37,14 @@
       this.audio.onwaiting = () => this.setLoading(true);
       this.audio.oncanplay = () => this.setLoading(false);
 
+      // 后台播放：防止页面切后台时音频暂停
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden && this.playing) {
+          // 页面隐藏时，确保 AudioContext 不被挂起
+          if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+        }
+      });
+
       this.render();
       this.el.classList.add('visible');
       this.loadHot();
@@ -253,7 +261,15 @@
       const art = this.el.querySelector('.disc-art');
       const title = this.el.querySelector('.track-title');
       const artist = this.el.querySelector('.track-artist');
-      if (art) art.style.backgroundImage = t.artwork ? `url(${t.artwork})` : 'linear-gradient(135deg,#1a0f2e,#0f0f1e)';
+      if (art) {
+        if (t.artwork) {
+          art.style.backgroundImage = `url(${t.artwork})`;
+          art.innerHTML = '';
+        } else {
+          art.style.backgroundImage = 'linear-gradient(135deg,#646cff33,#ff6b9d33)';
+          art.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:3rem;opacity:.6">🎵</div>';
+        }
+      }
       if (title) title.textContent = t.title;
       if (artist) artist.textContent = t.artist;
       this.el.querySelectorAll('.pl-item').forEach((el, i) => {
