@@ -21,15 +21,24 @@ export async function onRequestGet(context) {
       return new Response('No play URL', { status: 404 });
     }
 
-    // 代理音频流
-    const audioRes = await fetch(apiData.url, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' },
-    });
+    // 代理音频流（支持 Range 请求，手机播放需要）
+    const rangeHeader = context.request.headers.get('Range');
+    const fetchHeaders = {
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+    };
+    if (rangeHeader) fetchHeaders['Range'] = rangeHeader;
 
-    const headers = new Headers(audioRes.headers);
+    const audioRes = await fetch(apiData.url, { headers: fetchHeaders });
+
+    const headers = new Headers();
     headers.set('Access-Control-Allow-Origin', '*');
-    headers.set('Access-Control-Allow-Methods', 'GET');
+    headers.set('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
+    headers.set('Access-Control-Allow-Headers', 'Range');
     headers.set('Cache-Control', 'public, max-age=3600');
+    headers.set('Content-Type', 'audio/mpeg');
+    headers.set('Accept-Ranges', 'bytes');
+    if (audioRes.headers.get('Content-Length')) headers.set('Content-Length', audioRes.headers.get('Content-Length'));
+    if (audioRes.headers.get('Content-Range')) headers.set('Content-Range', audioRes.headers.get('Content-Range'));
 
     return new Response(audioRes.body, {
       status: audioRes.status,
