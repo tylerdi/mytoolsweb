@@ -454,12 +454,12 @@
         .tab-btn:hover{color:#e8e8e8}
         .tab-btn.active{color:#646cff;border-bottom-color:#646cff}
         /* 搜索 */
-        .search-box{display:none;padding:12px 16px;gap:8px}
+        .search-box{display:flex;padding:12px 16px;gap:8px}
         .search-box input{flex:1;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:8px 12px;color:#e8e8e8;font-size:.8rem;font-family:inherit;outline:none}
         .search-box input:focus{border-color:#646cff}
         .search-box button{background:#646cff;border:none;border-radius:8px;padding:8px 14px;color:#fff;cursor:pointer;font-size:.8rem}
         /* 分类标签 */
-        .genre-bar{display:none;padding:8px 16px;gap:6px;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
+        .genre-bar{display:flex;padding:8px 16px;gap:6px;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
         .genre-bar::-webkit-scrollbar{display:none}
         .genre-chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:4px 12px;font-size:.7rem;color:#aaa;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
         .genre-chip:hover,.genre-chip.active{background:rgba(100,108,255,.15);border-color:#646cff;color:#646cff}
