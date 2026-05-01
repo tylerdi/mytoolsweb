@@ -9,7 +9,6 @@
       this.el = document.getElementById('fish-music-player');
       if (!this.el) return;
       this.audio = new Audio();
-      this.audio.crossOrigin = 'anonymous';
       this.volume = 0.6;
       this.muted = false;
       this.shuffle = false;
