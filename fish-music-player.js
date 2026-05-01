@@ -22,14 +22,22 @@
       this.ctx = null;
       this.analyser = null;
 
+      // 恢复上次状态
+      try {
+        const st = JSON.parse(localStorage.getItem('fm_state') || '{}');
+        if (st.shuffle) this.shuffle = st.shuffle;
+        if (st.repeat) this.repeat = st.repeat;
+      } catch {}
+
       this.audio.volume = this.volume;
       this.audio.ontimeupdate = () => { this.updateProgress(); this.syncLyrics(); };
       this.audio.onended = () => this.handleEnded();
       this.audio.onerror = () => { console.warn('播放失败，跳下一首'); setTimeout(() => this.next(), 500); };
       this.audio.onloadedmetadata = () => this.updateDuration();
+      this.audio.onwaiting = () => this.setLoading(true);
+      this.audio.oncanplay = () => this.setLoading(false);
 
       this.render();
-      // 确保播放器可见（防止 reveal 动画未触发）
       this.el.classList.add('visible');
       this.loadHot();
     }
@@ -139,7 +147,8 @@
 
     renderLyrics() {
       const el = this.el.querySelector('.lyrics-lines');
-      if (!el || !this.lyrics.length) return;
+      if (!el) return;
+      if (!this.lyrics.length) { el.innerHTML = '<div style="color:#444;font-size:.7rem">暂无歌词</div>'; return; }
       el.innerHTML = this.lyrics.map((l, i) =>
         `<div class="lrc-line" data-idx="${i}" style="padding:1px 0;transition:all .3s;color:#555">${l.text}</div>`
       ).join('');
@@ -244,10 +253,14 @@
       const art = this.el.querySelector('.disc-art');
       const title = this.el.querySelector('.track-title');
       const artist = this.el.querySelector('.track-artist');
-      if (art) art.style.backgroundImage = t.artwork ? `url(${t.artwork})` : 'none';
+      if (art) art.style.backgroundImage = t.artwork ? `url(${t.artwork})` : 'linear-gradient(135deg,#1a0f2e,#0f0f1e)';
       if (title) title.textContent = t.title;
       if (artist) artist.textContent = t.artist;
-      this.el.querySelectorAll('.pl-item').forEach((el, i) => el.classList.toggle('active', i === this.idx));
+      this.el.querySelectorAll('.pl-item').forEach((el, i) => {
+        const active = i === this.idx;
+        el.classList.toggle('active', active);
+        if (active) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
     }
     updateUI() {
       this.updateTrack();
@@ -269,6 +282,12 @@
     updateSongCount() {
       const el = this.el.querySelector('.song-count');
       if (el) el.textContent = this.playlist.length ? `共 ${this.playlist.length} 首` : '';
+    }
+    setLoading(on) {
+      const btn = this.el.querySelector('.ctrl-play');
+      if (!btn) return;
+      if (on) { btn.innerHTML = '<div style="width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite"></div>'; }
+      else { btn.innerHTML = this.playing ? '⏸' : '▶'; }
     }
     renderList() {
       const list = this.el.querySelector('.pl-list');
@@ -308,7 +327,7 @@
         .visualizer{display:flex;justify-content:center;gap:2px;height:40px;align-items:flex-end;margin-top:10px}
         .vis-bar{width:4px;border-radius:2px;background:linear-gradient(to top,#646cff,#ff6b9d);transition:height .05s;min-height:3px}
         .prog-area{padding:0 20px;margin-top:8px}
-        .prog-bar{height:4px;background:rgba(255,255,255,.08);border-radius:2px;cursor:pointer;position:relative}
+        .prog-bar{height:6px;background:rgba(255,255,255,.08);border-radius:3px;cursor:pointer;position:relative;touch-action:none}
         .prog-fill{height:100%;background:linear-gradient(90deg,#646cff,#ff6b9d);border-radius:2px;transition:width .1s;width:0}
         .prog-time{display:flex;justify-content:space-between;font-size:.65rem;color:#666;margin-top:4px}
         .controls{display:flex;align-items:center;justify-content:center;gap:16px;padding:12px 20px}
@@ -363,7 +382,7 @@
       <div class="mp-wrap">
         <div class="mp-header">
           <h2>🐟 音乐台</h2>
-          <span class="badge">酷我音乐</span>
+          <span class="badge">酷我 · Audius</span>
         </div>
         <div class="disc-area">
           <div class="disc"><div class="disc-art"></div><div class="disc-hole"></div></div>
@@ -371,7 +390,7 @@
             <div class="track-title">加载中...</div>
             <div class="track-artist">—</div>
           </div>
-          <div class="lyrics-area" style="max-height:120px;overflow:hidden;margin-top:10px;text-align:center">
+          <div class="lyrics-area" style="max-height:120px;overflow-y:auto;margin-top:10px;text-align:center;-webkit-overflow-scrolling:touch">
             <div class="lyrics-lines" style="font-size:.75rem;color:#666;line-height:1.8"></div>
           </div>
           <div class="visualizer">${Array.from({length:20},()=>'<div class="vis-bar"></div>').join('')}</div>
@@ -399,10 +418,25 @@
           <span style="font-size:.65rem;color:#666;margin-left:auto" class="song-count"></span>
         </div>
         <div class="pl-list"><div style="text-align:center;padding:40px;color:#666">🎵 加载中...</div></div>
-        <div class="mp-footer">🐟 小鱼儿音乐台 · 酷我音乐 · 空格播放 · ↑↓切歌 · ←→快进退</div>
+        <div class="mp-footer">🐟 小鱼儿音乐台 · 酷我+Audius · 空格播放 · ↑↓切歌 · ←→快进退</div>
       </div>`;
 
       this.el.querySelector('.mp-wrap').__player = this;
+
+      // 进度条触摸拖动
+      const progBar = this.el.querySelector('.prog-bar');
+      if (progBar) {
+        const seekTouch = (e) => {
+          const r = progBar.getBoundingClientRect();
+          const x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+          const pct = Math.max(0, Math.min(1, x / r.width));
+          if (this.audio.duration) this.audio.currentTime = pct * this.audio.duration;
+        };
+        let touching = false;
+        progBar.addEventListener('touchstart', (e) => { touching = true; seekTouch(e); }, { passive: true });
+        progBar.addEventListener('touchmove', (e) => { if (touching) seekTouch(e); }, { passive: true });
+        progBar.addEventListener('touchend', () => { touching = false; });
+      }
 
       // 键盘快捷键
       document.addEventListener('keydown', (e) => {
