@@ -12,17 +12,19 @@ def get_git_log(limit=50):
     """Get recent git commits."""
     try:
         result = subprocess.run(
-            ['git', 'log', f'--max-count={limit}', '--format=%H|%s|%ai|%an'],
+            ['git', 'log', f'--max-count={limit}', '--format=%H%x00%s%x00%ai%x00%an'],
             capture_output=True, text=True,
-            cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            cwd=os.path.dirname(os.path.abspath(__file__))
         )
         commits = []
         for line in result.stdout.strip().split('\n'):
-            if '|' in line:
-                parts = line.split('|', 3)
+            if '\x00' in line:
+                parts = line.split('\x00', 3)
                 if len(parts) == 4:
                     hash_val, message, date_str, author = parts
                     date = date_str[:10]
+                    # 过滤掉合并提交和版本号更新
+                    if message.startswith('Merge ') or message.startswith('chore:'): continue
                     commits.append({
                         'hash': hash_val[:7],
                         'message': message,
