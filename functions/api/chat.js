@@ -13,7 +13,7 @@ export async function onRequestPost(context) {
 
   try {
     const body = await request.json();
-    const { messages, model = 'mimo-v2-flash' } = body;
+    const { messages, model = 'mimo-v2-flash', stream = true, max_tokens = 500 } = body;
 
     if (!messages || !Array.isArray(messages)) {
       return new Response(JSON.stringify({ error: 'messages 必须是数组' }), {
@@ -44,8 +44,8 @@ export async function onRequestPost(context) {
       body: JSON.stringify({
         model: model,
         messages: [systemMessage, ...limited],
-        stream: true,
-        max_tokens: 500,
+        stream: stream,
+        max_tokens: max_tokens,
       }),
     });
 
@@ -53,6 +53,14 @@ export async function onRequestPost(context) {
       const errText = await apiResponse.text();
       return new Response(JSON.stringify({ error: `Chat API 错误: ${apiResponse.status}` }), {
         status: apiResponse.status,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      });
+    }
+
+    // 非流式：直接返回 JSON
+    if (!stream) {
+      const data = await apiResponse.json();
+      return new Response(JSON.stringify(data), {
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
     }
