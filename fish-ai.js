@@ -16,7 +16,7 @@
   class TTSEngine {
     constructor() {
       this.chunks = [];
-      this.audioCache = new Map();
+      this.blobUrls = [];
       this.currentIdx = 0;
       this.isPlaying = false;
       this.isPaused = false;
@@ -26,19 +26,7 @@
       this.mimoFailed = false;
       this.rate = 1.0;
       this._abort = false;
-      this._audioCtx = null;
-      this._gainNode = null;
-      this._currentSource = null;
-    }
-
-    _ensureCtx() {
-      if (!this._audioCtx || this._audioCtx.state === 'closed') {
-        this._audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        this._gainNode = this._audioCtx.createGain();
-        this._gainNode.gain.value = 1.0;
-        this._gainNode.connect(this._audioCtx.destination);
-      }
-      if (this._audioCtx.state === 'suspended') this._audioCtx.resume();
+      this._audioEl = null;
     }
 
     splitText(text) {
@@ -69,105 +57,103 @@
       if (!text?.trim()) return;
       this.rate = opts.rate || 1.0;
       this.chunks = this.splitText(text);
+      if (!this.chunks.length) return;
+      this.blobUrls = new Array(this.chunks.length).fill(null);
       this.currentIdx = 0;
       this.isPlaying = true;
       this._abort = false;
-      this.audioCache.clear();
-      this._ensureCtx();
-      this._notify('generating');
-      this._preloadAhead(0);
-      this._playWhenReady(0);
-    }
 
-    _playWhenReady(idx) {
-      if (idx >= this.chunks.length || this._abort) {
-        this.isPlaying = false;
-        this._notify('ended');
-        this.onEnd?.();
-        return;
-      }
-      if (this.isPaused) { this.currentIdx = idx; return; }
-      this.currentIdx = idx;
-      this._notify('playing');
-      const buffer = this.audioCache.get(idx);
-      if (buffer) { this._playBuffer(buffer, idx); return; }
-      const check = setInterval(() => {
-        if (this._abort) { clearInterval(check); return; }
-        const buf = this.audioCache.get(idx);
-        if (buf) { clearInterval(check); this._playBuffer(buf, idx); }
-      }, 200);
-    }
-
-    _playBuffer(buffer, idx) {
-      if (this._abort || this.isPaused) return;
-      if (this._currentSource) { try { this._currentSource.onended = null; this._currentSource.stop(); } catch {} }
-      const source = this._audioCtx.createBufferSource();
-      source.buffer = buffer;
-      source.connect(this._gainNode);
-      this._currentSource = source;
-      source.onended = () => {
+      // 创建 Audio 元素（在用户手势内）
+      this._audioEl = new Audio();
+      this._audioEl.preload = 'auto';
+      this._audioEl.addEventListener('ended', () => {
         if (this._abort || this.isPaused) return;
-        this._playWhenReady(idx + 1);
-      };
-      try { source.start(0); } catch (e) { console.warn('[TTS] start fail:', e); this._playWhenReady(idx + 1); }
+        this._playNextIfReady(this.currentIdx + 1);
+      });
+
+      this._notify('generating');
+
+      // 后台生成所有段
+      this._generateAllChunks();
+
+      // 等第一段就绪后播放
+      await this._waitForChunk(0);
+      if (this._abort) return;
+      this._playChunk(0);
     }
 
-    async _generateChunk(idx) {
-      const text = this.chunks[idx];
-      if (!text) return null;
-      if (!this.mimoFailed && this.mode === 'mimo') {
+    async _generateAllChunks() {
+      for (let i = 0; i < this.chunks.length; i++) {
+        if (this._abort) return;
+        if (this.blobUrls[i]) continue;
         try {
           const res = await fetch(`${API_BASE}/tts`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text, speed: this.rate }),
+            body: JSON.stringify({ text: this.chunks[i], speed: this.rate }),
           });
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           const blob = await res.blob();
           if (blob.size < 100) throw new Error('empty audio');
-          const arrayBuffer = await blob.arrayBuffer();
-          if (this._abort) return null;
-          const audioBuffer = await this._audioCtx.decodeAudioData(arrayBuffer);
-          return audioBuffer;
+          if (this._abort) return;
+          this.blobUrls[i] = URL.createObjectURL(blob);
         } catch (e) {
-          console.warn('[TTS] MIMO chunk failed:', e.message);
-          this.mimoFailed = true;
-          this.mode = 'browser';
+          console.warn('[TTS] chunk', i, 'failed:', e.message);
+          if (!this.mimoFailed) { this.mimoFailed = true; this.mode = 'browser'; }
         }
       }
-      return this._browserChunkBuffer(text);
     }
 
-    _browserChunkBuffer(text) {
-      if (!('speechSynthesis' in window)) return null;
-      const sr = this._audioCtx.sampleRate;
-      return this._audioCtx.createBuffer(1, sr * 0.1, sr);
+    _waitForChunk(idx) {
+      return new Promise(resolve => {
+        if (this.blobUrls[idx]) { resolve(); return; }
+        const check = setInterval(() => {
+          if (this._abort || this.blobUrls[idx]) { clearInterval(check); resolve(); }
+        }, 100);
+      });
     }
 
-    async _preloadAhead(fromIdx) {
-      for (let i = 0; i < PRELOAD_AHEAD; i++) {
-        const idx = fromIdx + i;
-        if (idx >= this.chunks.length || this._abort) break;
-        if (this.audioCache.has(idx)) continue;
-        try {
-          const buf = await this._generateChunk(idx);
-          if (buf && !this._abort) this.audioCache.set(idx, buf);
-        } catch {}
+    _playChunk(idx) {
+      if (idx >= this.chunks.length || this._abort) { this._finish(); return; }
+      if (!this.blobUrls[idx]) return;
+      this.currentIdx = idx;
+      this._notify('playing');
+      this._audioEl.src = this.blobUrls[idx];
+      this._audioEl.currentTime = 0;
+      this._audioEl.play().catch(e => {
+        console.warn('[TTS] play failed:', idx, e);
+        this._playNextIfReady(idx + 1);
+      });
+    }
+
+    _playNextIfReady(idx) {
+      if (idx >= this.chunks.length || this._abort) { this._finish(); return; }
+      if (this.blobUrls[idx]) {
+        this._playChunk(idx);
+      } else {
+        this._waitForChunk(idx).then(() => {
+          if (!this._abort) this._playChunk(idx);
+        });
       }
+    }
+
+    _finish() {
+      this.isPlaying = false;
+      this._notify('ended');
+      this.onEnd?.();
     }
 
     pause() {
-      if (!this.isPlaying) return;
+      if (!this.isPlaying || !this._audioEl) return;
       this.isPaused = true;
-      if (this._currentSource) { try { this._currentSource.onended = null; this._currentSource.stop(); } catch {} }
+      this._audioEl.pause();
       this._notify('paused');
     }
 
     resume() {
-      if (!this.isPaused) return;
+      if (!this.isPaused || !this._audioEl) return;
       this.isPaused = false;
-      if (this._audioCtx?.state === 'suspended') this._audioCtx.resume();
-      this._playWhenReady(this.currentIdx);
+      this._audioEl.play().catch(() => {});
       this._notify('playing');
     }
 
@@ -175,22 +161,21 @@
 
     stop() {
       this._abort = true;
-      if (this._currentSource) { try { this._currentSource.onended = null; this._currentSource.stop(); } catch {} }
-      this._currentSource = null;
+      if (this._audioEl) { try { this._audioEl.pause(); this._audioEl.src = ''; } catch {} }
+      this._audioEl = null;
+      for (const url of this.blobUrls) { if (url) try { URL.revokeObjectURL(url); } catch {} }
+      this.blobUrls = [];
+      this.chunks = [];
       this.isPlaying = false;
       this.isPaused = false;
       this.currentIdx = 0;
-      this.audioCache.clear();
-      this.chunks = [];
       this._notify('stopped');
     }
 
     seekTo(idx) {
       if (idx < 0 || idx >= this.chunks.length) return;
-      if (this._currentSource) { try { this._currentSource.onended = null; this._currentSource.stop(); } catch {} }
       this._abort = false;
-      this._playWhenReady(idx);
-      this._preloadAhead(idx + 1);
+      this._playChunk(idx);
     }
 
     setRate(r) { this.rate = parseFloat(r); }
@@ -200,7 +185,7 @@
     }
   }
 
-  // ==================== TTS 听文章按钮 ====================
+// ==================== TTS 听文章按钮 ====================
   class ListenButton {
     constructor(container, text) {
       this.text = text;
