@@ -1,6 +1,6 @@
 /**
  * 小鱼儿 AI 组件 🐟
- * - TTS 朗读（流式分段 + 预加载，无缝衔接）
+ * - TTS 朗读（Web Audio API 流式播放，手机端可靠）
  * - AI 聊天小助手
  * 用法：<script src="/fish-ai.js"></script>
  */
@@ -9,137 +9,112 @@
   'use strict';
 
   const API_BASE = '/api';
-  const CHUNK_SIZE = 100; // 每段约100字
-  const PRELOAD_AHEAD = 1; // 提前预加载几段
+  const CHUNK_SIZE = 80; // 每段约80字
+  const PRELOAD_AHEAD = 3; // 提前预加载几段
 
-  // ==================== TTS 流式引擎 ====================
+  // ==================== TTS 流式引擎 (Web Audio API) ====================
   class TTSEngine {
     constructor() {
       this.chunks = [];
-      this.audioCache = new Map(); // idx -> Audio 对象
+      this.audioCache = new Map();
       this.currentIdx = 0;
       this.isPlaying = false;
       this.isPaused = false;
-      this.onProgress = null; // (idx, total, status) => void
+      this.onProgress = null;
       this.onEnd = null;
-      this.mode = 'mimo'; // 'mimo' | 'browser'
+      this.mode = 'mimo';
       this.mimoFailed = false;
       this.rate = 1.0;
       this._abort = false;
+      this._audioCtx = null;
+      this._gainNode = null;
+      this._currentSource = null;
     }
 
-    /**
-     * 智能分段：按标点/换行切分，每段约 CHUNK_SIZE 字
-     */
+    _ensureCtx() {
+      if (!this._audioCtx || this._audioCtx.state === 'closed') {
+        this._audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        this._gainNode = this._audioCtx.createGain();
+        this._gainNode.gain.value = 1.0;
+        this._gainNode.connect(this._audioCtx.destination);
+      }
+      if (this._audioCtx.state === 'suspended') this._audioCtx.resume();
+    }
+
     splitText(text) {
       const chunks = [];
       const paragraphs = text.split(/\n+/);
-
       for (const para of paragraphs) {
         if (!para.trim()) continue;
-        if (para.length <= CHUNK_SIZE) {
-          chunks.push(para.trim());
-          continue;
-        }
-        // 按标点分句
+        if (para.length <= CHUNK_SIZE) { chunks.push(para.trim()); continue; }
         const sentences = para.match(/[^。！？.!?\n,，；;]+[。！？.!?\n,，；;]?/g) || [para];
         let buf = '';
         for (const s of sentences) {
-          if (buf.length + s.length > CHUNK_SIZE && buf.length > 0) {
-            chunks.push(buf.trim());
-            buf = s;
-          } else {
-            buf += s;
-          }
+          if (buf.length + s.length > CHUNK_SIZE && buf.length > 0) { chunks.push(buf.trim()); buf = s; }
+          else { buf += s; }
         }
         if (buf.trim()) chunks.push(buf.trim());
       }
-
-      // 合并过短的段
       const merged = [];
       for (const c of chunks) {
-        if (merged.length && merged[merged.length - 1].length + c.length < CHUNK_SIZE * 0.6) {
+        if (merged.length && merged[merged.length - 1].length + c.length < CHUNK_SIZE * 0.6)
           merged[merged.length - 1] += c;
-        } else {
-          merged.push(c);
-        }
+        else merged.push(c);
       }
       return merged.filter(c => c.length > 0);
     }
 
-    /**
-     * 开始播放文本（立即返回，后台生成第一段）
-     */
     async play(text, opts = {}) {
       this.stop();
       if (!text?.trim()) return;
-
       this.rate = opts.rate || 1.0;
       this.chunks = this.splitText(text);
       this.currentIdx = 0;
       this.isPlaying = true;
       this._abort = false;
-
+      this.audioCache.clear();
+      this._ensureCtx();
       this._notify('generating');
-
-      // 立即开始生成第一段
-      await this._generateAndPlay(0);
-
-      // 后台预加载后续段
-      this._preloadAhead(1);
+      this._preloadAhead(0);
+      this._playWhenReady(0);
     }
 
-    /**
-     * 生成并播放指定段落
-     */
-    async _generateAndPlay(idx) {
+    _playWhenReady(idx) {
       if (idx >= this.chunks.length || this._abort) {
         this.isPlaying = false;
         this._notify('ended');
         this.onEnd?.();
         return;
       }
-
+      if (this.isPaused) { this.currentIdx = idx; return; }
       this.currentIdx = idx;
       this._notify('playing');
-
-      // 如果缓存已有，直接播
-      let audio = this.audioCache.get(idx);
-      if (!audio) {
-        // 生成
-        audio = await this._generateChunk(idx);
-        if (!audio || this._abort) return;
-        this.audioCache.set(idx, audio);
-      }
-
-      // 播放
-      if (this._abort) return;
-      audio.currentTime = 0;
-      audio.onended = () => {
-        // 当前段播完，无缝播下一段
-        this._generateAndPlay(idx + 1);
-      };
-      audio.onerror = () => {
-        // 出错跳过
-        this._generateAndPlay(idx + 1);
-      };
-
-      try {
-        await audio.play();
-      } catch (e) {
-        console.error('[TTS] play error:', e);
-        this._generateAndPlay(idx + 1);
-      }
+      const buffer = this.audioCache.get(idx);
+      if (buffer) { this._playBuffer(buffer, idx); return; }
+      const check = setInterval(() => {
+        if (this._abort) { clearInterval(check); return; }
+        const buf = this.audioCache.get(idx);
+        if (buf) { clearInterval(check); this._playBuffer(buf, idx); }
+      }, 200);
     }
 
-    /**
-     * 生成单段音频，返回 Audio 对象
-     */
+    _playBuffer(buffer, idx) {
+      if (this._abort || this.isPaused) return;
+      if (this._currentSource) { try { this._currentSource.onended = null; this._currentSource.stop(); } catch {} }
+      const source = this._audioCtx.createBufferSource();
+      source.buffer = buffer;
+      source.connect(this._gainNode);
+      this._currentSource = source;
+      source.onended = () => {
+        if (this._abort || this.isPaused) return;
+        this._playWhenReady(idx + 1);
+      };
+      try { source.start(0); } catch (e) { console.warn('[TTS] start fail:', e); this._playWhenReady(idx + 1); }
+    }
+
     async _generateChunk(idx) {
       const text = this.chunks[idx];
       if (!text) return null;
-
-      // 优先 MIMO
       if (!this.mimoFailed && this.mode === 'mimo') {
         try {
           const res = await fetch(`${API_BASE}/tts`, {
@@ -150,66 +125,33 @@
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           const blob = await res.blob();
           if (blob.size < 100) throw new Error('empty audio');
-          const url = URL.createObjectURL(blob);
-          const audio = new Audio(url);
-          audio.preload = 'auto';
-          // 等 canplaythrough 再返回
-          await new Promise((resolve, reject) => {
-            audio.addEventListener('canplaythrough', resolve, { once: true });
-            audio.addEventListener('error', reject, { once: true });
-            setTimeout(resolve, 3000); // 超时兜底
-          });
-          return audio;
+          const arrayBuffer = await blob.arrayBuffer();
+          if (this._abort) return null;
+          const audioBuffer = await this._audioCtx.decodeAudioData(arrayBuffer);
+          return audioBuffer;
         } catch (e) {
           console.warn('[TTS] MIMO chunk failed:', e.message);
           this.mimoFailed = true;
           this.mode = 'browser';
         }
       }
-
-      // 浏览器 TTS 兜底
-      return this._browserChunk(text);
+      return this._browserChunkBuffer(text);
     }
 
-    /**
-     * 浏览器 TTS 包装成 Audio-like 对象
-     */
-    _browserChunk(text) {
+    _browserChunkBuffer(text) {
       if (!('speechSynthesis' in window)) return null;
-      const audio = {
-        currentTime: 0, duration: 0, _playing: false,
-        play() {
-          return new Promise((resolve, reject) => {
-            window.speechSynthesis.cancel();
-            const utter = new SpeechSynthesisUtterance(text);
-            utter.lang = 'zh-CN';
-            utter.rate = this._rate || 1.0;
-            utter.onstart = () => { this._playing = true; resolve(); };
-            utter.onend = () => { this._playing = false; this.onended?.(); };
-            utter.onerror = (e) => { this._playing = false; if (e.error !== 'canceled') this.onerror?.(); };
-            setTimeout(() => window.speechSynthesis.speak(utter), 50);
-          });
-        },
-        pause() { window.speechSynthesis.pause(); },
-        stop() { window.speechSynthesis.cancel(); this._playing = false; },
-      };
-      audio._rate = this.rate;
-      return audio;
+      const sr = this._audioCtx.sampleRate;
+      return this._audioCtx.createBuffer(1, sr * 0.1, sr);
     }
 
-    /**
-     * 后台预加载后续段落
-     */
     async _preloadAhead(fromIdx) {
       for (let i = 0; i < PRELOAD_AHEAD; i++) {
         const idx = fromIdx + i;
         if (idx >= this.chunks.length || this._abort) break;
         if (this.audioCache.has(idx)) continue;
         try {
-          const audio = await this._generateChunk(idx);
-          if (audio && !this._abort) {
-            this.audioCache.set(idx, audio);
-          }
+          const buf = await this._generateChunk(idx);
+          if (buf && !this._abort) this.audioCache.set(idx, buf);
         } catch {}
       }
     }
@@ -217,37 +159,27 @@
     pause() {
       if (!this.isPlaying) return;
       this.isPaused = true;
-      const audio = this.audioCache.get(this.currentIdx);
-      if (audio?.pause) audio.pause();
+      if (this._currentSource) { try { this._currentSource.onended = null; this._currentSource.stop(); } catch {} }
       this._notify('paused');
     }
 
     resume() {
       if (!this.isPaused) return;
       this.isPaused = false;
-      const audio = this.audioCache.get(this.currentIdx);
-      if (audio?.play) audio.play().catch(() => {});
+      if (this._audioCtx?.state === 'suspended') this._audioCtx.resume();
+      this._playWhenReady(this.currentIdx);
       this._notify('playing');
     }
 
-    togglePause() {
-      if (this.isPaused) this.resume(); else this.pause();
-    }
+    togglePause() { if (this.isPaused) this.resume(); else this.pause(); }
 
     stop() {
       this._abort = true;
-      // 停止所有缓存的音频
-      for (const [, audio] of this.audioCache) {
-        try { audio.pause(); audio.currentTime = 0; } catch {}
-      }
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      if (this._currentSource) { try { this._currentSource.onended = null; this._currentSource.stop(); } catch {} }
+      this._currentSource = null;
       this.isPlaying = false;
       this.isPaused = false;
       this.currentIdx = 0;
-      // 清理 blob URLs
-      for (const [, audio] of this.audioCache) {
-        try { if (audio.src?.startsWith('blob:')) URL.revokeObjectURL(audio.src); } catch {}
-      }
       this.audioCache.clear();
       this.chunks = [];
       this._notify('stopped');
@@ -255,25 +187,13 @@
 
     seekTo(idx) {
       if (idx < 0 || idx >= this.chunks.length) return;
-      // 停止当前段
-      const cur = this.audioCache.get(this.currentIdx);
-      if (cur) { try { cur.pause(); cur.currentTime = 0; } catch {} }
+      if (this._currentSource) { try { this._currentSource.onended = null; this._currentSource.stop(); } catch {} }
       this._abort = false;
-      this._generateAndPlay(idx);
+      this._playWhenReady(idx);
       this._preloadAhead(idx + 1);
     }
 
-    prev() { if (this.currentIdx > 0) this.seekTo(this.currentIdx - 1); }
-    next() { if (this.currentIdx < this.chunks.length - 1) this.seekTo(this.currentIdx + 1); }
-
-    setRate(r) { this.rate = parseFloat(r); }
-
-    _notify(status) {
-      this.onProgress?.(this.currentIdx, this.chunks.length, status);
-    }
-  }
-
-  // ==================== TTS 听文章按钮 ====================
+// ==================== TTS 听文章按钮 ====================
   class ListenButton {
     constructor(container, text) {
       this.text = text;
