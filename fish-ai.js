@@ -193,7 +193,14 @@
       this._preloadAhead(idx + 1);
     }
 
-// ==================== TTS 听文章按钮 ====================
+    setRate(r) { this.rate = parseFloat(r); }
+
+    _notify(status) {
+      this.onProgress?.(this.currentIdx, this.chunks.length, status);
+    }
+  }
+
+  // ==================== TTS 听文章按钮 ====================
   class ListenButton {
     constructor(container, text) {
       this.text = text;
