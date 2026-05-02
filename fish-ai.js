@@ -437,14 +437,15 @@
     }
 
     positionWindow() {
-      // 手机端用 CSS 定位，不走 JS（避免键盘弹出时错位）
+      // 手机端：用 visualViewport 适配键盘
       if (window.innerWidth < 768) {
+        const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
         this.win.style.width = '';
-        this.win.style.maxHeight = '';
-        this.win.style.top = '';
-        this.win.style.left = '';
-        this.win.style.right = '';
-        // CSS 会处理 bottom 和 max-height
+        this.win.style.left = '8px';
+        this.win.style.right = '8px';
+        this.win.style.top = Math.max(80, vh - 420) + 'px';
+        this.win.style.bottom = 'auto';
+        this.win.style.maxHeight = Math.min(400, vh - 100) + 'px';
         return;
       }
 

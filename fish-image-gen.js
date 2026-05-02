@@ -180,6 +180,7 @@
         .img-hist-prompt{position:absolute;bottom:0;left:0;right:0;padding:4px 6px;background:linear-gradient(transparent,rgba(0,0,0,.8));font-size:.55rem;color:#ddd;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
         @media(max-width:768px){.img-history-list{grid-template-columns:repeat(3,1fr)}.ig-wrap{padding:12px}}
         @media(max-width:768px){
+          .ig-wrap{max-width:100%!important;padding:12px!important}
           .ig-input-row{flex-direction:column}
           .ig-gen-btn,.ig-rand-btn{width:100%;text-align:center}
           .ig-sizes{flex-wrap:wrap}

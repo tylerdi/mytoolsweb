@@ -20,7 +20,7 @@ export async function onRequestPost(context) {
 
     return new Response(audioData, {
       headers: {
-        'Content-Type': 'audio/mpeg',
+        'Content-Type': 'audio/wav',
         'Cache-Control': 'public, max-age=3600',
         'Access-Control-Allow-Origin': '*',
       },
@@ -41,7 +41,7 @@ async function generateMimoTTS(text, speed) {
     body: JSON.stringify({
       model: 'mimo-v2-tts',
       input: text,
-      speed: speed,
+      voice: '',
     }),
   });
 
