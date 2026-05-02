@@ -127,7 +127,7 @@
         }
         @keyframes ffToast { 0% { opacity: 0; transform: translateX(-50%) translateY(8px); } 15% { opacity: 1; } 85% { opacity: 1; } 100% { opacity: 0; transform: translateX(-50%) translateY(-8px); } }
       
-        @media(){
+        @media(max-width:768px){
           .ff-widget{padding:16px !important;border-radius:12px !important}
           .ff-widget *{max-width:100% !important;box-sizing:border-box}
         }`;

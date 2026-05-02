@@ -134,7 +134,7 @@
           }
           .fc-skip:hover { border-color: #555; color: #aaa; }
         
-        @media(){
+        @media(max-width:768px){
           .fc-widget{padding:16px !important;border-radius:12px !important}
           .fc-widget *{max-width:100% !important;box-sizing:border-box}
         }

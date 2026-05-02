@@ -68,7 +68,7 @@
         .dm-spinner{width:24px;height:24px;border:2px solid #2a2a2a;border-top-color:#a855f7;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 8px}
         @keyframes spin{to{transform:rotate(360deg)}}
       
-        @media(){
+        @media(max-width:768px){
           .dm-wrap{padding:16px;border-radius:12px}
           .dm-wrap *{max-width:100% !important}
         }

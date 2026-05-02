@@ -107,7 +107,7 @@
         .vm-loading .fish { font-size: 2rem; animation: vmFloat 2s ease-in-out infinite; margin-bottom: 8px; }
         @keyframes vmFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
       
-        @media(){
+        @media(max-width:768px){
           .vm-widget{padding:16px !important;border-radius:12px !important}
           .vm-widget *{max-width:100% !important;box-sizing:border-box}
         }`;

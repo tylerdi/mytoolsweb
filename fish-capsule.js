@@ -123,7 +123,7 @@
             box-shadow: 0 8px 30px rgba(212,168,83,0.4); animation: capToastIn 0.4s ease; }
           @keyframes capToastIn { from { opacity:0; transform:translateX(-50%) translateY(-20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
         
-        @media(){
+        @media(max-width:768px){
           .cap-widget{padding:16px !important;border-radius:12px !important}
           .cap-widget *{max-width:100% !important;box-sizing:border-box}
         }

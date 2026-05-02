@@ -97,7 +97,7 @@
           font-size: 12px; color: #646cff; margin-top: 8px; font-weight: 600;
         }
       
-        @media(){
+        @media(max-width:768px){
           .mood-widget{padding:16px !important;border-radius:12px !important}
           .mood-widget *{max-width:100% !important;box-sizing:border-box}
         }`;

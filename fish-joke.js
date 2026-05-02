@@ -68,7 +68,7 @@
         .jk-btn{background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;padding:6px 14px;color:#aaa;font-size:.75rem;cursor:pointer;font-family:inherit;transition:all .2s}
         .jk-btn:hover{border-color:#646cff;color:#e8e8e8}
       
-        @media(){
+        @media(max-width:768px){
           .jk-wrap{padding:16px;border-radius:12px}
           .jk-wrap *{max-width:100% !important}
         }

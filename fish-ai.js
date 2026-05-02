@@ -349,10 +349,11 @@
         .fish-chat-send:disabled{opacity:.5;cursor:not-allowed}
         .fish-chat-messages::-webkit-scrollbar{width:4px}
         .fish-chat-messages::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
-        @media(){
+        @media(max-width:768px){
           .fish-chat-fab{opacity:.35;width:48px;height:48px;font-size:24px}
           .fish-chat-fab:active{opacity:.7}
-          .fish-chat-window{width:auto;max-height:70vh}
+          .fish-chat-window{left:8px!important;right:8px!important;width:auto!important;bottom:80px!important;max-height:50vh;max-height:50dvh;top:auto!important}
+          .fish-chat-messages{max-height:calc(50vh - 160px);max-height:calc(50dvh - 160px)}
         }
       `;
       document.head.appendChild(style);
@@ -436,6 +437,17 @@
     }
 
     positionWindow() {
+      // 手机端用 CSS 定位，不走 JS（避免键盘弹出时错位）
+      if (window.innerWidth < 768) {
+        this.win.style.width = '';
+        this.win.style.maxHeight = '';
+        this.win.style.top = '';
+        this.win.style.left = '';
+        this.win.style.right = '';
+        // CSS 会处理 bottom 和 max-height
+        return;
+      }
+
       const fab = this.fab.getBoundingClientRect();
       const winW = window.innerWidth, winH = window.innerHeight;
       const gap = 6;

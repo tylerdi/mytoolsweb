@@ -146,7 +146,7 @@
           50% { transform: translateY(-3px); }
         }
       
-        @media(){
+        @media(max-width:768px){
           .fm-container{opacity:.4!important;transform:scale(.85)}
           .fm-container:hover,.fm-container:active{opacity:.8!important}
           .fm-container *{max-width:100%!important;box-sizing:border-box}

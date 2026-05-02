@@ -169,7 +169,7 @@
           }
           @keyframes fmBounce { from { height: 4px; } to { height: var(--h); } }
         
-        @media(){
+        @media(max-width:768px){
           .fm-widget{padding:16px !important;border-radius:12px !important}
           .fm-widget *{max-width:100% !important;box-sizing:border-box}
         }

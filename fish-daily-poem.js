@@ -138,7 +138,7 @@
         .dp-decor-tl { top: 10px; left: 15px; }
         .dp-decor-br { bottom: 10px; right: 15px; transform: rotate(180deg); }
       
-        @media(){
+        @media(max-width:768px){
           .dp-widget{padding:16px !important;border-radius:12px !important}
           .dp-widget *{max-width:100% !important;box-sizing:border-box}
         }`;

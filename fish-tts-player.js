@@ -233,7 +233,7 @@
         .tts-txt::-webkit-scrollbar{width:4px}
         .tts-txt::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
       
-        @media(){
+        @media(max-width:768px){
           .tts-p{padding:16px !important;border-radius:12px !important}
           .tts-p *{max-width:100% !important;box-sizing:border-box}
         }

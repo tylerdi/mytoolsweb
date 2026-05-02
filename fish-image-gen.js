@@ -178,9 +178,8 @@
         .img-hist-item img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
         .img-hist-item:hover img{transform:scale(1.05)}
         .img-hist-prompt{position:absolute;bottom:0;left:0;right:0;padding:4px 6px;background:linear-gradient(transparent,rgba(0,0,0,.8));font-size:.55rem;color:#ddd;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        @media(){.img-history-list{grid-template-columns:repeat(3,1fr)}.ig-wrap{padding:12px}}
-        @media(){
-          .ig-wrap{max-width:100%!important;padding:12px!important}
+        @media(max-width:768px){.img-history-list{grid-template-columns:repeat(3,1fr)}.ig-wrap{padding:12px}}
+        @media(max-width:768px){
           .ig-input-row{flex-direction:column}
           .ig-gen-btn,.ig-rand-btn{width:100%;text-align:center}
           .ig-sizes{flex-wrap:wrap}

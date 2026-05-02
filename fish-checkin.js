@@ -181,7 +181,7 @@
           @keyframes fcToastIn { from { opacity:0; transform:translateX(-50%) translateY(-20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
           @keyframes fcToastOut { to { opacity:0; transform:translateX(-50%) translateY(-20px); } }
         
-        @media(){
+        @media(max-width:768px){
           .fc-widget{padding:16px !important;border-radius:12px !important}
           .fc-widget *{max-width:100% !important;box-sizing:border-box}
         }

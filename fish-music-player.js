@@ -545,7 +545,7 @@
         .float-note{position:absolute;font-size:1rem;opacity:0;animation:note-float 3s ease-out forwards}
         @keyframes note-float{0%{opacity:0;transform:translateY(0) scale(.5)}20%{opacity:.7}100%{opacity:0;transform:translateY(-120px) translateX(var(--dx,20px)) scale(1.2) rotate(var(--rot,20deg))}}
 
-        @media(){
+        @media(max-width:768px){
           .mp-wrap{border-radius:12px;margin:0 8px}
           .disc{width:140px;height:140px}
           .controls{gap:12px;padding:10px 16px}

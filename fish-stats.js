@@ -126,7 +126,7 @@
             text-align: center;
           }
         
-        @media(){
+        @media(max-width:768px){
           .stats-widget{padding:16px !important;border-radius:12px !important}
           .stats-widget *{max-width:100% !important;box-sizing:border-box}
         }
@@ -203,7 +203,7 @@
           }
           .stats-error { color: var(--text-dim, #888); font-size: 0.85rem; }
         
-        @media(){
+        @media(max-width:768px){
           .stats-widget{padding:16px !important;border-radius:12px !important}
           .stats-widget *{max-width:100% !important;box-sizing:border-box}
         }

@@ -171,7 +171,7 @@
             font-size: 14px;
           }
         
-        @media(){
+        @media(max-width:768px){
           .dq-widget{padding:16px !important;border-radius:12px !important}
           .dq-widget *{max-width:100% !important;box-sizing:border-box}
         }

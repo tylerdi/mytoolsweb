@@ -196,11 +196,11 @@
         .vp-dl{display:inline-flex;align-items:center;gap:4px;background:rgba(100,108,255,.2);border:1px solid rgba(100,108,255,.3);border-radius:8px;padding:6px 14px;color:#646cff;font-size:.75rem;text-decoration:none;transition:all .2s}
         .vp-dl:hover{background:rgba(100,108,255,.3)}
         .vp-hint{font-size:.6rem;color:#555;margin-top:8px}
-        @media(){
+        @media(max-width:768px){
           .vp-wrap{max-width:100%}
           .vp-grid{grid-template-columns:repeat(2,1fr)}
         }
-        @media(){
+        @media(max-width:768px){
           .vp-wrap{padding:16px !important;border-radius:12px !important}
           .vp-grid{grid-template-columns:repeat(2,1fr);gap:8px}
           .vp-chip{padding:3px 8px;font-size:.65rem}

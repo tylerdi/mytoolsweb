@@ -119,7 +119,7 @@
         .tt-btn{background:linear-gradient(135deg,#646cff,#ff6b9d);border:none;border-radius:10px;padding:10px 24px;color:#fff;font-size:.85rem;cursor:pointer;font-family:inherit;font-weight:600}
         .tt-best{font-size:.7rem;color:#555;text-align:center;margin-top:8px}
       
-        @media(){
+        @media(max-width:768px){
           .tt-wrap{padding:16px;border-radius:12px}
           .tt-wrap *{max-width:100% !important}
         }
