@@ -83,7 +83,7 @@
         });
         const data = await res.json();
         const text = data.choices?.[0]?.message?.content || '';
-        const lines = text.split(/|||\||\n+/).map(l => l.trim()).filter(l => l && l.length > 1);
+        const lines = text.split(/\|\|\||\n+/).map(l => l.trim()).filter(l => l && l.length > 1);
         resultsEl.innerHTML = lines.slice(0, 5).map(line =>
           `<div class="py-card" onclick="navigator.clipboard.writeText(this.querySelector('.text').textContent);this.style.borderColor='#4caf50';setTimeout(()=>this.style.borderColor='transparent',1000)"><span class="copy-hint">点击复制</span><span class="text">${line.replace(/^\d+[\.\)、]\s*/, '')}</span></div>`
         ).join('');
