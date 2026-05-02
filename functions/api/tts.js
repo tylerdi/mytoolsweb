@@ -20,7 +20,7 @@ export async function onRequestPost(context) {
 
     return new Response(audioData, {
       headers: {
-        'Content-Type': 'audio/wav',
+        'Content-Type': 'audio/mpeg',
         'Cache-Control': 'public, max-age=3600',
         'Access-Control-Allow-Origin': '*',
       },
