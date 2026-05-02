@@ -135,8 +135,18 @@
     } else {
         document.title = data.title + ' · Tyler';
         document.getElementById('page-header').innerHTML = `<h1>${data.title}</h1><p>${data.desc}</p>`;
-        document.getElementById('grid').innerHTML = data.items.map(item =>
-            `<a class="card" href="/?scroll=${item.id}">
+        renderGrid(data.items);
+
+        // Auto-redirect if URL has #hash
+        if (location.hash) {
+            const autoId = location.hash.slice(1);
+            location.href = '/tool.html?id=' + autoId;
+        }
+    }
+
+    function renderGrid(items) {
+        document.getElementById('grid').innerHTML = items.map(item =>
+            `<a class="card" href="/tool.html?id=${item.id}">
                 <div class="icon">${item.icon}</div>
                 <h3>${item.name}</h3>
                 <p>${item.desc}</p>

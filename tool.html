@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工具 · Tyler</title>
+    <link rel="icon" type="image/png" href="resource/easyclaw.png">
+    <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#0a0a0a;--surface:#141414;--border:#2a2a2a;--text:#e8e8e8;--text-secondary:#888;--accent:#646cff;--pink:#ff6b9d;--gold:#d4a853}
+        body{font-family:'LXGW WenKai',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh;overflow-x:hidden;position:relative}
+
+        /* 动态背景 */
+        .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none}
+        .bg-gradient{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 20%,rgba(100,108,255,.08) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(255,107,157,.06) 0%,transparent 50%),radial-gradient(ellipse at 50% 50%,rgba(212,168,83,.04) 0%,transparent 50%);animation:bgShift 10s ease-in-out infinite alternate}
+        @keyframes bgShift{0%{opacity:.6;transform:scale(1)}100%{opacity:1;transform:scale(1.1)}}
+        .bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(100,108,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(100,108,255,.03) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 20%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at center,black 20%,transparent 70%);animation:gridPulse 8s ease-in-out infinite}
+        @keyframes gridPulse{0%,100%{opacity:.4}50%{opacity:.8}}
+        .bg-orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.12;animation:orbDrift 15s ease-in-out infinite}
+        .bg-orb-1{width:500px;height:500px;background:var(--accent);top:-200px;left:-200px}
+        .bg-orb-2{width:400px;height:400px;background:var(--pink);bottom:-150px;right:-150px;animation-delay:-5s}
+        .bg-orb-3{width:300px;height:300px;background:var(--gold);top:40%;left:60%;animation-delay:-10s}
+        @keyframes orbDrift{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-50px) scale(1.15)}66%{transform:translate(-30px,40px) scale(.85)}}
+        .bg-stars{position:absolute;inset:0}
+        .bg-star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:twinkle 3s ease-in-out infinite}
+        @keyframes twinkle{0%,100%{opacity:.1;transform:scale(1)}50%{opacity:.8;transform:scale(2)}}
+        /* 浮动粒子 */
+        .bg-particles{position:absolute;inset:0}
+        .bg-particle{position:absolute;border-radius:50%;background:var(--accent);opacity:.15;animation:floatUp linear infinite}
+        @keyframes floatUp{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:.15}90%{opacity:.15}100%{transform:translateY(-10vh) scale(1);opacity:0}}
+
+        /* 顶部导航 */
+        .topbar{position:sticky;top:0;background:rgba(10,10,10,.75);backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);border-bottom:1px solid rgba(100,108,255,.15);padding:0.8rem 1.5rem;z-index:100;display:flex;align-items:center}
+        .topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),var(--pink),var(--accent),transparent);opacity:.6;animation:navGlow 4s linear infinite;background-size:200% 100%}
+        @keyframes navGlow{0%{background-position:200% 0}100%{background-position:-200% 0}}
+        .topbar a{color:var(--accent);text-decoration:none;font-size:0.85rem;min-width:60px;transition:all .2s}
+        .topbar a:hover{color:var(--pink);text-shadow:0 0 12px var(--pink)}
+        .topbar .title{font-weight:700;font-size:1rem;flex:1;text-align:center;background:linear-gradient(135deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+        /* 内容区 */
+        .container{max-width:900px;margin:0 auto;padding:1.5rem;position:relative;z-index:1}
+        #component{min-height:60vh;animation:fadeUp .6s ease-out}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+        /* 加载动画 */
+        .loading{text-align:center;padding:4rem 1rem;color:var(--text-secondary)}
+        .loading .spinner{display:inline-block;width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-right-color:var(--pink);border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:1rem}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .loading .pulse{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);animation:loadPulse 1.4s ease-in-out infinite;margin:0 4px}
+        .loading .pulse:nth-child(2){animation-delay:.2s}
+        .loading .pulse:nth-child(3){animation-delay:.4s}
+        @keyframes loadPulse{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.5);opacity:1}}
+
+        /* 底部装饰 */
+        .bottom-glow{position:fixed;bottom:0;left:0;right:0;height:200px;background:linear-gradient(to top,rgba(100,108,255,.05),transparent);pointer-events:none;z-index:0}
+
+        /* 移动端适配 */
+        @media(max-width:768px){
+            .bg-orb{filter:blur(60px);opacity:.08}
+            .bg-grid{display:none}
+        }
+    </style>
+</head>
+<body>
+    <!-- 动态背景层 -->
+    <div class="bg-layer">
+        <div class="bg-gradient"></div>
+        <div class="bg-grid"></div>
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+        <div class="bg-orb bg-orb-3"></div>
+        <div class="bg-stars" id="bgStars"></div>
+        <div class="bg-particles" id="bgParticles"></div>
+    </div>
+
+    <nav class="topbar">
+        <a href="/">← 首页</a>
+        <span class="title" id="toolTitle">加载中...</span>
+        <span style="min-width:60px"></span>
+    </nav>
+    <main class="container">
+        <div id="component">
+            <div class="loading">
+                <div class="spinner"></div><br>
+                <span class="pulse"></span><span class="pulse"></span><span class="pulse"></span>
+            </div>
+        </div>
+    </main>
+    <div class="bottom-glow"></div>
+
+    <script>
+    // 生成星光
+    (function(){
+        const c=document.getElementById('bgStars');
+        for(let i=0;i<50;i++){
+            const s=document.createElement('div');
+            s.className='bg-star';
+            s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;animation-duration:${2+Math.random()*3}s;width:${1+Math.random()*2}px;height:${1+Math.random()*2}px`;
+            c.appendChild(s);
+        }
+    })();
+    // 生成浮动粒子
+    (function(){
+        const c=document.getElementById('bgParticles');
+        for(let i=0;i<20;i++){
+            const p=document.createElement('div');
+            p.className='bg-particle';
+            const s=2+Math.random()*4;
+            p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;animation-duration:${10+Math.random()*15}s;animation-delay:${Math.random()*10}s`;
+            c.appendChild(p);
+        }
+    })();
+
+    const TOOLS = {
+        'fish-music-player':   { title:'🎵 音乐播放器',   js:'/fish-music-player.js' },
+        'fish-video-player':   { title:'🎬 视频播放器',   js:'/fish-video-player.js' },
+        'fish-image-gen':      { title:'🎨 AI 画图',      js:'/fish-image-gen.js' },
+        'fish-tts-tool':       { title:'🔊 文字转语音',   js:'/fish-tts-tool.js' },
+        'fish-translate':      { title:'🌐 AI 翻译',      js:'/fish-translate.js' },
+        'fish-speech-to-text': { title:'🎙️ 语音转文字',  js:'/fish-speech-to-text.js' },
+        'fish-code-explain':   { title:'💻 代码解释器',   js:'/fish-code-explain.js' },
+        'fish-color':          { title:'🎨 配色方案',     js:'/fish-color.js' },
+        'fish-wenyan':         { title:'🏛️ 文言文翻译',  js:'/fish-wenyan.js' },
+        'fish-weekly':         { title:'📝 周报生成器',   js:'/fish-weekly.js' },
+        'fish-resume':         { title:'📄 简历生成器',   js:'/fish-resume.js' },
+        'fish-pyq':            { title:'📱 朋友圈文案',   js:'/fish-pyq.js' },
+        'fish-lyric-writer':   { title:'🎵 歌词创作',     js:'/fish-lyric-writer.js' },
+        'fish-imitate':        { title:'🎤 模仿写作',     js:'/fish-imitate.js' },
+        'fish-book-notes':     { title:'📚 读书笔记',     js:'/fish-book-notes.js' },
+        'fish-annual-report':  { title:'📊 年度报告',     js:'/fish-annual-report.js' },
+        'fish-story-game':     { title:'🎭 故事接龙',     js:'/fish-story-game.js' },
+        'fish-debate':         { title:'🤖 AI 辩论赛',    js:'/fish-debate.js' },
+        'fish-couplet':        { title:'🧧 AI 对联',      js:'/fish-couplet.js' },
+        'fish-naming':         { title:'👶 起名助手',     js:'/fish-naming.js' },
+        'fish-quote':          { title:'💡 每日名言',     js:'/fish-quote.js' },
+        'fish-life-sim':       { title:'🔄 人生重开',     js:'/fish-life-sim.js' },
+        'fish-challenge':      { title:'🎯 每日挑战',     js:'/fish-challenge.js' },
+        'fish-question':       { title:'❓ 每日一问',     js:'/fish-question.js' },
+        'fish-quiz':           { title:'🧠 知识闯关',     js:'/fish-quiz.js' },
+        'fish-treehole':       { title:'💬 AI 树洞',      js:'/fish-treehole.js' },
+        'fish-horoscope':      { title:'🔮 每日运势',     js:'/fish-horoscope.js' },
+        'fish-recipe':         { title:'🍳 AI 菜谱',      js:'/fish-recipe.js' },
+        'fish-travel':         { title:'🗺️ 旅行规划',   js:'/fish-travel.js' },
+        'fish-movie':          { title:'🎬 影视推荐',     js:'/fish-movie.js' },
+        'fish-history-today':  { title:'📜 历史今天',     js:'/fish-history-today.js' },
+        'fish-fitness':        { title:'💪 健身计划',     js:'/fish-fitness.js' },
+        'fish-riddle':         { title:'🤪 脑筋急转弯',   js:'/fish-riddle.js' },
+        'fish-daily-poem':     { title:'📅 每日诗词',     js:'/fish-daily-poem.js' },
+        'fish-funfact':        { title:'🎲 冷知识',       js:'/fish-funfact.js' },
+        'fish-joke':           { title:'😂 笑话',         js:'/fish-joke.js' },
+        'fish-dream':          { title:'🔮 AI 解梦',      js:'/fish-dream.js' },
+        'fish-typing-test':    { title:'⌨️ 打字测速',    js:'/fish-typing-test.js' },
+        'fish-checkin':        { title:'✅ 每日打卡',     js:'/fish-checkin.js' },
+        'fish-mood':           { title:'😊 心情日记',     js:'/fish-mood.js' },
+        'fish-capsule':        { title:'💌 时光胶囊',     js:'/fish-capsule.js' },
+        'fish-guestbook':      { title:'💬 留言板',       js:'/fish-guestbook.js' },
+        'fish-visitor-map':    { title:'🗺️ 访客地图',   js:'/fish-visitor-map.js' },
+        'fish-stats':          { title:'📊 网站统计',     js:'/fish-stats.js' },
+    };
+
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    const tool = TOOLS[id];
+
+    if (!tool) {
+        document.getElementById('component').innerHTML = '<div class="loading">❌ 工具不存在</div>';
+    } else {
+        document.title = tool.title + ' · Tyler';
+        document.getElementById('toolTitle').textContent = tool.title;
+        // Create container div with the ID the component expects
+        const CONTAINER_MAP = {
+            'fish-mood': 'mood-diary',
+            'fish-question': 'daily-question'
+        };
+        const containerId = CONTAINER_MAP[id] || id;
+        const container = document.createElement('div');
+        container.id = containerId;
+        document.getElementById('component').replaceChildren(container);
+        // Load the component script
+        const script = document.createElement('script');
+        script.src = tool.js;
+        document.body.appendChild(script);
+    }
+    </script>
+</body>
+</html>

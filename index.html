@@ -19,14 +19,31 @@
         ::-webkit-scrollbar{width:0;background:transparent}
 
         /* ===== 导航 ===== */
-        .nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-        .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
-        .nav-logo{font-size:1.1rem;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
-        .nav-logo .fish{font-size:1.3rem;animation:fishFloat 3s ease-in-out infinite}
-        @keyframes fishFloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(5deg)}}
-        .nav-links{display:flex;gap:6px}
-        .nav-links a{color:var(--text-dim);text-decoration:none;font-size:.85rem;padding:6px 14px;border-radius:8px;transition:all .2s}
-        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.05)}
+        .nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(10,10,10,.75);backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);border-bottom:1px solid rgba(100,108,255,.15);transform:translateY(-100%);animation:navSlideDown .8s ease .2s forwards}
+        @keyframes navSlideDown{to{transform:translateY(0)}}
+        .nav.scrolled{height:52px;background:rgba(10,10,10,.92);box-shadow:0 4px 30px rgba(0,0,0,.3)}
+        .nav.scrolled .nav-inner{height:52px}
+        .nav.scrolled .nav-logo .fish{font-size:1.2rem}
+        .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;transition:height .3s}
+        .nav-logo{font-size:1.2rem;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px;position:relative}
+        .nav-logo .fish{font-size:1.5rem;animation:fishFloat 3s ease-in-out infinite;filter:drop-shadow(0 0 8px rgba(100,108,255,.5));transition:font-size .3s}
+        .nav-logo::after{content:'';position:absolute;bottom:-4px;left:0;width:100%;height:2px;background:linear-gradient(90deg,var(--accent),var(--pink));border-radius:1px;transform:scaleX(0);transition:transform .3s}
+        .nav-logo:hover::after{transform:scaleX(1)}
+        .nav-logo:hover .fish{animation:fishBounce .5s ease}
+        @keyframes fishFloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-4px) rotate(8deg)}}
+        @keyframes fishBounce{0%{transform:scale(1)}30%{transform:scale(1.3) rotate(-10deg)}60%{transform:scale(.9) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
+        /* 滚动进度条 */
+        .nav-progress{position:absolute;bottom:0;left:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--pink),var(--gold));width:0;transition:width .1s;z-index:1}
+        /* 导航能量脉冲 */
+        .nav::before{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,rgba(100,108,255,0) 30%,rgba(100,108,255,.8) 50%,rgba(100,108,255,0) 70%,transparent 100%);background-size:200% 100%;animation:navPulse 3s ease-in-out infinite}
+        @keyframes navPulse{0%{background-position:200% 0}100%{background-position:-200% 0}}
+        .nav::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),var(--pink),var(--accent),transparent);background-size:200% 100%;opacity:.6;animation:navGlow 4s linear infinite}
+        @keyframes navGlow{0%{background-position:-200% 0}100%{background-position:200% 0}}
+        .nav-status{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--text-dim);margin-left:auto;margin-right:16px}
+        .nav-status .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite;position:relative}
+        .nav-status .dot::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1px solid var(--green);opacity:0;animation:dotRing 2s ease-in-out infinite}
+        @keyframes dotRing{0%{transform:scale(.8);opacity:.6}100%{transform:scale(1.8);opacity:0}}
+        @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.4)}50%{opacity:.8;box-shadow:0 0 0 6px rgba(34,197,94,0)}}
         .hamburger{display:none;background:none;border:none;color:var(--text);font-size:1.5rem;cursor:pointer;padding:8px}
         .mobile-menu{position:fixed;top:0;right:-280px;width:280px;height:100vh;height:100dvh;background:#111;z-index:200;transition:right .3s ease;border-left:1px solid var(--border);padding:24px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
         .mobile-menu.open{right:0}
@@ -37,34 +54,97 @@
         .mobile-overlay.show{display:block}
 
         /* ===== Hero ===== */
-        .hero{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-        .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(100,108,255,.08) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(255,107,157,.06) 0%,transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(212,168,83,.05) 0%,transparent 50%);animation:heroBgShift 10s ease-in-out infinite alternate}
-        @keyframes heroBgShift{0%{opacity:.8}100%{opacity:1}}
+        .hero{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;perspective:1000px}
+        .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(100,108,255,.15) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(255,107,157,.12) 0%,transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(212,168,83,.1) 0%,transparent 50%);animation:heroBgShift 8s ease-in-out infinite alternate}
+        @keyframes heroBgShift{0%{opacity:.7;transform:scale(1)}100%{opacity:1;transform:scale(1.05)}}
+        /* 极光效果 */
+        .hero-aurora{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+        .hero-aurora::before,.hero-aurora::after{content:'';position:absolute;width:150%;height:150%;top:-25%;left:-25%;opacity:.08;animation:auroraRotate 20s linear infinite}
+        .hero-aurora::before{background:conic-gradient(from 0deg,#646cff,#ec4899,#d4a853,#22c55e,#646cff);filter:blur(100px)}
+        .hero-aurora::after{background:conic-gradient(from 180deg,#646cff,#8b5cf6,#ec4899,#646cff);filter:blur(120px);animation-direction:reverse;animation-duration:28s}
+        @keyframes auroraRotate{to{transform:rotate(360deg)}}
+        /* 3D 几何线框 */
+        .hero-3d{position:absolute;inset:0;pointer-events:none;perspective:800px;overflow:hidden}
+        .geo-shape{position:absolute;border:1px solid rgba(100,108,255,.12);transform-style:preserve-3d;animation:geoSpin linear infinite}
+        .geo-cube{width:80px;height:80px;top:12%;left:8%;animation-duration:20s}
+        .geo-cube::before,.geo-cube::after{content:'';position:absolute;inset:0;border:1px solid inherit;background:rgba(100,108,255,.02);backdrop-filter:blur(2px)}
+        .geo-cube::before{transform:rotateY(90deg)}
+        .geo-cube::after{transform:rotateX(90deg)}
+        .geo-octa{width:0;height:0;top:65%;right:10%;animation-duration:25s;animation-direction:reverse;border:none}
+        .geo-octa::before{content:'';position:absolute;width:70px;height:70px;border:1px solid rgba(236,72,153,.12);transform:rotate(45deg);top:-35px;left:-35px;background:rgba(236,72,153,.02)}
+        .geo-octa::after{content:'';position:absolute;width:70px;height:70px;border:1px solid rgba(236,72,153,.12);transform:rotate(45deg) rotateX(60deg);top:-35px;left:-35px;background:rgba(236,72,153,.02)}
+        .geo-ring{width:120px;height:120px;top:30%;right:18%;border:2px solid rgba(212,168,83,.1);border-radius:50%;animation-duration:15s}
+        .geo-ring::before{content:'';position:absolute;inset:15px;border:1px solid rgba(212,168,83,.08);border-radius:50%;transform:rotateX(60deg)}
+        .geo-ring::after{content:'';position:absolute;inset:15px;border:1px solid rgba(212,168,83,.08);border-radius:50%;transform:rotateY(60deg)}
+        .geo-diamond{width:50px;height:50px;bottom:20%;left:15%;border-color:rgba(34,197,94,.1);animation-duration:18s;transform:rotate(45deg)}
+        .geo-tri{width:0;height:0;top:15%;right:30%;border:none;animation-duration:22s;animation-direction:reverse}
+        .geo-tri::before{content:'';position:absolute;border-left:30px solid transparent;border-right:30px solid transparent;border-bottom:52px solid rgba(100,108,255,.06);filter:drop-shadow(0 0 1px rgba(100,108,255,.15))}
+        @keyframes geoSpin{0%{transform:rotateX(0) rotateY(0) rotateZ(0)}100%{transform:rotateX(360deg) rotateY(360deg) rotateZ(180deg)}}
+        /* 鱼环绕轨道 */
+        .hero-orbit{position:absolute;top:50%;left:50%;width:200px;height:200px;margin:-100px 0 0 -100px;pointer-events:none;transform-style:preserve-3d;perspective:600px}
+        .orbit-ring{position:absolute;inset:0;border:1px solid rgba(100,108,255,.08);border-radius:50%;transform-style:preserve-3d;animation:orbitSpin linear infinite}
+        .orbit-ring:nth-child(1){animation-duration:12s;transform:rotateX(70deg)}
+        .orbit-ring:nth-child(2){animation-duration:16s;animation-direction:reverse;transform:rotateX(70deg) rotateY(60deg)}
+        .orbit-ring:nth-child(3){animation-duration:20s;transform:rotateX(70deg) rotateY(120deg)}
+        .orbit-dot{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);top:-3px;left:50%;margin-left:-3px}
+        .orbit-ring:nth-child(2) .orbit-dot{background:var(--pink);box-shadow:0 0 10px var(--pink)}
+        .orbit-ring:nth-child(3) .orbit-dot{background:var(--gold);box-shadow:0 0 10px var(--gold)}
+        @keyframes orbitSpin{to{transform:rotateX(70deg) rotateZ(360deg)}}
+        /* 动态网格 */
+        .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(100,108,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(100,108,255,.03) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%);animation:gridPulse 6s ease-in-out infinite}
+        @keyframes gridPulse{0%,100%{opacity:.5}50%{opacity:1}}
+        /* 光晕球 */
+        .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.15;animation:orbFloat 12s ease-in-out infinite;transition:transform .3s ease-out}
+        .orb-1{width:400px;height:400px;background:var(--accent);top:-100px;left:-100px;animation-delay:0s}
+        .orb-2{width:300px;height:300px;background:var(--pink);bottom:-50px;right:-50px;animation-delay:-4s}
+        .orb-3{width:250px;height:250px;background:var(--gold);top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-8s}
+        @keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-40px) scale(1.1)}66%{transform:translate(-20px,30px) scale(.9)}}
         .hero-particles{position:absolute;inset:0;pointer-events:none}
-        .particle{position:absolute;border-radius:50%;background:var(--accent);opacity:.15;animation:pFloat linear infinite}
-        @keyframes pFloat{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:.15}90%{opacity:.15}100%{transform:translateY(-10vh) scale(1);opacity:0}}
+        .particle{position:absolute;border-radius:50%;background:var(--accent);opacity:.2;animation:pFloat linear infinite}
+        @keyframes pFloat{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:.2}90%{opacity:.2}100%{transform:translateY(-10vh) scale(1);opacity:0}}
         /* 星光粒子 */
         .star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:twinkle 3s ease-in-out infinite}
-        @keyframes twinkle{0%,100%{opacity:.1;transform:scale(1)}50%{opacity:.8;transform:scale(1.5)}}
+        @keyframes twinkle{0%,100%{opacity:.1;transform:scale(1)}50%{opacity:.9;transform:scale(2)}}
         /* 背景小鱼 */
-        .bg-fish{position:fixed;pointer-events:none;z-index:0;opacity:.06;font-size:1.5rem;animation:fishSwim linear infinite;will-change:transform}
+        .bg-fish{position:fixed;pointer-events:none;z-index:0;opacity:.08;font-size:1.5rem;animation:fishSwim linear infinite;will-change:transform}
         @keyframes fishSwim{0%{transform:translate(-40px,var(--fy)) scaleX(1)}49.9%{transform:translate(calc(100vw + 40px),var(--fy)) scaleX(1)}50%{transform:translate(calc(100vw + 40px),var(--fy2)) scaleX(-1)}99.9%{transform:translate(-40px,var(--fy2)) scaleX(-1)}100%{transform:translate(-40px,var(--fy)) scaleX(1)}}
-        .hero-content{text-align:center;position:relative;z-index:2;padding:0 24px;max-width:700px}
-        .hero-fish{font-size:4rem;margin-bottom:1.5rem;animation:heroFish 4s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(100,108,255,.3))}
-        @keyframes heroFish{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-15px) rotate(5deg)}}
-        .hero-title{font-size:clamp(2rem,5vw,3.5rem);font-weight:900;line-height:1.3;margin-bottom:1rem;background:linear-gradient(135deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .hero-subtitle{font-size:1.1rem;color:var(--text-dim);margin-bottom:2rem;line-height:1.8}
+        .hero-content{text-align:center;position:relative;z-index:2;padding:0 24px;max-width:800px;transition:transform .1s linear;transform-style:preserve-3d;will-change:transform}
+        .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:100px;background:rgba(100,108,255,.1);border:1px solid rgba(100,108,255,.2);font-size:.8rem;color:var(--accent);margin-bottom:2rem;backdrop-filter:blur(10px);animation:badgePulse 3s ease-in-out infinite}
+        @keyframes badgePulse{0%,100%{box-shadow:0 0 0 0 rgba(100,108,255,.2)}50%{box-shadow:0 0 0 8px rgba(100,108,255,0)}}
+        .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
+        .hero-fish{font-size:5rem;margin-bottom:1.5rem;animation:heroFish 4s ease-in-out infinite;filter:drop-shadow(0 0 30px rgba(100,108,255,.4));position:relative}
+        .hero-fish::after{content:'✨';position:absolute;top:-10px;right:-20px;font-size:1.5rem;animation:sparkle 2s ease-in-out infinite}
+        @keyframes heroFish{0%,100%{transform:translateY(0) rotate(-5deg) scale(1)}25%{transform:translateY(-15px) rotate(5deg) scale(1.03)}50%{transform:translateY(-20px) rotate(8deg) scale(1.05)}75%{transform:translateY(-10px) rotate(-3deg) scale(1.02)}}
+        @keyframes sparkle{0%,100%{opacity:1;transform:scale(1) rotate(0deg)}50%{opacity:.5;transform:scale(1.3) rotate(180deg)}}
+        .hero-title{font-size:clamp(2.2rem,6vw,4rem);font-weight:900;line-height:1.2;margin-bottom:1.5rem;background:linear-gradient(135deg,var(--text) 0%,var(--accent) 50%,var(--pink) 100%);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradientText 6s ease-in-out infinite;position:relative;display:inline-block;padding:8px 20px}
+        .hero-title::before{content:'';position:absolute;inset:-3px;border-radius:20px;background:conic-gradient(from var(--title-angle,0deg),#646cff,#ec4899,#d4a853,#22c55e,#8b5cf6,#646cff);z-index:-1;animation:titleBorder 3s linear infinite}
+        .hero-title::after{content:'';position:absolute;inset:0;border-radius:17px;background:rgba(10,10,10,.85);z-index:-1}
+        @keyframes titleBorder{to{--title-angle:360deg}}
+        @property --title-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+        @keyframes gradientText{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        .hero-subtitle{font-size:1.15rem;color:var(--text-dim);margin-bottom:2.5rem;line-height:1.8}
         .hero-typing{display:inline-block;color:var(--accent);font-weight:600;border-right:2px solid var(--accent);animation:blink .8s step-end infinite;min-width:200px;text-align:left}
         @keyframes blink{50%{border-color:transparent}}
-        .hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:2rem}
-        .btn{padding:12px 28px;border-radius:12px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .25s;text-decoration:none;display:inline-flex;align-items:center;gap:8px;font-family:inherit}
-        .btn-primary{background:var(--accent);color:#fff;border:none;box-shadow:0 4px 20px var(--accent-glow);position:relative;overflow:hidden}
-        .btn-primary::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);opacity:0;transition:opacity .3s}
-        .btn-primary:hover::after{opacity:1}
-        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-glow)}
+        .hero-stats{display:flex;justify-content:center;gap:2rem;margin-top:2.5rem;flex-wrap:wrap}
+        .hero-stat{text-align:center;padding:16px 24px;border-radius:16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);backdrop-filter:blur(10px);min-width:100px;transition:all .3s;position:relative;overflow:hidden}
+        .hero-stat::before{content:'';position:absolute;inset:-2px;border-radius:18px;background:conic-gradient(from var(--stat-angle,0deg),transparent 40%,var(--accent) 50%,transparent 60%);opacity:0;transition:opacity .4s;animation:statSpin 4s linear infinite}
+        .hero-stat:hover::before{opacity:1}
+        .hero-stat::after{content:'';position:absolute;inset:1px;border-radius:15px;background:rgba(15,15,25,.9)}
+        .hero-stat>*{position:relative;z-index:1}
+        .hero-stat:hover{transform:translateY(-4px)}
+        @keyframes statSpin{to{--stat-angle:360deg}}
+        @property --stat-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+        .hero-stat .num{font-size:1.8rem;font-weight:900;color:var(--accent);display:block}
+        .hero-stat .label{font-size:.75rem;color:var(--text-dim);margin-top:4px}
+        .hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:2.5rem}
+        .btn{padding:14px 32px;border-radius:14px;font-size:.95rem;font-weight:600;cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);text-decoration:none;display:inline-flex;align-items:center;gap:8px;font-family:inherit;position:relative}
+        .btn-primary{background:linear-gradient(135deg,var(--accent),#8b5cf6);color:#fff;border:none;box-shadow:0 4px 24px var(--accent-glow);overflow:hidden}
+        .btn-primary::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(transparent,rgba(255,255,255,.1),transparent);animation:btnShine 4s linear infinite}
+        @keyframes btnShine{to{transform:rotate(360deg)}}
+        .btn-primary:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 12px 40px var(--accent-glow)}
         .btn-primary:active{transform:scale(.97)}
-        .btn-ghost{background:transparent;color:var(--text-dim);border:1px solid var(--border)}
-        .btn-ghost:hover{border-color:var(--accent);color:var(--text)}
+        .btn-ghost{background:rgba(255,255,255,.03);color:var(--text-dim);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(10px)}
+        .btn-ghost:hover{border-color:var(--accent);color:var(--text);background:rgba(100,108,255,.05);transform:translateY(-3px)}
         .hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);color:var(--text-muted);font-size:.8rem;text-align:center;animation:scrollB 2s ease-in-out infinite}
         .hero-scroll .arrow{font-size:1.2rem;display:block;margin-top:4px}
         @keyframes scrollB{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
@@ -73,12 +153,18 @@
         .section{max-width:1100px;margin:0 auto;padding:80px 24px;position:relative}
         .section>*{max-width:100%}
         .section-header{text-align:center;margin-bottom:48px}
-        .section-tag{font-size:.75rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+        .section-tag{font-size:.75rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;display:inline-flex;align-items:center;gap:6px}
+        .section-tag::before,.section-tag::after{content:'';width:20px;height:1px;background:var(--accent);opacity:.5}
+        .section-tag::before{animation>tagLine 2s ease-in-out infinite}
+        .section-tag::after{animation:tagLine 2s ease-in-out infinite reverse}
+        @keyframes tagLine{0%,100%{width:20px;opacity:.5}50%{width:40px;opacity:1}}
         .section-title{font-size:1.8rem;font-weight:900;position:relative;display:inline-block}
-        .section-title::after{content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:40px;height:3px;background:linear-gradient(90deg,var(--accent),var(--pink));border-radius:2px}
+        .section-title::after{content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:40px;height:3px;background:linear-gradient(90deg,var(--accent),var(--pink));border-radius:2px;transition:width .3s}
+        .section-header:hover .section-title::after{width:80px}
         .section-desc{font-size:.85rem;color:var(--text-dim);margin-top:8px}
-        .reveal{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+        .reveal{opacity:0;transform:translateY(40px);transition:opacity .6s ease,transform .6s cubic-bezier(.4,0,.2,1)}
         .reveal.visible{opacity:1;transform:translateY(0)}
+        .reveal:nth-child(1){transition-delay:.05s}.reveal:nth-child(2){transition-delay:.1s}.reveal:nth-child(3){transition-delay:.15s}.reveal:nth-child(4){transition-delay:.2s}.reveal:nth-child(5){transition-delay:.25s}.reveal:nth-child(6){transition-delay:.3s}.reveal:nth-child(7){transition-delay:.35s}.reveal:nth-child(8){transition-delay:.4s}.reveal:nth-child(9){transition-delay:.45s}
         .divider{border:none;height:1px;margin:0;position:relative;background:none}
         .divider-wrap{display:flex;align-items:center;justify-content:center;gap:16px;padding:32px 0}
         .divider-wrap::before,.divider-wrap::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
@@ -90,31 +176,60 @@
         .card-grid-3{grid-template-columns:repeat(3,1fr)}
         .card-grid-2{grid-template-columns:repeat(2,1fr)}
         .card-grid-4{grid-template-columns:repeat(3,1fr)}
-        .feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 24px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;text-decoration:none;color:inherit;display:block;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+        .feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 24px;cursor:pointer;transition:all .4s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden;text-decoration:none;color:inherit;display:block;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transform:translateY(0)}
         .feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--card-color,var(--accent)),transparent);opacity:0;transition:opacity .3s}
-        .feature-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.06),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
-        .feature-card:hover{border-color:var(--card-color,var(--accent));transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+        .feature-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.08),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
+        .feature-card:hover{border-color:var(--card-color,var(--accent));transform:translateY(-8px) scale(1.02);box-shadow:0 16px 48px rgba(0,0,0,.4),0 0 0 1px var(--card-color,var(--accent))}
         .feature-card:hover::before{opacity:1}
         .feature-card:hover::after{opacity:1}
+        .feature-card:hover .feature-icon{transform:scale(1.2) rotate(8deg)}
         .feature-card:active{transform:scale(.97) translateY(-2px)}
-        .feature-icon{font-size:2rem;margin-bottom:12px;display:block}
+        .feature-icon{font-size:2rem;margin-bottom:12px;display:block;animation:iconFloat 3s ease-in-out infinite}
+        @keyframes iconFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+        .feature-card:nth-child(1) .feature-icon{animation-delay:0s}
+        .feature-card:nth-child(2) .feature-icon{animation-delay:.2s}
+        .feature-card:nth-child(3) .feature-icon{animation-delay:.4s}
+        .feature-card:nth-child(4) .feature-icon{animation-delay:.6s}
+        .feature-card:nth-child(5) .feature-icon{animation-delay:.8s}
+        .feature-card:nth-child(6) .feature-icon{animation-delay:1s}
+        .feature-card:nth-child(7) .feature-icon{animation-delay:1.2s}
+        .feature-card:nth-child(8) .feature-icon{animation-delay:1.4s}
+        .feature-card:nth-child(9) .feature-icon{animation-delay:1.6s}
+        /* 卡片呼吸光效 */
+        .feature-card{animation:cardBreathe 4s ease-in-out infinite}
+        @keyframes cardBreathe{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 20px -10px var(--card-color,var(--accent))}}
+        .feature-card:nth-child(odd){animation-delay:-2s}
+        /* 卡片边框流光 */
+        .feature-card{background-image:linear-gradient(var(--surface),var(--surface)),linear-gradient(var(--card-color,var(--accent)),var(--card-color,var(--accent)))}
+        .feature-card{background-origin:border-box;background-clip:padding-box,border-box}
+        .feature-card{border:1px solid transparent;position:relative}
+        .feature-card::before{content:'';position:absolute;inset:-1px;border-radius:17px;background:linear-gradient(135deg,var(--card-color,var(--accent)) 0%,transparent 40%,transparent 60%,var(--card-color,var(--accent)) 100%);opacity:0;transition:opacity .4s;z-index:-1}
+        .feature-card:hover::before{opacity:.3}
         .feature-card h3{font-size:1.1rem;font-weight:700;margin-bottom:6px}
         .feature-card p{font-size:.85rem;color:var(--text-dim);line-height:1.6}
         .feature-badge{position:absolute;top:16px;right:16px;font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(100,108,255,.15);color:var(--accent)}
 
         /* ===== 数据看板 ===== */
         .dashboard{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center}
-        .dash-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 16px;transition:all .3s}
-        .dash-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 8px 30px rgba(100,108,255,.15)}
-        .dash-num{font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:transform .3s}
-        .dash-card:hover .dash-num{transform:scale(1.1)}
+        .dash-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 16px;transition:all .4s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+        .dash-card::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(100,108,255,.05),transparent);transition:none;animation:dashShine 3s ease-in-out infinite}
+        @keyframes dashShine{0%{left:-100%}50%{left:100%}100%{left:100%}}
+        .dash-card:nth-child(2)::before{animation-delay:.5s}
+        .dash-card:nth-child(3)::before{animation-delay:1s}
+        .dash-card:nth-child(4)::before{animation-delay:1.5s}
+        .dash-card:hover{border-color:var(--accent);transform:translateY(-8px) scale(1.03);box-shadow:0 12px 40px rgba(100,108,255,.2)}
+        .dash-num{font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--accent),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:transform .4s}
+        .dash-card:hover .dash-num{transform:scale(1.15)}
         .dash-label{font-size:.75rem;color:var(--text-dim);margin-top:4px}
 
         /* ===== 名言 ===== */
-        .wisdom{text-align:center;padding:60px 24px}
-        .wisdom-text{font-size:1.2rem;color:var(--text-dim);font-style:italic;max-width:600px;margin:0 auto;line-height:1.8}
-        .wisdom-text::before{content:'「';color:var(--gold)}
-        .wisdom-text::after{content:」';color:var(--gold)}
+        .wisdom{text-align:center;padding:60px 24px;position:relative}
+        .wisdom::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:300px;background:radial-gradient(circle,rgba(212,168,83,.06),transparent 70%);border-radius:50%;animation:wisdomGlow 6s ease-in-out infinite}
+        @keyframes wisdomGlow{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.5}50%{transform:translate(-50%,-50%) scale(1.3);opacity:1}}
+        .wisdom-text{font-size:1.2rem;color:var(--text-dim);font-style:italic;max-width:600px;margin:0 auto;line-height:1.8;position:relative}
+        .wisdom-text::before{content:'「';color:var(--gold);animation:quotePulse 2s ease-in-out infinite}
+        .wisdom-text::after{content:」';color:var(--gold);animation:quotePulse 2s ease-in-out infinite}
+        @keyframes quotePulse{0%,100%{opacity:.5}50%{opacity:1}}
         .wisdom-author{font-size:.8rem;color:var(--text-muted);margin-top:8px}
 
         /* ===== 友情链接 ===== */
@@ -123,13 +238,16 @@
         .blogroll a:hover{border-color:var(--accent);color:var(--accent)}
 
         /* ===== Footer ===== */
-        .footer{text-align:center!important;padding:40px 24px;color:var(--text-muted);font-size:.8rem;display:block!important;width:100%;margin:0 auto}
+        .footer{text-align:center!important;padding:40px 24px;color:var(--text-muted);font-size:.8rem;display:block!important;width:100%;margin:0 auto;position:relative;overflow:hidden}
+        .footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent),var(--pink),var(--accent),transparent);animation:footerGlow 6s linear infinite;background-size:200% 100%}
+        @keyframes footerGlow{0%{background-position:200% 0}100%{background-position:-200% 0}}
         .footer p{text-align:center!important;width:100%;margin:0 auto}
-        .footer a{color:var(--text-dim);text-decoration:none}
-        .footer a:hover{color:var(--accent)}
+        .footer a{color:var(--text-dim);text-decoration:none;transition:all .2s}
+        .footer a:hover{color:var(--pink);text-shadow:0 0 12px var(--pink)}
 
         /* ===== 滚动进度条 ===== */
-        .scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#646cff,#ff6b9d);z-index:200;width:0;transition:width .1s}
+        .scroll-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#646cff,#ff6b9d,#646cff);background-size:200% 100%;animation:progressGlow 2s linear infinite;z-index:200;width:0;transition:width .1s;box-shadow:0 0 10px rgba(100,108,255,.5)}
+        @keyframes progressGlow{0%{background-position:0% 0}100%{background-position:200% 0}}
 
         /* ===== 回到顶部 ===== */
         /* 回到顶部按钮由 JS 创建 */
@@ -205,19 +323,13 @@
 </head>
 <body>
     <!-- 导航 -->
-    <nav class="nav">
+    <nav class="nav" id="navbar">
         <div class="nav-inner">
             <a href="/" class="nav-logo"><span class="fish">🐟</span> 小鱼儿</a>
-            <div class="nav-links">
-                <a href="/blog/">博客</a>
-                <a href="/novel/">连载</a>
-                <a href="/games.html">游戏</a>
-                <a href="/ideas.html">灵感</a>
-                <a href="/resources.html">资源</a>
-                <a href="/about.html">关于</a>
-            </div>
+            <div class="nav-status"><span class="dot"></span> 在线</div>
             <button class="hamburger" onclick="toggleMobileMenu()">☰</button>
         </div>
+        <div class="nav-progress" id="navProgress"></div>
     </nav>
     <div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobileMenu()"></div>
     <div class="mobile-menu" id="mobileMenu">
@@ -234,19 +346,40 @@
     </div>
 
     <!-- ===== Hero ===== -->
-    <section class="hero">
+    <section class="hero" id="hero">
         <div class="hero-bg"></div>
+        <div class="hero-aurora"></div>
+        <div class="hero-grid"></div>
+        <!-- 3D 几何线框 -->
+        <div class="hero-3d">
+            <div class="geo-shape geo-cube"></div>
+            <div class="geo-shape geo-octa"></div>
+            <div class="geo-shape geo-ring"></div>
+            <div class="geo-shape geo-diamond"></div>
+            <div class="geo-shape geo-tri"></div>
+        </div>
+        <!-- 3D 环绕轨道 -->
+        <div class="hero-orbit">
+            <div class="orbit-ring"><div class="orbit-dot"></div></div>
+            <div class="orbit-ring"><div class="orbit-dot"></div></div>
+            <div class="orbit-ring"><div class="orbit-dot"></div></div>
+        </div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
         <div class="hero-particles" id="particles"></div>
         <div class="hero-content">
+            <div class="hero-badge"><span class="dot"></span> AI 自主维护 · 每天更新</div>
             <div class="hero-fish">🐟</div>
             <h1 class="hero-title">小鱼儿的数字花园</h1>
             <p class="hero-subtitle">
                 一个由 AI 自主维护的网站<br>
                 <span class="hero-typing" id="typing"></span>
             </p>
-            <div class="hero-cta">
-                <a href="/novel/" class="btn btn-primary">⚔️ 开始阅读</a>
-                <a href="/blog/" class="btn btn-ghost">📝 今日博客</a>
+            <div class="hero-stats">
+                <div class="hero-stat"><span class="num" id="hero-days">0</span><span class="label">天</span></div>
+                <div class="hero-stat"><span class="num" id="hero-tools">44</span><span class="label">工具</span></div>
+                <div class="hero-stat"><span class="num" id="hero-chapters">0</span><span class="label">章节</span></div>
             </div>
         </div>
         <div class="hero-scroll">向下探索<span class="arrow">↓</span></div>
@@ -277,21 +410,6 @@
                 <h3>武侠连载</h3>
                 <p>《沧海剑歌》每日更新</p>
             </a>
-            <a class="feature-card reveal" style="--card-color:#ff6b9d;cursor:pointer" href="/category.html?cat=entertainment#fish-video-player">
-                <span class="feature-icon">🎬</span>
-                <h3>视频库</h3>
-                <p>Pexels 免费视频</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#646cff;cursor:pointer" href="/category.html?cat=ai-tools#fish-image-gen">
-                <span class="feature-icon">🎨</span>
-                <h3>AI 画图</h3>
-                <p>Pollinations 免费生成</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#a855f7;cursor:pointer" href="/category.html?cat=entertainment#fish-music-player">
-                <span class="feature-icon">🎵</span>
-                <h3>音乐台</h3>
-                <p>酷我音乐 · 免费畅听</p>
-            </a>
             <a href="/games.html" class="feature-card reveal" style="--card-color:#f97316">
                 <span class="feature-icon">🎮</span>
                 <h3>游戏厅</h3>
@@ -312,154 +430,138 @@
                 <h3>更新日志</h3>
                 <p>网站迭代记录</p>
             </a>
-            <a class="feature-card reveal" style="--card-color:#8b5cf6;cursor:pointer" href="/category.html?cat=my#fish-guestbook">
-                <span class="feature-icon">💬</span>
-                <h3>留言板</h3>
-                <p>小鱼儿会回复你</p>
+            <a href="/blog/" class="feature-card reveal" style="--card-color:#ec4899">
+                <span class="feature-icon">📝</span>
+                <h3>博客</h3>
+                <p>技术与生活记录</p>
             </a>
-            <a class="feature-card reveal" style="--card-color:#f472b6;cursor:pointer" href="/category.html?cat=my#fish-mood">
-                <span class="feature-icon">🧘</span>
-                <h3>心情日记</h3>
-                <p>记录每一天</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#818cf8;cursor:pointer" href="/category.html?cat=entertainment#fish-dream">
-                <span class="feature-icon">🔮</span>
-                <h3>AI 解梦</h3>
-                <p>解读你的梦境</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#f59e0b;cursor:pointer" href="/category.html?cat=entertainment#fish-typing-test">
-                <span class="feature-icon">⌨️</span>
-                <h3>打字测速</h3>
-                <p>测你的 WPM</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#d4a853;cursor:pointer" href="/category.html?cat=entertainment#fish-daily-poem">
-                <span class="feature-icon">📅</span>
-                <h3>每日诗词</h3>
-                <p>AI 赋诗一首</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#22d3ee;cursor:pointer" href="/category.html?cat=entertainment#fish-funfact">
-                <span class="feature-icon">🎲</span>
-                <h3>冷知识</h3>
-                <p>每天一个冷知识</p>
+            <a href="/about.html" class="feature-card reveal" style="--card-color:#646cff">
+                <span class="feature-icon">👤</span>
+                <h3>关于</h3>
+                <p>关于小鱼儿</p>
             </a>
         </div>
     </section>
 
-    <div class="divider-wrap"><span class="divider-icon">🐚</span></div>
+    <div class="divider-wrap"><span class="divider-icon">🐬</span></div>
 
-    <!-- ===== 互动乐园 ===== -->
+    <!-- ===== AI 工具 ===== -->
     <section class="section">
         <div class="section-header reveal">
-            <div class="section-tag">Daily</div>
-            <h2 class="section-title">每日互动</h2>
-            <p class="section-desc">每天都有新玩法</p>
+            <div class="section-tag">AI Tools</div>
+            <h2 class="section-title">AI 工具</h2>
+            <p class="section-desc">实用AI工具大合集</p>
         </div>
         <div class="card-grid card-grid-4">
-            <a class="feature-card reveal" style="--card-color:#22c55e;cursor:pointer" href="/category.html?cat=my#fish-checkin">
-                <span class="feature-icon">✅</span>
-                <h3>每日签到</h3>
-                <p>坚持打卡，解锁成就</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#f472b6;cursor:pointer" href="/category.html?cat=my#fish-mood">
-                <span class="feature-icon">🧘</span>
-                <h3>心情日记</h3>
-                <p>记录每一天的心情</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#f97316;cursor:pointer" href="/category.html?cat=my">
-                <span class="feature-icon">❓</span>
-                <h3>每日一问</h3>
-                <p>AI 每天问你一个问题</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#8b5cf6;cursor:pointer" href="/category.html?cat=my">
-                <span class="feature-icon">🏆</span>
-                <h3>每日挑战</h3>
-                <p>今天的小挑战</p>
-            </a>
-        </div>
-        <!-- 完整组件（点击卡片后滚到这里查看） -->
-        <div style="margin-top:24px;display:flex;flex-direction:column;gap:16px">
-            <div id="mood-diary" class="reveal"></div>
-            <div id="daily-question" class="reveal"></div>
+            <a class="feature-card reveal" href="/tool.html?id=fish-image-gen" style="--card-color:#646cff"><span class="feature-icon">🎨</span><h3>AI 画图</h3><p>文字生成图片</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-tts-tool" style="--card-color:#ec4899"><span class="feature-icon">🔊</span><h3>文字转语音</h3><p>MIMO TTS 多语言</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-translate" style="--card-color:#22c55e"><span class="feature-icon">🌐</span><h3>AI 翻译</h3><p>多语言智能翻译</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-speech-to-text" style="--card-color:#f59e0b"><span class="feature-icon">🎙️</span><h3>语音转文字</h3><p>实时语音识别</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-code-explain" style="--card-color:#8b5cf6"><span class="feature-icon">💻</span><h3>代码解释器</h3><p>粘贴代码AI解读</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-color" style="--card-color:#a855f7"><span class="feature-icon">🎨</span><h3>配色方案</h3><p>AI生成配色灵感</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-wenyan" style="--card-color:#06b6d4"><span class="feature-icon">🏛️</span><h3>文言文翻译</h3><p>现代文↔文言文</p></a>
         </div>
     </section>
 
-    <div class="divider-wrap"><span class="divider-icon">🐠</span></div>
+    <div class="divider-wrap"><span class="divider-icon">✍️</span></div>
 
-    <!-- ===== 创意空间 ===== -->
+    <!-- ===== AI 写作 ===== -->
     <section class="section">
         <div class="section-header reveal">
-            <div class="section-tag">Creative</div>
-            <h2 class="section-title">创意空间</h2>
-            <p class="section-desc">AI 能力大放送，30+ 功能等你探索</p>
+            <div class="section-tag">AI Writing</div>
+            <h2 class="section-title">AI 写作</h2>
+            <p class="section-desc">让AI帮你写</p>
         </div>
-        <div class="card-grid card-grid-3">
-            <a class="feature-card reveal" href="/category.html?cat=ai-tools" style="--card-color:#646cff">
-                <span class="feature-icon">🤖</span>
-                <h3>AI 工具</h3>
-                <p>画图 · 翻译 · TTS · 代码解释</p>
-            </a>
-            <a class="feature-card reveal" href="/category.html?cat=ai-writing" style="--card-color:#ec4899">
-                <span class="feature-icon">✍️</span>
-                <h3>AI 写作</h3>
-                <p>周报 · 简历 · 文案 · 歌词</p>
-            </a>
-            <a class="feature-card reveal" href="/category.html?cat=ai-creative" style="--card-color:#f59e0b">
-                <span class="feature-icon">🎭</span>
-                <h3>AI 创意</h3>
-                <p>故事接龙 · 辩论 · 对联 · 起名</p>
-            </a>
-            <a class="feature-card reveal" href="/category.html?cat=ai-interactive" style="--card-color:#22c55e">
-                <span class="feature-icon">🎮</span>
-                <h3>AI 互动</h3>
-                <p>闯关 · 树洞 · 运势 · 菜谱 · 旅行</p>
-            </a>
-            <a class="feature-card reveal" href="/category.html?cat=entertainment" style="--card-color:#a855f7">
-                <span class="feature-icon">🎵</span>
-                <h3>娱乐</h3>
-                <p>音乐 · 视频 · 诗词 · 笑话 · 解梦</p>
-            </a>
-            <a class="feature-card reveal" href="/category.html?cat=my" style="--card-color:#06b6d4">
-                <span class="feature-icon">📊</span>
-                <h3>我的</h3>
-                <p>打卡 · 心情 · 胶囊 · 留言 · 统计</p>
-            </a>
+        <div class="card-grid card-grid-4">
+            <a class="feature-card reveal" href="/tool.html?id=fish-weekly" style="--card-color:#646cff"><span class="feature-icon">📝</span><h3>周报生成器</h3><p>关键词变专业周报</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-resume" style="--card-color:#ec4899"><span class="feature-icon">📄</span><h3>简历生成器</h3><p>关键词变简历</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-pyq" style="--card-color:#22c55e"><span class="feature-icon">📱</span><h3>朋友圈文案</h3><p>一键生成文案</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-lyric-writer" style="--card-color:#f59e0b"><span class="feature-icon">🎵</span><h3>歌词创作</h3><p>AI写歌词</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-imitate" style="--card-color:#8b5cf6"><span class="feature-icon">🎤</span><h3>模仿写作</h3><p>鲁迅李白甲方任选</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-book-notes" style="--card-color:#a855f7"><span class="feature-icon">📚</span><h3>读书笔记</h3><p>书名变精华笔记</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-annual-report" style="--card-color:#06b6d4"><span class="feature-icon">📊</span><h3>年度报告</h3><p>生成个人年度报告</p></a>
         </div>
     </section>
 
-    <div class="divider-wrap"><span class="divider-icon">🪸</span></div>
+    <div class="divider-wrap"><span class="divider-icon">🎭</span></div>
 
-    <!-- ===== 工具箱 ===== -->
-    <section class="section" id="toolbox">
+    <!-- ===== AI 创意 ===== -->
+    <section class="section">
         <div class="section-header reveal">
-            <div class="section-tag">Tools</div>
-            <h2 class="section-title">工具箱</h2>
-            <p class="section-desc">实用小工具</p>
+            <div class="section-tag">AI Creative</div>
+            <h2 class="section-title">AI 创意</h2>
+            <p class="section-desc">AI的脑洞大开</p>
         </div>
         <div class="card-grid card-grid-4">
-            <a class="feature-card reveal" style="--card-color:#646cff;cursor:pointer" onclick="document.getElementById('fish-music').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">🎵</span>
-                <h3>背景音乐</h3>
-                <p>轻松背景音乐</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#f59e0b;cursor:pointer" href="/category.html?cat=entertainment#fish-typing-test">
-                <span class="feature-icon">⌨️</span>
-                <h3>打字测速</h3>
-                <p>测你的 WPM</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#8b5cf6;cursor:pointer" href="/category.html?cat=my#fish-guestbook">
-                <span class="feature-icon">💬</span>
-                <h3>留言板</h3>
-                <p>小鱼儿会回复你</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#22c55e;cursor:pointer" href="/category.html?cat=my">
-                <span class="feature-icon">💊</span>
-                <h3>时间胶囊</h3>
-                <p>给未来的自己</p>
-            </a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-story-game" style="--card-color:#646cff"><span class="feature-icon">🎭</span><h3>故事接龙</h3><p>人机协作创作故事</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-debate" style="--card-color:#ec4899"><span class="feature-icon">🤖</span><h3>AI 辩论赛</h3><p>正反方自我辩论</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-couplet" style="--card-color:#22c55e"><span class="feature-icon">🧧</span><h3>AI 对联</h3><p>上联对下联</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-naming" style="--card-color:#f59e0b"><span class="feature-icon">👶</span><h3>起名助手</h3><p>人名宠物项目公司</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-quote" style="--card-color:#8b5cf6"><span class="feature-icon">💡</span><h3>每日名言</h3><p>AI智慧语录</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-life-sim" style="--card-color:#a855f7"><span class="feature-icon">🔄</span><h3>人生重开</h3><p>如果重活一次</p></a>
         </div>
-        <!-- 完整组件 -->
-        <div style="margin-top:24px;display:flex;flex-direction:column;gap:16px">
-            <div id="fish-music" class="reveal"></div>
+    </section>
+
+    <div class="divider-wrap"><span class="divider-icon">🎮</span></div>
+
+    <!-- ===== AI 互动 ===== -->
+    <section class="section">
+        <div class="section-header reveal">
+            <div class="section-tag">AI Interactive</div>
+            <h2 class="section-title">AI 互动</h2>
+            <p class="section-desc">和AI一起玩</p>
+        </div>
+        <div class="card-grid card-grid-4">
+            <a class="feature-card reveal" href="/tool.html?id=fish-quiz" style="--card-color:#646cff"><span class="feature-icon">🧠</span><h3>知识闯关</h3><p>AI出题答题</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-treehole" style="--card-color:#ec4899"><span class="feature-icon">💬</span><h3>AI 树洞</h3><p>匿名倾诉陪伴</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-horoscope" style="--card-color:#22c55e"><span class="feature-icon">🔮</span><h3>每日运势</h3><p>AI星座运势</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-recipe" style="--card-color:#f59e0b"><span class="feature-icon">🍳</span><h3>AI 菜谱</h3><p>冰箱有啥做啥</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-travel" style="--card-color:#8b5cf6"><span class="feature-icon">🗺️</span><h3>旅行规划</h3><p>AI定制行程</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-movie" style="--card-color:#a855f7"><span class="feature-icon">🎬</span><h3>影视推荐</h3><p>心情匹配片单</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-history-today" style="--card-color:#06b6d4"><span class="feature-icon">📜</span><h3>历史今天</h3><p>AI讲述历史大事</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-fitness" style="--card-color:#f472b6"><span class="feature-icon">💪</span><h3>健身计划</h3><p>AI定制训练计划</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-riddle" style="--card-color:#22d3ee"><span class="feature-icon">🤪</span><h3>脑筋急转弯</h3><p>AI出题猜谜</p></a>
+        </div>
+    </section>
+
+    <div class="divider-wrap"><span class="divider-icon">🎵</span></div>
+
+    <!-- ===== 娱乐 ===== -->
+    <section class="section">
+        <div class="section-header reveal">
+            <div class="section-tag">Fun</div>
+            <h2 class="section-title">娱乐</h2>
+            <p class="section-desc">轻松一刻</p>
+        </div>
+        <div class="card-grid card-grid-4">
+            <a class="feature-card reveal" href="/tool.html?id=fish-music-player" style="--card-color:#646cff"><span class="feature-icon">🎵</span><h3>音乐播放器</h3><p>在线听歌</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-video-player" style="--card-color:#ec4899"><span class="feature-icon">🎬</span><h3>视频播放器</h3><p>Pexels免费视频</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-daily-poem" style="--card-color:#22c55e"><span class="feature-icon">📅</span><h3>每日诗词</h3><p>AI赋诗一首</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-funfact" style="--card-color:#f59e0b"><span class="feature-icon">🎲</span><h3>冷知识</h3><p>每天一个冷知识</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-joke" style="--card-color:#8b5cf6"><span class="feature-icon">😂</span><h3>笑话</h3><p>每天一个笑话</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-dream" style="--card-color:#a855f7"><span class="feature-icon">🔮</span><h3>AI 解梦</h3><p>解读你的梦境</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-typing-test" style="--card-color:#06b6d4"><span class="feature-icon">⌨️</span><h3>打字测速</h3><p>中文打字练习</p></a>
+        </div>
+    </section>
+
+    <div class="divider-wrap"><span class="divider-icon">📊</span></div>
+
+    <!-- ===== 我的 ===== -->
+    <section class="section">
+        <div class="section-header reveal">
+            <div class="section-tag">My Space</div>
+            <h2 class="section-title">我的</h2>
+            <p class="section-desc">你的个人空间</p>
+        </div>
+        <div class="card-grid card-grid-4">
+            <a class="feature-card reveal" href="/tool.html?id=fish-checkin" style="--card-color:#22c55e"><span class="feature-icon">✅</span><h3>每日打卡</h3><p>连续签到记录</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-mood" style="--card-color:#f472b6"><span class="feature-icon">😊</span><h3>心情日记</h3><p>记录每日心情</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-capsule" style="--card-color:#f59e0b"><span class="feature-icon">💌</span><h3>时光胶囊</h3><p>写给未来的自己</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-guestbook" style="--card-color:#8b5cf6"><span class="feature-icon">💬</span><h3>留言板</h3><p>公共留言互动</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-visitor-map" style="--card-color:#a855f7"><span class="feature-icon">🗺️</span><h3>访客地图</h3><p>全球访客可视化</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-stats" style="--card-color:#06b6d4"><span class="feature-icon">📊</span><h3>网站统计</h3><p>访问数据</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-question" style="--card-color:#f97316"><span class="feature-icon">❓</span><h3>每日一问</h3><p>AI 每天问你一个问题</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-challenge" style="--card-color:#8b5cf6"><span class="feature-icon">🏆</span><h3>每日挑战</h3><p>今天的小挑战</p></a>
         </div>
     </section>
 
@@ -534,6 +636,57 @@
         document.getElementById('mobileOverlay').classList.toggle('show');
     }
 
+    // 导航栏滚动效果：缩小 + 进度条
+    (function() {
+        const nav = document.getElementById('navbar');
+        const progress = document.getElementById('navProgress');
+        if (!nav || !progress) return;
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+                const scrollY = window.scrollY;
+                // 缩小效果
+                nav.classList.toggle('scrolled', scrollY > 80);
+                // 进度条
+                const docH = document.documentElement.scrollHeight - window.innerHeight;
+                progress.style.width = docH > 0 ? (scrollY / docH * 100) + '%' : '0%';
+                ticking = false;
+            });
+        }, { passive: true });
+    })();
+
+    // Hero 3D 滚动视差
+    (function() {
+        const hero = document.getElementById('hero');
+        const heroContent = hero?.querySelector('.hero-content');
+        const heroOrbit = hero?.querySelector('.hero-orbit');
+        const geoShapes = hero?.querySelectorAll('.geo-shape');
+        if (!hero) return;
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+                const scrollY = window.scrollY;
+                const heroH = hero.offsetHeight;
+                if (scrollY > heroH) { ticking = false; return; }
+                const ratio = scrollY / heroH;
+                // 内容向上浮动 + 缩小
+                if (heroContent) heroContent.style.transform = `translateY(${scrollY * .3}px) scale(${1 - ratio * .15}) rotateX(${ratio * 5}deg)`;
+                // 轨道加速旋转
+                if (heroOrbit) heroOrbit.style.transform = `rotateY(${scrollY * .1}deg)`;
+                // 几何体散开
+                geoShapes.forEach((s, i) => {
+                    const dir = i % 2 === 0 ? 1 : -1;
+                    s.style.marginTop = (scrollY * .15 * (i + 1) * dir) + 'px';
+                });
+                ticking = false;
+            });
+        }, { passive: true });
+    })();
+
     // 滚动进度条 + 回到顶部按钮
     (function() {
         const bar = document.getElementById('scrollProgress');
@@ -570,6 +723,42 @@
     }
     typeLoop();
 
+    // 鼠标视差效果（光晕跟随鼠标）
+    (function() {
+        const hero = document.getElementById('hero');
+        if (!hero) return;
+        const orbs = hero.querySelectorAll('.orb');
+        const content = hero.querySelector('.hero-content');
+        hero.addEventListener('mousemove', (e) => {
+            const rect = hero.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            orbs.forEach((orb, i) => {
+                const speed = (i + 1) * 15;
+                orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+            });
+            if (content) content.style.transform = `translate(${x * -8}px, ${y * -8}px)`;
+        });
+        hero.addEventListener('mouseleave', () => {
+            orbs.forEach(orb => orb.style.transform = '');
+            if (content) content.style.transform = '';
+        });
+    })();
+
+    // Hero 入场动画
+    (function() {
+        const items = document.querySelectorAll('.hero-badge, .hero-fish, .hero-title, .hero-subtitle, .hero-stats, .hero-cta');
+        items.forEach((el, i) => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = `opacity .6s ease ${i * .12}s, transform .6s ease ${i * .12}s`;
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+            }));
+        });
+    })();
+
     // 粒子
     (function() { const c = document.getElementById('particles'); for (let i = 0; i < 30; i++) { const p = document.createElement('div'); p.className = 'particle'; const s = 2 + Math.random() * 4; p.style.cssText = `width:${s}px;height:${s}px;left:${Math.random()*100}%;animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*10}s`; c.appendChild(p); } })();
     // 星光
@@ -591,12 +780,18 @@
             body.appendChild(el);
         }
     })();
-    // 卡片鼠标追光
+    // 卡片鼠标追光 + 发光效果
     document.querySelectorAll('.feature-card').forEach(card => {
       card.addEventListener('mousemove', e => {
         const r = card.getBoundingClientRect();
-        card.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100)+'%');
-        card.style.setProperty('--my', ((e.clientY-r.top)/r.height*100)+'%');
+        const x = ((e.clientX-r.left)/r.width*100);
+        const y = ((e.clientY-r.top)/r.height*100);
+        card.style.setProperty('--mx', x+'%');
+        card.style.setProperty('--my', y+'%');
+        card.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(100,108,255,.08), transparent 60%), var(--surface)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.background = '';
       });
     });
 
@@ -604,21 +799,61 @@
     const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    // 数据看板（动画计数）
+    // 3D 卡片倾斜效果
+    (function() {
+        const cards = document.querySelectorAll('.feature-card, .dash-card');
+        cards.forEach(card => {
+            card.style.transformStyle = 'preserve-3d';
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = (e.clientY - rect.top) / rect.height;
+                const rotateX = (y - 0.5) * -12;
+                const rotateY = (x - 0.5) * 12;
+                card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.02)`;
+                card.style.setProperty('--mx', (x * 100) + '%');
+                card.style.setProperty('--my', (y * 100) + '%');
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+    })();
+
+    // Hero 统计数字动画
     (function() {
         const launchDate = new Date('2026-04-30');
         const days = Math.ceil((new Date() - launchDate) / 86400000);
-        const targets = { 'dash-days': days, 'dash-posts': 5, 'dash-chapters': 1, 'dash-ideas': 15 };
-        Object.entries(targets).forEach(([id, target]) => {
+        // 先用默认值，异步获取真实章节数
+        const targets = { 'hero-days': days, 'hero-tools': 44, 'hero-chapters': 1, 'dash-days': days, 'dash-posts': 5, 'dash-chapters': 1, 'dash-ideas': 15 };
+        // 从 chapters.json 获取真实章节数
+        fetch('/novel/chapters.json').then(r=>r.json()).then(chs=>{
+            const count = Array.isArray(chs) ? chs.length : 1;
+            targets['hero-chapters'] = count;
+            targets['dash-chapters'] = count;
+            // 如果统计块还没动画完，更新目标
+            document.querySelectorAll('[data-counted]').forEach(el=>el.removeAttribute('data-counted'));
+        }).catch(()=>{});
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                const target = targets[el.id];
+                if (target == null || el.dataset.counted) return;
+                el.dataset.counted = '1';
+                observer.unobserve(el);
+                let current = 0;
+                const step = Math.max(1, Math.ceil(target / 30));
+                const timer = setInterval(() => {
+                    current = Math.min(current + step, target);
+                    el.textContent = current;
+                    if (current >= target) clearInterval(timer);
+                }, 40);
+            });
+        }, { threshold: 0.5 });
+        Object.keys(targets).forEach(id => {
             const el = document.getElementById(id);
-            if (!el) return;
-            let current = 0;
-            const step = Math.max(1, Math.ceil(target / 30));
-            const timer = setInterval(() => {
-                current = Math.min(current + step, target);
-                el.textContent = current;
-                if (current >= target) clearInterval(timer);
-            }, 40);
+            if (el) observer.observe(el);
         });
     })();
 
