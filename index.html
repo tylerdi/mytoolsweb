@@ -515,6 +515,31 @@
                 <h3>每日名言</h3>
                 <p>AI智慧语录</p>
             </a>
+            <a class="feature-card reveal" style="--card-color:#ef4444;cursor:pointer" onclick="document.getElementById('fish-couplet').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">🧧</span>
+                <h3>AI 对联</h3>
+                <p>上联对下联</p>
+            </a>
+            <a class="feature-card reveal" style="--card-color:#22c55e;cursor:pointer" onclick="document.getElementById('fish-code-explain').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">💻</span>
+                <h3>代码解释器</h3>
+                <p>粘贴代码AI解读</p>
+            </a>
+            <a class="feature-card reveal" style="--card-color:#ec4899;cursor:pointer" onclick="document.getElementById('fish-pyq').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">📱</span>
+                <h3>朋友圈文案</h3>
+                <p>一键生成文案</p>
+            </a>
+            <a class="feature-card reveal" style="--card-color:#8b5cf6;cursor:pointer" onclick="document.getElementById('fish-book-notes').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">📚</span>
+                <h3>读书笔记</h3>
+                <p>书名变精华笔记</p>
+            </a>
+            <a class="feature-card reveal" style="--card-color:#f97316;cursor:pointer" onclick="document.getElementById('fish-movie').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">🎬</span>
+                <h3>影视推荐</h3>
+                <p>心情匹配片单</p>
+            </a>
         </div>
         <!-- 完整组件 -->
         <div style="margin-top:24px;display:flex;flex-direction:column;gap:16px">
@@ -542,7 +567,11 @@
             <div id="fish-treehole" class="reveal"></div>
             <div id="fish-resume" class="reveal"></div>
             <div id="fish-quote" class="reveal"></div>        </div>
-    </section>
+            <div id="fish-couplet" class="reveal"></div>
+            <div id="fish-code-explain" class="reveal"></div>
+            <div id="fish-pyq" class="reveal"></div>
+            <div id="fish-book-notes" class="reveal"></div>
+            <div id="fish-movie" class="reveal"></div>    </section>
 
     <div class="divider-wrap"><span class="divider-icon">🪸</span></div>
 
@@ -688,7 +717,11 @@
     <script src="/fish-treehole.js?v=20260503a"></script>
     <script src="/fish-resume.js?v=20260503a"></script>
     <script src="/fish-quote.js?v=20260503a"></script>
-    <script>
+    <script src="/fish-couplet.js?v=20260503a"></script>
+    <script src="/fish-code-explain.js?v=20260503a"></script>
+    <script src="/fish-pyq.js?v=20260503a"></script>
+    <script src="/fish-book-notes.js?v=20260503a"></script>
+    <script src="/fish-movie.js?v=20260503a"></script>    <script>
     // 汉堡菜单
     function toggleMobileMenu() {
         document.getElementById('mobileMenu').classList.toggle('open');
