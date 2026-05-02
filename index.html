@@ -840,18 +840,18 @@
     (function() {
         const launchDate = new Date('2026-04-30');
         const days = Math.ceil((new Date() - launchDate) / 86400000);
-        // 先用默认值，异步获取真实章节数
-        const targets = { 'hero-days': days, 'hero-tools': 44, 'hero-chapters': 1, 'dash-days': days, 'dash-posts': 5, 'dash-chapters': 1, 'dash-ideas': 15 };
-        // 从 chapters.json 获取真实章节数
+        const targets = { 'hero-days': days, 'hero-tools': 44, 'hero-chapters': 3, 'dash-days': days, 'dash-posts': 5, 'dash-chapters': 3, 'dash-ideas': 15 };
+        // 获取真实章节数，再启动动画
         fetch('/novel/chapters.json').then(r=>r.json()).then(chs=>{
-            const count = Array.isArray(chs) ? chs.length : 1;
+            const count = Array.isArray(chs) ? chs.length : 3;
             targets['hero-chapters'] = count;
             targets['dash-chapters'] = count;
-            // 如果统计块还没动画完，更新目标
-            document.querySelectorAll('[data-counted]').forEach(el=>el.removeAttribute('data-counted'));
-        }).catch(()=>{});
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
+        }).catch(()=>{}).finally(()=>{
+            startCountAnimation(targets);
+        });
+        function startCountAnimation(targets) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
                 if (!entry.isIntersecting) return;
                 const el = entry.target;
                 const target = targets[el.id];
@@ -871,6 +871,7 @@
             const el = document.getElementById(id);
             if (el) observer.observe(el);
         });
+        }
     })();
 
     // AI 每日名言
