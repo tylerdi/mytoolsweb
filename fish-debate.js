@@ -48,7 +48,7 @@
           .db-result{display:none;text-align:center;padding:1rem;font-size:1.1rem;font-weight:700}
           .db-result.show{display:block}
           .db-status{text-align:center;color:var(--text-secondary,#888);font-size:0.85rem;margin-top:0.5rem}
-          @media(max-width:640px){.fish-debate{padding:1rem}}
+          @media(max-width:640px){.fish-debate{padding:1rem}.db-custom{flex-direction:column}.db-custom button{width:100%}.db-topics{gap:0.3rem}.db-topic-btn{padding:0.3rem 0.5rem;font-size:0.72rem}.db-vote{flex-direction:column;gap:0.5rem}.db-vote-btn{width:100%}}
         </style>
         <div class="db-header"><span>🤖</span><h3>AI 辩论赛</h3></div>
         <div class="db-topics">

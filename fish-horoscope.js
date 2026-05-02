@@ -40,7 +40,7 @@
           .hz-result .meta{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:0.75rem;font-size:0.8rem;color:var(--text-secondary,#888)}
           .hz-result .meta span{background:rgba(100,108,255,0.1);padding:0.2rem 0.5rem;border-radius:6px}
           .hz-loading{text-align:center;color:var(--text-secondary,#888);padding:1.5rem;font-size:0.85rem}
-          @media(max-width:480px){.hz-grid{grid-template-columns:repeat(3,1fr)}}
+          @media(max-width:480px){.hz-grid{grid-template-columns:repeat(3,1fr)}.hz-sign{padding:0.4rem}.hz-sign .emoji{font-size:1.2rem}}
         </style>
         <div class="hz-header"><span>🔮</span><h3>AI 每日运势</h3></div>
         <div class="hz-grid" id="hz-grid"></div>

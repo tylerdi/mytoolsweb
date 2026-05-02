@@ -39,7 +39,7 @@
           .sg-actions{display:flex;gap:0.5rem;margin-top:0.75rem}
           .sg-action-btn{background:none;border:1px solid var(--border,#2a2a2a);color:var(--text-secondary,#888);padding:0.35rem 0.75rem;border-radius:8px;cursor:pointer;font-size:0.8rem;transition:all 0.2s}
           .sg-action-btn:hover{border-color:var(--accent,#646cff);color:var(--accent,#646cff)}
-          @media(max-width:640px){.fish-story-game{padding:1rem}}
+          @media(max-width:640px){.fish-story-game{padding:1rem}.sg-input-area{flex-direction:column}.sg-send{width:100%}.sg-styles{gap:0.3rem}.sg-style-btn{padding:0.3rem 0.5rem;font-size:0.72rem}.sg-actions{flex-wrap:wrap}}
         </style>
         <div class="sg-header"><span>🎭</span><h3>AI 故事接龙</h3></div>
         <div class="sg-styles">

@@ -40,7 +40,7 @@
           .im-output .label{font-size:0.75rem;color:var(--text-secondary,#888);margin-bottom:0.5rem}
           .im-output .copy-btn{float:right;background:none;border:1px solid var(--border,#2a2a2a);color:var(--text-secondary,#888);padding:0.2rem 0.5rem;border-radius:6px;cursor:pointer;font-size:0.7rem}
           .im-output .copy-btn:hover{border-color:var(--accent,#646cff);color:var(--accent,#646cff)}
-          @media(max-width:640px){.fish-imitate{padding:1rem}}
+          @media(max-width:640px){.fish-imitate{padding:1rem}.im-styles{gap:0.3rem}.im-style-btn{padding:0.25rem 0.5rem;font-size:0.7rem}.im-go{width:100%}}
         </style>
         <div class="im-header"><span>🎤</span><h3>AI 模仿写作</h3></div>
         <div class="im-styles" id="im-styles"></div>
