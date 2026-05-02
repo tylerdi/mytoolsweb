@@ -54,7 +54,7 @@
         .mobile-overlay.show{display:block}
 
         /* ===== Hero ===== */
-        .hero{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;perspective:1000px}
+        .hero{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
         .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(100,108,255,.15) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(255,107,157,.12) 0%,transparent 50%),radial-gradient(ellipse at 50% 80%,rgba(212,168,83,.1) 0%,transparent 50%);animation:heroBgShift 8s ease-in-out infinite alternate}
         @keyframes heroBgShift{0%{opacity:.7;transform:scale(1)}100%{opacity:1;transform:scale(1.05)}}
         /* 极光效果 */
@@ -108,7 +108,7 @@
         /* 背景小鱼 */
         .bg-fish{position:fixed;pointer-events:none;z-index:0;opacity:.08;font-size:1.5rem;animation:fishSwim linear infinite;will-change:transform}
         @keyframes fishSwim{0%{transform:translate(-40px,var(--fy)) scaleX(1)}49.9%{transform:translate(calc(100vw + 40px),var(--fy)) scaleX(1)}50%{transform:translate(calc(100vw + 40px),var(--fy2)) scaleX(-1)}99.9%{transform:translate(-40px,var(--fy2)) scaleX(-1)}100%{transform:translate(-40px,var(--fy)) scaleX(1)}}
-        .hero-content{text-align:center;position:relative;z-index:2;padding:0 24px;max-width:800px;transition:transform .1s linear;transform-style:preserve-3d;will-change:transform}
+        .hero-content{text-align:center;position:relative;z-index:2;padding:0 24px;max-width:800px;will-change:transform,opacity}
         .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:100px;background:rgba(100,108,255,.1);border:1px solid rgba(100,108,255,.2);font-size:.8rem;color:var(--accent);margin-bottom:2rem;backdrop-filter:blur(10px);animation:badgePulse 3s ease-in-out infinite}
         @keyframes badgePulse{0%,100%{box-shadow:0 0 0 0 rgba(100,108,255,.2)}50%{box-shadow:0 0 0 8px rgba(100,108,255,0)}}
         .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
@@ -680,13 +680,12 @@
         }, { passive: true });
     })();
 
-    // Hero 3D 滚动视差
+    // Hero 滚动淡出（轻量，只改 transform + opacity）
     (function() {
         const hero = document.getElementById('hero');
         const heroContent = hero?.querySelector('.hero-content');
-        const heroOrbit = hero?.querySelector('.hero-orbit');
-        const geoShapes = hero?.querySelectorAll('.geo-shape');
-        if (!hero) return;
+        if (!hero || !heroContent) return;
+        heroContent.style.willChange = 'transform, opacity';
         let ticking = false;
         window.addEventListener('scroll', () => {
             if (ticking) return;
@@ -694,17 +693,11 @@
             requestAnimationFrame(() => {
                 const scrollY = window.scrollY;
                 const heroH = hero.offsetHeight;
-                if (scrollY > heroH) { ticking = false; return; }
-                const ratio = scrollY / heroH;
-                // 内容向上浮动 + 缩小
-                if (heroContent) heroContent.style.transform = `translateY(${scrollY * .3}px) scale(${1 - ratio * .15}) rotateX(${ratio * 5}deg)`;
-                // 轨道加速旋转
-                if (heroOrbit) heroOrbit.style.transform = `rotateY(${scrollY * .1}deg)`;
-                // 几何体散开
-                geoShapes.forEach((s, i) => {
-                    const dir = i % 2 === 0 ? 1 : -1;
-                    s.style.marginTop = (scrollY * .15 * (i + 1) * dir) + 'px';
-                });
+                if (scrollY <= heroH) {
+                    const ratio = scrollY / heroH;
+                    heroContent.style.transform = `translateY(${scrollY * .4}px) scale(${1 - ratio * .12})`;
+                    heroContent.style.opacity = 1 - ratio * 1.2;
+                }
                 ticking = false;
             });
         }, { passive: true });
