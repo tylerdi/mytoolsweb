@@ -116,12 +116,11 @@
         .hero-fish::after{content:'✨';position:absolute;top:-10px;right:-20px;font-size:1.5rem;animation:sparkle 2s ease-in-out infinite}
         @keyframes heroFish{0%,100%{transform:translateY(0) rotate(-5deg) scale(1)}25%{transform:translateY(-15px) rotate(5deg) scale(1.03)}50%{transform:translateY(-20px) rotate(8deg) scale(1.05)}75%{transform:translateY(-10px) rotate(-3deg) scale(1.02)}}
         @keyframes sparkle{0%,100%{opacity:1;transform:scale(1) rotate(0deg)}50%{opacity:.5;transform:scale(1.3) rotate(180deg)}}
-        .hero-title{font-size:clamp(2.2rem,6vw,4rem);font-weight:900;line-height:1.2;margin-bottom:1.5rem;background:linear-gradient(135deg,var(--text) 0%,var(--accent) 50%,var(--pink) 100%);background-size:200% 200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradientText 6s ease-in-out infinite;position:relative;display:inline-block;padding:8px 20px}
+        .hero-title{font-size:clamp(2.2rem,6vw,4rem);font-weight:900;line-height:1.2;margin-bottom:1.5rem;background:linear-gradient(135deg,var(--text) 0%,var(--accent) 50%,var(--pink) 100%),rgba(10,10,10,.92);background-size:200% 200%,100% 100%;background-clip:text,padding-box;-webkit-background-clip:text,padding-box;-webkit-text-fill-color:transparent;animation:gradientText 6s ease-in-out infinite;position:relative;display:inline-block;padding:10px 24px;border:3px solid transparent;border-radius:20px}
         .hero-title::before{content:'';position:absolute;inset:-3px;border-radius:20px;background:conic-gradient(from var(--title-angle,0deg),#646cff,#ec4899,#d4a853,#22c55e,#8b5cf6,#646cff);z-index:-1;animation:titleBorder 3s linear infinite}
-        .hero-title::after{content:'';position:absolute;inset:0;border-radius:17px;background:rgba(10,10,10,.85);z-index:-1}
         @keyframes titleBorder{to{--title-angle:360deg}}
         @property --title-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
-        @keyframes gradientText{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        @keyframes gradientText{0%{background-position:0% 50%,0}50%{background-position:100% 50%,0}100%{background-position:0% 50%,0}}
         .hero-subtitle{font-size:1.15rem;color:var(--text-dim);margin-bottom:2.5rem;line-height:1.8}
         .hero-typing{display:inline-block;color:var(--accent);font-weight:600;border-right:2px solid var(--accent);animation:blink .8s step-end infinite;min-width:200px;text-align:left}
         @keyframes blink{50%{border-color:transparent}}
