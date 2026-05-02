@@ -378,10 +378,8 @@
         </div>
         <!-- 完整组件（点击卡片后滚到这里查看） -->
         <div style="margin-top:24px;display:flex;flex-direction:column;gap:16px">
-            <div id="fish-checkin" class="reveal"></div>
             <div id="mood-diary" class="reveal"></div>
             <div id="daily-question" class="reveal"></div>
-            <div id="fish-challenge" class="reveal"></div>
         </div>
     </section>
 
@@ -392,186 +390,41 @@
         <div class="section-header reveal">
             <div class="section-tag">Creative</div>
             <h2 class="section-title">创意空间</h2>
-            <p class="section-desc">AI 能力大放送</p>
+            <p class="section-desc">AI 能力大放送，30+ 功能等你探索</p>
         </div>
-        <div class="card-grid card-grid-4">
-            <a class="feature-card reveal" style="--card-color:#ec4899;cursor:pointer" onclick="document.getElementById('fish-image-gen').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">🎨</span>
-                <h3>AI 画图</h3>
-                <p>Pollinations 免费生成</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#06b6d4;cursor:pointer" onclick="document.getElementById('fish-video-player').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">🎬</span>
-                <h3>视频库</h3>
-                <p>Pexels 免费视频</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#22c55e;cursor:pointer" onclick="document.getElementById('fish-tts-tool').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">🔊</span>
-                <h3>文字转语音</h3>
-                <p>MIMO TTS · 多语言朗读</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#a855f7;cursor:pointer" onclick="document.getElementById('fish-translate').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">🌐</span>
-                <h3>AI 翻译</h3>
-                <p>多语言智能翻译</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#ff6b9d;cursor:pointer" onclick="document.getElementById('fish-speech-to-text').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">🎙️</span>
-                <h3>语音转文字</h3>
-                <p>实时语音识别</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#d4a853;cursor:pointer" onclick="document.getElementById('fish-daily-poem').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">📅</span>
-                <h3>每日诗词</h3>
-                <p>AI 赋诗一首</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#22d3ee;cursor:pointer" onclick="document.getElementById('fish-funfact').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">🎲</span>
-                <h3>冷知识</h3>
-                <p>每天一个冷知识</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#f472b6;cursor:pointer" onclick="document.getElementById('fish-joke').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">😂</span>
-                <h3>笑话</h3>
-                <p>每天一个笑话</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#818cf8;cursor:pointer" onclick="document.getElementById('fish-dream').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">🔮</span>
-                <h3>AI 解梦</h3>
-                <p>解读你的梦境</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#f59e0b;cursor:pointer" onclick="document.getElementById('fish-story-game').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">🎭</span>
-                <h3>故事接龙</h3>
-                <p>人机协作创作故事</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#ef4444;cursor:pointer" onclick="document.getElementById('fish-debate').scrollIntoView({behavior:'smooth'})">
+        <div class="card-grid card-grid-3">
+            <a class="feature-card reveal" href="/category.html?cat=ai-tools" style="--card-color:#646cff">
                 <span class="feature-icon">🤖</span>
-                <h3>AI 辩论赛</h3>
-                <p>正反方自我辩论</p>
+                <h3>AI 工具</h3>
+                <p>画图 · 翻译 · TTS · 代码解释</p>
             </a>
-            <a class="feature-card reveal" style="--card-color:#8b5cf6;cursor:pointer" onclick="document.getElementById('fish-horoscope').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">🔮</span>
-                <h3>每日运势</h3>
-                <p>AI 星座运势</p>
+            <a class="feature-card reveal" href="/category.html?cat=ai-writing" style="--card-color:#ec4899">
+                <span class="feature-icon">✍️</span>
+                <h3>AI 写作</h3>
+                <p>周报 · 简历 · 文案 · 歌词</p>
             </a>
-            <a class="feature-card reveal" style="--card-color:#10b981;cursor:pointer" onclick="document.getElementById('fish-weekly').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">📝</span>
-                <h3>周报生成器</h3>
-                <p>关键词变专业周报</p>
+            <a class="feature-card reveal" href="/category.html?cat=ai-creative" style="--card-color:#f59e0b">
+                <span class="feature-icon">🎭</span>
+                <h3>AI 创意</h3>
+                <p>故事接龙 · 辩论 · 对联 · 起名</p>
             </a>
-            <a class="feature-card reveal" style="--card-color:#ec4899;cursor:pointer" onclick="document.getElementById('fish-imitate').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">🎤</span>
-                <h3>模仿写作</h3>
-                <p>鲁迅李白甲方任选</p>
+            <a class="feature-card reveal" href="/category.html?cat=ai-interactive" style="--card-color:#22c55e">
+                <span class="feature-icon">🎮</span>
+                <h3>AI 互动</h3>
+                <p>闯关 · 树洞 · 运势 · 菜谱 · 旅行</p>
             </a>
-            <a class="feature-card reveal" style="--card-color:#f97316;cursor:pointer" onclick="document.getElementById('fish-recipe').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">🍳</span>
-                <h3>AI 菜谱</h3>
-                <p>冰箱有啥做啥</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#a855f7;cursor:pointer" onclick="document.getElementById('fish-color').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">🎨</span>
-                <h3>配色方案</h3>
-                <p>AI生成配色灵感</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#06b6d4;cursor:pointer" onclick="document.getElementById('fish-naming').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">👶</span>
-                <h3>起名助手</h3>
-                <p>人名宠物项目公司</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#22c55e;cursor:pointer" onclick="document.getElementById('fish-travel').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">🗺️</span>
-                <h3>旅行规划</h3>
-                <p>AI定制行程</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#eab308;cursor:pointer" onclick="document.getElementById('fish-history-today').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">📜</span>
-                <h3>历史今天</h3>
-                <p>AI讲述历史大事</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#ec4899;cursor:pointer" onclick="document.getElementById('fish-lyric-writer').scrollIntoView({behavior:'smooth'})">
+            <a class="feature-card reveal" href="/category.html?cat=entertainment" style="--card-color:#a855f7">
                 <span class="feature-icon">🎵</span>
-                <h3>歌词创作</h3>
-                <p>AI写歌词</p>
+                <h3>娱乐</h3>
+                <p>音乐 · 视频 · 诗词 · 笑话 · 解梦</p>
             </a>
-            <a class="feature-card reveal" style="--card-color:#06b6d4;cursor:pointer" onclick="document.getElementById('fish-quiz').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">🧠</span>
-                <h3>知识闯关</h3>
-                <p>AI出题答题</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#a855f7;cursor:pointer" onclick="document.getElementById('fish-treehole').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">💬</span>
-                <h3>AI 树洞</h3>
-                <p>匿名倾诉陪伴</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#22c55e;cursor:pointer" onclick="document.getElementById('fish-resume').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">📄</span>
-                <h3>简历生成器</h3>
-                <p>关键词变简历</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#eab308;cursor:pointer" onclick="document.getElementById('fish-quote').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">💡</span>
-                <h3>每日名言</h3>
-                <p>AI智慧语录</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#ef4444;cursor:pointer" onclick="document.getElementById('fish-couplet').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">🧧</span>
-                <h3>AI 对联</h3>
-                <p>上联对下联</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#22c55e;cursor:pointer" onclick="document.getElementById('fish-code-explain').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">💻</span>
-                <h3>代码解释器</h3>
-                <p>粘贴代码AI解读</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#ec4899;cursor:pointer" onclick="document.getElementById('fish-pyq').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">📱</span>
-                <h3>朋友圈文案</h3>
-                <p>一键生成文案</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#8b5cf6;cursor:pointer" onclick="document.getElementById('fish-book-notes').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">📚</span>
-                <h3>读书笔记</h3>
-                <p>书名变精华笔记</p>
-            </a>
-            <a class="feature-card reveal" style="--card-color:#f97316;cursor:pointer" onclick="document.getElementById('fish-movie').scrollIntoView({behavior:'smooth'})">
-                <span class="feature-icon">🎬</span>
-                <h3>影视推荐</h3>
-                <p>心情匹配片单</p>
+            <a class="feature-card reveal" href="/category.html?cat=my" style="--card-color:#06b6d4">
+                <span class="feature-icon">📊</span>
+                <h3>我的</h3>
+                <p>打卡 · 心情 · 胶囊 · 留言 · 统计</p>
             </a>
         </div>
-        <!-- 完整组件 -->
-        <div style="margin-top:24px;display:flex;flex-direction:column;gap:16px">
-            <div id="fish-image-gen" class="reveal"></div>
-            <div id="fish-video-player" class="reveal"></div>
-            <div id="fish-tts-tool" class="reveal"></div>
-            <div id="fish-translate" class="reveal"></div>
-            <div id="fish-speech-to-text" class="reveal"></div>
-            <div id="fish-daily-poem" class="reveal"></div>
-            <div id="fish-funfact" class="reveal"></div>
-            <div id="fish-joke" class="reveal"></div>
-            <div id="fish-dream" class="reveal"></div>
-            <div id="fish-story-game" class="reveal"></div>
-            <div id="fish-debate" class="reveal"></div>
-            <div id="fish-horoscope" class="reveal"></div>
-            <div id="fish-weekly" class="reveal"></div>
-            <div id="fish-imitate" class="reveal"></div>
-            <div id="fish-recipe" class="reveal"></div>
-            <div id="fish-color" class="reveal"></div>
-            <div id="fish-naming" class="reveal"></div>
-            <div id="fish-travel" class="reveal"></div>
-            <div id="fish-history-today" class="reveal"></div>
-            <div id="fish-lyric-writer" class="reveal"></div>
-            <div id="fish-quiz" class="reveal"></div>
-            <div id="fish-treehole" class="reveal"></div>
-            <div id="fish-resume" class="reveal"></div>
-            <div id="fish-quote" class="reveal"></div>        </div>
-            <div id="fish-couplet" class="reveal"></div>
-            <div id="fish-code-explain" class="reveal"></div>
-            <div id="fish-pyq" class="reveal"></div>
-            <div id="fish-book-notes" class="reveal"></div>
-            <div id="fish-movie" class="reveal"></div>    </section>
+    </section>
 
     <div class="divider-wrap"><span class="divider-icon">🪸</span></div>
 
@@ -607,9 +460,6 @@
         <!-- 完整组件 -->
         <div style="margin-top:24px;display:flex;flex-direction:column;gap:16px">
             <div id="fish-music" class="reveal"></div>
-            <div id="fish-typing-test" class="reveal"></div>
-            <div id="fish-guestbook" class="reveal"></div>
-            <div id="fish-capsule" class="reveal"></div>
         </div>
     </section>
 
@@ -640,10 +490,8 @@
             </div>
         </div>
         <div style="margin-top:40px">
-            <div id="fish-stats" class="reveal"></div>
         </div>
         <div style="margin-top:40px">
-            <div id="fish-visitor-map" class="reveal"></div>
         </div>
     </section>
 
@@ -679,49 +527,7 @@
 
     <!-- 脚本 -->
     <script src="/fish-ai.js?v=20260502e"></script>
-    <script src="/fish-mood.js?v=20260501d"></script>
-    <script src="/fish-question.js?v=20260501d"></script>
-    <script src="/fish-music.js?v=20260501d"></script>
-    <script src="/fish-challenge.js?v=20260501d"></script>
-    <script src="/fish-checkin.js?v=20260501d"></script>
-    <script src="/fish-capsule.js?v=20260501d"></script>
-    <script src="/fish-tracker.js?v=20260501d"></script>
-    <script src="/fish-stats.js?v=20260501d"></script>
-    <script src="/fish-music-player.js?v=20260502g"></script>
-    <script src="/fish-tts-player.js?v=20260501d"></script>
-    <script src="/fish-guestbook.js?v=20260501d"></script>
-    <script src="/fish-daily-poem.js?v=20260501d"></script>
-    <script src="/fish-funfact.js?v=20260501d"></script>
-    <script src="/fish-visitor-map.js?v=20260501d"></script>
-    <script src="/fish-float-mascot.js?v=20260501d"></script>
-    <script src="/fish-image-gen.js?v=20260502b"></script>
-    <script src="/fish-video-player.js?v=20260501g"></script>
-    <script src="/fish-tts-tool.js?v=20260502a"></script>
-    <script src="/fish-translate.js?v=20260502a"></script>
-    <script src="/fish-speech-to-text.js?v=20260502a"></script>
-    <script src="/fish-joke.js?v=20260501d"></script>
-    <script src="/fish-typing-test.js?v=20260501d"></script>
-    <script src="/fish-dream.js?v=20260501d"></script>
-    <script src="/fish-story-game.js?v=20260502a"></script>
-    <script src="/fish-debate.js?v=20260502a"></script>
-    <script src="/fish-horoscope.js?v=20260502a"></script>
-    <script src="/fish-weekly.js?v=20260502a"></script>
-    <script src="/fish-imitate.js?v=20260502a"></script>
-    <script src="/fish-recipe.js?v=20260503a"></script>
-    <script src="/fish-color.js?v=20260503a"></script>
-    <script src="/fish-naming.js?v=20260503a"></script>
-    <script src="/fish-travel.js?v=20260503a"></script>
-    <script src="/fish-history-today.js?v=20260503a"></script>
-    <script src="/fish-lyric-writer.js?v=20260503a"></script>
-    <script src="/fish-quiz.js?v=20260503a"></script>
-    <script src="/fish-treehole.js?v=20260503a"></script>
-    <script src="/fish-resume.js?v=20260503a"></script>
-    <script src="/fish-quote.js?v=20260503a"></script>
-    <script src="/fish-couplet.js?v=20260503a"></script>
-    <script src="/fish-code-explain.js?v=20260503a"></script>
-    <script src="/fish-pyq.js?v=20260503b"></script>
-    <script src="/fish-book-notes.js?v=20260503a"></script>
-    <script src="/fish-movie.js?v=20260503a"></script>    <script>
+    <script src="/fish-music.js?v=20260501d"></script>    <script>
     // 汉堡菜单
     function toggleMobileMenu() {
         document.getElementById('mobileMenu').classList.toggle('open');

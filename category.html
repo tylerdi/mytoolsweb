@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>功能分类 · Tyler</title>
+    <link rel="icon" type="image/png" href="resource/easyclaw.png">
+    <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#0a0a0a;--surface:#141414;--border:#2a2a2a;--text:#e8e8e8;--text-secondary:#888;--accent:#646cff}
+        body{font-family:'LXGW WenKai',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh}
+        .header{border-bottom:1px solid var(--border);padding:1rem 0;position:sticky;top:0;background:rgba(10,10,10,0.85);backdrop-filter:blur(12px);z-index:100}
+        .header-inner{max-width:1200px;margin:0 auto;padding:0 1.5rem;display:flex;justify-content:space-between;align-items:center}
+        .logo{font-size:1.1rem;font-weight:700;color:var(--text);text-decoration:none}.logo span{color:var(--accent)}
+        .nav a{color:var(--text-secondary);text-decoration:none;margin-left:1.5rem;font-size:0.85rem}.nav a:hover{color:var(--text)}
+        .container{max-width:1200px;margin:0 auto;padding:2rem 1.5rem}
+        .page-header{margin-bottom:2rem}
+        .page-header h1{font-size:1.8rem;font-weight:800;letter-spacing:-0.03em}
+        .page-header p{color:var(--text-secondary);font-size:0.95rem;margin-top:0.25rem}
+        .back{color:var(--accent);text-decoration:none;font-size:0.85rem;display:inline-block;margin-bottom:1rem}.back:hover{text-decoration:underline}
+        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+        .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.2rem;cursor:pointer;transition:all 0.25s;text-decoration:none;color:var(--text);display:block;user-select:none;-webkit-tap-highlight-color:transparent}
+        .card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 20px rgba(100,108,255,0.15)}
+        .card .icon{font-size:1.5rem;margin-bottom:0.5rem}
+        .card h3{font-size:0.95rem;margin-bottom:0.25rem}
+        .card p{font-size:0.78rem;color:var(--text-secondary)}
+        .footer{border-top:1px solid var(--border);padding:2rem 0;text-align:center;color:var(--text-secondary);font-size:0.8rem;margin-top:3rem}
+        .footer a{color:var(--accent);text-decoration:none}
+        @media(max-width:640px){.container{padding:1.5rem 1rem}.grid{grid-template-columns:repeat(2,1fr)}.nav a{margin-left:1rem;font-size:0.8rem}}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">Tyler<span>.</span></a>
+            <nav class="nav">
+                <a href="/">首页</a>
+                <a href="/blog/">博客</a>
+                <a href="/novel/">连载</a>
+                <a href="/about.html">关于</a>
+            </nav>
+        </div>
+    </header>
+    <main class="container">
+        <a href="/" class="back">← 返回首页</a>
+        <div class="page-header" id="page-header"></div>
+        <div class="grid" id="grid"></div>
+    </main>
+    <footer class="footer">
+        <p>自动生成 · <a href="https://github.com/tylerdi/mytoolsweb">GitHub</a></p>
+    </footer>
+    <script>
+    const CATEGORIES = {
+        'ai-tools': {
+            title: '🤖 AI 工具', desc: '实用AI工具大合集',
+            items: [
+                { icon:'🎨', name:'AI 画图', desc:'文字生成图片', id:'fish-image-gen' },
+                { icon:'🔊', name:'文字转语音', desc:'MIMO TTS 多语言', id:'fish-tts-tool' },
+                { icon:'🌐', name:'AI 翻译', desc:'多语言智能翻译', id:'fish-translate' },
+                { icon:'🎙️', name:'语音转文字', desc:'实时语音识别', id:'fish-speech-to-text' },
+                { icon:'💻', name:'代码解释器', desc:'粘贴代码AI解读', id:'fish-code-explain' },
+                { icon:'🎨', name:'配色方案', desc:'AI生成配色灵感', id:'fish-color' },
+            ]
+        },
+        'ai-writing': {
+            title: '✍️ AI 写作', desc: '让AI帮你写',
+            items: [
+                { icon:'📝', name:'周报生成器', desc:'关键词变专业周报', id:'fish-weekly' },
+                { icon:'📄', name:'简历生成器', desc:'关键词变简历', id:'fish-resume' },
+                { icon:'📱', name:'朋友圈文案', desc:'一键生成文案', id:'fish-pyq' },
+                { icon:'🎵', name:'歌词创作', desc:'AI写歌词', id:'fish-lyric-writer' },
+                { icon:'🎤', name:'模仿写作', desc:'鲁迅李白甲方任选', id:'fish-imitate' },
+                { icon:'📚', name:'读书笔记', desc:'书名变精华笔记', id:'fish-book-notes' },
+            ]
+        },
+        'ai-creative': {
+            title: '🎭 AI 创意', desc: 'AI的脑洞大开',
+            items: [
+                { icon:'🎭', name:'故事接龙', desc:'人机协作创作故事', id:'fish-story-game' },
+                { icon:'🤖', name:'AI 辩论赛', desc:'正反方自我辩论', id:'fish-debate' },
+                { icon:'🧧', name:'AI 对联', desc:'上联对下联', id:'fish-couplet' },
+                { icon:'👶', name:'起名助手', desc:'人名宠物项目公司', id:'fish-naming' },
+                { icon:'💡', name:'每日名言', desc:'AI智慧语录', id:'fish-quote' },
+            ]
+        },
+        'ai-interactive': {
+            title: '🎮 AI 互动', desc: '和AI一起玩',
+            items: [
+                { icon:'🧠', name:'知识闯关', desc:'AI出题答题', id:'fish-quiz' },
+                { icon:'💬', name:'AI 树洞', desc:'匿名倾诉陪伴', id:'fish-treehole' },
+                { icon:'🔮', name:'每日运势', desc:'AI星座运势', id:'fish-horoscope' },
+                { icon:'🍳', name:'AI 菜谱', desc:'冰箱有啥做啥', id:'fish-recipe' },
+                { icon:'🗺️', name:'旅行规划', desc:'AI定制行程', id:'fish-travel' },
+                { icon:'🎬', name:'影视推荐', desc:'心情匹配片单', id:'fish-movie' },
+                { icon:'📜', name:'历史今天', desc:'AI讲述历史大事', id:'fish-history-today' },
+            ]
+        },
+        'entertainment': {
+            title: '🎵 娱乐', desc: '轻松一刻',
+            items: [
+                { icon:'🎵', name:'音乐播放器', desc:'在线听歌', id:'fish-music-player' },
+                { icon:'🎬', name:'视频播放器', desc:'Pexels免费视频', id:'fish-video-player' },
+                { icon:'📅', name:'每日诗词', desc:'AI赋诗一首', id:'fish-daily-poem' },
+                { icon:'🎲', name:'冷知识', desc:'每天一个冷知识', id:'fish-funfact' },
+                { icon:'😂', name:'笑话', desc:'每天一个笑话', id:'fish-joke' },
+                { icon:'🔮', name:'AI 解梦', desc:'解读你的梦境', id:'fish-dream' },
+                { icon:'⌨️', name:'打字测速', desc:'中文打字练习', id:'fish-typing-test' },
+            ]
+        },
+        'my': {
+            title: '📊 我的', desc: '你的个人空间',
+            items: [
+                { icon:'✅', name:'每日打卡', desc:'连续签到记录', id:'fish-checkin' },
+                { icon:'😊', name:'心情日记', desc:'记录每日心情', id:'fish-mood' },
+                { icon:'💌', name:'时光胶囊', desc:'写给未来的自己', id:'fish-capsule' },
+                { icon:'💬', name:'留言板', desc:'公共留言互动', id:'fish-guestbook' },
+                { icon:'🗺️', name:'访客地图', desc:'全球访客可视化', id:'fish-visitor-map' },
+                { icon:'📊', name:'网站统计', desc:'访问数据', id:'fish-stats' },
+            ]
+        }
+    };
+
+    const params = new URLSearchParams(location.search);
+    const cat = params.get('cat');
+    const data = CATEGORIES[cat];
+
+    if (!data) {
+        document.getElementById('page-header').innerHTML = '<h1>404</h1><p>分类不存在</p>';
+    } else {
+        document.title = data.title + ' · Tyler';
+        document.getElementById('page-header').innerHTML = `<h1>${data.title}</h1><p>${data.desc}</p>`;
+        document.getElementById('grid').innerHTML = data.items.map(item =>
+            `<a class="card" href="/?scroll=${item.id}">
+                <div class="icon">${item.icon}</div>
+                <h3>${item.name}</h3>
+                <p>${item.desc}</p>
+            </a>`
+        ).join('');
+    }
+    </script>
+</body>
+</html>
