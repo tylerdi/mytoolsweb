@@ -355,6 +355,7 @@
         </div>
         <div class="tts-bar">
             <button class="tts-btn" id="tts-btn" onclick="toggleTTS()">🔊 朗读本章</button>
+            <button class="tts-btn" id="tts-pause-btn" onclick="togglePauseTTS()" style="display:none">⏸ 暂停</button>
             <div class="tts-speed">
                 语速：
                 <input type="range" id="tts-rate" min="0.5" max="2" step="0.1" value="1.2">
@@ -581,36 +582,57 @@
         return d.innerHTML;
     }
 
-    // TTS 朗读（流式分段 + 激进预加载，无缝衔接）
+    // TTS 朗读（边生成边播放，同一 Audio 对象）
     let ttsChunks = [];
-    let ttsCache = new Map();
+    let ttsBlobUrls = []; // 每段的 Blob URL
+    let ttsGenerating = []; // 每段是否已生成
     let ttsIdx = 0;
     let ttsPlaying = false;
+    let ttsPaused = false;
     let ttsAborted = false;
-    const PRELOAD_AHEAD = 3; // 提前预加载3段
+    let ttsAudioEl = null;
 
     async function toggleTTS() {
         if (ttsPlaying) { stopTTS(); } else { await startTTS(); }
     }
 
+    function togglePauseTTS() {
+        if (!ttsPlaying || ttsAborted || !ttsAudioEl) return;
+        const pauseBtn = document.getElementById('tts-pause-btn');
+        if (ttsPaused) {
+            ttsPaused = false;
+            if (pauseBtn) pauseBtn.textContent = '⏸ 暂停';
+            ttsAudioEl.play().catch(() => {});
+        } else {
+            ttsPaused = true;
+            if (pauseBtn) pauseBtn.textContent = '▶ 继续';
+            ttsAudioEl.pause();
+        }
+    }
+
     function splitForTTS(text) {
         const chunks = [];
-        for (const para of text.split(/\n+/)) {
-            if (!para.trim()) continue;
-            if (para.length <= 100) { chunks.push(para.trim()); continue; }
-            const sents = para.match(/[^。！？.!?,，；;]+[。！？.!?,，；;]?/g) || [para];
+        const paras = text.split(/\n+/).filter(p => p.trim());
+        for (const para of paras) {
+            if (para.length <= 80) { chunks.push(para.trim()); continue; }
+            const sents = para.match(/[^。！？.!?\n,，；;：:]+[。！？.!?\n,，；;：:]?/g) || [para];
             let buf = '';
             for (const s of sents) {
-                if (buf.length + s.length > 100 && buf.length) { chunks.push(buf.trim()); buf = s; }
-                else buf += s;
+                const trimmed = s.trim();
+                if (!trimmed) continue;
+                if (buf.length + trimmed.length > 80 && buf.length) {
+                    chunks.push(buf.trim());
+                    buf = trimmed;
+                } else {
+                    buf += (buf ? '，' : '') + trimmed;
+                }
             }
             if (buf.trim()) chunks.push(buf.trim());
         }
-        // 合并过短段（<50字合并）
         const merged = [];
         for (const c of chunks) {
-            if (merged.length && merged[merged.length-1].length + c.length < 60)
-                merged[merged.length-1] += c;
+            if (merged.length && merged[merged.length-1].length + c.length < 50)
+                merged[merged.length-1] += '，' + c;
             else merged.push(c);
         }
         return merged.filter(c => c.length > 0);
@@ -622,143 +644,153 @@
         if (!content.trim()) return;
 
         ttsAborted = false;
+        ttsPaused = false;
         ttsChunks = splitForTTS(content);
-        ttsCache.clear();
+        ttsBlobUrls = new Array(ttsChunks.length).fill(null);
+        ttsGenerating = new Array(ttsChunks.length).fill(false);
         ttsIdx = 0;
         ttsPlaying = true;
 
         btn.textContent = '⏳ 准备中...';
         btn.disabled = true;
+        document.getElementById('tts-pause-btn').style.display = '';
 
-        // 生成第一段（必须等）
-        const first = await genTTSChunk(ttsChunks[0]);
-        if (!first || ttsAborted) return;
-        ttsCache.set(0, first);
+        // 创建 Audio 元素（在用户手势内）
+        ttsAudioEl = new Audio();
+        ttsAudioEl.preload = 'auto';
 
-        // 后台并行预加载后续段（不等待）
-        for (let i = 1; i <= PRELOAD_AHEAD && i < ttsChunks.length; i++) {
-            preloadOne(i);
-        }
+        // 监听播放结束，自动播下一段
+        ttsAudioEl.addEventListener('ended', () => {
+            if (ttsAborted || ttsPaused) return;
+            playNextIfReady(ttsIdx + 1);
+        });
 
-        // 立即播放第一段
-        playTTSChunk(0);
-    }
+        // 后台生成所有段（不等待）
+        generateAllChunks();
 
-    // 后台预加载单个chunk（fire-and-forget）
-    async function preloadOne(idx) {
-        if (idx >= ttsChunks.length || ttsAborted || ttsCache.has(idx)) return;
-        try {
-            const a = await genTTSChunk(ttsChunks[idx]);
-            if (a && !ttsAborted) ttsCache.set(idx, a);
-        } catch {}
-    }
-
-    // 保持预加载队列：确保当前播放idx之后有N段已缓存
-    function ensurePreload(currentIdx) {
-        for (let i = 1; i <= PRELOAD_AHEAD; i++) {
-            preloadOne(currentIdx + i);
-        }
-    }
-
-    async function playTTSChunk(idx) {
-        if (idx >= ttsChunks.length || ttsAborted) { stopTTS(); return; }
-        ttsIdx = idx;
-        const btn = document.getElementById('tts-btn');
-        btn.textContent = `⏸️ 停止 (${idx+1}/${ttsChunks.length})`;
-        btn.disabled = false;
-
-        let audio = ttsCache.get(idx);
-
-        if (!audio) {
-            // 还没缓存好，等一下（最多2秒）
-            btn.textContent = `⏳ 加载中 (${idx+1}/${ttsChunks.length})`;
-            for (let w = 0; w < 20; w++) {
-                if (ttsAborted) return;
-                audio = ttsCache.get(idx);
-                if (audio) break;
-                await new Promise(r => setTimeout(r, 100));
-            }
-            if (!audio) {
-                // 还是没有，现场生成
-                audio = await genTTSChunk(ttsChunks[idx]);
-                if (!audio || ttsAborted) return;
-                ttsCache.set(idx, audio);
-            }
-        }
+        // 等第一段生成完
+        await waitForChunk(0);
         if (ttsAborted) return;
 
-        // 播放当前段
-        audio.onended = () => {
-            // 播完立即播下一段，同时确保更后面的段在预加载
-            ensurePreload(idx + 1);
-            playTTSChunk(idx + 1);
-        };
-        audio.onerror = () => playTTSChunk(idx + 1);
-
-        try { await audio.play(); } catch { playTTSChunk(idx + 1); }
-
-        // 播放开始后，确保后续段在预加载
-        ensurePreload(idx + 1);
+        // 播放第一段
+        playChunk(0);
     }
 
-    async function genTTSChunk(text) {
-        try {
-            const rate = parseFloat(document.getElementById('tts-rate').value);
-            const res = await fetch('/api/tts', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text, speed: rate }),
-            });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const blob = await res.blob();
-            if (blob.size < 100) throw new Error('empty');
-            const url = URL.createObjectURL(blob);
-            const audio = new Audio(url);
-            audio.preload = 'auto';
-            await new Promise(r => { audio.addEventListener('canplaythrough', r, { once: true }); audio.addEventListener('error', r, { once: true }); setTimeout(r, 3000); });
-            return audio;
-        } catch (e) {
-            console.warn('[Novel TTS] chunk failed:', e.message);
-            // 浏览器 TTS 兜底
-            return browserTTSChunk(text);
-        }
-    }
-
-    function browserTTSChunk(text) {
-        if (!('speechSynthesis' in window)) return null;
-        const rate = parseFloat(document.getElementById('tts-rate').value);
-        return {
-            play() {
-                return new Promise(resolve => {
-                    window.speechSynthesis.cancel();
-                    const u = new SpeechSynthesisUtterance(text);
-                    u.lang = 'zh-CN'; u.rate = rate;
-                    u.onend = () => resolve();
-                    u.onerror = () => resolve();
-                    setTimeout(() => window.speechSynthesis.speak(u), 50);
+    // 后台逐段生成
+    async function generateAllChunks() {
+        for (let i = 0; i < ttsChunks.length; i++) {
+            if (ttsAborted) return;
+            if (ttsGenerating[i] || ttsBlobUrls[i]) continue;
+            ttsGenerating[i] = true;
+            try {
+                const res = await fetch('/api/tts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: ttsChunks[i] }),
                 });
-            },
-            onended: null, onerror: null,
-        };
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const blob = await res.blob();
+                if (ttsAborted) return;
+                ttsBlobUrls[i] = URL.createObjectURL(blob);
+                updateTTSBtn('⏳', `已生成 (${i+1}/${ttsChunks.length})`);
+            } catch (e) {
+                console.warn('[TTS] generate chunk', i, 'failed:', e);
+            }
+            ttsGenerating[i] = false;
+        }
     }
 
-    async function preloadTTS(from) {
-        // 保留兼容，实际用 ensurePreload
-        for (let i = 0; i < PRELOAD_AHEAD; i++) {
-            preloadOne(from + i);
+    // 等待某段生成完
+    function waitForChunk(idx) {
+        return new Promise(resolve => {
+            if (ttsBlobUrls[idx]) { resolve(); return; }
+            const check = setInterval(() => {
+                if (ttsAborted || ttsBlobUrls[idx]) {
+                    clearInterval(check);
+                    resolve();
+                }
+            }, 100);
+        });
+    }
+
+    // 播放指定段
+    function playChunk(idx) {
+        if (idx >= ttsChunks.length || ttsAborted) { stopTTS(); return; }
+        if (!ttsBlobUrls[idx]) return;
+
+        ttsIdx = idx;
+        ttsAudioEl.src = ttsBlobUrls[idx];
+        ttsAudioEl.currentTime = 0;
+        ttsAudioEl.play().then(() => {
+            updateTTSProgress();
+        }).catch(e => {
+            console.warn('[TTS] play failed:', idx, e);
+            // 尝试浏览器 TTS 兜底
+            playBrowserTTS(idx);
+        });
+    }
+
+    // 如果下一段已就绪就播放，否则等
+    function playNextIfReady(idx) {
+        if (idx >= ttsChunks.length || ttsAborted) { stopTTS(); return; }
+        if (ttsBlobUrls[idx]) {
+            playChunk(idx);
+        } else {
+            updateTTSBtn('⏳', `等待生成 (${idx+1}/${ttsChunks.length})`);
+            waitForChunk(idx).then(() => {
+                if (!ttsAborted) playChunk(idx);
+            });
         }
+    }
+
+    function playBrowserTTS(idx) {
+        if (idx >= ttsChunks.length || ttsAborted) { stopTTS(); return; }
+        if (!('speechSynthesis' in window)) { stopTTS(); return; }
+        ttsIdx = idx;
+        updateTTSProgress();
+        const rate = parseFloat(document.getElementById('tts-rate')?.value || '1');
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(ttsChunks[idx]);
+        u.lang = 'zh-CN';
+        u.rate = rate;
+        u.onend = () => { if (!ttsAborted) playNextIfReady(idx + 1); };
+        u.onerror = () => { if (!ttsAborted) playNextIfReady(idx + 1); };
+        window.speechSynthesis.speak(u);
+    }
+
+    function updateTTSProgress() {
+        const btn = document.getElementById('tts-btn');
+        if (!btn) return;
+        const pct = ttsChunks.length ? Math.round((ttsIdx + 1) / ttsChunks.length * 100) : 0;
+        btn.textContent = ttsPaused
+            ? `⏸ 已暂停 (${ttsIdx+1}/${ttsChunks.length})`
+            : `🔊 朗读中 ${pct}% (${ttsIdx+1}/${ttsChunks.length})`;
+    }
+
+    function updateTTSBtn(icon, text) {
+        const btn = document.getElementById('tts-btn');
+        if (btn) btn.textContent = `${icon} ${text}`;
     }
 
     function stopTTS() {
         ttsAborted = true;
         ttsPlaying = false;
-        for (const [, a] of ttsCache) { try { a.pause(); a.currentTime = 0; } catch {} }
-        for (const [, a] of ttsCache) { try { if (a.src?.startsWith('blob:')) URL.revokeObjectURL(a.src); } catch {} }
-        ttsCache.clear();
+        ttsPaused = false;
+        if (ttsAudioEl) { try { ttsAudioEl.pause(); ttsAudioEl.src = ''; } catch {} }
+        ttsAudioEl = null;
+        // 释放 blob URLs
+        for (const url of ttsBlobUrls) {
+            if (url) try { URL.revokeObjectURL(url); } catch {}
+        }
+        ttsBlobUrls = [];
+        ttsGenerating = [];
         ttsChunks = [];
+        ttsIdx = 0;
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-        document.getElementById('tts-btn').textContent = '🔊 朗读本章';
-        document.getElementById('tts-btn').disabled = false;
+        const btn = document.getElementById('tts-btn');
+        if (btn) { btn.textContent = '🔊 朗读本章'; btn.disabled = false; }
+        const pauseBtn = document.getElementById('tts-pause-btn');
+        if (pauseBtn) { pauseBtn.style.display = 'none'; pauseBtn.textContent = '⏸ 暂停'; }
     }
 
     // 语速显示
