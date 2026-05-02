@@ -490,6 +490,31 @@
                 <h3>历史今天</h3>
                 <p>AI讲述历史大事</p>
             </a>
+            <a class="feature-card reveal" style="--card-color:#ec4899;cursor:pointer" onclick="document.getElementById('fish-lyric-writer').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">🎵</span>
+                <h3>歌词创作</h3>
+                <p>AI写歌词</p>
+            </a>
+            <a class="feature-card reveal" style="--card-color:#06b6d4;cursor:pointer" onclick="document.getElementById('fish-quiz').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">🧠</span>
+                <h3>知识闯关</h3>
+                <p>AI出题答题</p>
+            </a>
+            <a class="feature-card reveal" style="--card-color:#a855f7;cursor:pointer" onclick="document.getElementById('fish-treehole').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">💬</span>
+                <h3>AI 树洞</h3>
+                <p>匿名倾诉陪伴</p>
+            </a>
+            <a class="feature-card reveal" style="--card-color:#22c55e;cursor:pointer" onclick="document.getElementById('fish-resume').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">📄</span>
+                <h3>简历生成器</h3>
+                <p>关键词变简历</p>
+            </a>
+            <a class="feature-card reveal" style="--card-color:#eab308;cursor:pointer" onclick="document.getElementById('fish-quote').scrollIntoView({behavior:'smooth'})">
+                <span class="feature-icon">💡</span>
+                <h3>每日名言</h3>
+                <p>AI智慧语录</p>
+            </a>
         </div>
         <!-- 完整组件 -->
         <div style="margin-top:24px;display:flex;flex-direction:column;gap:16px">
@@ -512,7 +537,11 @@
             <div id="fish-naming" class="reveal"></div>
             <div id="fish-travel" class="reveal"></div>
             <div id="fish-history-today" class="reveal"></div>
-        </div>
+            <div id="fish-lyric-writer" class="reveal"></div>
+            <div id="fish-quiz" class="reveal"></div>
+            <div id="fish-treehole" class="reveal"></div>
+            <div id="fish-resume" class="reveal"></div>
+            <div id="fish-quote" class="reveal"></div>        </div>
     </section>
 
     <div class="divider-wrap"><span class="divider-icon">🪸</span></div>
@@ -654,7 +683,11 @@
     <script src="/fish-naming.js?v=20260503a"></script>
     <script src="/fish-travel.js?v=20260503a"></script>
     <script src="/fish-history-today.js?v=20260503a"></script>
-
+    <script src="/fish-lyric-writer.js?v=20260503a"></script>
+    <script src="/fish-quiz.js?v=20260503a"></script>
+    <script src="/fish-treehole.js?v=20260503a"></script>
+    <script src="/fish-resume.js?v=20260503a"></script>
+    <script src="/fish-quote.js?v=20260503a"></script>
     <script>
     // 汉堡菜单
     function toggleMobileMenu() {
