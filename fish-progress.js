@@ -66,7 +66,8 @@ class FishProgress {
     const daysToWeekend = Math.ceil((nextFriday - now) / 86400000);
 
     return {
-      year: { pct: yearPct, label: `${year}年`, sub: `还剩 ${365 - Math.floor((now - yearStart) / 86400000)} 天` },
+      year: year,
+      yearPct: { pct: yearPct, label: `${year}年`, sub: `还剩 ${365 - Math.floor((now - yearStart) / 86400000)} 天` },
       month: { pct: monthPct, label: `${month + 1}月`, sub: `${daysInMonth}天，还剩 ${daysInMonth - day} 天` },
       week: { pct: weekPct, label: '本周', sub: daysToWeekend > 0 ? `距周末 ${daysToWeekend} 天` : '🎉 周末快乐！' },
       day: { pct: dayPct, label: '今天', sub: `${hour}:${String(minute).padStart(2,'0')}` },
@@ -77,7 +78,7 @@ class FishProgress {
 
   render() {
     const p = this.getProgress();
-    const items = [p.day, p.week, p.month, p.year];
+    const items = [p.day, p.week, p.month, p.yearPct];
     if (p.life) items.push(p.life);
 
     const gradients = [
@@ -107,7 +108,7 @@ class FishProgress {
           </div>
         `).join('')}
         <div class="fp-footer">
-          <span class="fp-countdown">🎆 距 ${year + 1} 年还有 <strong>${p.daysToNewYear}</strong> 天</span>
+          <span class="fp-countdown">🎆 距 ${p.year + 1} 年还有 <strong>${p.daysToNewYear}</strong> 天</span>
           ${!this.birthday ? '<button class="fp-set" id="fp-set-birth">🎂 设置生日</button>' : '<button class="fp-set" id="fp-set-birth">修改</button>'}
         </div>
       </div>
