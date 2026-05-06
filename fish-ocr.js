@@ -3,7 +3,7 @@ class FishOcr{
   constructor(){
     this.el=document.getElementById('fish-ocr');
     if(!this.el)return;
-    this.API='https://fufu.iqach.top/v1/chat/completions';
+    this.API='/api/chat';
     this.imgData=null;
     this.extractedText='';
     this.render();
@@ -150,7 +150,7 @@ class FishOcr{
     reader.readAsDataURL(file);
   }
   clear(){
-    const $=s=>this.el.querySelector($);
+    const $=s=>this.el.querySelector(s);
     this.imgData=null;
     this.extractedText='';
     $('#ocr-preview').style.display='none';
@@ -185,14 +185,15 @@ class FishOcr{
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({
           model:'mimo-v2-omni',
+          stream:false,
+          max_tokens:4096,
           messages:[{
             role:'user',
             content:[
               {type:'text',text:'请识别图片中的所有文字，原样输出，不要添加任何解释或额外内容。如果图片中有表格，请用文本格式还原表格结构。'},
               {type:'image_url',image_url:{url:this.imgData}}
             ]
-          }],
-          max_tokens:4096
+          }]
         })
       });
 
@@ -217,11 +218,12 @@ class FishOcr{
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({
           model:'mimo-v2-pro',
+          stream:false,
+          max_tokens:4096,
           messages:[{
             role:'user',
             content:'以下是通过OCR从图片中识别出的文字内容：\n\n---\n'+this.extractedText+'\n---\n\n请根据内容进行分析和解答：\n1. 如果是题目（数学/语文/英语等），请给出详细解答过程和答案\n2. 如果是文章，请给出摘要和要点\n3. 如果是代码，请解释代码功能\n4. 如果是其他内容，请给出有用的分析和建议'
-          }],
-          max_tokens:4096
+          }]
         })
       });
 
