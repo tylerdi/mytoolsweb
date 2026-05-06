@@ -1,12 +1,11 @@
 /* fish-todo.js — 待办清单 */
 class FishTodo{constructor(){
+  this.el=document.getElementById('fish-todo');
+  if(!this.el)return;
   this.KEY='fish_todos';
   this.TABS=['全部','进行中','已完成'];
   this.tab=0;
   this.editing=null;
-}
-init(el){
-  this.el=el;
   this.data=this.load();
   this.render();
 }
@@ -92,4 +91,4 @@ renderList(){
   const total=this.data.length,done=this.data.filter(d=>d.done).length;
   this.el.querySelector('#todo-stats').innerHTML=`<span>共 ${total} 项</span><span>已完成 ${done}</span><span>完成率 ${total?Math.round(done/total*100):0}%</span>`;
 }}
-window.fishTodo=new FishTodo();
+new FishTodo();

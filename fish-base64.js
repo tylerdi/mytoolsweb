@@ -1,7 +1,8 @@
 /* fish-base64.js — 编解码工具箱（Base64/URL/Unicode/HTML实体） */
 class FishBase64{
-init(el){
-  this.el=el;
+constructor(){
+  this.el=document.getElementById('fish-base64');
+  if(!this.el)return;
   this.mode='base64';
   this.render();
 }
@@ -72,4 +73,4 @@ transform(dir){
     info.textContent=`✅ ${dir==='encode'?'编码':'解码'}成功，${out.value.length} 字符`;
   }catch(e){info.textContent='❌ '+e.message}
 }}
-window.fishBase64=new FishBase64();
+new FishBase64();

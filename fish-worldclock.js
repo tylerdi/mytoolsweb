@@ -1,33 +1,26 @@
 /* fish-worldclock.js — 世界时钟 */
 class FishWorldclock{
   constructor(){
+    this.el=document.getElementById('fish-worldclock');
+    if(!this.el)return;
     this.zones=[
-      {name:'北京',tz:'Asia/Shanghai',flag:'🇨🇳'},
-      {name:'东京',tz:'Asia/Tokyo',flag:'🇯🇵'},
-      {name:'首尔',tz:'Asia/Seoul',flag:'🇰🇷'},
-      {name:'新加坡',tz:'Asia/Singapore',flag:'🇸🇬'},
-      {name:'迪拜',tz:'Asia/Dubai',flag:'🇦🇪'},
-      {name:'伦敦',tz:'Europe/London',flag:'🇬🇧'},
-      {name:'巴黎',tz:'Europe/Paris',flag:'🇫🇷'},
-      {name:'柏林',tz:'Europe/Berlin',flag:'🇩🇪'},
-      {name:'莫斯科',tz:'Europe/Moscow',flag:'🇷🇺'},
-      {name:'纽约',tz:'America/New_York',flag:'🇺🇸'},
-      {name:'芝加哥',tz:'America/Chicago',flag:'🇺🇸'},
-      {name:'洛杉矶',tz:'America/Los_Angeles',flag:'🇺🇸'},
-      {name:'悉尼',tz:'Australia/Sydney',flag:'🇦🇺'},
-      {name:'奥克兰',tz:'Pacific/Auckland',flag:'🇳🇿'},
+      {name:'北京',tz:'Asia/Shanghai',flag:'🇨🇳'},{name:'东京',tz:'Asia/Tokyo',flag:'🇯🇵'},
+      {name:'首尔',tz:'Asia/Seoul',flag:'🇰🇷'},{name:'新加坡',tz:'Asia/Singapore',flag:'🇸🇬'},
+      {name:'迪拜',tz:'Asia/Dubai',flag:'🇦🇪'},{name:'伦敦',tz:'Europe/London',flag:'🇬🇧'},
+      {name:'巴黎',tz:'Europe/Paris',flag:'🇫🇷'},{name:'柏林',tz:'Europe/Berlin',flag:'🇩🇪'},
+      {name:'莫斯科',tz:'Europe/Moscow',flag:'🇷🇺'},{name:'纽约',tz:'America/New_York',flag:'🇺🇸'},
+      {name:'芝加哥',tz:'America/Chicago',flag:'🇺🇸'},{name:'洛杉矶',tz:'America/Los_Angeles',flag:'🇺🇸'},
+      {name:'悉尼',tz:'Australia/Sydney',flag:'🇦🇺'},{name:'奥克兰',tz:'Pacific/Auckland',flag:'🇳🇿'},
     ];
+    this.KEY='fish_worldclock_zones';
     this.myZones=this.loadZones();
-    this.timer=null;
-  }
-  loadZones(){try{return JSON.parse(localStorage.getItem('fish_worldclock_zones'))||null}catch(e){return null}}
-  saveZones(){localStorage.setItem('fish_worldclock_zones',JSON.stringify(this.myZones))}
-  init(el){
-    this.el=el;
     if(!this.myZones)this.myZones=this.zones.slice(0,6);
+    this.timer=null;
     this.render();
     this.timer=setInterval(()=>this.updateTimes(),1000);
   }
+  loadZones(){try{return JSON.parse(localStorage.getItem(this.KEY))||null}catch(e){return null}}
+  saveZones(){localStorage.setItem(this.KEY,JSON.stringify(this.myZones))}
   destroy(){if(this.timer){clearInterval(this.timer);this.timer=null}}
   render(){
     this.el.style.cssText='max-width:700px;margin:0 auto;padding:20px';
@@ -115,4 +108,4 @@ class FishWorldclock{
     if(diff===0)return'与本地相同';
     return diff>0?`UTC+${diff}`:`UTC${diff}`;
   }}
-window.fishWorldclock=new FishWorldclock();
+new FishWorldclock();

@@ -1,11 +1,10 @@
 /* fish-habit.js — 习惯打卡追踪 */
 class FishHabit{
   constructor(){
+    this.el=document.getElementById('fish-habit');
+    if(!this.el)return;
     this.KEY='fish_habits';
     this.COLORS=['#ff6b6b','#ffd93d','#6bcb77','#4ecdc4','#a855f7','#ff8a5c','#64c8ff','#ff6b9d'];
-  }
-  init(el){
-    this.el=el;
     this.data=this.load();
     this.render();
   }
@@ -113,4 +112,4 @@ class FishHabit{
     const totalStreak=this.data.reduce((s,h)=>Math.max(s,this.getStreak(h)),0);
     this.el.querySelector('#hb-stats').innerHTML=`<span>📊 ${this.data.length} 个习惯</span><span>✅ 累计 ${total} 次打卡</span><span>🔥 最长连续 ${totalStreak} 天</span>`;
   }}
-window.fishHabit=new FishHabit();
+new FishHabit();

@@ -1,7 +1,8 @@
 /* fish-devtool.js — 开发者工具箱 */
 class FishDevtool{
-init(el){
-  this.el=el;
+constructor(){
+  this.el=document.getElementById('fish-devtool');
+  if(!this.el)return;
   this.render();
 }
 render(){
@@ -211,4 +212,4 @@ panelUA(p){
     this.el.querySelector('#dev-ua-out').innerHTML=`<b>浏览器:</b> ${br}<br><b>系统:</b> ${syst}<br><b>设备:</b> ${mob?'📱 移动端':'🖥 桌面端'}`;
   };
 }}
-window.fishDevtool=new FishDevtool();
+new FishDevtool();
