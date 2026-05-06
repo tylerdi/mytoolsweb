@@ -307,8 +307,8 @@ class FishMarkdown {
 // 注入样式
 const style = document.createElement('style');
 style.textContent = `
-.fmd-wrap{display:flex;height:600px;max-height:80vh;border:1px solid var(--border,#2a2a3e);border-radius:16px;overflow:hidden;font-family:'LXGW WenKai',system-ui,sans-serif;background:var(--surface,#1a1a2e);width:100%}
-.fmd-editor-area{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.fmd-wrap{display:flex;height:600px;max-height:80vh;border:1px solid var(--border,#2a2a3e);border-radius:16px;overflow:hidden;font-family:'LXGW WenKai',system-ui,sans-serif;background:var(--surface,#1a1a2e);width:100%;box-sizing:border-box;position:relative}
+.fmd-editor-area{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden;position:relative}
 .fmd-toolbar{display:flex;align-items:center;gap:4px;padding:8px 12px;border-bottom:1px solid var(--border,#2a2a3e);flex-wrap:wrap;flex-shrink:0}
 .fmd-tool{background:none;border:1px solid transparent;color:var(--text-secondary,#888);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:.8rem;font-family:inherit;transition:all .2s}
 .fmd-tool:hover{background:rgba(100,108,255,.1);color:var(--text,#e8e8e8)}
@@ -323,7 +323,7 @@ style.textContent = `
 .fmd-editor-container.mode-preview .fmd-preview{flex:1}
 .fmd-editor-container.mode-split .fmd-textarea{flex:1;border-right:1px solid var(--border,#2a2a3e)}
 .fmd-editor-container.mode-split .fmd-preview{flex:1}
-.fmd-textarea{width:100%;height:100%;background:transparent;border:none;color:var(--text,#e8e8e8);font-size:.9rem;line-height:1.8;padding:16px;font-family:'Courier New',monospace;resize:none;outline:none;box-sizing:border-box}
+.fmd-textarea{flex:1;min-width:0;height:100%;background:transparent;border:none;color:var(--text,#e8e8e8);font-size:.9rem;line-height:1.8;padding:16px;font-family:'Courier New',monospace;resize:none;outline:none;box-sizing:border-box;overflow-x:hidden;word-break:break-all}
 .fmd-textarea::placeholder{color:var(--text-secondary,#666)}
 .fmd-preview{flex:1;overflow-y:auto;padding:16px;font-size:.9rem;line-height:1.8;color:var(--text,#e8e8e8)}
 .fmd-preview h1,.fmd-preview h2,.fmd-preview h3,.fmd-preview h4{color:var(--text,#e8e8e8);margin:16px 0 8px}
