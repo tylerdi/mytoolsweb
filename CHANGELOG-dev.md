@@ -16,6 +16,9 @@
 | 备忘录 | `fish-memo.js` | 本地便签/待办，置顶/搜索/筛选 |
 | 倒计时 | `fish-countdown.js` | 倒数重要日子，预设节日快捷添加 |
 | 密码生成器 | `fish-password.js` | 加密级随机密码+强度检测+历史记录 |
+| 贡献日历 | `fish-calendar.js` | GitHub风格打卡热力图+连续天数统计 |
+| 二维码生成 | `fish-qrcode.js` | 文本/URL生成二维码，可自定义颜色尺寸 |
+| Markdown 笔记 | `fish-markdown.js` | 实时预览编辑器+多篇笔记管理+本地存储 |
 
 ### 📐 布局调整
 - 首页「花园数据」下方依次新增：人生进度条 → 今日运势
