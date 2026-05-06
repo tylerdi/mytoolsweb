@@ -94,6 +94,7 @@ class FishMarkdown {
 
         <div class="fmd-editor-area">
           <div class="fmd-toolbar">
+            <button class="fmd-tool fmd-toggle-sidebar" id="fmd-toggle" title="笔记列表">📓</button>
             <button class="fmd-tool" data-md="**" title="粗体"><b>B</b></button>
             <button class="fmd-tool" data-md="_" title="斜体"><i>I</i></button>
             <button class="fmd-tool" data-md="~~" title="删除线"><s>S</s></button>
@@ -143,6 +144,11 @@ class FishMarkdown {
 
     // 新建笔记
     document.getElementById('fmd-new').addEventListener('click', () => this.createNote());
+
+    // 手机端侧边栏切换
+    document.getElementById('fmd-toggle')?.addEventListener('click', () => {
+      document.getElementById('fmd-sidebar')?.classList.toggle('show');
+    });
 
     // 笔记切换
     document.getElementById('fmd-note-list').addEventListener('click', e => {
@@ -344,11 +350,14 @@ style.textContent = `
 .fmd-preview strong{color:var(--text,#fff)}
 @media(max-width:768px){
   .fmd-wrap{flex-direction:column;height:auto;max-height:none}
-  .fmd-sidebar{width:100%;max-height:200px;border-right:none;border-bottom:1px solid var(--border,#2a2a3e)}
+  .fmd-sidebar{width:100%;max-height:200px;border-right:none;border-bottom:1px solid var(--border,#2a2a3e);display:none}
+  .fmd-sidebar.show{display:flex;flex-direction:column}
+  .fmd-toggle-sidebar{display:inline-flex!important}
   .fmd-editor-container{min-height:400px}
   .fmd-editor-container.mode-split{flex-direction:column}
   .fmd-editor-container.mode-split .fmd-textarea{border-right:none;border-bottom:1px solid var(--border,#2a2a3e)}
 }
+.fmd-toggle-sidebar{display:none!important}
 `;
 document.head.appendChild(style);
 
