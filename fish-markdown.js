@@ -13,6 +13,8 @@ class FishMarkdown {
   constructor() {
     this.el = document.getElementById('fish-markdown');
     if (!this.el) return;
+    this.isMobile = window.innerWidth <= 900;
+    this.sidebarOpen = false;
     this.notes = this.load();
     this.current = this.notes[0]?.id || null;
     this.render();
@@ -76,7 +78,7 @@ class FishMarkdown {
 
     this.el.innerHTML = `
       <div class="fmd-wrap">
-        <div class="fmd-sidebar" id="fmd-sidebar">
+        <div class="fmd-sidebar" id="fmd-sidebar" style="${this.isMobile ? 'display:none' : ''}">
           <div class="fmd-sidebar-header">
             <span>📓 笔记本</span>
             <button class="fmd-new" id="fmd-new" title="新建笔记">＋</button>
@@ -94,7 +96,7 @@ class FishMarkdown {
 
         <div class="fmd-editor-area">
           <div class="fmd-toolbar">
-            <button class="fmd-tool fmd-toggle-sidebar" id="fmd-toggle" title="笔记列表">📓</button>
+            <button class="fmd-tool" id="fmd-toggle" title="笔记列表" style="${this.isMobile ? '' : 'display:none'}">📓</button>
             <button class="fmd-tool" data-md="**" title="粗体"><b>B</b></button>
             <button class="fmd-tool" data-md="_" title="斜体"><i>I</i></button>
             <button class="fmd-tool" data-md="~~" title="删除线"><s>S</s></button>
@@ -147,7 +149,14 @@ class FishMarkdown {
 
     // 手机端侧边栏切换
     document.getElementById('fmd-toggle')?.addEventListener('click', () => {
-      document.getElementById('fmd-sidebar')?.classList.toggle('show');
+      const sidebar = document.getElementById('fmd-sidebar');
+      if (!sidebar) return;
+      this.sidebarOpen = !this.sidebarOpen;
+      if (this.sidebarOpen) {
+        sidebar.style.cssText = 'position:fixed;top:0;left:0;width:280px;height:100vh;z-index:999;background:var(--bg,#0a0a0a);display:flex;flex-direction:column;box-shadow:4px 0 20px rgba(0,0,0,.5)';
+      } else {
+        sidebar.style.display = 'none';
+      }
     });
 
     // 笔记切换
@@ -348,12 +357,8 @@ style.textContent = `
 .fmd-preview a{color:var(--accent,#646cff);text-decoration:none}
 .fmd-preview a:hover{text-decoration:underline}
 .fmd-preview strong{color:var(--text,#fff)}
-.fmd-toggle-sidebar{display:none!important}
 @media(max-width:900px){
-  .fmd-wrap{flex-direction:column;height:auto;max-height:none}
-  .fmd-sidebar{position:fixed;top:0;left:0;right:0;bottom:0;z-index:999;width:100%;max-width:300px;height:100vh;max-height:100vh;border-right:none;background:var(--bg,#0a0a0a);transform:translateX(-100%);transition:transform .3s ease;display:flex;flex-direction:column}
-  .fmd-sidebar.show{transform:translateX(0)}
-  .fmd-toggle-sidebar{display:inline-flex!important}
+  .fmd-wrap{height:auto!important;max-height:none!important}
   .fmd-editor-container{min-height:400px}
   .fmd-editor-container.mode-split{flex-direction:column}
   .fmd-editor-container.mode-split .fmd-textarea{border-right:none;border-bottom:1px solid var(--border,#2a2a3e)}
