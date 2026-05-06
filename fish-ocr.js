@@ -119,10 +119,15 @@ class FishOcr{
   }
   handleFile(file){
     const $=s=>this.el.querySelector(s);
+    const status=$('#ocr-status');
+    status.textContent='📷 读取图片中...';
     // 压缩图片，避免base64过大
     const reader=new FileReader();
+    reader.onerror=()=>{status.textContent='❌ 图片读取失败'};
     reader.onload=(e)=>{
+      status.textContent='🖼 处理图片中...';
       const img=new Image();
+      img.onerror=()=>{status.textContent='❌ 图片加载失败，请换一张试试'};
       img.onload=()=>{
         const canvas=document.createElement('canvas');
         const maxSize=1600;
@@ -177,8 +182,11 @@ class FishOcr{
     status.textContent='🔄 正在识别文字...';
     result.style.display='none';
     aiSection.style.display='none';
+    console.log('[OCR] 开始识别，图片大小:',this.imgData.length,'字符');
 
     try{
+      status.textContent='📡 正在调用MIMO Omni...';
+      console.log('[OCR] 请求 /api/ocr model=mimo-v2-omni');
       // Step 1: OCR识别 - 调用 MIMO Omni
       const ocrResp=await fetch(this.API,{
         method:'POST',
@@ -196,6 +204,7 @@ class FishOcr{
           }]
         })
       });
+      console.log('[OCR] 响应状态:',ocrResp.status);
 
       if(!ocrResp.ok){
         let errText='';
