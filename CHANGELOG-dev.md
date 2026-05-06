@@ -19,6 +19,9 @@
 | 贡献日历 | `fish-calendar.js` | GitHub风格打卡热力图+连续天数统计 |
 | 二维码生成 | `fish-qrcode.js` | 文本/URL生成二维码，可自定义颜色尺寸 |
 | Markdown 笔记 | `fish-markdown.js` | 实时预览编辑器+多篇笔记管理+本地存储 |
+| 正则测试器 | `fish-regex-tester.js` | 实时匹配高亮+预设+速查表 |
+| 颜色调色板 | `fish-color-palette.js` | 取色器+色彩搭配+明度阶梯+随机配色 |
+| 单位换算 | `fish-converter.js` | 8大类（长度/重量/温度/面积/体积/速度/数据/时间）实时换算 |
 
 ### 📐 布局调整
 - 首页「花园数据」下方依次新增：人生进度条 → 今日运势
