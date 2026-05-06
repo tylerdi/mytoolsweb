@@ -39,6 +39,27 @@
 
 ---
 
+## 2026-05-06 — 第五批工具（+5个，总计68）
+
+### 🆕 新增工具
+
+| 工具 | 文件 | 说明 |
+|------|------|------|
+| 待办清单 | `fish-todo.js` | 本地待办管理，优先级标记，完成率统计 |
+| 编解码工具箱 | `fish-base64.js` | Base64/URL/Unicode/HTML实体/Hex 多格式编解码 |
+| 开发者工具箱 | `fish-devtool.js` | Hash计算/正则测试/JSON格式化/Cron生成/UUID/时间戳/UA解析 |
+| 世界时钟 | `fish-worldclock.js` | 全球时区卡片，秒级实时更新，自定义城市 |
+| 习惯打卡 | `fish-habit.js` | 每日习惯追踪，连续天数统计，周视图热力色块 |
+
+### 技术要点
+- 全部纯前端实现，无外部依赖
+- 数据持久化：localStorage
+- Hash 使用 Web Crypto API（SHA-1/256/512）
+- UUID 使用 crypto.randomUUID() 降级兼容
+- 世界时钟 setInterval 每秒刷新，destroy() 自动清理
+
+---
+
 ## 2026-05-01 — 网站大改造
 
 ### 背景
