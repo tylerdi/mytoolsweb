@@ -375,7 +375,7 @@
             </p>
             <div class="hero-stats">
                 <div class="hero-stat"><span class="num" id="hero-days">0</span><span class="label">天</span></div>
-                <div class="hero-stat"><span class="num" id="hero-tools">60</span><span class="label">工具</span></div>
+                <div class="hero-stat"><span class="num" id="hero-tools">63</span><span class="label">工具</span></div>
                 <div class="hero-stat"><span class="num" id="hero-chapters">0</span><span class="label">章节</span></div>
             </div>
         </div>
@@ -574,6 +574,9 @@
             <a class="feature-card reveal" href="/tool.html?id=fish-regex-tester" style="--card-color:#22c55e"><span class="feature-icon">🔍</span><h3>正则测试器</h3><p>实时匹配高亮</p></a>
             <a class="feature-card reveal" href="/tool.html?id=fish-color-palette" style="--card-color:#f97316"><span class="feature-icon">🎨</span><h3>颜色调色板</h3><p>取色+配色方案</p></a>
             <a class="feature-card reveal" href="/tool.html?id=fish-converter" style="--card-color:#06b6d4"><span class="feature-icon">📐</span><h3>单位换算</h3><p>8大类实时换算</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-diff" style="--card-color:#22c55e"><span class="feature-icon">📝</span><h3>文本对比</h3><p>逐行差异高亮</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-json-viewer" style="--card-color:#f59e0b"><span class="feature-icon">📊</span><h3>JSON 可视化</h3><p>格式化+树形展开</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-clipboard" style="--card-color:#ec4899"><span class="feature-icon">📋</span><h3>剪贴板管理</h3><p>文本片段快速复制</p></a>
         </div>
     </section>
 
@@ -666,6 +669,9 @@
     <script src="/fish-calendar.js?v=20260506a"></script>
     <script src="/fish-qrcode.js?v=20260506a"></script>
     <script src="/fish-markdown.js?v=20260506f"></script>
+    <script src="/fish-diff.js?v=20260506a"></script>
+    <script src="/fish-json-viewer.js?v=20260506a"></script>
+    <script src="/fish-clipboard.js?v=20260506a"></script>
     <script src="/fish-regex-tester.js?v=20260506a"></script>
     <script src="/fish-color-palette.js?v=20260506a"></script>
     <script src="/fish-converter.js?v=20260506a"></script>    <script>
@@ -881,7 +887,7 @@
     (function() {
         const launchDate = new Date('2026-04-30');
         const days = Math.ceil((new Date() - launchDate) / 86400000);
-        const targets = { 'hero-days': days, 'hero-tools': 60, 'hero-chapters': 3, 'dash-days': days, 'dash-posts': 5, 'dash-chapters': 3, 'dash-ideas': 15 };
+        const targets = { 'hero-days': days, 'hero-tools': 63, 'hero-chapters': 3, 'dash-days': days, 'dash-posts': 5, 'dash-chapters': 3, 'dash-ideas': 15 };
         // 获取真实章节数，再启动动画
         fetch('/novel/chapters.json').then(r=>r.json()).then(chs=>{
             const count = Array.isArray(chs) ? chs.length : 3;
