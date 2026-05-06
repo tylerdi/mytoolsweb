@@ -3,7 +3,7 @@ class FishOcr{
   constructor(){
     this.el=document.getElementById('fish-ocr');
     if(!this.el)return;
-    this.API='/api/chat';
+    this.API='/api/ocr';
     this.imgData=null;
     this.extractedText='';
     this.render();
@@ -198,12 +198,13 @@ class FishOcr{
       });
 
       if(!ocrResp.ok){
-        const errText=await ocrResp.text();
-        throw new Error('OCR请求失败('+ocrResp.status+'): '+errText.slice(0,100));
+        let errText='';
+        try{const d=await ocrResp.json();errText=d.error?.message||JSON.stringify(d.error||d)}catch(e){errText=await ocrResp.text().catch(()=>'未知错误')}
+        throw new Error('OCR请求失败('+ocrResp.status+'): '+String(errText).slice(0,200));
       }
 
       const ocrData=await ocrResp.json();
-      if(ocrData.error)throw new Error(ocrData.error.message||JSON.stringify(ocrData.error));
+      if(ocrData.error)throw new Error('API错误: '+(ocrData.error.message||JSON.stringify(ocrData.error)));
       this.extractedText=ocrData.choices?.[0]?.message?.content||'未能识别到文字';
       resultText.textContent=this.extractedText;
       result.style.display='block';
@@ -241,7 +242,8 @@ class FishOcr{
 
     }catch(e){
       status.className='ocr-status';
-      status.textContent='❌ '+e.message;
+      status.textContent='❌ 出错了: '+e.message;
+      console.error('OCR错误:',e);
     }
   }}
 new FishOcr();
