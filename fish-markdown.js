@@ -13,10 +13,9 @@ class FishMarkdown {
   constructor() {
     this.el = document.getElementById('fish-markdown');
     if (!this.el) return;
-    this.isMobile = window.innerWidth <= 900;
-    this.sidebarOpen = false;
     this.notes = this.load();
     this.current = this.notes[0]?.id || null;
+    this.mobile = window.innerWidth <= 900;
     this.render();
   }
 
@@ -64,7 +63,6 @@ class FishMarkdown {
     if (!note) return;
     note.content = content;
     note.updated = Date.now();
-    // 自动提取标题
     const titleMatch = content.match(/^#\s+(.+)/m);
     if (titleMatch) note.title = titleMatch[1].slice(0, 30);
     this.save();
@@ -78,25 +76,9 @@ class FishMarkdown {
 
     this.el.innerHTML = `
       <div class="fmd-wrap">
-        <div class="fmd-sidebar" id="fmd-sidebar" style="${this.isMobile ? 'display:none' : ''}">
-          <div class="fmd-sidebar-header">
-            <span>📓 笔记本</span>
-            <button class="fmd-new" id="fmd-new" title="新建笔记">＋</button>
-          </div>
-          <div class="fmd-note-list" id="fmd-note-list">
-            ${this.notes.map(n => `
-              <div class="fmd-note-item ${n.id === this.current ? 'active' : ''}" data-id="${n.id}">
-                <div class="fmd-note-title">${this.escape(n.title)}</div>
-                <div class="fmd-note-time">${this.formatTime(n.updated)}</div>
-                <button class="fmd-note-del" data-id="${n.id}" title="删除">×</button>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-
         <div class="fmd-editor-area">
           <div class="fmd-toolbar">
-            <button class="fmd-tool" id="fmd-toggle" title="笔记列表" style="${this.isMobile ? '' : 'display:none'}">📓</button>
+            ${this.mobile ? '<button class="fmd-tool" id="fmd-toggle" title="笔记列表">📓</button>' : ''}
             <button class="fmd-tool" data-md="**" title="粗体"><b>B</b></button>
             <button class="fmd-tool" data-md="_" title="斜体"><i>I</i></button>
             <button class="fmd-tool" data-md="~~" title="删除线"><s>S</s></button>
@@ -129,10 +111,8 @@ class FishMarkdown {
   bindEvents() {
     const textarea = document.getElementById('fmd-textarea');
 
-    // 内容变化
     textarea.addEventListener('input', () => this.updateContent(textarea.value));
 
-    // Tab 键支持
     textarea.addEventListener('keydown', e => {
       if (e.key === 'Tab') {
         e.preventDefault();
@@ -144,30 +124,9 @@ class FishMarkdown {
       }
     });
 
-    // 新建笔记
-    document.getElementById('fmd-new').addEventListener('click', () => this.createNote());
-
-    // 手机端侧边栏切换
+    // 手机端笔记列表弹窗
     document.getElementById('fmd-toggle')?.addEventListener('click', () => {
-      const sidebar = document.getElementById('fmd-sidebar');
-      if (!sidebar) return;
-      this.sidebarOpen = !this.sidebarOpen;
-      if (this.sidebarOpen) {
-        sidebar.style.cssText = 'position:fixed;top:0;left:0;width:280px;height:100vh;z-index:999;background:var(--bg,#0a0a0a);display:flex;flex-direction:column;box-shadow:4px 0 20px rgba(0,0,0,.5)';
-      } else {
-        sidebar.style.display = 'none';
-      }
-    });
-
-    // 笔记切换
-    document.getElementById('fmd-note-list').addEventListener('click', e => {
-      const item = e.target.closest('.fmd-note-item');
-      const del = e.target.closest('.fmd-note-del');
-      if (del) { e.stopPropagation(); this.deleteNote(del.dataset.id); return; }
-      if (item) {
-        this.current = item.dataset.id;
-        this.render();
-      }
+      this.showNotePicker();
     });
 
     // 格式化按钮
@@ -192,8 +151,7 @@ class FishMarkdown {
       });
     });
 
-    // 复制
-    document.getElementById('fmd-copy').addEventListener('click', () => {
+    document.getElementById('fmd-copy')?.addEventListener('click', () => {
       const note = this.getCurrent();
       if (note) {
         navigator.clipboard.writeText(note.content).then(() => {
@@ -204,7 +162,7 @@ class FishMarkdown {
       }
     });
 
-    document.getElementById('fmd-copy-html').addEventListener('click', () => {
+    document.getElementById('fmd-copy-html')?.addEventListener('click', () => {
       const html = document.getElementById('fmd-preview').innerHTML;
       navigator.clipboard.writeText(html).then(() => {
         const btn = document.getElementById('fmd-copy-html');
@@ -213,14 +171,73 @@ class FishMarkdown {
       });
     });
 
-    // 标签页切换
     this.el.querySelectorAll('.fmd-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         this.el.querySelectorAll('.fmd-tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
         const mode = tab.dataset.tab;
-        const container = document.getElementById('fmd-editor-container');
-        container.className = 'fmd-editor-container mode-' + mode;
+        document.getElementById('fmd-editor-container').className = 'fmd-editor-container mode-' + mode;
+      });
+    });
+  }
+
+  showNotePicker() {
+    const existing = document.getElementById('fmd-picker-overlay');
+    if (existing) { existing.remove(); return; }
+
+    const overlay = document.createElement('div');
+    overlay.id = 'fmd-picker-overlay';
+    overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center';
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+    const panel = document.createElement('div');
+    panel.style.cssText = 'background:var(--surface,#1a1a2e);border-radius:16px 16px 0 0;width:100%;max-width:500px;max-height:70vh;display:flex;flex-direction:column;overflow:hidden';
+
+    const header = document.createElement('div');
+    header.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border,#2a2a3e)';
+    header.innerHTML = `<span style="font-weight:700;font-size:1rem">📓 笔记列表</span><button id="fmd-picker-new" style="background:var(--accent,#646cff);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:.85rem;cursor:pointer">＋ 新建</button>`;
+
+    const list = document.createElement('div');
+    list.style.cssText = 'flex:1;overflow-y:auto;padding:12px';
+    list.innerHTML = this.notes.map(n => `
+      <div class="fmd-picker-item" data-id="${n.id}" style="padding:12px 16px;border-radius:10px;margin-bottom:6px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .2s;${n.id === this.current ? 'background:rgba(100,108,255,.15);border:1px solid rgba(100,108,255,.2)' : ''}">
+        <div>
+          <div style="font-size:.9rem;font-weight:600">${this.escape(n.title)}</div>
+          <div style="font-size:.7rem;color:var(--text-secondary,#888);margin-top:2px">${this.formatTime(n.updated)}</div>
+        </div>
+        <button class="fmd-picker-del" data-id="${n.id}" style="background:none;border:none;color:var(--text-secondary,#666);font-size:1rem;cursor:pointer;padding:4px 8px">🗑️</button>
+      </div>
+    `).join('');
+
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '关闭';
+    closeBtn.style.cssText = 'width:100%;padding:16px;background:none;border:none;border-top:1px solid var(--border,#2a2a3e);color:var(--text-secondary,#888);font-size:.9rem;cursor:pointer;font-family:inherit';
+    closeBtn.addEventListener('click', () => overlay.remove());
+
+    panel.appendChild(header);
+    panel.appendChild(list);
+    panel.appendChild(closeBtn);
+    overlay.appendChild(panel);
+    document.body.appendChild(overlay);
+
+    // 事件
+    document.getElementById('fmd-picker-new')?.addEventListener('click', () => {
+      overlay.remove();
+      this.createNote();
+    });
+
+    list.querySelectorAll('.fmd-picker-item').forEach(item => {
+      item.addEventListener('click', e => {
+        if (e.target.closest('.fmd-picker-del')) {
+          e.stopPropagation();
+          this.deleteNote(e.target.closest('.fmd-picker-del').dataset.id);
+          overlay.remove();
+          this.showNotePicker();
+          return;
+        }
+        this.current = item.dataset.id;
+        overlay.remove();
+        this.render();
       });
     });
   }
@@ -233,52 +250,32 @@ class FishMarkdown {
   }
 
   updateNoteList() {
-    const list = document.getElementById('fmd-note-list');
-    if (!list) return;
-    list.innerHTML = this.notes.map(n => `
-      <div class="fmd-note-item ${n.id === this.current ? 'active' : ''}" data-id="${n.id}">
-        <div class="fmd-note-title">${this.escape(n.title)}</div>
-        <div class="fmd-note-time">${this.formatTime(n.updated)}</div>
-        <button class="fmd-note-del" data-id="${n.id}" title="删除">×</button>
-      </div>
-    `).join('');
+    // 手机端不更新侧边栏列表（已移除），仅更新标题
   }
 
   parseMarkdown(md) {
     if (!md) return '<p style="color:var(--text-secondary,#666)">预览区域</p>';
     let html = this.escape(md);
-    // 代码块
     html = html.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
-    // 行内代码
     html = html.replace(/`([^`]+)`/g, '<code class="fmd-inline-code">$1</code>');
-    // 标题
     html = html.replace(/^#### (.+)$/gm, '<h4>$1</h4>');
     html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
     html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
     html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
-    // 粗体、斜体、删除线
     html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
     html = html.replace(/_(.+?)_/g, '<em>$1</em>');
     html = html.replace(/~~(.+?)~~/g, '<del>$1</del>');
-    // 链接
     html = html.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
-    // 图片
     html = html.replace(/!\[(.+?)\]\((.+?)\)/g, '<img src="$2" alt="$1" style="max-width:100%;border-radius:8px" />');
-    // 引用
     html = html.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
-    // 水平线
     html = html.replace(/^---$/gm, '<hr />');
-    // 列表
     html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
     html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
-    // 复选框
     html = html.replace(/\[x\]/g, '☑️');
     html = html.replace(/\[ \]/g, '⬜');
-    // 段落
     html = html.replace(/\n\n/g, '</p><p>');
     html = html.replace(/\n/g, '<br>');
     html = '<p>' + html + '</p>';
-    // 清理空段落
     html = html.replace(/<p>\s*<\/p>/g, '');
     html = html.replace(/<p>(<h[1-6]>)/g, '$1');
     html = html.replace(/(<\/h[1-6]>)<\/p>/g, '$1');
@@ -310,22 +307,9 @@ class FishMarkdown {
 // 注入样式
 const style = document.createElement('style');
 style.textContent = `
-.fmd-wrap{display:flex;height:600px;max-height:80vh;border:1px solid var(--border,#2a2a3e);border-radius:16px;overflow:hidden;font-family:'LXGW WenKai',system-ui,sans-serif;background:var(--surface,#1a1a2e)}
-.fmd-sidebar{width:220px;border-right:1px solid var(--border,#2a2a3e);display:flex;flex-direction:column;flex-shrink:0}
-.fmd-sidebar-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border,#2a2a3e);font-size:.9rem;font-weight:700;color:var(--text,#e8e8e8)}
-.fmd-new{background:var(--accent,#646cff);color:#fff;border:none;border-radius:8px;width:28px;height:28px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .3s}
-.fmd-new:hover{transform:scale(1.1)}
-.fmd-note-list{flex:1;overflow-y:auto;padding:8px}
-.fmd-note-item{padding:10px 12px;border-radius:10px;cursor:pointer;margin-bottom:4px;position:relative;transition:all .2s}
-.fmd-note-item:hover{background:rgba(100,108,255,.08)}
-.fmd-note-item.active{background:rgba(100,108,255,.15);border:1px solid rgba(100,108,255,.2)}
-.fmd-note-title{font-size:.8rem;font-weight:600;color:var(--text,#e8e8e8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fmd-note-time{font-size:.65rem;color:var(--text-secondary,#666);margin-top:2px}
-.fmd-note-del{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--text-secondary,#666);font-size:.8rem;cursor:pointer;opacity:0;transition:all .2s;padding:2px 6px;border-radius:4px}
-.fmd-note-item:hover .fmd-note-del{opacity:1}
-.fmd-note-del:hover{color:#ef4444;background:rgba(239,68,68,.1)}
-.fmd-editor-area{flex:1;display:flex;flex-direction:column;min-width:0}
-.fmd-toolbar{display:flex;align-items:center;gap:4px;padding:8px 12px;border-bottom:1px solid var(--border,#2a2a3e);flex-wrap:wrap}
+.fmd-wrap{display:flex;height:600px;max-height:80vh;border:1px solid var(--border,#2a2a3e);border-radius:16px;overflow:hidden;font-family:'LXGW WenKai',system-ui,sans-serif;background:var(--surface,#1a1a2e);width:100%}
+.fmd-editor-area{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.fmd-toolbar{display:flex;align-items:center;gap:4px;padding:8px 12px;border-bottom:1px solid var(--border,#2a2a3e);flex-wrap:wrap;flex-shrink:0}
 .fmd-tool{background:none;border:1px solid transparent;color:var(--text-secondary,#888);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:.8rem;font-family:inherit;transition:all .2s}
 .fmd-tool:hover{background:rgba(100,108,255,.1);color:var(--text,#e8e8e8)}
 .fmd-tool-sep{width:1px;height:16px;background:var(--border,#2a2a3e);margin:0 4px}
@@ -339,7 +323,7 @@ style.textContent = `
 .fmd-editor-container.mode-preview .fmd-preview{flex:1}
 .fmd-editor-container.mode-split .fmd-textarea{flex:1;border-right:1px solid var(--border,#2a2a3e)}
 .fmd-editor-container.mode-split .fmd-preview{flex:1}
-.fmd-textarea{width:100%;height:100%;background:transparent;border:none;color:var(--text,#e8e8e8);font-size:.9rem;line-height:1.8;padding:16px;font-family:'Courier New',monospace;resize:none;outline:none}
+.fmd-textarea{width:100%;height:100%;background:transparent;border:none;color:var(--text,#e8e8e8);font-size:.9rem;line-height:1.8;padding:16px;font-family:'Courier New',monospace;resize:none;outline:none;box-sizing:border-box}
 .fmd-textarea::placeholder{color:var(--text-secondary,#666)}
 .fmd-preview{flex:1;overflow-y:auto;padding:16px;font-size:.9rem;line-height:1.8;color:var(--text,#e8e8e8)}
 .fmd-preview h1,.fmd-preview h2,.fmd-preview h3,.fmd-preview h4{color:var(--text,#e8e8e8);margin:16px 0 8px}
@@ -358,8 +342,8 @@ style.textContent = `
 .fmd-preview a:hover{text-decoration:underline}
 .fmd-preview strong{color:var(--text,#fff)}
 @media(max-width:900px){
-  .fmd-wrap{height:auto!important;max-height:none!important}
-  .fmd-editor-container{min-height:400px}
+  .fmd-wrap{height:auto!important;max-height:none!important;min-height:70vh}
+  .fmd-editor-container{min-height:50vh}
   .fmd-editor-container.mode-split{flex-direction:column}
   .fmd-editor-container.mode-split .fmd-textarea{border-right:none;border-bottom:1px solid var(--border,#2a2a3e)}
 }
