@@ -21,7 +21,7 @@ class FishQrcodeScanner{
       .qrs-cam-overlay::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--c-accent);animation:qrsScan 2s linear infinite}
       @keyframes qrsScan{0%{top:0}50%{top:calc(100% - 2px)}100%{top:0}}
       .qrs-cam-status{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);color:#fff;padding:6px 16px;border-radius:20px;font-size:13px}
-      .qrs-upload{border:2px dashed var(--c-border);border-radius:16px;padding:40px 20px;text-align:center;cursor:pointer;transition:all .2s}
+      .qrs-upload{border:2px dashed var(--c-border);border-radius:16px;padding:40px 20px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
       .qrs-upload:hover{border-color:var(--c-accent);background:rgba(255,255,255,.02)}
       .qrs-upload input{display:none}
       .qrs-icon{font-size:48px;margin-bottom:8px}
@@ -66,7 +66,7 @@ class FishQrcodeScanner{
         </div>
         <div id="qrs-upload-panel" style="display:none">
           <div class="qrs-upload" id="qrs-upload">
-            <input type="file" id="qrs-file" accept="image/*">
+            <input type="file" id="qrs-file" accept="image/*" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:5">
             <div class="qrs-icon">📁</div>
             <div class="qrs-hint">点击上传包含二维码的图片</div>
           </div>
@@ -120,9 +120,8 @@ class FishQrcodeScanner{
     $('#qrs-start').onclick=()=>this.startCamera();
     $('#qrs-stop').onclick=()=>this.stopCamera();
 
-    // 上传
+    // 上传 - input 直接覆盖在上传区，原生点击
     const upload=$('#qrs-upload');
-    upload.onclick=()=>{$('#qrs-file').click()};
     $('#qrs-file').onchange=()=>{
       const file=$('#qrs-file').files[0];
       if(file)this.handleUpload(file);

@@ -15,16 +15,13 @@ class FishOcr{
       .ocr-upload{border:2px dashed var(--c-border);border-radius:16px;padding:40px 20px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
       .ocr-upload:hover{border-color:var(--c-accent);background:rgba(255,255,255,.02)}
       .ocr-upload.has-img{padding:10px;border-style:solid}
-      .ocr-upload input{display:none}
-      .ocr-icon{font-size:48px;margin-bottom:8px}
-      .ocr-hint{font-size:13px;color:var(--c-muted)}
+      .ocr-upload input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:5}
       .ocr-preview{max-width:100%;max-height:400px;border-radius:12px;display:none;object-fit:contain}
       .ocr-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
       .ocr-btn{padding:10px 20px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
       .ocr-btn-primary{background:var(--c-accent);color:#fff}.ocr-btn-primary:hover{filter:brightness(1.15)}
       .ocr-btn-primary:disabled{opacity:.5;cursor:not-allowed}
       .ocr-btn-secondary{background:rgba(255,255,255,.08);color:var(--c-text);border:1px solid var(--c-border)}
-      .ocr-btn-camera{background:rgba(100,200,255,.12);color:#64c8ff;border:1px solid rgba(100,200,255,.2)}
       .ocr-result{background:rgba(255,255,255,.03);border:1px solid var(--c-border);border-radius:14px;overflow:hidden;display:none}
       .ocr-result-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--c-border);background:rgba(255,255,255,.02)}
       .ocr-result-title{font-size:14px;font-weight:600}
@@ -35,24 +32,22 @@ class FishOcr{
       .ocr-status{text-align:center;font-size:13px;color:var(--c-muted);padding:8px}
       .ocr-status.loading{color:var(--c-accent)}
       .ocr-copy-btn{padding:4px 12px;border:none;border-radius:6px;font-size:12px;cursor:pointer;background:rgba(100,255,150,.15);color:#64ff96;transition:all .2s}
-      .ocr-copy-btn:active{transform:scale(.95)}
-      .ocr-cam-preview{width:100%;border-radius:12px;display:none;background:#000}
-      .ocr-cam-close{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:#fff;font-size:16px;cursor:pointer;z-index:2}
       .ocr-tabs{display:flex;gap:4px;background:rgba(255,255,255,.03);border-radius:10px;padding:4px}
       .ocr-tab{flex:1;text-align:center;padding:8px;border-radius:8px;font-size:13px;cursor:pointer;transition:all .2s;color:var(--c-muted)}
-      .ocr-tab.active{background:var(--c-accent);color:#fff}</style>
+      .ocr-tab.active{background:var(--c-accent);color:#fff}
+      .ocr-icon{font-size:48px;margin-bottom:8px}
+      .ocr-hint{font-size:13px;color:var(--c-muted)}</style>
       <div class="ocr-wrap">
         <h2 style="text-align:center;margin:0">📸 文字识别</h2>
-        <div class="ocr-tabs">
+        <div class="ocr-tabs" id="ocr-tabs">
           <div class="ocr-tab active" data-tab="upload">📁 上传图片</div>
           <div class="ocr-tab" data-tab="camera">📷 拍照识别</div>
         </div>
         <div class="ocr-upload" id="ocr-upload">
           <input type="file" id="ocr-file" accept="image/*">
-          <input type="file" id="ocr-camera" accept="image/*" capture="environment">
           <div id="ocr-upload-content">
             <div class="ocr-icon">📸</div>
-            <div class="ocr-hint">点击上传图片，或拖拽图片到此处</div>
+            <div class="ocr-hint">点击或拍照上传图片</div>
           </div>
           <img class="ocr-preview" id="ocr-preview">
         </div>
@@ -77,32 +72,29 @@ class FishOcr{
   }
   bindEvents(){
     const $=s=>this.el.querySelector(s);
-    const upload=$('#ocr-upload');
     const fileInput=$('#ocr-file');
-    const cameraInput=$('#ocr-camera');
     const preview=$('#ocr-preview');
-    const recognizeBtn=$('#ocr-recognize');
-    const clearBtn=$('#ocr-clear');
-    const status=$('#ocr-status');
 
-    // Tab切换
+    // Tab切换 - 改变 input 的 capture 属性
     this.el.querySelectorAll('.ocr-tab').forEach(tab=>{
       tab.onclick=()=>{
         this.el.querySelectorAll('.ocr-tab').forEach(t=>t.classList.remove('active'));
         tab.classList.add('active');
-        if(tab.dataset.tab==='camera'){cameraInput.click()}
+        if(tab.dataset.tab==='camera'){
+          fileInput.setAttribute('capture','environment');
+        }else{
+          fileInput.removeAttribute('capture');
+        }
       };
     });
 
-    // 点击上传区
-    upload.onclick=(e)=>{
-      if(e.target.closest('.ocr-copy-btn')||e.target.closest('.ocr-cam-close'))return;
-      const activeTab=this.el.querySelector('.ocr-tab.active');
-      if(activeTab.dataset.tab==='camera'){cameraInput.click()}
-      else{fileInput.click()}
+    // 文件选择 - input 直接覆盖在上传区上，原生点击
+    fileInput.onchange=()=>{
+      if(fileInput.files[0])this.handleFile(fileInput.files[0]);
     };
 
     // 拖拽上传
+    const upload=$('#ocr-upload');
     upload.ondragover=e=>{e.preventDefault();upload.style.borderColor='var(--c-accent)'};
     upload.ondragleave=()=>{upload.style.borderColor=''};
     upload.ondrop=e=>{
@@ -111,15 +103,11 @@ class FishOcr{
       if(file&&file.type.startsWith('image/'))this.handleFile(file);
     };
 
-    // 文件选择
-    fileInput.onchange=()=>{if(fileInput.files[0])this.handleFile(fileInput.files[0])};
-    cameraInput.onchange=()=>{if(cameraInput.files[0])this.handleFile(cameraInput.files[0])};
-
     // 识别按钮
-    recognizeBtn.onclick=()=>this.recognize();
+    $('#ocr-recognize').onclick=()=>this.recognize();
 
     // 清除
-    clearBtn.onclick=()=>this.clear();
+    $('#ocr-clear').onclick=()=>this.clear();
 
     // 复制
     $('#ocr-copy').onclick=()=>{
@@ -131,24 +119,38 @@ class FishOcr{
   }
   handleFile(file){
     const $=s=>this.el.querySelector(s);
+    // 压缩图片，避免base64过大
     const reader=new FileReader();
     reader.onload=(e)=>{
-      this.imgData=e.target.result;
-      const preview=$('#ocr-preview');
-      preview.src=this.imgData;
-      preview.style.display='block';
-      $('#ocr-upload').classList.add('has-img');
-      $('#ocr-upload-content').style.display='none';
-      $('#ocr-recognize').disabled=false;
-      $('#ocr-clear').style.display='';
-      $('#ocr-result').style.display='none';
-      $('#ocr-ai').style.display='none';
-      $('#ocr-status').textContent='';
+      const img=new Image();
+      img.onload=()=>{
+        const canvas=document.createElement('canvas');
+        const maxSize=1600;
+        let w=img.width,h=img.height;
+        if(w>maxSize||h>maxSize){
+          if(w>h){h=Math.round(h*maxSize/w);w=maxSize}
+          else{w=Math.round(w*maxSize/h);h=maxSize}
+        }
+        canvas.width=w;canvas.height=h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        this.imgData=canvas.toDataURL('image/jpeg',0.85);
+        const preview=$('#ocr-preview');
+        preview.src=this.imgData;
+        preview.style.display='block';
+        $('#ocr-upload').classList.add('has-img');
+        $('#ocr-upload-content').style.display='none';
+        $('#ocr-recognize').disabled=false;
+        $('#ocr-clear').style.display='';
+        $('#ocr-result').style.display='none';
+        $('#ocr-ai').style.display='none';
+        $('#ocr-status').textContent='';
+      };
+      img.src=e.target.result;
     };
     reader.readAsDataURL(file);
   }
   clear(){
-    const $=s=>this.el.querySelector(s);
+    const $=s=>this.el.querySelector($);
     this.imgData=null;
     this.extractedText='';
     $('#ocr-preview').style.display='none';
@@ -161,7 +163,6 @@ class FishOcr{
     $('#ocr-ai').style.display='none';
     $('#ocr-status').textContent='';
     $('#ocr-file').value='';
-    $('#ocr-camera').value='';
   }
   async recognize(){
     const $=s=>this.el.querySelector(s);
@@ -197,10 +198,11 @@ class FishOcr{
 
       if(!ocrResp.ok){
         const errText=await ocrResp.text();
-        throw new Error('OCR请求失败: '+ocrResp.status+' '+errText);
+        throw new Error('OCR请求失败('+ocrResp.status+'): '+errText.slice(0,100));
       }
 
       const ocrData=await ocrResp.json();
+      if(ocrData.error)throw new Error(ocrData.error.message||JSON.stringify(ocrData.error));
       this.extractedText=ocrData.choices?.[0]?.message?.content||'未能识别到文字';
       resultText.textContent=this.extractedText;
       result.style.display='block';
@@ -224,12 +226,13 @@ class FishOcr{
       });
 
       if(!aiResp.ok){
-        aiText.textContent='⚠️ AI解答请求失败';
+        aiText.textContent='⚠️ AI解答请求失败('+aiResp.status+')';
         status.textContent='✅ 识别完成（AI解答失败）';
         return;
       }
 
       const aiData=await aiResp.json();
+      if(aiData.error){aiText.textContent='⚠️ '+aiData.error.message;status.textContent='✅ 识别完成（AI解答失败）';return}
       const aiContent=aiData.choices?.[0]?.message?.content||'无法生成解答';
       aiText.textContent=aiContent;
       status.textContent='✅ 全部完成';
