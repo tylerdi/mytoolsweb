@@ -375,7 +375,7 @@
             </p>
             <div class="hero-stats">
                 <div class="hero-stat"><span class="num" id="hero-days">0</span><span class="label">天</span></div>
-                <div class="hero-stat"><span class="num" id="hero-tools">70</span><span class="label">工具</span></div>
+                <div class="hero-stat"><span class="num" id="hero-tools">69</span><span class="label">工具</span></div>
                 <div class="hero-stat"><span class="num" id="hero-chapters">0</span><span class="label">章节</span></div>
             </div>
         </div>
@@ -902,7 +902,7 @@
     (function() {
         const launchDate = new Date('2026-04-30');
         const days = Math.ceil((new Date() - launchDate) / 86400000);
-        const targets = { 'hero-days': days, 'hero-tools': 68, 'hero-chapters': 3, 'dash-days': days, 'dash-posts': 5, 'dash-chapters': 3, 'dash-ideas': 15 };
+        const targets = { 'hero-days': days, 'hero-tools': 69, 'hero-chapters': 3, 'dash-days': days, 'dash-posts': 5, 'dash-chapters': 3, 'dash-ideas': 15 };
         // 获取真实章节数，再启动动画
         fetch('/novel/chapters.json').then(r=>r.json()).then(chs=>{
             const count = Array.isArray(chs) ? chs.length : 3;
