@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent 不再是工具，而是你的数字同事 · Tyler's Blog</title>
+    <link rel="icon" type="image/png" href="../../resource/easyclaw.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0a0a; --surface: #141414; --border: #2a2a2a;
+            --text: #e8e8e8; --text-secondary: #888; --accent: #646cff;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg); color: var(--text); line-height: 1.8; min-height: 100vh;
+        }
+        .header {
+            border-bottom: 1px solid var(--border); padding: 1.5rem 0;
+            position: sticky; top: 0; background: rgba(10,10,10,0.85);
+            backdrop-filter: blur(12px); z-index: 100;
+        }
+        .header-inner {
+            max-width: 720px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 1.25rem; font-weight: 700; color: var(--text); text-decoration: none; }
+        .logo span { color: var(--accent); }
+        .nav a { color: var(--text-secondary); text-decoration: none; margin-left: 2rem; font-size: 0.9rem; }
+        .nav a:hover { color: var(--text); }
+        .container { max-width: 720px; margin: 0 auto; padding: 3rem 2rem; }
+        .back { color: var(--accent); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; display: inline-block; }
+        .back:hover { text-decoration: underline; }
+        .post-date { font-size: 0.85rem; color: var(--accent); font-weight: 600; margin-bottom: 0.75rem; }
+        .post-title { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.03em; line-height: 1.3; }
+        .post-tag {
+            display: inline-block; font-size: 0.75rem; color: var(--accent);
+            background: rgba(100,108,255,0.1); padding: 0.2rem 0.6rem;
+            border-radius: 4px; margin-bottom: 2rem; font-weight: 500;
+        }
+        .post-content { font-size: 1.05rem; }
+        .post-content p { margin-bottom: 1.25rem; }
+        .post-content h2 { font-size: 1.4rem; font-weight: 700; margin: 2rem 0 1rem; letter-spacing: -0.02em; }
+        .post-content h3 { font-size: 1.15rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .post-content li { margin-left: 1.5rem; margin-bottom: 0.5rem; color: var(--text-secondary); }
+        .post-content blockquote {
+            border-left: 3px solid var(--accent); padding: 0.75rem 1.25rem;
+            margin: 1.5rem 0; background: var(--surface); border-radius: 0 8px 8px 0;
+            color: var(--text-secondary); font-style: italic;
+        }
+        .footer {
+            border-top: 1px solid var(--border); padding: 2rem 0;
+            text-align: center; color: var(--text-secondary); font-size: 0.85rem;
+            max-width: 720px; margin: 3rem auto 0;
+        }
+        .footer a { color: var(--accent); text-decoration: none; }
+        @media (max-width: 640px) {
+            .container { padding: 2rem 1.25rem; }
+            .post-title { font-size: 1.5rem; }
+        }
+        .fish-tts { margin-bottom: 1.5rem; }
+        .fish-listen-btn {
+            background: rgba(100,108,255,0.1); border: 1px solid rgba(100,108,255,0.3);
+            color: var(--accent); padding: 0.5rem 1.2rem; border-radius: 8px;
+            cursor: pointer; font-size: 0.9rem; font-weight: 500;
+            transition: all 0.2s;
+        }
+        .fish-listen-btn:hover { background: rgba(100,108,255,0.2); transform: translateY(-1px); }
+        .fish-listen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">Tyler<span>.</span></a>
+            <nav class="nav">
+                <a href="/">首页</a>
+                <a href="/blog/">博客</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <a href="/blog/" class="back">← 返回博客列表</a>
+        <div class="post-date">2026 年 05 月 09 日</div>
+        <h1 class="post-title">AI Agent 不再是工具，而是你的数字同事</h1>
+        <span class="post-tag">AI,Agent,效率,工作流</span>
+        <div class="fish-tts" id="listen-section"></div>
+        <div class="post-content">
+<p>去年这个时候，我们还在讨论"AI 会不会取代人类"。今年，真正的问题变成了：**你有几个 AI 同事了？**</p>
+<p>这不是夸张。2026 年上半年，一个明显的趋势已经成型——AI Agent 从"你让它做什么它做什么"的工具，进化成了"你给它目标，它自己想办法"的协作者。</p>
+<h2>从"指令"到"意图"</h2>
+<p>传统软件是这样的：你点一个按钮，它执行一个动作。ChatGPT 刚出来的时候，本质上也是这样——你给 prompt，它给回答。整个交互是**回合制**的。</p>
+<p>现在的 Agent 不一样了。你说"帮我调研一下竞品的定价策略"，它会自己去爬网站、整理数据、生成对比表格、甚至给出你的定价建议。中间它可能需要十几次工具调用，但它不会每一步都来问你"接下来我可以做这个吗？"。</p>
+<p>这是一个根本性的范式转移：**从执行指令到理解意图。**</p>
+<h2>我自己的真实体验</h2>
+<p>上个月我做了一个实验。我同时跑了三个 Agent：一个帮我整理每天的技术新闻摘要，一个帮我 review 代码仓库里的 PR，还有一个帮我回复一些标准化的客户咨询。</p>
+<p>效果怎么样？说实话，**60 分到 70 分的水平**。新闻摘要偶尔会抓到不相关的内容，代码 review 有时候会漏掉边界情况，客户回复的语气还比较机械。</p>
+<p>但关键是——这些事情我之前根本不做，或者拖到最后一刻才做。一个 60 分的自动执行，远好过一个 100 分但从不发生的执行。</p>
+<p>这让我想到一个类比：**洗碗机洗得不如手洗干净，但你家碗筷的清洁频率提高了三倍。**</p>
+<h2>真正的瓶颈不是技术</h2>
+<p>很多人以为 Agent 的瓶颈是模型不够聪明。其实不是。2026 年的模型已经足够好了，好到能完成大部分日常任务的 80%。</p>
+<p>真正的瓶颈是**信任和工作流设计**。</p>
+<p>你怎么知道 Agent 做对了？你怎么处理它犯错的情况？你给它多大的自主权？这些问题没有标准答案，但每个团队都在摸索。</p>
+<p>我观察到一个有趣的现象：做得好的团队，不是那些直接把 Agent 丢进工作流的，而是先**重新设计了工作流本身**。他们会把任务拆解成"Agent 能独立完成的"和"需要人类把关的"两部分，然后在关键节点设置检查机制。</p>
+<p>这跟当年 DevOps 的思路很像——不是让机器替代人，而是让人和机器各自做自己擅长的事。</p>
+<h2>给普通人的建议</h2>
+<p>如果你还没开始用 Agent，现在是最好的时机。不是因为它已经完美了，而是因为**学会跟 Agent 协作**本身就是一个需要练习的技能。</p>
+<p>从一个小任务开始。比如让 Agent 帮你整理阅读清单，或者帮你草拟邮件。观察它在哪里做得好，在哪里需要你介入。慢慢地，你会建立起一种直觉——什么该交给它，什么该自己来。</p>
+<p>这种直觉，就是未来几年最值钱的能力之一。</p>
+<p>---</p>
+<p>工具会越来越聪明，但**知道怎么用工具的人**，永远稀缺。</p>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Powered by <a href="https://www.tylerzhang.xyz">Tyler</a> & <a href="https://openclaw.ai">OpenClaw</a></p>
+    </footer>
+    <script src="/fish-ai.js?v=20260501"></script>
+</body>
+</html>
