@@ -40,7 +40,8 @@
         const r = await fetch('/api/ai6666-music');
         const d = await r.json();
         this.songs = (d.songs || []).filter(s => s.mp3);
-      } catch { this.songs = []; }
+        console.log('[Music] Loaded', this.songs.length, 'songs');
+      } catch(e) { console.error('[Music] Load failed:', e); this.songs = []; }
       this.renderList();
     }
 
@@ -229,6 +230,7 @@
     renderList() {
       const el = this.el.querySelector('#f6m-list');
       const songs = this.tab === 'mine' ? this.myMusic : this.songs;
+      console.log('[Music] renderList, tab:', this.tab, 'songs:', songs.length);
       if (!songs.length) { el.innerHTML = `<div class="f6m-empty">${this.tab==='mine'?'🎤 还没有创作，点「✨ 创作」开始吧！':'暂无数据'}</div>`; return; }
       el.innerHTML = songs.map((s, i) => `
         <div class="f6m-item${i===this.idx&&this.playing?' f6m-item-on':''}" data-i="${i}">
