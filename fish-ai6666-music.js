@@ -244,8 +244,11 @@
           <button class="f6m-item-act" title="播放">▶</button>
         </div>`).join('');
       el.querySelectorAll('.f6m-item').forEach(x => {
-        const handler = e => { e.preventDefault(); if(e.target.closest('a'))return; this.play(+x.dataset.i); };
-        x.addEventListener('click', handler, { passive: false });
+        const idx = +x.dataset.i;
+        x.addEventListener('click', e => { e.preventDefault(); if(e.target.closest('a'))return; this.play(idx); }, { passive: false });
+        // 明确绑定播放按钮
+        const btn = x.querySelector('.f6m-item-act');
+        if (btn) btn.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); this.play(idx); }, { passive: false });
       });
     }
 
