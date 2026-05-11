@@ -1,8 +1,6 @@
-// Cloudflare Pages Function: NetEase Music Search via Karpov Gateway
+// Cloudflare Pages Function: NetEase Music Search
 // GET /api/karpov-netease/search?q=keyword&page=1&page_size=10
-
-const KARPOV_BASE = 'https://nine-management-corresponding-change.trycloudflare.com';
-const KARPOV_KEY = 'mk_9wXQ7IgA9X_3vmnJzunsjG8bVQ_oGlSW';
+// 直连网易云公共 API，不依赖 Karpov 隧道
 
 export async function onRequestGet(context) {
   const { searchParams } = new URL(context.request.url);
@@ -15,12 +13,39 @@ export async function onRequestGet(context) {
   }
 
   try {
-    const url = `${KARPOV_BASE}/v1/netease/search/songs?q=${encodeURIComponent(q)}&page=${page}&page_size=${pageSize}`;
+    const offset = (page - 1) * pageSize;
+    const url = `https://music.163.com/api/search/get?s=${encodeURIComponent(q)}&type=1&offset=${offset}&limit=${pageSize}`;
     const resp = await fetch(url, {
-      headers: { 'X-API-Key': KARPOV_KEY, 'Content-Type': 'application/json' },
+      headers: {
+        'Referer': 'https://music.163.com/',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+      },
     });
-    const data = await resp.json();
-    return Response.json(data, {
+    const raw = await resp.json();
+
+    const items = (raw.result?.songs || []).map(s => ({
+      id: String(s.id),
+      title: s.name,
+      artist: (s.artists || []).map(a => a.name).join(' / '),
+      artists: (s.artists || []).map(a => ({ id: String(a.id), name: a.name })),
+      album: s.album ? { id: String(s.album.id), title: s.album.name, cover: s.album.picUrl ? s.album.picUrl + '?param=300y300' : '' } : null,
+      durationSeconds: Math.round((s.duration || 0) / 1000),
+      isVipOnly: (s.fee === 1),
+      playable: true,
+      provider: 'netease',
+    }));
+
+    return Response.json({
+      code: 200,
+      message: 'success',
+      data: {
+        items,
+        hasMore: (raw.result?.songCount || 0) > offset + pageSize,
+        page,
+        pageSize,
+        total: raw.result?.songCount || 0,
+      }
+    }, {
       headers: { 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=300' },
     });
   } catch (err) {
