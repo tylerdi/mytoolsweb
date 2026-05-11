@@ -45,19 +45,16 @@
         const r = await fetch('/api/ai6666-music');
         const d = await r.json();
         const all = (d.songs || []).filter(s => s.mp3);
-        // 分离可播放和不可播放的歌
-        const playable = all.filter(s => this._canPlay(s.mp3));
-        const other = all.filter(s => !this._canPlay(s.mp3));
-        // 可播放的排前面
-        this.songs = [...playable, ...other];
-        this._playableCount = playable.length;
-        console.log('[Music] Loaded', all.length, 'songs,', playable.length, 'playable');
+        // 只保留可播放的歌
+        this.songs = all.filter(s => this._canPlay(s.mp3));
+        this._playableCount = this.songs.length;
+        console.log('[Music] Loaded', all.length, 'songs,', this._playableCount, 'playable');
       } catch(e) { console.error('[Music] Load failed:', e); this.songs = []; this._playableCount = 0; }
       this.renderList();
       // 更新徽标
       const badge = this.el.querySelector('#f6m-badge');
       if (badge && this._playableCount !== undefined) {
-        badge.textContent = `${this._playableCount}/${this.songs.length} 可播放`;
+        badge.textContent = `${this._playableCount} 首可播放`;
       }
       // 自动播放第一首可播放的歌
       if (this._playableCount > 0 && !this.playing) {
