@@ -48,6 +48,8 @@
     render() {
       this.el.innerHTML = `
       <style>
+        .f6m-toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:rgba(100,108,255,.9);color:#fff;padding:8px 20px;border-radius:20px;font-size:13px;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none}
+        .f6m-toast.show{opacity:1}
         .f6m-wrap{background:#111;border-radius:16px;overflow:hidden;border:1px solid #222;-webkit-overflow-scrolling:touch}
         .f6m-topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#161616;border-bottom:1px solid #222}
         .f6m-tabs{display:flex;gap:4px}
@@ -266,7 +268,7 @@
       this.audio.src = s.mp3;
       this.audio.load();
       const p = this.audio.play();
-      if (p) p.catch(e => { console.error('[Music] Play error:', e.message || e); });
+      if (p) p.then(() => { this._toast('🎵 ' + (s.title || '正在播放')); }).catch(e => { console.error('[Music] Play error:', e.message || e); this._toast('⚠️ 播放失败: ' + (e.message || '未知错误')); });
       this.playing = true;
       this.ui(s);
       this.renderList();
@@ -419,6 +421,12 @@
       setTimeout(poll, 3000);
     }
 
+    _toast(msg) {
+      let t = document.querySelector('.f6m-toast');
+      if (!t) { t = document.createElement('div'); t.className = 'f6m-toast'; document.body.appendChild(t); }
+      t.textContent = msg; t.classList.add('show');
+      clearTimeout(this._toastT); this._toastT = setTimeout(() => t.classList.remove('show'), 2000);
+    }
     fmt(s) { s=Math.round(s); return `${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`; }
     esc(t) { const d=document.createElement('div'); d.textContent=t||''; return d.innerHTML; }
   }
