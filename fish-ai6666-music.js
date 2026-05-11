@@ -257,6 +257,13 @@
     }
 
     // === 播放 ===
+    _proxy(url) {
+      // 代理 ai6666 的 mp3，绕过移动端播放限制
+      if (url && (url.includes('ai6666.com') || url.includes('catbox.moe'))) {
+        return '/api/music-proxy?url=' + encodeURIComponent(url);
+      }
+      return url;
+    }
     play(i) {
       const songs = this.tab === 'mine' ? this.myMusic : this.songs;
       console.log('[Music] play called, idx:', i, 'songs:', songs.length, 'tab:', this.tab);
@@ -264,8 +271,9 @@
       this.idx = i;
       const s = songs[i];
       if (!s || !s.mp3) { console.warn('[Music] No mp3 for song:', s); return; }
-      console.log('[Music] Playing:', s.title, s.mp3.substring(0, 60));
-      this.audio.src = s.mp3;
+      const mp3Url = this._proxy(s.mp3);
+      console.log('[Music] Playing:', s.title, mp3Url.substring(0, 80));
+      this.audio.src = mp3Url;
       this.audio.load();
       const p = this.audio.play();
       if (p) p.then(() => { this._toast('🎵 ' + (s.title || '正在播放')); }).catch(e => { console.error('[Music] Play error:', e.message || e); this._toast('⚠️ 播放失败: ' + (e.message || '未知错误')); });
