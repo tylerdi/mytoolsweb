@@ -1,14 +1,10 @@
 // Cloudflare Pages Function: Karpov Gateway - Netease Music Proxy
-// GET /api/karpov-netease/search?q=keyword&page=1&page_size=10
-// GET /api/karpov-netease/song/:id/url
-// GET /api/karpov-netease/song/:id/lyric
-
-const KARPOV_BASE = 'http://localhost:18080';
-const KARPOV_KEY = 'mk_9wXQ7IgA9X_3vmnJzunsjG8bVQ_oGlSW';
-
 export async function onRequestGet(context) {
   const { searchParams, pathname } = new URL(context.request.url);
   const path = pathname.replace('/api/karpov-netease', '');
+  
+  const KARPOV_BASE = 'https://syntax-tobago-scale-rid.trycloudflare.com';
+  const KARPOV_KEY = 'mk_9wXQ7IgA9X_3vmnJzunsjG8bVQ_oGlSW';
 
   try {
     let url;
@@ -31,11 +27,8 @@ export async function onRequestGet(context) {
       const songId = path.split('/')[2];
       const level = searchParams.get('level') || 'exhigh';
       url = `${KARPOV_BASE}/v1/netease/songs/${songId}/url?level=${level}`;
-    } else if (path.startsWith('/song/') && path.endsWith('/lyric')) {
-      const songId = path.split('/')[2];
-      url = `${KARPOV_BASE}/v1/netease/songs/${songId}/lyric`;
     } else {
-      return Response.json({ error: 'Unknown endpoint' }, { status: 404 });
+      return Response.json({ error: 'Unknown endpoint', path }, { status: 404 });
     }
 
     const resp = await fetch(url, { headers });
@@ -43,6 +36,6 @@ export async function onRequestGet(context) {
 
     return Response.json(data);
   } catch (err) {
-    return Response.json({ error: err.message }, { status: 500 });
+    return Response.json({ error: err.message, stack: err.stack }, { status: 500 });
   }
 }
