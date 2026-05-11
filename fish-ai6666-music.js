@@ -32,6 +32,11 @@
       await this.load();
     }
 
+    // 判断 mp3 是否可播放（Supabase 转码版 44.1kHz）
+    _canPlay(url) {
+      return url && (url.includes('supabase.co') || url.includes('soundhelix.com'));
+    }
+
     async load() {
       const list = this.el.querySelector('.f6m-list');
       if (!list) return;
@@ -39,10 +44,25 @@
       try {
         const r = await fetch('/api/ai6666-music');
         const d = await r.json();
-        this.songs = (d.songs || []).filter(s => s.mp3);
-        console.log('[Music] Loaded', this.songs.length, 'songs');
-      } catch(e) { console.error('[Music] Load failed:', e); this.songs = []; }
+        const all = (d.songs || []).filter(s => s.mp3);
+        // 分离可播放和不可播放的歌
+        const playable = all.filter(s => this._canPlay(s.mp3));
+        const other = all.filter(s => !this._canPlay(s.mp3));
+        // 可播放的排前面
+        this.songs = [...playable, ...other];
+        this._playableCount = playable.length;
+        console.log('[Music] Loaded', all.length, 'songs,', playable.length, 'playable');
+      } catch(e) { console.error('[Music] Load failed:', e); this.songs = []; this._playableCount = 0; }
       this.renderList();
+      // 更新徽标
+      const badge = this.el.querySelector('#f6m-badge');
+      if (badge && this._playableCount !== undefined) {
+        badge.textContent = `${this._playableCount}/${this.songs.length} 可播放`;
+      }
+      // 自动播放第一首可播放的歌
+      if (this._playableCount > 0 && !this.playing) {
+        this.play(0);
+      }
     }
 
     render() {
@@ -138,7 +158,7 @@
             <button class="f6m-tab" data-tab="create">✨ 创作</button>
             <button class="f6m-tab" data-tab="mine">🎤 我的</button>
           </div>
-          <span class="f6m-badge">AI 音乐 · ai6666.com</span>
+          <span class="f6m-badge" id="f6m-badge">AI 音乐 · ai6666.com</span>
         </div>
         <div class="f6m-body">
           <div class="f6m-player" id="f6m-player">
@@ -234,23 +254,25 @@
       const songs = this.tab === 'mine' ? this.myMusic : this.songs;
       console.log('[Music] renderList, tab:', this.tab, 'songs:', songs.length);
       if (!songs.length) { el.innerHTML = `<div class="f6m-empty">${this.tab==='mine'?'🎤 还没有创作，点「✨ 创作」开始吧！':'暂无数据'}</div>`; return; }
-      el.innerHTML = songs.map((s, i) => `
-        <div class="f6m-item${i===this.idx&&this.playing?' f6m-item-on':''}" data-i="${i}">
+      el.innerHTML = songs.map((s, i) => {
+        const canPlay = this._canPlay(s.mp3);
+        return `
+        <div class="f6m-item${i===this.idx&&this.playing?' f6m-item-on':''}${!canPlay?' f6m-item-disabled':''}" data-i="${i}"${!canPlay?' style="opacity:0.4"':''}>
           <img class="f6m-item-img" src="${s.cover||''}" alt="" onerror="this.style.display='none'">
           <div class="f6m-item-body">
-            <div class="f6m-item-name">${this.esc(s.title)}</div>
+            <div class="f6m-item-name">${this.esc(s.title)}${!canPlay?' <span style="font-size:11px;color:#666">(暂不可播)</span>':''}</div>
             <div class="f6m-item-sub">
               ${s.artist?`<a href="${s.profileUrl||'#'}" target="_blank" rel="noopener">${this.esc(s.artist)}</a>`:''}
               ${s.duration?`<span>${this.fmt(s.duration)}</span>`:''}
               ${s.rating?`<span>⭐${s.rating}</span>`:''}
             </div>
           </div>
-          <button class="f6m-item-act" title="播放">▶</button>
-        </div>`).join('');
+          <button class="f6m-item-act" title="${canPlay?'播放':'暂不可播'}">${canPlay?'▶':'⊘'}</button>
+        </div>`;
+      }).join(');
       el.querySelectorAll('.f6m-item').forEach(x => {
         const idx = +x.dataset.i;
         x.addEventListener('click', e => { e.preventDefault(); if(e.target.closest('a'))return; this.play(idx); }, { passive: false });
-        // 明确绑定播放按钮
         const btn = x.querySelector('.f6m-item-act');
         if (btn) btn.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); this.play(idx); }, { passive: false });
       });
@@ -271,7 +293,22 @@
       this.idx = i;
       const s = songs[i];
       if (!s || !s.mp3) { console.warn('[Music] No mp3 for song:', s); return; }
-      const mp3Url = this._proxy(s.mp3);
+      // 跳过不可播放的歌（防止无限循环）
+      if (!this._canPlay(s.mp3)) {
+        if (this._skipCount === undefined) this._skipCount = 0;
+        this._skipCount++;
+        if (this._skipCount > songs.length) {
+          console.warn('[Music] All songs unplayable');
+          this._toast('⚠️ 当前没有可播放的歌曲');
+          this._skipCount = 0;
+          return;
+        }
+        console.log('[Music] Skipping unplayable:', s.title);
+        this.next();
+        return;
+      }
+      this._skipCount = 0;
+      const mp3Url = s.mp3; // Supabase URL 直接用，不走代理
       console.log('[Music] Playing:', s.title, mp3Url.substring(0, 80));
       this.audio.src = mp3Url;
       this.audio.load();
