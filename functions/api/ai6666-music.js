@@ -6,6 +6,21 @@
 
 const API_BASE = 'https://ai6666.com/api/mini';
 const DEFAULT_TOKEN = 'hh_cde1a3add48423871b20da3f9868f1cdd4556bbe7ab477612b05a3cc';
+const SUPABASE_STORAGE = 'https://twyosmombfrcheyjujvb.supabase.co/storage/v1/object/public/gallery/music';
+
+// 本地歌曲 ID → 转码后的 Supabase URL（44.1kHz，兼容移动端）
+const LOCAL_IDS = new Set([
+  '96d2bbcc-bef7-4653-92ba-1b0cfc00de51',
+  '87fa5717-b6c1-4970-9ff8-c6052d451f6f',
+  '19a25c30-b1e1-44d9-9ce6-4b87640f4457',
+  '55e315de-113d-4f21-af31-c827f220db10',
+  'db7a8b39-a86b-479f-908e-2de24217e720',
+  '71841b28-5103-4901-bc99-baa491796b4b',
+]);
+function getMp3(songId, originalUrl) {
+  if (LOCAL_IDS.has(songId)) return `${SUPABASE_STORAGE}/${songId}.mp3`;
+  return originalUrl;
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -122,12 +137,12 @@ export async function onRequestGet(context) {
 
   // 本地 AI 生成的歌曲（内联，避免文件读取问题）
   const localSongs = [
-    { id: '96d2bbcc-bef7-4653-92ba-1b0cfc00de51', title: '霓虹漫游 Neon Drift', mp3: 'https://c.ai6666.com/music/mp3/96d2bbcc-bef7-4653-92ba-1b0cfc00de51.mp3', cover: 'https://c.ai6666.com/music/cover/96d2bbcc-bef7-4653-92ba-1b0cfc00de51.jpg', artist: 'tyler', profileUrl: 'https://ai6666.com/accounts/profile/1986/', duration: 187, tags: 'Electronic rock, Distorted synth layers, Driving drum machine', rating: 0 },
-    { id: '87fa5717-b6c1-4970-9ff8-c6052d451f6f', title: '霓虹漫游 Neon Drift (V2)', mp3: 'https://c.ai6666.com/music/mp3/87fa5717-b6c1-4970-9ff8-c6052d451f6f.mp3', cover: 'https://c.ai6666.com/music/cover/87fa5717-b6c1-4970-9ff8-c6052d451f6f.jpg', artist: 'tyler', profileUrl: 'https://ai6666.com/accounts/profile/1986/', duration: 254, tags: 'Electronic rock, Distorted synth layers, Driving drum machine', rating: 0 },
-    { id: '19a25c30-b1e1-44d9-9ce6-4b87640f4457', title: '长安月下 Under the Chang\'an Moon', mp3: 'https://c.ai6666.com/music/mp3/19a25c30-b1e1-44d9-9ce6-4b87640f4457.mp3', cover: 'https://c.ai6666.com/music/cover/19a25c30-b1e1-44d9-9ce6-4b87640f4457.jpg', artist: 'tyler', profileUrl: 'https://ai6666.com/accounts/profile/1986/', duration: 236, tags: 'Ancient Chinese R&B, Silk-and-bamboo melody with modern groove', rating: 0 },
-    { id: '55e315de-113d-4f21-af31-c827f220db10', title: '长安月下 Under the Chang\'an Moon (V2)', mp3: 'https://c.ai6666.com/music/mp3/55e315de-113d-4f21-af31-c827f220db10.mp3', cover: 'https://c.ai6666.com/music/cover/55e315de-113d-4f21-af31-c827f220db10.jpg', artist: 'tyler', profileUrl: 'https://ai6666.com/accounts/profile/1986/', duration: 238, tags: 'Ancient Chinese R&B, Silk-and-bamboo melody with modern groove', rating: 0 },
-    { id: 'db7a8b39-a86b-479f-908e-2de24217e720', title: '代码与苍山 Code & Mountains', mp3: 'https://c.ai6666.com/music/mp3/db7a8b39-a86b-479f-908e-2de24217e720.mp3', cover: 'https://c.ai6666.com/music/cover/db7a8b39-a86b-479f-908e-2de24217e720.jpg', artist: 'tyler', profileUrl: 'https://ai6666.com/accounts/profile/1986/', duration: 220, tags: 'Indie folk, Acoustic guitar with soft fingerpicking, Intimate storytelling vocal', rating: 0 },
-    { id: '71841b28-5103-4901-bc99-baa491796b4b', title: '代码与苍山 Code & Mountains (V2)', mp3: 'https://c.ai6666.com/music/mp3/71841b28-5103-4901-bc99-baa491796b4b.mp3', cover: 'https://c.ai6666.com/music/cover/71841b28-5103-4901-bc99-baa491796b4b.jpg', artist: 'tyler', profileUrl: 'https://ai6666.com/accounts/profile/1986/', duration: 147, tags: 'Indie folk, Acoustic guitar with soft fingerpicking, Intimate storytelling vocal', rating: 0 },
+    { id: '96d2bbcc-bef7-4653-92ba-1b0cfc00de51', title: '霓虹漫游 Neon Drift', mp3: getMp3('96d2bbcc-bef7-4653-92ba-1b0cfc00de51', 'https://c.ai6666.com/music/mp3/96d2bbcc-bef7-4653-92ba-1b0cfc00de51.mp3'), cover: 'https://c.ai6666.com/music/cover/96d2bbcc-bef7-4653-92ba-1b0cfc00de51.jpg', artist: 'tyler', profileUrl: 'https://ai6666.com/accounts/profile/1986/', duration: 187, tags: 'Electronic rock, Distorted synth layers, Driving drum machine', rating: 0 },
+    { id: '87fa5717-b6c1-4970-9ff8-c6052d451f6f', title: '霓虹漫游 Neon Drift (V2)', mp3: getMp3('87fa5717-b6c1-4970-9ff8-c6052d451f6f', 'https://c.ai6666.com/music/mp3/87fa5717-b6c1-4970-9ff8-c6052d451f6f.mp3'), cover: 'https://c.ai6666.com/music/cover/87fa5717-b6c1-4970-9ff8-c6052d451f6f.jpg', artist: 'tyler', profileUrl: 'https://ai6666.com/accounts/profile/1986/', duration: 254, tags: 'Electronic rock, Distorted synth layers, Driving drum machine', rating: 0 },
+    { id: '19a25c30-b1e1-44d9-9ce6-4b87640f4457', title: '长安月下 Under the Chang\'an Moon', mp3: getMp3('19a25c30-b1e1-44d9-9ce6-4b87640f4457', 'https://c.ai6666.com/music/mp3/19a25c30-b1e1-44d9-9ce6-4b87640f4457.mp3'), cover: 'https://c.ai6666.com/music/cover/19a25c30-b1e1-44d9-9ce6-4b87640f4457.jpg', artist: 'tyler', profileUrl: 'https://ai6666.com/accounts/profile/1986/', duration: 236, tags: 'Ancient Chinese R&B, Silk-and-bamboo melody with modern groove', rating: 0 },
+    { id: '55e315de-113d-4f21-af31-c827f220db10', title: '长安月下 Under the Chang\'an Moon (V2)', mp3: getMp3('55e315de-113d-4f21-af31-c827f220db10', 'https://c.ai6666.com/music/mp3/55e315de-113d-4f21-af31-c827f220db10.mp3'), cover: 'https://c.ai6666.com/music/cover/55e315de-113d-4f21-af31-c827f220db10.jpg', artist: 'tyler', profileUrl: 'https://ai6666.com/accounts/profile/1986/', duration: 238, tags: 'Ancient Chinese R&B, Silk-and-bamboo melody with modern groove', rating: 0 },
+    { id: 'db7a8b39-a86b-479f-908e-2de24217e720', title: '代码与苍山 Code & Mountains', mp3: getMp3('db7a8b39-a86b-479f-908e-2de24217e720', 'https://c.ai6666.com/music/mp3/db7a8b39-a86b-479f-908e-2de24217e720.mp3'), cover: 'https://c.ai6666.com/music/cover/db7a8b39-a86b-479f-908e-2de24217e720.jpg', artist: 'tyler', profileUrl: 'https://ai6666.com/accounts/profile/1986/', duration: 220, tags: 'Indie folk, Acoustic guitar with soft fingerpicking, Intimate storytelling vocal', rating: 0 },
+    { id: '71841b28-5103-4901-bc99-baa491796b4b', title: '代码与苍山 Code & Mountains (V2)', mp3: getMp3('71841b28-5103-4901-bc99-baa491796b4b', 'https://c.ai6666.com/music/mp3/71841b28-5103-4901-bc99-baa491796b4b.mp3'), cover: 'https://c.ai6666.com/music/cover/71841b28-5103-4901-bc99-baa491796b4b.jpg', artist: 'tyler', profileUrl: 'https://ai6666.com/accounts/profile/1986/', duration: 147, tags: 'Indie folk, Acoustic guitar with soft fingerpicking, Intimate storytelling vocal', rating: 0 },
   ];
 
   // 去重合并（本地歌优先，网页歌补充）
