@@ -1,7 +1,7 @@
 // Cloudflare Pages Function: Get song play URL via Karpov Gateway
 // GET /api/karpov-netease/song/:id/url?level=exhigh
 
-const KARPOV_BASE = 'https://project-sam-tournaments-volt.trycloudflare.com';
+const KARPOV_BASE = 'https://extra-general-namespace-recently.trycloudflare.com';
 const KARPOV_KEY = 'mk_9wXQ7IgA9X_3vmnJzunsjG8bVQ_oGlSW';
 
 export async function onRequestGet(context) {
