@@ -56,10 +56,7 @@
       if (badge && this._playableCount !== undefined) {
         badge.textContent = `${this._playableCount} 首可播放`;
       }
-      // 自动播放第一首可播放的歌
-      if (this._playableCount > 0 && !this.playing) {
-        this.play(0);
-      }
+
     }
 
     render() {

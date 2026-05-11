@@ -80,10 +80,11 @@
       this.showStatus('🔍 搜索中...');
       const results = [];
 
-      // 同时搜酷我和 Audius
-      const [kuwoRes, audiusRes] = await Promise.allSettled([
+      // 同时搜酷我、Audius 和网易云
+      const [kuwoRes, audiusRes, neteaseRes] = await Promise.allSettled([
         fetch(`/api/music-search?q=${encodeURIComponent(q)}&rn=15`).then(r => r.json()),
-        fetch(`/api/audius-search?q=${encodeURIComponent(q)}&rn=15`).then(r => r.json())
+        fetch(`/api/audius-search?q=${encodeURIComponent(q)}&rn=15`).then(r => r.json()),
+        fetch(`/api/karpov-netease/search?q=${encodeURIComponent(q)}&page=1&page_size=15`).then(r => r.json())
       ]);
 
       // 酷我结果
@@ -100,6 +101,15 @@
           id: s.rid, title: s.name, artist: s.artist, album: s.album || '',
           duration: s.duration || 0, rid: s.rid, artwork: s.artwork || '',
           type: 'audius', streamUrl: s.streamUrl || ''
+        }));
+      }
+
+      // 网易云结果
+      if (neteaseRes.status === 'fulfilled' && neteaseRes.value.code === 200) {
+        (neteaseRes.value.data?.items || []).forEach(s => results.push({
+          id: s.id, title: s.title, artist: s.artist, album: s.album?.title || '',
+          duration: s.durationSeconds || 0, rid: s.id, artwork: s.album?.cover || '',
+          type: 'netease'
         }));
       }
 
@@ -124,8 +134,19 @@
       if (this.audio.src && this.audio.src.startsWith('blob:')) URL.revokeObjectURL(this.audio.src);
       try {
         // 根据来源选择播放路径
-        const src0 = t.type === 'audius' && t.streamUrl ? t.streamUrl : `/api/kuwo-proxy?rid=${t.rid}`;
-        let src = src0;
+        let src;
+        if (t.type === 'netease') {
+          // 网易云：先获取播放地址
+          const r = await fetch(`/api/karpov-netease/song/${t.rid}/url?level=exhigh`);
+          const d = await r.json();
+          src = d.data?.audio?.url;
+          if (!src) { console.warn('[网易云] 无播放地址'); this._skipAfterFail(); return; }
+        } else if (t.type === 'audius' && t.streamUrl) {
+          src = t.streamUrl;
+        } else {
+          src = `/api/kuwo-proxy?rid=${t.rid}`;
+        }
+        let playSrc = src;
         console.log('[播放]', t.type, t.title, src);
         // Audius 跨域流先 fetch 成 blob，避免 CORS 限制可视化
         if (t.type === 'audius' && src.startsWith('http')) {
@@ -413,7 +434,7 @@
           <div class="pl-idx">${i+1}</div>
           <div class="pl-art" style="background-image:url(${t.artwork||''})"></div>
           <div class="pl-info">
-            <div class="pl-title">${t.title} ${t.type==='audius'?'<span style="font-size:.55rem;color:#22c55e;background:rgba(34,197,94,.15);padding:1px 5px;border-radius:4px">Audius</span>':t.type==='kuwo'?'<span style="font-size:.55rem;color:#646cff;background:rgba(100,108,255,.15);padding:1px 5px;border-radius:4px">酷我</span>':''}</div>
+            <div class="pl-title">${t.title} ${t.type==='audius'?'<span style="font-size:.55rem;color:#22c55e;background:rgba(34,197,94,.15);padding:1px 5px;border-radius:4px">Audius</span>':t.type==='kuwo'?'<span style="font-size:.55rem;color:#646cff;background:rgba(100,108,255,.15);padding:1px 5px;border-radius:4px">酷我</span>':t.type==='netease'?'<span style="font-size:.55rem;color:#ec4899;background:rgba(236,72,153,.15);padding:1px 5px;border-radius:4px">网易云</span>':''}</div>
             <div class="pl-artist">${t.artist}</div>
           </div>
           <div class="pl-dur">${t.duration?this.fmt(t.duration):''}</div>
