@@ -253,8 +253,13 @@
       player.querySelector('.fnm-song-artist').textContent =
         this.currentSong.artist || this.currentSong.artists?.map(a => a.name).join(' / ') || '';
 
-      // 获取播放链接
+      // 获取播放链接（先试网易云，失败走 Audius）
+      const songName = this.currentSong.title;
+      const artistName = this.currentSong.artist || '';
+      const searchQuery = `${songName} ${artistName}`.trim();
+
       try {
+        // 先试网易云直接播放
         const r = await fetch(`/api/karpov-netease/song/${this.currentSong.id}/url?level=exhigh`);
         const d = await r.json();
         if (d.code === 200 && d.data?.audio?.url) {
@@ -262,12 +267,30 @@
           this.audio.play();
           this.playing = true;
           this.syncPlayBtn();
-        } else {
-          console.warn('获取播放链接失败:', d);
+          return;
         }
-      } catch (err) {
-        console.error('播放失败:', err);
+      } catch (e) {
+        console.warn('网易云播放失败，尝试 Audius:', e);
       }
+
+      // fallback: 用 Audius 搜索播放
+      try {
+        const ar = await fetch(`/api/audius-search?q=${encodeURIComponent(searchQuery)}&limit=1`);
+        const ad = await ar.json();
+        if (ad.data?.length) {
+          const track = ad.data[0];
+          this.audio.src = `https://discoveryprovider.audius.co/v1/tracks/${track.id}/stream?app_name=fishplayer`;
+          this.audio.play();
+          this.playing = true;
+          this.syncPlayBtn();
+          return;
+        }
+      } catch (e) {
+        console.warn('Audius 搜索也失败:', e);
+      }
+
+      // 都失败了
+      this.showToast('⚠️ 该歌曲暂时无法播放');
     }
 
     togglePlay() {
