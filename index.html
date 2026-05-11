@@ -151,10 +151,10 @@
         .section>*{max-width:100%}
         .section-header{text-align:center;margin-bottom:48px}
         .section-tag{font-size:.75rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;display:inline-flex;align-items:center;gap:6px}
-        .section-tag::before,.section-tag::after{content:'';width:20px;height:1px;background:var(--accent);opacity:.5}
-        .section-tag::before{animation>tagLine 2s ease-in-out infinite}
+        .section-tag::before,.section-tag::after{content:'';width:30px;height:1px;background:var(--accent);opacity:.5;transform-origin:center}
+        .section-tag::before{animation:tagLine 2s ease-in-out infinite}
         .section-tag::after{animation:tagLine 2s ease-in-out infinite reverse}
-        @keyframes tagLine{0%,100%{width:20px;opacity:.5}50%{width:40px;opacity:1}}
+        @keyframes tagLine{0%,100%{transform:scaleX(1);opacity:.5}50%{transform:scaleX(1.5);opacity:1}}
         .section-title{font-size:1.8rem;font-weight:900;position:relative;display:inline-block}
         .section-title::after{content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:40px;height:3px;background:linear-gradient(90deg,var(--accent),var(--pink));border-radius:2px;transition:width .3s}
         .section-header:hover .section-title::after{width:80px}
