@@ -3,7 +3,7 @@ export async function onRequestGet(context) {
   const { searchParams, pathname } = new URL(context.request.url);
   const path = pathname.replace('/api/karpov-netease', '');
   
-  const KARPOV_BASE = 'https://syntax-tobago-scale-rid.trycloudflare.com';
+  const KARPOV_BASE = 'https://colleagues-enabling-figured-marine.trycloudflare.com';
   const KARPOV_KEY = 'mk_9wXQ7IgA9X_3vmnJzunsjG8bVQ_oGlSW';
 
   try {
