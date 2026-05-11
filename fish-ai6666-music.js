@@ -90,8 +90,8 @@
         .f6m-list{max-height:400px;overflow-y:auto;padding:8px}
         .f6m-list::-webkit-scrollbar{width:4px}
         .f6m-list::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
-        .f6m-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:.2s}
-        .f6m-item:hover{background:#1a1a1a}
+        .f6m-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:.2s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+        .f6m-item:hover,.f6m-item:active{background:#1a1a1a}
         .f6m-item-on{background:#1a0030}
         .f6m-item-img{width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0}
         .f6m-item-body{flex:1;min-width:0}
@@ -243,17 +243,25 @@
           </div>
           <button class="f6m-item-act" title="播放">▶</button>
         </div>`).join('');
-      el.querySelectorAll('.f6m-item').forEach(x => x.onclick = e => { if(e.target.closest('a'))return; this.play(+x.dataset.i); });
+      el.querySelectorAll('.f6m-item').forEach(x => {
+        const handler = e => { e.preventDefault(); if(e.target.closest('a'))return; this.play(+x.dataset.i); };
+        x.addEventListener('click', handler, { passive: false });
+      });
     }
 
     // === 播放 ===
     play(i) {
       const songs = this.tab === 'mine' ? this.myMusic : this.songs;
-      if (!songs.length) return;
+      console.log('[Music] play called, idx:', i, 'songs:', songs.length, 'tab:', this.tab);
+      if (!songs.length) { console.warn('[Music] No songs!'); return; }
       this.idx = i;
       const s = songs[i];
+      if (!s || !s.mp3) { console.warn('[Music] No mp3 for song:', s); return; }
+      console.log('[Music] Playing:', s.title, s.mp3.substring(0, 60));
       this.audio.src = s.mp3;
-      this.audio.play().catch(()=>{});
+      this.audio.load();
+      const p = this.audio.play();
+      if (p) p.catch(e => { console.error('[Music] Play error:', e.message || e); });
       this.playing = true;
       this.ui(s);
       this.renderList();
