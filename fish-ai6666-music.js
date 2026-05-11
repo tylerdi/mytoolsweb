@@ -269,7 +269,7 @@
           </div>
           <button class="f6m-item-act" title="${canPlay?'播放':'暂不可播'}">${canPlay?'▶':'⊘'}</button>
         </div>`;
-      }).join(');
+      }).join('');
       el.querySelectorAll('.f6m-item').forEach(x => {
         const idx = +x.dataset.i;
         x.addEventListener('click', e => { e.preventDefault(); if(e.target.closest('a'))return; this.play(idx); }, { passive: false });
