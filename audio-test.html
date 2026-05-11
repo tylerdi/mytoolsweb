@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>音频测试</title></head>
+<body style="background:#111;color:#fff;font-family:system-ui;padding:20px">
+<h2>🎵 音频播放测试</h2>
+
+<p>测试1: 碳基圈 mp3</p>
+<audio id="a1" controls src="https://c.ai6666.com/music/mp3/96d2bbcc-bef7-4653-92ba-1b0cfc00de51.mp3" style="width:100%"></audio>
+
+<p>测试2: 网易云 mp3</p>
+<audio id="a2" controls src="https://music.163.com/song/media/outer/url?id=1901371647.mp3" style="width:100%"></audio>
+
+<p>测试3: JS 播放</p>
+<button onclick="testPlay()" style="padding:12px 24px;font-size:16px;border:none;border-radius:8px;background:#646cff;color:#fff">点击播放</button>
+<div id="status" style="margin-top:12px;color:#888"></div>
+
+<script>
+function testPlay() {
+  const a = new Audio('https://c.ai6666.com/music/mp3/96d2bbcc-bef7-4653-92ba-1b0cfc00de51.mp3');
+  const s = document.getElementById('status');
+  s.textContent = '⏳ 加载中...';
+  a.play().then(() => {
+    s.textContent = '✅ 播放成功！';
+  }).catch(e => {
+    s.textContent = '❌ 播放失败: ' + e.message + ' (name: ' + e.name + ')';
+  });
+  a.onerror = (e) => {
+    s.textContent = '❌ 加载错误: ' + (a.error ? a.error.code + ' - ' + a.error.message : '未知');
+  };
+}
+</script>
+</body>
+</html>
