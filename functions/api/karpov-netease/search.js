@@ -1,7 +1,7 @@
 // Cloudflare Pages Function: NetEase Music Search via Karpov Gateway
 // GET /api/karpov-netease/search?q=keyword&page=1&page_size=10
 
-const KARPOV_BASE = 'https://women-weekends-instructions-amendment.trycloudflare.com';
+const KARPOV_BASE = 'https://nine-management-corresponding-change.trycloudflare.com';
 const KARPOV_KEY = 'mk_9wXQ7IgA9X_3vmnJzunsjG8bVQ_oGlSW';
 
 export async function onRequestGet(context) {
