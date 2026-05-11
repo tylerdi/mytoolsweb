@@ -119,7 +119,22 @@ export async function onRequestGet(context) {
   // GET /api/ai6666-music — 热门音乐（默认）
   // 优先用网页抓取（更稳定，包含完整元数据）
   const songs = await fetchHallFromWeb();
-  return jsonResp({ songs, fetchedAt: Date.now() });
+
+  // 合并本地 AI 生成的歌曲（补充网页抓取可能遗漏的新歌）
+  let localSongs = [];
+  try {
+    const localResp = await fetch(new URL('/api/ai6666-music-data.json', url).toString());
+    if (localResp.ok) {
+      const localData = await localResp.json();
+      if (localData.songs) localSongs = localData.songs;
+    }
+  } catch {}
+
+  // 去重合并（本地歌优先，网页歌补充）
+  const ids = new Set(localSongs.map(s => s.id));
+  const merged = [...localSongs, ...songs.filter(s => !ids.has(s.id))];
+
+  return jsonResp({ songs: merged, fetchedAt: Date.now() });
 }
 
 // POST /api/ai6666-music/generate — 生成音乐
