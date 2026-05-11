@@ -47,7 +47,7 @@
     render() {
       this.el.innerHTML = `
       <style>
-        .f6m-wrap{background:#111;border-radius:16px;overflow:hidden;border:1px solid #222}
+        .f6m-wrap{background:#111;border-radius:16px;overflow:hidden;border:1px solid #222;-webkit-overflow-scrolling:touch}
         .f6m-topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#161616;border-bottom:1px solid #222}
         .f6m-tabs{display:flex;gap:4px}
         .f6m-tab{background:none;border:none;color:#888;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:.2s}
