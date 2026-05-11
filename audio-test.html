@@ -4,29 +4,50 @@
 <body style="background:#111;color:#fff;font-family:system-ui;padding:20px">
 <h2>🎵 音频播放测试</h2>
 
-<p>测试1: 碳基圈 mp3</p>
-<audio id="a1" controls src="https://c.ai6666.com/music/mp3/96d2bbcc-bef7-4653-92ba-1b0cfc00de51.mp3" style="width:100%"></audio>
+<p>测试1: 碳基圈 mp3 (原生控件)</p>
+<audio controls src="https://c.ai6666.com/music/mp3/96d2bbcc-bef7-4653-92ba-1b0cfc00de51.mp3" style="width:100%"></audio>
 
-<p>测试2: 网易云 mp3</p>
-<audio id="a2" controls src="https://music.163.com/song/media/outer/url?id=1901371647.mp3" style="width:100%"></audio>
+<p>测试2: 公共测试 mp3</p>
+<audio controls src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" style="width:100%"></audio>
 
-<p>测试3: JS 播放</p>
-<button onclick="testPlay()" style="padding:12px 24px;font-size:16px;border:none;border-radius:8px;background:#646cff;color:#fff">点击播放</button>
-<div id="status" style="margin-top:12px;color:#888"></div>
+<p>测试3: JS 播放碳基圈</p>
+<button onclick="test1()" style="padding:12px 24px;font-size:16px;border:none;border-radius:8px;background:#646cff;color:#fff;margin:4px">碳基圈 mp3</button>
+<div id="s1" style="margin:8px 0;color:#888"></div>
+
+<p>测试4: JS 播放公共 mp3</p>
+<button onclick="test2()" style="padding:12px 24px;font-size:16px;border:none;border-radius:8px;background:#22c55e;color:#fff;margin:4px">公共 mp3</button>
+<div id="s2" style="margin:8px 0;color:#888"></div>
+
+<p>测试5: fetch 检测</p>
+<button onclick="test3()" style="padding:12px 24px;font-size:16px;border:none;border-radius:8px;background:#f59e0b;color:#fff;margin:4px">Fetch 测试</button>
+<div id="s3" style="margin:8px 0;color:#888"></div>
 
 <script>
-function testPlay() {
-  const a = new Audio('https://c.ai6666.com/music/mp3/96d2bbcc-bef7-4653-92ba-1b0cfc00de51.mp3');
-  const s = document.getElementById('status');
+function test1() {
+  const s = document.getElementById('s1');
   s.textContent = '⏳ 加载中...';
-  a.play().then(() => {
-    s.textContent = '✅ 播放成功！';
-  }).catch(e => {
-    s.textContent = '❌ 播放失败: ' + e.message + ' (name: ' + e.name + ')';
-  });
-  a.onerror = (e) => {
-    s.textContent = '❌ 加载错误: ' + (a.error ? a.error.code + ' - ' + a.error.message : '未知');
-  };
+  const a = new Audio();
+  a.src = 'https://c.ai6666.com/music/mp3/96d2bbcc-bef7-4653-92ba-1b0cfc00de51.mp3';
+  a.oncanplay = () => { s.textContent = '✅ 可以播放! duration=' + Math.round(a.duration) + 's'; };
+  a.onerror = () => { s.textContent = '❌ 加载错误 code=' + (a.error?.code) + ' msg=' + (a.error?.message || '?'); };
+  a.play().then(() => { s.textContent = '✅ 播放成功!'; }).catch(e => { s.textContent += '\n❌ play()失败: ' + e.name + ': ' + e.message; });
+}
+function test2() {
+  const s = document.getElementById('s2');
+  s.textContent = '⏳ 加载中...';
+  const a = new Audio();
+  a.src = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
+  a.oncanplay = () => { s.textContent = '✅ 可以播放! duration=' + Math.round(a.duration) + 's'; };
+  a.onerror = () => { s.textContent = '❌ 加载错误 code=' + (a.error?.code) + ' msg=' + (a.error?.message || '?'); };
+  a.play().then(() => { s.textContent = '✅ 播放成功!'; }).catch(e => { s.textContent += '\n❌ play()失败: ' + e.name + ': ' + e.message; });
+}
+async function test3() {
+  const s = document.getElementById('s3');
+  s.textContent = '⏳ 检测中...';
+  try {
+    const r = await fetch('https://c.ai6666.com/music/mp3/96d2bbcc-bef7-4653-92ba-1b0cfc00de51.mp3', { method: 'HEAD' });
+    s.textContent = '✅ HTTP ' + r.status + ' | Content-Type: ' + r.headers.get('content-type') + ' | Size: ' + Math.round((+r.headers.get('content-length')||0)/1024) + 'KB';
+  } catch(e) { s.textContent = '❌ Fetch失败: ' + e.message; }
 }
 </script>
 </body>
