@@ -239,6 +239,29 @@
             <div id="diff-result" class="tool-result" style="white-space:pre-wrap;line-height:2"></div>
         </div>
 
+        <!-- 密码生成器 -->
+        <div class="tool-card">
+            <h3><span class="icon">🔑</span> 密码生成器</h3>
+            <div class="tool-area">
+                <div class="tool-row">
+                    <label style="font-size:.8rem;color:var(--text-dim);white-space:nowrap">长度</label>
+                    <input type="number" id="pwd-len" value="16" min="4" max="128" style="width:60px;flex:none">
+                </div>
+                <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:8px;font-size:.85rem">
+                    <label><input type="checkbox" id="pwd-upper" checked> A-Z</label>
+                    <label><input type="checkbox" id="pwd-lower" checked> a-z</label>
+                    <label><input type="checkbox" id="pwd-digit" checked> 0-9</label>
+                    <label><input type="checkbox" id="pwd-symbol" checked> !@#$</label>
+                </div>
+            </div>
+            <div class="tool-actions">
+                <button class="tool-btn primary" onclick="genPassword()">生成密码</button>
+                <button class="tool-btn primary" onclick="genBatch()">批量生成</button>
+                <button class="tool-btn" onclick="copyResult('pwd-result')">复制</button>
+            </div>
+            <div class="tool-result" id="pwd-result"></div>
+        </div>
+
     </div>
 </div>
 
@@ -471,6 +494,38 @@ function textDiff() {
     const summary = `<div style="margin-bottom:12px;padding:8px 12px;background:var(--surface);border-radius:8px;font-size:.85rem;color:var(--text-dim)">` +
         `共 ${lines.length} 行 | <span style="color:#22c55e">+${addCount} 新增</span> | <span style="color:#ef4444">-${delCount} 删除</span></div>`;
     result.innerHTML = summary + html;
+}
+
+// Password Generator
+function genPassword() {
+    const len = Math.max(4, Math.min(128, +document.getElementById('pwd-len').value || 16));
+    let chars = '';
+    if (document.getElementById('pwd-upper').checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (document.getElementById('pwd-lower').checked) chars += 'abcdefghijklmnopqrstuvwxyz';
+    if (document.getElementById('pwd-digit').checked) chars += '0123456789';
+    if (document.getElementById('pwd-symbol').checked) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    if (!chars) { document.getElementById('pwd-result').textContent = '❌ 请至少选择一种字符类型'; return; }
+    const arr = crypto.getRandomValues(new Uint8Array(len));
+    let pwd = '';
+    for (let i = 0; i < len; i++) pwd += chars[arr[i] % chars.length];
+    document.getElementById('pwd-result').textContent = pwd;
+}
+function genBatch() {
+    const results = [];
+    for (let i = 0; i < 10; i++) {
+        const len = Math.max(4, Math.min(128, +document.getElementById('pwd-len').value || 16));
+        let chars = '';
+        if (document.getElementById('pwd-upper').checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        if (document.getElementById('pwd-lower').checked) chars += 'abcdefghijklmnopqrstuvwxyz';
+        if (document.getElementById('pwd-digit').checked) chars += '0123456789';
+        if (document.getElementById('pwd-symbol').checked) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+        if (!chars) { document.getElementById('pwd-result').textContent = '❌ 请至少选择一种字符类型'; return; }
+        const arr = crypto.getRandomValues(new Uint8Array(len));
+        let pwd = '';
+        for (let j = 0; j < len; j++) pwd += chars[arr[j] % chars.length];
+        results.push(pwd);
+    }
+    document.getElementById('pwd-result').textContent = results.join('\n');
 }
 </script>
 
