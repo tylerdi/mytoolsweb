@@ -1,6 +1,8 @@
-// Cloudflare Pages Function: NetEase Music Search
+// Cloudflare Pages Function: NetEase Music Search via Karpov Gateway
 // GET /api/karpov-netease/search?q=keyword&page=1&page_size=10
-// 直连网易云公共 API，不依赖 Karpov 隧道
+
+const KARPOV_GATEWAY = 'https://karpov.tylerzhang.xyz';
+const KARPOV_API_KEY = 'mk_9wXQ7IgA9X_3vmnJzunsjG8bVQ_oGlSW';
 
 export async function onRequestGet(context) {
   const { searchParams } = new URL(context.request.url);
@@ -14,25 +16,29 @@ export async function onRequestGet(context) {
 
   try {
     const offset = (page - 1) * pageSize;
-    const url = `https://music.163.com/api/search/get?s=${encodeURIComponent(q)}&type=1&offset=${offset}&limit=${pageSize}`;
+    const url = `${KARPOV_GATEWAY}/v1/netease/search/songs?q=${encodeURIComponent(q)}&page=${page}&limit=${pageSize}`;
     const resp = await fetch(url, {
       headers: {
-        'Referer': 'https://music.163.com/',
+        'X-API-Key': KARPOV_API_KEY,
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
       },
     });
     const raw = await resp.json();
 
-    const items = (raw.result?.songs || []).map(s => ({
+    if (raw.code !== 200) {
+      return Response.json({ error: raw.message || 'Search failed' }, { status: 500 });
+    }
+
+    const items = (raw.data?.items || []).map(s => ({
       id: String(s.id),
-      title: s.name,
-      artist: (s.artists || []).map(a => a.name).join(' / '),
-      artists: (s.artists || []).map(a => ({ id: String(a.id), name: a.name })),
-      album: s.album ? { id: String(s.album.id), title: s.album.name, cover: s.album.picUrl ? s.album.picUrl + '?param=300y300' : '' } : null,
-      durationSeconds: Math.round((s.duration || 0) / 1000),
-      isVipOnly: (s.fee === 1),
-      playable: true,
-      provider: 'netease',
+      title: s.title,
+      artist: s.artist || s.artists?.map(a => a.name).join(' / ') || '',
+      artists: s.artists || [],
+      album: s.album || null,
+      durationSeconds: s.durationSeconds || 0,
+      isVipOnly: s.isVipOnly || false,
+      playable: s.playable || false,
+      provider: s.provider || 'netease',
     }));
 
     return Response.json({
@@ -40,10 +46,10 @@ export async function onRequestGet(context) {
       message: 'success',
       data: {
         items,
-        hasMore: (raw.result?.songCount || 0) > offset + pageSize,
+        hasMore: raw.data?.hasMore || false,
         page,
         pageSize,
-        total: raw.result?.songCount || 0,
+        total: raw.data?.total || 0,
       }
     }, {
       headers: { 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=300' },

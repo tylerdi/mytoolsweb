@@ -1,6 +1,8 @@
-// Cloudflare Pages Function: Get NetEase song play URL
+// Cloudflare Pages Function: Get NetEase song play URL via Karpov Gateway
 // GET /api/karpov-netease/song/:id/url
-// 直连网易云公共 API
+
+const KARPOV_GATEWAY = 'https://karpov.tylerzhang.xyz';
+const KARPOV_API_KEY = 'mk_9wXQ7IgA9X_3vmnJzunsjG8bVQ_oGlSW';
 
 export async function onRequestGet(context) {
   const { searchParams, pathname } = new URL(context.request.url);
@@ -11,27 +13,27 @@ export async function onRequestGet(context) {
     return Response.json({ error: 'Invalid song id' }, { status: 400 });
   }
 
+  const level = searchParams.get('level') || 'exhigh';
+
   try {
-    const url = `https://music.163.com/api/song/enhance/player/url?id=${songId}&ids=[${songId}]&br=320000`;
+    const url = `${KARPOV_GATEWAY}/v1/netease/song/url?id=${songId}&level=${level}`;
     const resp = await fetch(url, {
       headers: {
-        'Referer': 'https://music.163.com/',
+        'X-API-Key': KARPOV_API_KEY,
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
-        'Cookie': 'os=pc; appver=2.10.15;',
       },
     });
     const raw = await resp.json();
-    const song = raw.data?.[0];
 
-    if (song && song.url) {
+    if (raw.code === 200 && raw.data?.url) {
       return Response.json({
         code: 200,
         message: 'success',
         data: {
-          audio: { url: song.url },
-          br: song.br || 128000,
-          size: song.size || 0,
-          type: song.type || 'mp3',
+          audio: { url: raw.data.url },
+          br: raw.data.br || 128000,
+          size: raw.data.size || 0,
+          type: raw.data.type || 'mp3',
         }
       }, {
         headers: { 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=600' },
