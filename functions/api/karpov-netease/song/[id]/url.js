@@ -16,7 +16,7 @@ export async function onRequestGet(context) {
   const level = searchParams.get('level') || 'exhigh';
 
   try {
-    const url = `${KARPOV_GATEWAY}/v1/netease/song/url?id=${songId}&level=${level}`;
+    const url = `${KARPOV_GATEWAY}/v1/netease/songs/${songId}/url?quality=${level}`;
     const resp = await fetch(url, {
       headers: {
         'X-API-Key': KARPOV_API_KEY,
@@ -25,22 +25,22 @@ export async function onRequestGet(context) {
     });
     const raw = await resp.json();
 
-    if (raw.code === 200 && raw.data?.url) {
+    if (raw.code === 200 && raw.data?.audio?.url) {
       return Response.json({
         code: 200,
         message: 'success',
         data: {
-          audio: { url: raw.data.url },
-          br: raw.data.br || 128000,
-          size: raw.data.size || 0,
-          type: raw.data.type || 'mp3',
+          audio: { url: raw.data.audio.url },
+          br: raw.data.audio.sizeBytes || 0,
+          size: raw.data.audio.sizeBytes || 0,
+          type: raw.data.audio.format || 'mp3',
         }
       }, {
         headers: { 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'public, max-age=600' },
       });
     }
 
-    return Response.json({ code: 404, message: 'Song not available' }, { status: 404 });
+    return Response.json({ code: 404, message: 'Song not available', detail: raw }, { status: 404 });
   } catch (err) {
     return Response.json({ error: err.message }, { status: 500 });
   }
