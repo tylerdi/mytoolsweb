@@ -4,7 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>工具 · Tyler</title>
+    <meta name="description" content="免费在线AI工具，开箱即用">
     <link rel="icon" type="image/png" href="resource/easyclaw.png">
+    <link rel="canonical" href="https://tylerzhang.xyz/tool.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tylerzhang.xyz/tool.html">
+    <meta property="og:title" content="工具 · Tyler">
+    <meta property="og:description" content="免费在线AI工具，开箱即用">
+    <meta property="og:image" content="https://tylerzhang.xyz/resource/easyclaw.png">
+    <meta property="og:site_name" content="小鱼儿的数字花园">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="工具 · Tyler">
+    <meta name="twitter:description" content="免费在线AI工具，开箱即用">
     <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
@@ -193,8 +204,24 @@
     if (!tool) {
         document.getElementById('component').innerHTML = '<div class="loading">❌ 工具不存在</div>';
     } else {
-        document.title = tool.title + ' · Tyler';
+        // 动态更新标题和meta标签（SEO + 社交分享）
+        const fullTitle = tool.title + ' · 小鱼儿数字花园';
+        const desc = tool.title.replace(/[^一-龥a-zA-Z0-9 ]/g,'') + ' - 免费在线AI工具，由Tyler开发';
+        document.title = fullTitle;
         document.getElementById('toolTitle').textContent = tool.title;
+        // 更新meta标签
+        const updateMeta = (attr, key, val) => {
+            let el = document.querySelector(`meta[${attr}="${key}"]`);
+            if (el) el.content = val;
+        };
+        updateMeta('property','og:title', fullTitle);
+        updateMeta('property','og:description', desc);
+        updateMeta('name','twitter:title', fullTitle);
+        updateMeta('name','twitter:description', desc);
+        const descMeta = document.querySelector('meta[name="description"]');
+        if (descMeta) descMeta.content = desc;
+        const canonical = document.querySelector('link[rel="canonical"]');
+        if (canonical) canonical.href = 'https://tylerzhang.xyz/tool.html?id=' + id;
         // Create container div with the ID the component expects
         const CONTAINER_MAP = {
             'fish-mood': 'mood-diary',
