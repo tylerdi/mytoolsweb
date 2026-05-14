@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>免费在线AI文字转语音(TTS) - 中文AI配音工具 | Tyler工具箱</title>
+    <meta name="description" content="免费在线AI文字转语音工具，支持中文、英文等多语言，高质量AI配音，一键生成MP3。无需注册，开箱即用。">
+    <meta name="keywords" content="文字转语音,TTS,AI配音,在线TTS,免费文字转语音,AI语音合成,中文TTS,AI朗读,文本转语音在线,MP3生成">
+    <link rel="canonical" href="https://tylerzhang.xyz/ai-tts.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tylerzhang.xyz/ai-tts.html">
+    <meta property="og:title" content="免费在线AI文字转语音(TTS) - 中文AI配音工具">
+    <meta property="og:description" content="免费在线AI文字转语音工具，支持中文英文，高质量AI配音，一键生成MP3。">
+    <meta property="og:image" content="https://tylerzhang.xyz/resource/easyclaw.png">
+    <meta property="og:site_name" content="Tyler工具箱">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="免费在线AI文字转语音(TTS) - 中文AI配音工具">
+    <meta name="twitter:description" content="免费在线AI文字转语音工具，支持中文英文，高质量AI配音，一键生成MP3。">
+    <link rel="icon" type="image/png" href="resource/easyclaw.png">
+    <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai:wght@300;400;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "AI文字转语音(TTS)工具",
+        "url": "https://tylerzhang.xyz/ai-tts.html",
+        "description": "免费在线AI文字转语音工具，支持中文英文等多语言，高质量AI配音，一键生成MP3。",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Web",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+        "inLanguage": ["zh-CN", "en"]
+    }
+    </script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#0a0a0a;--surface:#141414;--border:#2a2a2a;--text:#e8e8e8;--text-dim:#888;--accent:#646cff;--pink:#ff6b9d;--gold:#d4a853;--green:#22c55e}
+        body{font-family:'LXGW WenKai',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh}
+        
+        /* 顶部导航 */
+        .topbar{position:sticky;top:0;background:rgba(10,10,10,.85);backdrop-filter:blur(24px);border-bottom:1px solid rgba(100,108,255,.15);padding:0.8rem 1.5rem;z-index:100;display:flex;align-items:center}
+        .topbar a{color:var(--accent);text-decoration:none;font-size:0.85rem;transition:color .2s}
+        .topbar a:hover{color:var(--pink)}
+        .topbar .title{font-weight:700;font-size:1rem;flex:1;text-align:center;background:linear-gradient(135deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        
+        /* 容器 */
+        .container{max-width:800px;margin:0 auto;padding:2rem 1.5rem}
+        
+        /* Hero */
+        .hero{text-align:center;padding:3rem 0 2rem}
+        .hero h1{font-size:2rem;font-weight:700;margin-bottom:0.5rem;background:linear-gradient(135deg,var(--accent),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .hero p{color:var(--text-dim);font-size:1rem;max-width:500px;margin:0 auto}
+        .badge-row{display:flex;gap:8px;justify-content:center;margin-top:1rem;flex-wrap:wrap}
+        .badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:0.75rem;background:rgba(100,108,255,.15);color:var(--accent);border:1px solid rgba(100,108,255,.2)}
+        
+        /* 工具区 */
+        .tool-area{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:2rem 0}
+        .input-group{margin-bottom:1.5rem}
+        .input-group label{display:block;font-size:0.9rem;color:var(--text-dim);margin-bottom:0.5rem}
+        textarea{width:100%;min-height:140px;padding:1rem;background:var(--bg);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:inherit;font-size:0.95rem;resize:vertical;transition:border-color .3s}
+        textarea:focus{outline:none;border-color:var(--accent)}
+        textarea::placeholder{color:#555}
+        
+        .controls{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin-bottom:1.5rem}
+        .control-item{display:flex;align-items:center;gap:0.5rem}
+        .control-item label{font-size:0.85rem;color:var(--text-dim);white-space:nowrap}
+        input[type="range"]{width:120px;accent-color:var(--accent)}
+        .speed-val{font-size:0.85rem;color:var(--accent);min-width:2em;text-align:center}
+        
+        .char-count{text-align:right;font-size:0.8rem;color:var(--text-dim);margin-bottom:1rem}
+        .char-count.warn{color:var(--pink)}
+        
+        .btn-generate{width:100%;padding:14px;border:none;border-radius:12px;font-size:1rem;font-weight:700;font-family:inherit;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--pink));color:#fff;transition:all .3s}
+        .btn-generate:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(100,108,255,.3)}
+        .btn-generate:active{transform:scale(.98)}
+        .btn-generate:disabled{opacity:.5;cursor:not-allowed;transform:none}
+        
+        /* 播放器 */
+        .player-area{margin-top:1.5rem;display:none}
+        .player-area.show{display:block;animation:fadeUp .4s ease}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .audio-player{width:100%;border-radius:12px;margin-bottom:1rem}
+        .btn-download{display:inline-block;padding:10px 24px;border-radius:10px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-family:inherit;font-size:0.9rem;cursor:pointer;transition:all .2s;text-decoration:none}
+        .btn-download:hover{background:var(--accent);color:#fff}
+        
+        /* 加载 */
+        .loading{display:none;text-align:center;padding:1rem;color:var(--text-dim)}
+        .loading.show{display:block}
+        .loading .spinner{display:inline-block;width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin-right:8px;vertical-align:middle}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        
+        /* 错误 */
+        .error-msg{display:none;padding:1rem;background:rgba(255,107,157,.1);border:1px solid rgba(255,107,157,.2);border-radius:10px;color:var(--pink);font-size:0.9rem;margin-top:1rem}
+        .error-msg.show{display:block}
+        
+        /* 特性介绍 */
+        .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:2rem 0}
+        .feature{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center}
+        .feature .icon{font-size:2rem;margin-bottom:0.5rem}
+        .feature h3{font-size:1rem;margin-bottom:0.3rem}
+        .feature p{font-size:0.8rem;color:var(--text-dim)}
+        
+        /* 使用步骤 */
+        .steps{margin:2rem 0}
+        .steps h2{font-size:1.3rem;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border)}
+        .step{display:flex;gap:1rem;margin-bottom:1.5rem;align-items:flex-start}
+        .step-num{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--pink));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;flex-shrink:0}
+        .step-content h3{font-size:1rem;margin-bottom:0.2rem}
+        .step-content p{font-size:0.85rem;color:var(--text-dim)}
+        
+        /* FAQ */
+        .faq{margin:2rem 0}
+        .faq h2{font-size:1.3rem;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border)}
+        .faq-item{margin-bottom:1.5rem}
+        .faq-item h3{font-size:1rem;margin-bottom:0.3rem;color:var(--accent)}
+        .faq-item p{font-size:0.9rem;color:var(--text-dim);line-height:1.8}
+        
+        /* 内链 */
+        .more-tools{margin:2rem 0;padding:2rem;background:var(--surface);border:1px solid var(--border);border-radius:16px;text-align:center}
+        .more-tools h2{font-size:1.2rem;margin-bottom:1rem}
+        .tool-links{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+        .tool-links a{padding:8px 20px;border-radius:10px;border:1px solid var(--border);color:var(--text);text-decoration:none;font-size:0.9rem;transition:all .2s}
+        .tool-links a:hover{border-color:var(--accent);color:var(--accent)}
+        
+        /* Footer */
+        .footer{text-align:center;padding:2rem 0;color:var(--text-dim);font-size:0.8rem;border-top:1px solid var(--border);margin-top:2rem}
+        .footer a{color:var(--accent);text-decoration:none}
+        
+        @media(max-width:768px){
+            .hero h1{font-size:1.5rem}
+            .tool-area{padding:1.5rem}
+            .controls{flex-direction:column;align-items:flex-start}
+            input[type="range"]{width:100%}
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <a href="/">← 首页</a>
+        <span class="title">AI 文字转语音</span>
+        <a href="/tools.html">工具箱</a>
+    </div>
+    
+    <div class="container">
+        <!-- Hero -->
+        <div class="hero">
+            <h1>🎙️ AI 文字转语音</h1>
+            <p>输入文字，一键生成高质量AI语音。支持中英文，免费使用，无需注册。</p>
+            <div class="badge-row">
+                <span class="badge">🆓 完全免费</span>
+                <span class="badge">🇨🇳 中文优化</span>
+                <span class="badge">⚡ 3秒生成</span>
+                <span class="badge">📥 下载MP3</span>
+            </div>
+        </div>
+        
+        <!-- 工具区 -->
+        <div class="tool-area">
+            <div class="input-group">
+                <label for="text-input">输入要转换的文字</label>
+                <textarea id="text-input" placeholder="在这里输入文字，比如：你好，欢迎使用AI文字转语音工具。支持中文和英文混合输入。" maxlength="500"></textarea>
+                <div class="char-count" id="char-count">0 / 500</div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-item">
+                    <label>语速</label>
+                    <input type="range" id="speed" min="0.5" max="2.0" step="0.1" value="1.0">
+                    <span class="speed-val" id="speed-val">1.0x</span>
+                </div>
+            </div>
+            
+            <button class="btn-generate" id="btn-generate" onclick="generate()">
+                🎵 生成语音
+            </button>
+            
+            <div class="loading" id="loading">
+                <span class="spinner"></span> 正在生成语音，请稍候...
+            </div>
+            
+            <div class="error-msg" id="error-msg"></div>
+            
+            <div class="player-area" id="player-area">
+                <audio class="audio-player" id="audio-player" controls></audio>
+                <br>
+                <button class="btn-download" id="btn-download" onclick="downloadAudio()">📥 下载 MP3</button>
+            </div>
+        </div>
+        
+        <!-- 特性 -->
+        <div class="features">
+            <div class="feature">
+                <div class="icon">🎯</div>
+                <h3>中文优化</h3>
+                <p>专为中文语音合成优化，发音自然流畅，告别机械感</p>
+            </div>
+            <div class="feature">
+                <div class="icon">⚡</div>
+                <h3>极速生成</h3>
+                <p>3秒内完成语音合成，无需排队等待</p>
+            </div>
+            <div class="feature">
+                <div class="icon">🎛️</div>
+                <h3>语速可调</h3>
+                <p>0.5倍到2倍语速自由调节，满足不同场景需求</p>
+            </div>
+            <div class="feature">
+                <div class="icon">🆓</div>
+                <h3>完全免费</h3>
+                <p>无需注册，无次数限制，无水印，开箱即用</p>
+            </div>
+        </div>
+        
+        <!-- 使用步骤 -->
+        <div class="steps">
+            <h2>📖 使用方法</h2>
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <h3>输入文字</h3>
+                    <p>在文本框中输入要转换为语音的文字内容，支持中文、英文及中英混合，最多500字。</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <h3>调节语速</h3>
+                    <p>拖动滑块选择语速。1.0x为正常语速，0.5x为慢速（适合学习），2.0x为快速（适合速听）。</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <h3>生成并下载</h3>
+                    <p>点击"生成语音"按钮，等待几秒即可在线试听。满意后点击"下载MP3"保存到本地。</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 使用场景 -->
+        <div class="steps">
+            <h2>💡 使用场景</h2>
+            <div class="step">
+                <div class="step-num">📱</div>
+                <div class="step-content">
+                    <h3>短视频配音</h3>
+                    <p>为抖音、快手、B站短视频快速生成旁白配音，省去录音设备和环境噪音的烦恼。</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">📚</div>
+                <div class="step-content">
+                    <h3>有声阅读</h3>
+                    <p>将文章、小说、学习资料转成语音，通勤路上用耳朵"阅读"。</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">🎓</div>
+                <div class="step-content">
+                    <h3>教学课件</h3>
+                    <p>为PPT、教学视频添加语音讲解，提升课件专业度。</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">♿</div>
+                <div class="step-content">
+                    <h3>无障碍辅助</h3>
+                    <p>帮助视障用户获取文字信息，让内容触达更多人。</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FAQ -->
+        <div class="faq">
+            <h2>❓ 常见问题</h2>
+            <div class="faq-item">
+                <h3>这个TTS工具是免费的吗？</h3>
+                <p>完全免费，无需注册账号，没有使用次数限制，生成的音频也没有水印。我们使用小米MIMO语音合成模型，提供高质量的中文语音。</p>
+            </div>
+            <div class="faq-item">
+                <h3>支持哪些语言？</h3>
+                <p>目前主要支持中文和英文，以及中英文混合输入。中文发音经过特别优化，自然度接近真人。</p>
+            </div>
+            <div class="faq-item">
+                <h3>生成的音频可以商用吗？</h3>
+                <p>生成的音频文件可以自由使用，包括个人和商业用途。如需大批量使用，建议联系确认授权。</p>
+            </div>
+            <div class="faq-item">
+                <h3>和微软、谷歌的TTS相比有什么优势？</h3>
+                <p>我们的优势在于：1）完全免费，无需API密钥；2）中文发音更自然，专为中文优化；3）无需注册，即开即用；4）支持在线试听和直接下载MP3。</p>
+            </div>
+            <div class="faq-item">
+                <h3>可以生成多长的语音？</h3>
+                <p>单次最多支持500字。如果需要更长的语音，可以分段生成后用音频编辑工具拼接。</p>
+            </div>
+        </div>
+        
+        <!-- 更多工具 -->
+        <div class="more-tools">
+            <h2>🔧 更多AI工具</h2>
+            <div class="tool-links">
+                <a href="/ai-image-generator.html">🎨 AI画图</a>
+                <a href="/tools.html">🛠️ 开发者工具</a>
+                <a href="/">🏠 首页</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Powered by <a href="/">Tyler工具箱</a> · 小米MIMO语音合成</p>
+        </div>
+    </div>
+    
+    <script>
+        const textInput = document.getElementById('text-input');
+        const charCount = document.getElementById('char-count');
+        const speedSlider = document.getElementById('speed');
+        const speedVal = document.getElementById('speed-val');
+        const btnGenerate = document.getElementById('btn-generate');
+        const loading = document.getElementById('loading');
+        const errorMsg = document.getElementById('error-msg');
+        const playerArea = document.getElementById('player-area');
+        const audioPlayer = document.getElementById('audio-player');
+        
+        let currentBlob = null;
+        
+        // 字数统计
+        textInput.addEventListener('input', () => {
+            const len = textInput.value.length;
+            charCount.textContent = `${len} / 500`;
+            charCount.className = len > 450 ? 'char-count warn' : 'char-count';
+        });
+        
+        // 语速显示
+        speedSlider.addEventListener('input', () => {
+            speedVal.textContent = parseFloat(speedSlider.value).toFixed(1) + 'x';
+        });
+        
+        // 生成语音
+        async function generate() {
+            const text = textInput.value.trim();
+            if (!text) {
+                showError('请输入要转换的文字');
+                return;
+            }
+            
+            btnGenerate.disabled = true;
+            loading.classList.add('show');
+            errorMsg.classList.remove('show');
+            playerArea.classList.remove('show');
+            
+            try {
+                const res = await fetch('/api/tts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: text,
+                        speed: parseFloat(speedSlider.value)
+                    })
+                });
+                
+                if (!res.ok) {
+                    const err = await res.json().catch(() => ({}));
+                    throw new Error(err.error || `请求失败 (${res.status})`);
+                }
+                
+                const blob = await res.blob();
+                currentBlob = blob;
+                const url = URL.createObjectURL(blob);
+                audioPlayer.src = url;
+                playerArea.classList.add('show');
+                
+            } catch (err) {
+                showError('生成失败：' + err.message);
+            } finally {
+                btnGenerate.disabled = false;
+                loading.classList.remove('show');
+            }
+        }
+        
+        // 下载
+        function downloadAudio() {
+            if (!currentBlob) return;
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(currentBlob);
+            a.download = 'tts-audio.mp3';
+            a.click();
+        }
+        
+        // 错误显示
+        function showError(msg) {
+            errorMsg.textContent = msg;
+            errorMsg.classList.add('show');
+        }
+        
+        // Ctrl+Enter 快捷键
+        textInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                generate();
+            }
+        });
+    </script>
+</body>
+</html>
