@@ -482,12 +482,10 @@
         <button class="close-btn" onclick="toggleMobileMenu()">✕</button>
         <div style="clear:both;padding-top:16px">
             <a href="/blog/">📝 博客</a>
-            <a href="/novel/">⚔️ 连载</a>
-            <a href="/gallery.html">🖼️ 图床</a>
-            <a href="/ideas.html">💡 灵感</a>
+            <a href="/ai-tts.html">🎙️ TTS</a>
+            <a href="/tools.html">🛠️ 工具箱</a>
             <a href="/resources.html">🧰 资源</a>
             <a href="/about.html">👤 关于</a>
-            <a href="/games.html">🎮 游戏</a>
             <a href="/changelog.html">📋 更新日志</a>
         </div>
     </div>
@@ -572,20 +570,20 @@
                 <h3>AI 工具箱</h3>
                 <p>JSON格式化、Base64、时间戳等</p>
             </a>
-            <a href="/novel/" class="feature-card reveal" style="--card-color:#d4a853">
-                <span class="feature-icon">📖</span>
-                <h3>武侠连载</h3>
-                <p>《沧海剑歌》每日更新</p>
+            <a href="/ai-tts.html" class="feature-card reveal" style="--card-color:#d4a853">
+                <span class="feature-icon">🎙️</span>
+                <h3>AI 文字转语音</h3>
+                <p>高质量中文TTS，免费MP3下载</p>
             </a>
-            <a href="/games.html" class="feature-card reveal" style="--card-color:#f97316">
-                <span class="feature-icon">🎮</span>
-                <h3>游戏厅</h3>
-                <p>摸鱼时间到！</p>
+            <a href="/tools/ai-image-generator.html" class="feature-card reveal" style="--card-color:#f97316">
+                <span class="feature-icon">🎨</span>
+                <h3>AI 画图</h3>
+                <p>文字生成图片，多风格支持</p>
             </a>
-            <a href="/ideas.html" class="feature-card reveal" style="--card-color:#22c55e">
-                <span class="feature-icon">💡</span>
-                <h3>灵感墙</h3>
-                <p>每日灵感点子</p>
+            <a href="/tools/ai-translation.html" class="feature-card reveal" style="--card-color:#22c55e">
+                <span class="feature-icon">🌐</span>
+                <h3>AI 翻译</h3>
+                <p>多语言智能翻译</p>
             </a>
             <a href="/resources.html" class="feature-card reveal" style="--card-color:#ec4899">
                 <span class="feature-icon">📚</span>
@@ -621,7 +619,7 @@
         </div>
         <div class="card-grid card-grid-4">
             <a class="feature-card reveal" href="/tools/ai-image-generator.html" style="--card-color:#646cff"><span class="feature-icon">🎨</span><h3>AI 画图</h3><p>文字生成图片</p></a>
-            <a class="feature-card reveal" href="/gallery.html" style="--card-color:#f97316"><span class="feature-icon">🖼️</span><h3>图床</h3><p>gpt-image-2 高质量画廊</p></a>
+
             <a class="feature-card reveal" href="/tools/ai-voice-generator.html" style="--card-color:#ec4899"><span class="feature-icon">🔊</span><h3>文字转语音</h3><p>MIMO TTS 多语言</p></a>
             <a class="feature-card reveal" href="/tools/ai-translation.html" style="--card-color:#22c55e"><span class="feature-icon">🌐</span><h3>AI 翻译</h3><p>多语言智能翻译</p></a>
             <a class="feature-card reveal" href="/tool.html?id=fish-speech-to-text" style="--card-color:#f59e0b"><span class="feature-icon">🎙️</span><h3>语音转文字</h3><p>实时语音识别</p></a>
@@ -776,14 +774,7 @@
                 <div class="dash-num" id="dash-posts">0</div>
                 <div class="dash-label">博客文章</div>
             </div>
-            <div class="dash-card">
-                <div class="dash-num" id="dash-chapters">0</div>
-                <div class="dash-label">小说章节</div>
-            </div>
-            <div class="dash-card">
-                <div class="dash-num" id="dash-ideas">0</div>
-                <div class="dash-label">灵感点子</div>
-            </div>
+
         </div>
         <div style="margin-top:40px">
         </div>
@@ -964,7 +955,7 @@
     })();
 
     // 打字机效果
-    const phrases = ['每天写一篇博客','每天更新一章武侠小说','每天推荐一首歌','每天抛出一个问题','每天记录你的心情','每天给你一个挑战','随时陪你聊天 🐟'];
+    const phrases = ['免费AI文字转语音','在线AI画图','AI智能翻译','70+开发者工具','免费AI聊天助手','每天更新博客','随时陪你聊天 🐟'];
     let phraseIdx = 0, charIdx = 0, deleting = false;
     const typingEl = document.getElementById('typing');
     function typeLoop() {
@@ -1078,9 +1069,10 @@
     (function() {
         const launchDate = new Date('2026-04-30');
         const days = Math.ceil((new Date() - launchDate) / 86400000);
-        const targets = { 'hero-days': days, 'hero-tools': 69, 'hero-chapters': 3, 'dash-days': days, 'dash-posts': 5, 'dash-chapters': 3, 'dash-ideas': 15 };
+        const targets = { 'hero-days': days, 'hero-tools': 69, 'hero-chapters': 0, 'dash-days': days, 'dash-posts': 5, 'dash-chapters': 0 };
         // 获取真实章节数，再启动动画
         fetch('/novel/chapters.json').then(r=>r.json()).then(chs=>{
+        // novel removed
             const count = Array.isArray(chs) ? chs.length : 3;
             targets['hero-chapters'] = count;
             targets['dash-chapters'] = count;
