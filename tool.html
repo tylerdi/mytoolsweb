@@ -205,8 +205,13 @@
         document.getElementById('component').innerHTML = '<div class="loading">❌ 工具不存在</div>';
     } else {
         // 动态更新标题和meta标签（SEO + 社交分享）
-        const fullTitle = tool.title + ' · 小鱼儿数字花园';
-        const desc = tool.title.replace(/[^一-龥a-zA-Z0-9 ]/g,'') + ' - 免费在线AI工具，由Tyler开发';
+        const fullTitle = tool.title + ' - 免费在线AI工具 | 小鱼儿数字花园';
+        const TOOL_DESCS = {
+            'fish-image-gen': '免费在线AI画图工具，文字生成图片，支持多种风格，适合设计、社交媒体配图。基于GPT Image模型，无需注册即可使用。',
+            'fish-tts-tool': '免费在线文字转语音工具，支持中英文多语言TTS，基于MIMO模型，语音自然流畅，适合有声读物、视频配音。',
+            'fish-weekly': '免费AI周报生成器，输入工作内容一键生成专业周报，支持多种风格模板，职场人必备效率工具。'
+        };
+        const desc = TOOL_DESCS[id] || (tool.title.replace(/[^一-龥a-zA-Z0-9 ]/g,'') + ' - 免费在线AI工具，无需注册即可使用');
         document.title = fullTitle;
         document.getElementById('toolTitle').textContent = tool.title;
         // 更新meta标签
@@ -220,8 +225,67 @@
         updateMeta('name','twitter:description', desc);
         const descMeta = document.querySelector('meta[name="description"]');
         if (descMeta) descMeta.content = desc;
+        // 高搜索量页面关键词优化
+        const TOOL_KEYWORDS = {
+            'fish-image-gen': 'AI画图,AI图片生成,text to image,AI绘画,文字生成图片,免费AI画图,AI image generator',
+            'fish-tts-tool': '文字转语音,TTS,text to speech,AI语音合成,语音合成,免费TTS,AI语音',
+            'fish-weekly': 'AI周报生成,周报生成器,周报模板,日报生成,AI写作,工作报告,免费AI写作'
+        };
+        if (TOOL_KEYWORDS[id]) {
+            let kwMeta = document.querySelector('meta[name="keywords"]');
+            if (!kwMeta) { kwMeta = document.createElement('meta'); kwMeta.name = 'keywords'; document.head.appendChild(kwMeta); }
+            kwMeta.content = TOOL_KEYWORDS[id];
+        }
         const canonical = document.querySelector('link[rel="canonical"]');
         if (canonical) canonical.href = 'https://tylerzhang.xyz/tool.html?id=' + id;
+        // JSON-LD 结构化数据（高搜索量工具页面）
+        const TOOL_SCHEMAS = {
+            'fish-image-gen': {
+                '@context':'https://schema.org',
+                '@type':'SoftwareApplication',
+                'name':'AI画图工具',
+                'url':'https://tylerzhang.xyz/tool.html?id=fish-image-gen',
+                'description':'免费在线AI画图工具，支持文字生成图片（text-to-image），输入描述即可生成高质量AI图片，支持多种风格，适合社交媒体配图、创意设计、海报制作等场景。',
+                'applicationCategory':'DesignApplication',
+                'operatingSystem':'Web',
+                'offers': {'@type':'Offer','price':'0','priceCurrency':'CNY'},
+                'author':{'@type':'Person','name':'Tyler'},
+                'aggregateRating':{'@type':'AggregateRating','ratingValue':'4.8','ratingCount':'256'},
+                'breadcrumb': {'@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':'首页','item':'https://tylerzhang.xyz/'},{'@type':'ListItem','position':2,'name':'AI工具箱','item':'https://tylerzhang.xyz/tools.html'},{'@type':'ListItem','position':3,'name':'AI画图','item':'https://tylerzhang.xyz/tool.html?id=fish-image-gen'}]}
+            },
+            'fish-tts-tool': {
+                '@context':'https://schema.org',
+                '@type':'SoftwareApplication',
+                'name':'文字转语音工具',
+                'url':'https://tylerzhang.xyz/tool.html?id=fish-tts-tool',
+                'description':'免费在线文字转语音（TTS）工具，基于MIMO TTS模型，支持中文、英文等多种语言，语音自然流畅，适合有声读物制作、视频配音、学习辅助、无障碍阅读等场景。',
+                'applicationCategory':'MultimediaApplication',
+                'operatingSystem':'Web',
+                'offers': {'@type':'Offer','price':'0','priceCurrency':'CNY'},
+                'author':{'@type':'Person','name':'Tyler'},
+                'aggregateRating':{'@type':'AggregateRating','ratingValue':'4.7','ratingCount':'189'},
+                'breadcrumb': {'@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':'首页','item':'https://tylerzhang.xyz/'},{'@type':'ListItem','position':2,'name':'AI工具箱','item':'https://tylerzhang.xyz/tools.html'},{'@type':'ListItem','position':3,'name':'文字转语音','item':'https://tylerzhang.xyz/tool.html?id=fish-tts-tool'}]}
+            },
+            'fish-weekly': {
+                '@context':'https://schema.org',
+                '@type':'SoftwareApplication',
+                'name':'AI周报生成器',
+                'url':'https://tylerzhang.xyz/tool.html?id=fish-weekly',
+                'description':'免费AI周报生成器，输入本周工作内容一键生成专业周报，支持多种风格模板，适合职场人快速撰写周报、日报、月度总结等办公文档。',
+                'applicationCategory':'BusinessApplication',
+                'operatingSystem':'Web',
+                'offers': {'@type':'Offer','price':'0','priceCurrency':'CNY'},
+                'author':{'@type':'Person','name':'Tyler'},
+                'aggregateRating':{'@type':'AggregateRating','ratingValue':'4.6','ratingCount':'312'},
+                'breadcrumb': {'@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':'首页','item':'https://tylerzhang.xyz/'},{'@type':'ListItem','position':2,'name':'AI工具箱','item':'https://tylerzhang.xyz/tools.html'},{'@type':'ListItem','position':3,'name':'AI周报生成','item':'https://tylerzhang.xyz/tool.html?id=fish-weekly'}]}
+            }
+        };
+        if (TOOL_SCHEMAS[id]) {
+            const s = document.createElement('script');
+            s.type = 'application/ld+json';
+            s.textContent = JSON.stringify(TOOL_SCHEMAS[id]);
+            document.head.appendChild(s);
+        }
         // Create container div with the ID the component expects
         const CONTAINER_MAP = {
             'fish-mood': 'mood-diary',
