@@ -384,78 +384,7 @@
         @supports(-webkit-touch-callout:none){
             .hero{min-height:-webkit-fill-available}
         }
-        /* 碳基圈音乐广场 */
-        .f6m-wrap{background:linear-gradient(145deg,#18122b 0%,#130e24 50%,#0d0a1a 100%);border-radius:24px;border:1px solid rgba(139,92,246,.15);box-shadow:0 8px 40px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.04);overflow:hidden;position:relative}
-        .f6m-wrap::before{content:'';position:absolute;top:-80px;right:-60px;width:240px;height:240px;background:radial-gradient(circle,rgba(139,92,246,.12),transparent 70%);pointer-events:none}
-        .f6m-wrap::after{content:'';position:absolute;bottom:-60px;left:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(236,72,153,.1),transparent 70%);pointer-events:none}
-        .f6m-topbar{display:flex;align-items:center;padding:20px 28px 0;position:relative;z-index:1}
-        .f6m-tabs{display:flex;gap:6px;background:rgba(255,255,255,.04);padding:4px;border-radius:14px}
-        .f6m-tab{padding:8px 20px;border-radius:10px;border:none;background:transparent;color:#64748b;font-size:13px;font-weight:600;cursor:pointer;transition:.25s;letter-spacing:.3px}
-        .f6m-tab:hover{color:#cbd5e1}
-        .f6m-tab-active{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;box-shadow:0 2px 12px rgba(124,58,237,.35)}
-        .f6m-badge{margin-left:auto;font-size:11px;color:#64748b;background:rgba(255,255,255,.05);padding:4px 12px;border-radius:8px}
-        .f6m-body{display:flex;gap:0;min-height:440px;position:relative;z-index:1}
-        .f6m-player{width:300px;padding:28px 24px;display:flex;flex-direction:column;align-items:center;gap:16px;flex-shrink:0;background:linear-gradient(180deg,rgba(139,92,246,.06),transparent);border-right:1px solid rgba(255,255,255,.04)}
-        .f6m-cover-box{position:relative;width:200px;height:200px;border-radius:20px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06)}
-        .f6m-cover{width:100%;height:100%;background:linear-gradient(135deg,#1e1b4b,#312e81,#4c1d95);display:flex;align-items:center;justify-content:center;font-size:56px;background-size:cover;background-position:center;transition:transform .6s}
-        .f6m-cover-box:hover .f6m-cover{transform:scale(1.05)}
-        .f6m-viz{position:absolute;bottom:0;left:0;right:0;height:36px;display:flex;align-items:flex-end;justify-content:center;gap:3px;padding:0 24px 8px;opacity:0;transition:.4s;background:linear-gradient(transparent,rgba(0,0,0,.4))}
-        .f6m-viz-active{opacity:1}
-        .f6m-viz span{width:4px;background:linear-gradient(to top,#ec4899,#a78bfa);border-radius:2px;animation:f6m-bounce .6s ease-in-out infinite alternate}
-        .f6m-viz span:nth-child(1){height:8px;animation-delay:0s}
-        .f6m-viz span:nth-child(2){height:14px;animation-delay:.1s}
-        .f6m-viz span:nth-child(3){height:10px;animation-delay:.2s}
-        .f6m-viz span:nth-child(4){height:16px;animation-delay:.15s}
-        .f6m-viz span:nth-child(5){height:12px;animation-delay:.25s}
-        @keyframes f6m-bounce{to{height:4px}}
-        .f6m-meta{text-align:center;width:100%}
-        .f6m-song-title{font-size:16px;font-weight:700;color:#f1f5f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4}
-        .f6m-song-artist{font-size:13px;color:#a78bfa;margin-top:4px}
-        .f6m-song-artist a{color:#a78bfa;text-decoration:none}
-        .f6m-song-artist a:hover{text-decoration:underline}
-        .f6m-tags{font-size:11px;color:#475569;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px}
-        .f6m-progress{width:100%;height:5px;background:rgba(255,255,255,.07);border-radius:3px;cursor:pointer;position:relative;margin-top:4px}
-        .f6m-progress-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#ec4899);border-radius:3px;width:0;transition:width .1s}
-        .f6m-progress-knob{position:absolute;top:50%;left:0;width:14px;height:14px;background:#fff;border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 2px 10px rgba(0,0,0,.4);opacity:0;transition:opacity .2s}
-        .f6m-progress:hover .f6m-progress-knob{opacity:1}
-        .f6m-time{display:flex;justify-content:space-between;width:100%;font-size:11px;color:#475569;font-variant-numeric:tabular-nums}
-        .f6m-ctrls{display:flex;align-items:center;gap:10px}
-        .f6m-btn{width:42px;height:42px;border-radius:50%;border:none;background:rgba(255,255,255,.06);color:#94a3b8;font-size:16px;cursor:pointer;transition:.25s;display:flex;align-items:center;justify-content:center}
-        .f6m-btn:hover{background:rgba(255,255,255,.12);color:#e2e8f0;transform:scale(1.08)}
-        .f6m-btn-sm{width:34px;height:34px;font-size:14px}
-        .f6m-btn-play{width:56px;height:56px;font-size:24px;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;box-shadow:0 4px 24px rgba(124,58,237,.45)}
-        .f6m-btn-play:hover{box-shadow:0 6px 32px rgba(124,58,237,.6);transform:scale(1.1)}
-        .f6m-btn-on{background:rgba(124,58,237,.25)!important;color:#a78bfa!important}
-        .f6m-vol{display:flex;align-items:center;gap:10px;width:100%}
-        .f6m-vol-icon{font-size:14px;opacity:.5}
-        .f6m-vol-bar{flex:1;accent-color:#7c3aed;height:4px}
-        .f6m-list{flex:1;overflow-y:auto;padding:8px 0}
-        .f6m-list::-webkit-scrollbar{width:5px}
-        .f6m-list::-webkit-scrollbar-thumb{background:rgba(139,92,246,.2);border-radius:3px}
-        .f6m-item{display:flex;align-items:center;gap:14px;padding:10px 24px;cursor:pointer;transition:.2s;border-left:3px solid transparent;margin:0 8px;border-radius:0 10px 10px 0}
-        .f6m-item:hover{background:rgba(139,92,246,.08)}
-        .f6m-item-on{background:rgba(139,92,246,.12);border-left-color:#a855f7}
-        .f6m-item-img{width:44px;height:44px;border-radius:10px;object-fit:cover;flex-shrink:0;background:rgba(255,255,255,.05)}
-        .f6m-item-body{flex:1;min-width:0}
-        .f6m-item-name{font-size:13px;font-weight:600;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-        .f6m-item-sub{display:flex;gap:8px;font-size:11px;color:#475569;margin-top:3px}
-        .f6m-item-sub a{color:#7c3aed;text-decoration:none}
-        .f6m-item-sub a:hover{text-decoration:underline}
-        .f6m-item-act{width:32px;height:32px;border-radius:8px;border:none;background:rgba(255,255,255,.04);color:#64748b;font-size:12px;cursor:pointer;flex-shrink:0;transition:.2s;display:flex;align-items:center;justify-content:center}
-        .f6m-item-act:hover{background:rgba(139,92,246,.2);color:#a78bfa}
-        .f6m-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:240px;color:#475569;font-size:14px;gap:8px}
-        .f6m-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:240px;color:#64748b;gap:14px;font-size:13px}
-        .f6m-spinner{width:30px;height:30px;border:3px solid rgba(139,92,246,.15);border-top-color:#7c3aed;border-radius:50%;animation:f6m-spin .7s linear infinite}
-        @keyframes f6m-spin{to{transform:rotate(360deg)}}
-        @media(max-width:768px){
-            .f6m-body{flex-direction:column}
-            .f6m-player{width:100%;padding:20px;flex-direction:row;flex-wrap:wrap;gap:14px;border-right:none;border-bottom:1px solid rgba(255,255,255,.04)}
-            .f6m-cover-box{width:110px;height:110px;border-radius:16px}
-            .f6m-meta{flex:1;min-width:0;text-align:left}
-            .f6m-progress,.f6m-time,.f6m-ctrls,.f6m-vol{width:100%}
-            .f6m-list{max-height:320px}
-            .f6m-item{padding:10px 16px}
-        }
+
         /* 桌面端增强 */
         @media(min-width:769px){
             .feature-card:hover .feature-icon{transform:scale(1.15) rotate(5deg);transition:transform .3s}
@@ -528,31 +457,6 @@
             </div>
         </div>
         <div class="hero-scroll">向下探索<span class="arrow">↓</span></div>
-    </section>
-
-    <!-- ===== 音乐播放器（突出展示） ===== -->
-    <section class="section" style="padding-top:40px;padding-bottom:40px">
-        <div id="fish-music-player" class="reveal"></div>
-    </section>
-
-    <!-- ===== 碳基圈音乐广场 ===== -->
-    <section class="section">
-        <div class="section-header reveal">
-            <div class="section-tag">Music</div>
-            <h2 class="section-title">🎸 碳基圈音乐广场</h2>
-            <p class="section-desc">来自 ai6666.com 的 AI 生成音乐，每日更新</p>
-        </div>
-        <div id="fish-ai6666-music" class="reveal"></div>
-    </section>
-
-    <!-- ===== 网易云音乐 ===== -->
-    <section class="section">
-        <div class="section-header reveal">
-            <div class="section-tag">Netease</div>
-            <h2 class="section-title">🎵 网易云音乐</h2>
-            <p class="section-desc">搜索、播放、免费听歌</p>
-        </div>
-        <div id="fish-netease-music" class="reveal"></div>
     </section>
 
     <div class="divider-wrap"><span class="divider-icon">🌊</span></div>
@@ -643,7 +547,7 @@
             <a class="feature-card reveal" href="/tool.html?id=fish-resume" style="--card-color:#ec4899"><span class="feature-icon">📄</span><h3>简历生成器</h3><p>关键词变简历</p></a>
             <a class="feature-card reveal" href="/tool.html?id=fish-pyq" style="--card-color:#22c55e"><span class="feature-icon">📱</span><h3>朋友圈文案</h3><p>一键生成文案</p></a>
             <a class="feature-card reveal" href="/tool.html?id=fish-lyric-writer" style="--card-color:#f59e0b"><span class="feature-icon">🎵</span><h3>歌词创作</h3><p>AI写歌词</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-music" style="--card-color:#ec4899"><span class="feature-icon">🎶</span><h3>每日一歌</h3><p>AI推荐一首好歌</p></a>
+
             <a class="feature-card reveal" href="/tool.html?id=fish-imitate" style="--card-color:#8b5cf6"><span class="feature-icon">🎤</span><h3>模仿写作</h3><p>鲁迅李白甲方任选</p></a>
             <a class="feature-card reveal" href="/tool.html?id=fish-book-notes" style="--card-color:#a855f7"><span class="feature-icon">📚</span><h3>读书笔记</h3><p>书名变精华笔记</p></a>
             <a class="feature-card reveal" href="/tool.html?id=fish-annual-report" style="--card-color:#06b6d4"><span class="feature-icon">📊</span><h3>年度报告</h3><p>生成个人年度报告</p></a>
@@ -701,8 +605,6 @@
             <p class="section-desc">轻松一刻</p>
         </div>
         <div class="card-grid card-grid-4">
-            <a class="feature-card reveal" href="/tool.html?id=fish-music-player" style="--card-color:#646cff"><span class="feature-icon">🎵</span><h3>音乐播放器</h3><p>在线听歌</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-ai6666-music" style="--card-color:#7c3aed"><span class="feature-icon">🎸</span><h3>碳基圈音乐广场</h3><p>AI生成音乐</p></a>
             <a class="feature-card reveal" href="/tool.html?id=fish-video-player" style="--card-color:#ec4899"><span class="feature-icon">🎬</span><h3>视频播放器</h3><p>Pexels免费视频</p></a>
             <a class="feature-card reveal" href="/tool.html?id=fish-daily-poem" style="--card-color:#22c55e"><span class="feature-icon">📅</span><h3>每日诗词</h3><p>AI赋诗一首</p></a>
             <a class="feature-card reveal" href="/tool.html?id=fish-funfact" style="--card-color:#f59e0b"><span class="feature-icon">🎲</span><h3>冷知识</h3><p>每天一个冷知识</p></a>
@@ -808,7 +710,7 @@
     <section class="section" style="padding-bottom:60px;text-align:center">
         <div class="blogroll reveal">
             <a href="https://sanwan.ai" target="_blank">🦞 三万AI</a>
-            <a href="https://ai6666.com" target="_blank">🤖 碳基圈</a>
+
             <a href="https://openclaw.ai" target="_blank">🐾 OpenClaw</a>
             <a href="https://github.com" target="_blank">🐙 GitHub</a>
         </div>
@@ -830,9 +732,7 @@
 
     <!-- 脚本 -->
     <script src="/fish-ai.js?v=20260506c"></script>
-    <script src="/fish-music.js?v=20260506c"></script>
-    <script src="/fish-ai6666-music.js?v=20260511k"></script>
-    <script src="/fish-netease-music.js?v=20260511i"></script>
+
     <script src="/fish-horoscope.js?v=20260506c"></script>
     <script src="/fish-progress.js?v=20260506c"></script>
     <script src="/fish-memo.js?v=20260506c"></script>
