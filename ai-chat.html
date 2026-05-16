@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>免费AI聊天助手 - ChatGPT替代方案 | Tyler工具箱</title>
+    <meta name="description" content="免费在线AI聊天助手，基于小米MIMO大模型，支持中文对话、代码解释、写作辅助。无需注册，完全免费的ChatGPT替代方案。">
+    <meta name="keywords" content="AI chat assistant,ChatGPT alternative,free AI chat,AI聊天助手,免费AI对话,在线聊天机器人,AI问答,智能助手,AI写作助手,中文AI">
+    <link rel="canonical" href="https://tylerzhang.xyz/ai-chat.html">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tylerzhang.xyz/ai-chat.html">
+    <meta property="og:title" content="免费AI聊天助手 - ChatGPT替代方案">
+    <meta property="og:description" content="免费在线AI聊天助手，基于小米MIMO大模型，支持中文对话，无需注册，开箱即用。">
+    <meta property="og:image" content="https://tylerzhang.xyz/resource/easyclaw.png">
+    <meta property="og:site_name" content="Tyler工具箱">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="免费AI聊天助手 - ChatGPT替代方案">
+    <meta name="twitter:description" content="免费在线AI聊天助手，基于小米MIMO大模型，支持中文对话，无需注册。">
+    <link rel="icon" type="image/png" href="resource/easyclaw.png">
+    <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai:wght@300;400;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "AI聊天助手",
+        "url": "https://tylerzhang.xyz/ai-chat.html",
+        "description": "免费在线AI聊天助手，基于小米MIMO大模型，支持中文对话、代码解释、写作辅助，无需注册。",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+        "inLanguage": ["zh-CN", "en"],
+        "featureList": ["AI智能对话", "代码解释与生成", "写作辅助", "多轮上下文记忆", "流式实时回复"]
+    }
+    </script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#0a0a0a;--surface:#141414;--border:#2a2a2a;--text:#e8e8e8;--text-dim:#888;--accent:#646cff;--pink:#ff6b9d;--gold:#d4a853;--green:#22c55e}
+        body{font-family:'LXGW WenKai',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh}
+
+        /* 顶部导航 */
+        .topbar{position:sticky;top:0;background:rgba(10,10,10,.85);backdrop-filter:blur(24px);border-bottom:1px solid rgba(100,108,255,.15);padding:0.8rem 1.5rem;z-index:100;display:flex;align-items:center}
+        .topbar a{color:var(--accent);text-decoration:none;font-size:0.85rem;transition:color .2s}
+        .topbar a:hover{color:var(--pink)}
+        .topbar .title{font-weight:700;font-size:1rem;flex:1;text-align:center;background:linear-gradient(135deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+        /* 容器 */
+        .container{max-width:800px;margin:0 auto;padding:2rem 1.5rem}
+
+        /* Hero */
+        .hero{text-align:center;padding:3rem 0 2rem}
+        .hero h1{font-size:2rem;font-weight:700;margin-bottom:0.5rem;background:linear-gradient(135deg,var(--accent),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .hero p{color:var(--text-dim);font-size:1rem;max-width:500px;margin:0 auto}
+        .badge-row{display:flex;gap:8px;justify-content:center;margin-top:1rem;flex-wrap:wrap}
+        .badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:0.75rem;background:rgba(100,108,255,.15);color:var(--accent);border:1px solid rgba(100,108,255,.2)}
+
+        /* 聊天区 */
+        .chat-area{background:var(--surface);border:1px solid var(--border);border-radius:16px;margin:2rem 0;overflow:hidden;display:flex;flex-direction:column}
+        .chat-header{padding:1rem 1.5rem;background:rgba(26,26,26,.8);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+        .chat-header .avatar{font-size:1.5rem}
+        .chat-header .info h3{font-size:0.95rem;color:var(--text);margin:0}
+        .chat-header .info p{font-size:0.75rem;color:var(--text-dim);margin:0}
+        .chat-header .status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);margin-left:auto;box-shadow:0 0 6px var(--green)}
+
+        .chat-messages{flex:1;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:12px;height:380px;min-height:300px}
+        .chat-msg{max-width:85%;padding:12px 16px;border-radius:14px;font-size:0.9rem;line-height:1.7;word-break:break-word;animation:msgIn .3s ease}
+        @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        .chat-msg.user{align-self:flex-end;background:linear-gradient(135deg,var(--accent),#535bf2);color:#fff;border-bottom-right-radius:4px}
+        .chat-msg.ai{align-self:flex-start;background:var(--bg);color:var(--text);border:1px solid var(--border);border-bottom-left-radius:4px}
+        .chat-msg.ai .label{font-size:0.7rem;color:var(--accent);margin-bottom:4px;display:flex;align-items:center;gap:4px}
+        .chat-msg.ai .cursor{display:inline-block;width:2px;height:14px;background:var(--accent);animation:blink .6s infinite;vertical-align:middle;margin-left:2px}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+        .chat-input-area{padding:1rem 1.5rem;border-top:1px solid var(--border);background:rgba(26,26,26,.6);display:flex;gap:10px;align-items:flex-end}
+        .chat-input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:12px 16px;color:var(--text);font-size:0.9rem;outline:none;resize:none;font-family:inherit;min-height:44px;max-height:120px;line-height:1.5;transition:border-color .3s}
+        .chat-input:focus{border-color:var(--accent)}
+        .chat-input::placeholder{color:#555}
+        .chat-send{background:linear-gradient(135deg,var(--accent),var(--pink));border:none;border-radius:12px;color:#fff;padding:12px 20px;cursor:pointer;font-size:1rem;transition:all .3s;white-space:nowrap}
+        .chat-send:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(100,108,255,.3)}
+        .chat-send:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+
+        .chat-messages::-webkit-scrollbar{width:4px}
+        .chat-messages::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+
+        /* 快捷问题 */
+        .quick-questions{padding:0 1.5rem 1rem;display:flex;gap:8px;flex-wrap:wrap}
+        .quick-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-dim);font-size:0.75rem;font-family:inherit;cursor:pointer;transition:all .2s}
+        .quick-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(100,108,255,.08)}
+
+        /* 特性 */
+        .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:2rem 0}
+        .feature{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center}
+        .feature .icon{font-size:2rem;margin-bottom:0.5rem}
+        .feature h3{font-size:1rem;margin-bottom:0.3rem}
+        .feature p{font-size:0.8rem;color:var(--text-dim)}
+
+        /* 使用步骤 */
+        .steps{margin:2rem 0}
+        .steps h2{font-size:1.3rem;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border)}
+        .step{display:flex;gap:1rem;margin-bottom:1.5rem;align-items:flex-start}
+        .step-num{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--pink));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;flex-shrink:0}
+        .step-content h3{font-size:1rem;margin-bottom:0.2rem}
+        .step-content p{font-size:0.85rem;color:var(--text-dim)}
+
+        /* 使用场景 */
+        .scenarios{margin:2rem 0}
+        .scenarios h2{font-size:1.3rem;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border)}
+        .scenario{display:flex;gap:1rem;margin-bottom:1.5rem;align-items:flex-start}
+        .scenario-icon{width:36px;height:36px;border-radius:10px;background:rgba(100,108,255,.12);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+        .scenario-content h3{font-size:1rem;margin-bottom:0.2rem}
+        .scenario-content p{font-size:0.85rem;color:var(--text-dim)}
+
+        /* FAQ */
+        .faq{margin:2rem 0}
+        .faq h2{font-size:1.3rem;margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border)}
+        .faq-item{margin-bottom:1.5rem}
+        .faq-item h3{font-size:1rem;margin-bottom:0.3rem;color:var(--accent)}
+        .faq-item p{font-size:0.9rem;color:var(--text-dim);line-height:1.8}
+
+        /* 内链 */
+        .more-tools{margin:2rem 0;padding:2rem;background:var(--surface);border:1px solid var(--border);border-radius:16px;text-align:center}
+        .more-tools h2{font-size:1.2rem;margin-bottom:1rem}
+        .tool-links{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+        .tool-links a{padding:8px 20px;border-radius:10px;border:1px solid var(--border);color:var(--text);text-decoration:none;font-size:0.9rem;transition:all .2s}
+        .tool-links a:hover{border-color:var(--accent);color:var(--accent)}
+
+        /* Footer */
+        .footer{text-align:center;padding:2rem 0;color:var(--text-dim);font-size:0.8rem;border-top:1px solid var(--border);margin-top:2rem}
+        .footer a{color:var(--accent);text-decoration:none}
+
+        @media(max-width:768px){
+            .hero h1{font-size:1.5rem}
+            .chat-area{margin:1.5rem -0.5rem;border-radius:12px}
+            .chat-messages{height:320px;min-height:250px;padding:1rem}
+            .chat-input-area{padding:0.8rem 1rem}
+            .quick-questions{padding:0 1rem 0.8rem}
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <a href="/">← 首页</a>
+        <span class="title">AI 聊天助手</span>
+        <a href="/tools.html">工具箱</a>
+    </div>
+
+    <div class="container">
+        <!-- Hero -->
+        <div class="hero">
+            <h1>💬 AI 聊天助手</h1>
+            <p>基于小米MIMO大模型，免费在线AI对话。支持中文、代码解释、写作辅助，开箱即用。</p>
+            <div class="badge-row">
+                <span class="badge">🆓 完全免费</span>
+                <span class="badge">⚡ 流式实时回复</span>
+                <span class="badge">🧠 多轮上下文</span>
+                <span class="badge">🇨🇳 中文优化</span>
+            </div>
+        </div>
+
+        <!-- 聊天区 -->
+        <div class="chat-area">
+            <div class="chat-header">
+                <span class="avatar">🐟</span>
+                <div class="info">
+                    <h3>小鱼儿 · AI 助手</h3>
+                    <p>基于 MIMO v2 Flash · 随时为你服务</p>
+                </div>
+                <span class="status-dot"></span>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="chat-msg ai">
+                    <div class="label">🐟 小鱼儿</div>
+                    <span class="text">你好呀！我是小鱼儿 🐟，你的 AI 助手。有什么想聊的或者需要帮忙的吗？✨</span>
+                </div>
+            </div>
+            <div class="quick-questions" id="quick-questions">
+                <button class="quick-btn" data-q="你能做什么？">💡 你能做什么？</button>
+                <button class="quick-btn" data-q="帮我写一段Python冒泡排序">💻 写段代码</button>
+                <button class="quick-btn" data-q="推荐几个好用的AI工具">🔧 推荐AI工具</button>
+                <button class="quick-btn" data-q="用三句话介绍自己">📝 三句话介绍</button>
+            </div>
+            <div class="chat-input-area">
+                <textarea class="chat-input" id="chat-input" placeholder="输入你的问题..." rows="1"></textarea>
+                <button class="chat-send" id="chat-send">发送</button>
+            </div>
+        </div>
+
+        <!-- 特性 -->
+        <div class="features">
+            <div class="feature">
+                <div class="icon">⚡</div>
+                <h3>流式回复</h3>
+                <p>逐字实时输出，像真人打字一样自然，无需等待</p>
+            </div>
+            <div class="feature">
+                <div class="icon">🧠</div>
+                <h3>上下文记忆</h3>
+                <p>支持多轮对话，记住你说过的话，对话更连贯</p>
+            </div>
+            <div class="feature">
+                <div class="icon">💻</div>
+                <h3>代码专家</h3>
+                <p>写代码、解释代码、调试Bug，程序员的好帮手</p>
+            </div>
+            <div class="feature">
+                <div class="icon">🆓</div>
+                <h3>完全免费</h3>
+                <p>无需注册，无次数限制，无广告，打开就能用</p>
+            </div>
+        </div>
+
+        <!-- 使用步骤 -->
+        <div class="steps">
+            <h2>📖 使用方法</h2>
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-content">
+                    <h3>输入问题</h3>
+                    <p>在底部输入框中输入任何你想问的问题，支持中文和英文。</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-content">
+                    <h3>点击发送</h3>
+                    <p>点击发送按钮或按 Enter 键，AI 会立即开始回复。</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-content">
+                    <h3>继续对话</h3>
+                    <p>AI 会记住上下文，你可以追问、补充或切换话题，体验连贯的多轮对话。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 使用场景 -->
+        <div class="scenarios">
+            <h2>💡 使用场景</h2>
+            <div class="scenario">
+                <div class="scenario-icon">💻</div>
+                <div class="scenario-content">
+                    <h3>编程辅助</h3>
+                    <p>写代码、解释算法、调试报错、代码审查，提升开发效率。</p>
+                </div>
+            </div>
+            <div class="scenario">
+                <div class="scenario-icon">✍️</div>
+                <div class="scenario-content">
+                    <h3>写作助手</h3>
+                    <p>润色文案、改写文章、生成邮件、创作故事，让文字更出彩。</p>
+                </div>
+            </div>
+            <div class="scenario">
+                <div class="scenario-icon">📚</div>
+                <div class="scenario-content">
+                    <h3>学习答疑</h3>
+                    <p>解答数学题、解释概念、翻译文本、知识问答，随时随地学习。</p>
+                </div>
+            </div>
+            <div class="scenario">
+                <div class="scenario-icon">💡</div>
+                <div class="scenario-content">
+                    <h3>头脑风暴</h3>
+                    <p>产品创意、营销方案、活动策划，和 AI 一起碰撞灵感火花。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="faq">
+            <h2>❓ 常见问题</h2>
+            <div class="faq-item">
+                <h3>这个AI聊天助手是免费的吗？</h3>
+                <p>完全免费，无需注册账号，没有使用次数限制，没有广告。我们使用小米MIMO大模型，提供高质量的中文对话体验。</p>
+            </div>
+            <div class="faq-item">
+                <h3>和ChatGPT有什么区别？</h3>
+                <p>我们基于小米MIMO模型，对中文理解更自然。最大优势是免费且无需注册，打开网页就能直接使用。同时支持上下文记忆，对话更连贯。</p>
+            </div>
+            <div class="faq-item">
+                <h3>支持哪些语言？</h3>
+                <p>主要支持中文和英文，中文体验尤其出色。你可以用中文提问关于英文内容的问题，AI 会用中文回答。</p>
+            </div>
+            <div class="faq-item">
+                <h3>对话有字数限制吗？</h3>
+                <p>单次回复限制在500字以内，以保证回复速度和质量。如果需要更详细的回答，可以追问，AI 会基于上下文继续补充。</p>
+            </div>
+            <div class="faq-item">
+                <h3>我的对话内容会被保存吗？</h3>
+                <p>对话仅保存在你的浏览器内存中，刷新页面后会清空。我们不会存储你的任何对话内容，隐私安全有保障。</p>
+            </div>
+        </div>
+
+        <!-- 更多工具 -->
+        <div class="more-tools">
+            <h2>🔧 更多AI工具</h2>
+            <div class="tool-links">
+                <a href="/ai-tts.html">🎙️ AI文字转语音</a>
+                <a href="/ai-image-generator.html">🎨 AI画图</a>
+                <a href="/tools.html">🛠️ 开发者工具</a>
+                <a href="/">🏠 首页</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Powered by <a href="/">Tyler工具箱</a> · 小米MIMO v2 Flash</p>
+        </div>
+    </div>
+
+    <script>
+        const messagesEl = document.getElementById('chat-messages');
+        const inputEl = document.getElementById('chat-input');
+        const sendBtn = document.getElementById('chat-send');
+        const quickBtns = document.querySelectorAll('.quick-btn');
+
+        let messages = [];
+        let isStreaming = false;
+
+        // 自动调整输入框高度
+        inputEl.addEventListener('input', () => {
+            inputEl.style.height = 'auto';
+            inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + 'px';
+        });
+
+        // Enter 发送，Shift+Enter 换行
+        inputEl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                send();
+            }
+        });
+
+        sendBtn.addEventListener('click', send);
+
+        // 快捷问题
+        quickBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                inputEl.value = btn.dataset.q;
+                send();
+            });
+        });
+
+        async function send() {
+            const text = inputEl.value.trim();
+            if (!text || isStreaming) return;
+
+            inputEl.value = '';
+            inputEl.style.height = 'auto';
+            addMsg(text, 'user');
+            messages.push({ role: 'user', content: text });
+
+            isStreaming = true;
+            sendBtn.disabled = true;
+            inputEl.disabled = true;
+
+            // 隐藏快捷问题
+            const quickArea = document.getElementById('quick-questions');
+            if (quickArea) quickArea.style.display = 'none';
+
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ messages: messages })
+                });
+
+                if (!res.ok) throw new Error(`请求失败 (${res.status})`);
+
+                const reader = res.body.getReader();
+                const decoder = new TextDecoder();
+                let aiText = '';
+                const aiEl = addMsg('', 'ai', true);
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    const chunk = decoder.decode(value, { stream: true });
+                    for (const line of chunk.split('\n')) {
+                        if (!line.startsWith('data: ')) continue;
+                        const d = line.slice(6).trim();
+                        if (d === '[DONE]') continue;
+                        try {
+                            const delta = JSON.parse(d).choices?.[0]?.delta?.content;
+                            if (delta) {
+                                aiText += delta;
+                                aiEl.querySelector('.text').textContent = aiText;
+                                scrollBottom();
+                            }
+                        } catch {}
+                    }
+                }
+
+                // 移除光标
+                const cursor = aiEl.querySelector('.cursor');
+                if (cursor) cursor.remove();
+
+                if (aiText) messages.push({ role: 'assistant', content: aiText });
+
+            } catch (err) {
+                addMsg('抱歉，出了点问题 😅 请稍后再试。', 'ai');
+            }
+
+            isStreaming = false;
+            sendBtn.disabled = false;
+            inputEl.disabled = false;
+            inputEl.focus();
+        }
+
+        function addMsg(text, role, streaming = false) {
+            const el = document.createElement('div');
+            el.className = `chat-msg ${role}`;
+            if (role === 'ai') {
+                el.innerHTML = `<div class="label">🐟 小鱼儿</div><span class="text">${text}</span>${streaming ? '<span class="cursor"></span>' : ''}`;
+            } else {
+                el.textContent = text;
+            }
+            messagesEl.appendChild(el);
+            scrollBottom();
+            return el;
+        }
+
+        function scrollBottom() {
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+    </script>
+</body>
+</html>
