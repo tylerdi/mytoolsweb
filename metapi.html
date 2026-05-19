@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIMO API 中转站 — metapi.tylerzhang.xyz</title>
+  <meta name="description" content="MIMO API 中转站，兼容 OpenAI 格式，支持 mimo-v2-flash/pro/omni/2.5 系列模型。注册送100万token免费额度。">
+  <meta name="keywords" content="MIMO API, AI API, OpenAI 兼容, 免费 AI API, 国产大模型, 小米 MIMO">
+  <link rel="canonical" href="https://metapi.tylerzhang.xyz/">
+  <meta property="og:title" content="MIMO API 中转站">
+  <meta property="og:description" content="兼容 OpenAI 格式，注册送100万token">
+  <meta property="og:url" content="https://metapi.tylerzhang.xyz/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=LXGW+WenKai&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'LXGW WenKai', sans-serif;
+      background: #0a0a0f;
+      color: #e0e0e0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* 背景粒子效果 */
+    .bg-glow {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+      pointer-events: none; z-index: 0;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    /* 导航 */
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .logo { font-size: 1.4rem; font-weight: 700; color: #a78bfa; text-decoration: none; }
+    .logo span { color: #60a5fa; }
+    nav a { color: #9ca3af; text-decoration: none; margin-left: 28px; font-size: 0.9rem; transition: color 0.2s; }
+    nav a:hover { color: #a78bfa; }
+
+    /* Hero */
+    .hero {
+      text-align: center; padding: 80px 0 60px;
+    }
+    .hero h1 {
+      font-size: 2.8rem; font-weight: 700; margin-bottom: 16px;
+      background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p { font-size: 1.15rem; color: #9ca3af; max-width: 600px; margin: 0 auto 32px; line-height: 1.8; }
+    .hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      padding: 12px 28px; border-radius: 10px; font-size: 1rem;
+      font-weight: 600; cursor: pointer; transition: all 0.2s; border: none;
+      font-family: 'LXGW WenKai', sans-serif; text-decoration: none; display: inline-block;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: #fff; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4); }
+    .btn-secondary {
+      background: rgba(255,255,255,0.06); color: #a78bfa; border: 1px solid rgba(167,139,250,0.3);
+    }
+    .btn-secondary:hover { background: rgba(167,139,250,0.1); }
+
+    /* 特性卡片 */
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 40px 0; }
+    .feature-card {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px; padding: 28px; transition: all 0.3s;
+    }
+    .feature-card:hover { border-color: rgba(167,139,250,0.3); transform: translateY(-3px); }
+    .feature-icon { font-size: 2rem; margin-bottom: 12px; }
+    .feature-card h3 { font-size: 1.1rem; color: #e0e0e0; margin-bottom: 8px; }
+    .feature-card p { font-size: 0.9rem; color: #9ca3af; line-height: 1.6; }
+
+    /* 代码示例 */
+    .code-section { padding: 40px 0; }
+    .code-section h2 { text-align: center; font-size: 1.8rem; margin-bottom: 32px; color: #e0e0e0; }
+    .code-block {
+      background: #111118; border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px; overflow: hidden; max-width: 700px; margin: 0 auto;
+    }
+    .code-header {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 16px; background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dot:nth-child(1) { background: #ef4444; }
+    .code-dot:nth-child(2) { background: #eab308; }
+    .code-dot:nth-child(3) { background: #22c55e; }
+    .code-header span { margin-left: 12px; font-size: 0.8rem; color: #6b7280; }
+    pre {
+      padding: 20px; overflow-x: auto; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem; line-height: 1.7; color: #d1d5db;
+    }
+    .kw { color: #c084fc; }
+    .str { color: #34d399; }
+    .cm { color: #6b7280; }
+    .fn { color: #60a5fa; }
+
+    /* 模型列表 */
+    .models-section { padding: 40px 0; }
+    .models-section h2 { text-align: center; font-size: 1.8rem; margin-bottom: 32px; }
+    .model-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .model-card {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .model-name { font-weight: 600; color: #a78bfa; font-size: 0.95rem; }
+    .model-desc { font-size: 0.8rem; color: #6b7280; margin-top: 4px; }
+    .model-price { text-align: right; }
+    .model-price .price { font-size: 1.1rem; color: #34d399; font-weight: 700; }
+    .model-price .unit { font-size: 0.7rem; color: #6b7280; }
+
+    /* 定价 */
+    .pricing { padding: 40px 0; }
+    .pricing h2 { text-align: center; font-size: 1.8rem; margin-bottom: 12px; }
+    .pricing .subtitle { text-align: center; color: #6b7280; margin-bottom: 32px; }
+    .pricing-card {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px; padding: 32px; max-width: 500px; margin: 0 auto; text-align: center;
+    }
+    .pricing-card .free { font-size: 3rem; font-weight: 700; color: #34d399; margin: 16px 0 8px; }
+    .pricing-card .free-desc { color: #9ca3af; margin-bottom: 24px; }
+    .pricing-list { list-style: none; text-align: left; }
+    .pricing-list li { padding: 8px 0; color: #d1d5db; font-size: 0.95rem; }
+    .pricing-list li::before { content: '✓ '; color: #34d399; font-weight: 700; }
+
+    /* Footer */
+    footer {
+      text-align: center; padding: 40px 0; margin-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.06); color: #6b7280; font-size: 0.85rem;
+    }
+    footer a { color: #a78bfa; text-decoration: none; }
+
+    /* 响应式 */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2rem; }
+      .hero p { font-size: 1rem; }
+      nav { flex-direction: column; gap: 12px; }
+      nav a { margin-left: 0; margin-right: 14px; }
+      .features { grid-template-columns: 1fr; }
+      pre { font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+  <div class="container">
+    <nav>
+      <a href="/" class="logo">META<span>PI</span></a>
+      <div>
+        <a href="#features">特性</a>
+        <a href="#pricing">定价</a>
+        <a href="#code">快速开始</a>
+        <a href="/dashboard/">控制台</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <h1>MIMO API 中转站</h1>
+      <p>兼容 OpenAI 格式，一行代码切换。<br>支持 mimo-v2-flash / pro / omni / 2.5 系列，注册送 <strong style="color:#34d399">100万 token</strong> 免费额度。</p>
+      <div class="hero-buttons">
+        <a href="/dashboard/" class="btn btn-primary">免费注册</a>
+        <a href="#code" class="btn btn-secondary">查看文档</a>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="feature-card">
+        <div class="feature-icon">🔌</div>
+        <h3>OpenAI 兼容</h3>
+        <p>完全兼容 OpenAI API 格式，只需改一行 base_url，现有代码零修改迁移。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>极速响应</h3>
+        <p>小米 MIMO 模型原生推理，国内节点直连，延迟低至 200ms。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <h3>超低价格</h3>
+        <p>mimo-v2-flash 仅 ¥0.5/百万token，GPT-4o-mini 的 1/10，注册即送 100万 token。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h3>稳定可靠</h3>
+        <p>多节点冗余，99.9% 可用性保障，7×24 监控告警。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>多模型支持</h3>
+        <p>6 款模型可选：对话、推理、多模态、TTS，一站式满足所有需求。</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>用量透明</h3>
+        <p>实时用量统计，每次调用可查，费用一目了然。</p>
+      </div>
+    </section>
+
+    <section class="models-section">
+      <h2>可用模型</h2>
+      <div class="model-grid">
+        <div class="model-card">
+          <div>
+            <div class="model-name">mimo-v2-flash</div>
+            <div class="model-desc">快速轻量，日常对话首选</div>
+          </div>
+          <div class="model-price">
+            <div class="price">¥0.5</div>
+            <div class="unit">/百万token</div>
+          </div>
+        </div>
+        <div class="model-card">
+          <div>
+            <div class="model-name">mimo-v2-pro</div>
+            <div class="model-desc">专业推理，复杂任务利器</div>
+          </div>
+          <div class="model-price">
+            <div class="price">¥2</div>
+            <div class="unit">/百万token</div>
+          </div>
+        </div>
+        <div class="model-card">
+          <div>
+            <div class="model-name">mimo-v2-omni</div>
+            <div class="model-desc">多模态，支持图片理解</div>
+          </div>
+          <div class="model-price">
+            <div class="price">¥2</div>
+            <div class="unit">/百万token</div>
+          </div>
+        </div>
+        <div class="model-card">
+          <div>
+            <div class="model-name">mimo-v2.5-pro</div>
+            <div class="model-desc">旗舰模型，最强推理</div>
+          </div>
+          <div class="model-price">
+            <div class="price">¥5</div>
+            <div class="unit">/百万token</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="code-section" id="code">
+      <h2>快速开始</h2>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div>
+          <span>Python</span>
+        </div>
+        <pre><span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+
+<span class="cm"># 只需改这两行</span>
+client = <span class="fn">OpenAI</span>(
+    api_key=<span class="str">"mk_你的API密钥"</span>,
+    base_url=<span class="str">"https://metapi.tylerzhang.xyz/v1"</span>
+)
+
+response = client.chat.completions.<span class="fn">create</span>(
+    model=<span class="str">"mimo-v2-flash"</span>,
+    messages=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"你好"</span>}]
+)
+
+<span class="fn">print</span>(response.choices[0].message.content)</pre>
+      </div>
+
+      <div class="code-block" style="margin-top: 24px;">
+        <div class="code-header">
+          <div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div>
+          <span>curl</span>
+        </div>
+        <pre>curl https://metapi.tylerzhang.xyz/v1/chat/completions \
+  -H <span class="str">"Authorization: Bearer mk_你的API密钥"</span> \
+  -H <span class="str">"Content-Type: application/json"</span> \
+  -d <span class="str">'{
+    "model": "mimo-v2-flash",
+    "messages": [{"role": "user", "content": "你好"}]
+  }'</span></pre>
+      </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+      <h2>定价</h2>
+      <p class="subtitle">注册即送 100万 token，邀请好友各得 50万</p>
+      <div class="pricing-card">
+        <div class="free">免费开始</div>
+        <div class="free-desc">注册送 1,000,000 token</div>
+        <ul class="pricing-list">
+          <li>兼容 OpenAI API 格式</li>
+          <li>支持 6 款 MIMO 模型</li>
+          <li>Chat Completions + TTS</li>
+          <li>实时用量统计</li>
+          <li>邀请好友各得 50万 token</li>
+          <li>无最低消费，按量计费</li>
+        </ul>
+        <a href="/dashboard/" class="btn btn-primary" style="margin-top: 24px;">立即注册</a>
+      </div>
+    </section>
+
+    <footer>
+      <p>MIMO API 中转站 — Powered by <a href="https://tylerzhang.xyz">tylerzhang.xyz</a></p>
+      <p style="margin-top: 8px;">模型由小米 MIMO 提供 | API 服务由 metapi.tylerzhang.xyz 运营</p>
+    </footer>
+  </div>
+</body>
+</html>
