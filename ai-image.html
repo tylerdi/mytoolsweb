@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>免费AI画图工具 - 文字生成图片 | Tyler工具箱</title>
+    <meta name="description" content="免费在线AI画图工具，输入文字描述即可生成图片。支持动漫、写实、油画、水彩、赛博朋克等10种风格，4种尺寸比例。基于Flux模型，完全免费。">
+    <meta name="keywords" content="AI画图,AI image generator,文字生成图片,text to image,AI art generator,免费AI画图,在线AI绘图,AI绘画,Flux模型,AI生成图片">
+    <link rel="canonical" href="https://tylerzhang.xyz/ai-image">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tylerzhang.xyz/ai-image">
+    <meta property="og:title" content="免费AI画图工具 - 文字生成图片">
+    <meta property="og:description" content="输入文字描述即可AI生成图片，支持10种艺术风格，完全免费。">
+    <meta property="og:image" content="https://tylerzhang.xyz/resource/easyclaw.png">
+    <meta property="og:site_name" content="Tyler工具箱">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="免费AI画图工具 - 文字生成图片">
+    <meta name="twitter:description" content="输入文字描述即可AI生成图片，支持10种艺术风格，完全免费。">
+    <link rel="icon" type="image/png" href="resource/easyclaw.png">
+    <link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai:wght@300;400;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "AI画图工具",
+        "url": "https://tylerzhang.xyz/ai-image",
+        "description": "免费在线AI画图工具，文字生成图片，支持10种艺术风格。",
+        "applicationCategory": "DesignApplication",
+        "operatingSystem": "Web",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+        "inLanguage": ["zh-CN", "en"]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "AI画图工具怎么用？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "输入你想要的画面描述（支持中英文），选择风格和尺寸，点击生成按钮即可。AI会根据描述自动生成图片，支持动漫、写实、油画等10种风格。"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "AI画图生成的图片可以商用吗？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "生成的图片可以用于个人和商业用途，适合社交媒体配图、设计素材、广告创意等场景。"
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "AI画图支持哪些风格？",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "支持自动、动漫、油画、写实、像素、水彩、赛博朋克、国风、3D、素描共10种艺术风格。"
+                }
+            }
+        ]
+    }
+    </script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#0a0a0a;--surface:#141414;--border:#2a2a2a;--text:#e8e8e8;--text-dim:#888;--accent:#646cff;--pink:#ff6b9d;--gold:#d4a853;--green:#22c55e}
+        body{font-family:'LXGW WenKai',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;min-height:100vh}
+
+        .topbar{position:sticky;top:0;background:rgba(10,10,10,.85);backdrop-filter:blur(24px);border-bottom:1px solid rgba(100,108,255,.15);padding:0.8rem 1.5rem;z-index:100;display:flex;align-items:center}
+        .topbar a{color:var(--accent);text-decoration:none;font-size:0.85rem;transition:color .2s}
+        .topbar a:hover{color:var(--pink)}
+        .topbar .title{font-weight:700;font-size:1rem;flex:1;text-align:center;background:linear-gradient(135deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+        .container{max-width:800px;margin:0 auto;padding:2rem 1.5rem}
+
+        .hero{text-align:center;padding:3rem 0 2rem}
+        .hero h1{font-size:2rem;font-weight:700;margin-bottom:0.5rem;background:linear-gradient(135deg,var(--accent),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .hero p{color:var(--text-dim);font-size:1rem;max-width:500px;margin:0 auto}
+        .badge-row{display:flex;gap:8px;justify-content:center;margin-top:1rem;flex-wrap:wrap}
+        .badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:0.75rem;background:rgba(100,108,255,.15);color:var(--accent);border:1px solid rgba(100,108,255,.2)}
+
+        .tool-area{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;margin:2rem 0}
+
+        .ig-styles{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px;-webkit-overflow-scrolling:touch}
+        .ig-styles::-webkit-scrollbar{display:none}
+        .ig-style-chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:6px 14px;font-size:.8rem;color:#aaa;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .2s}
+        .ig-style-chip:hover,.ig-style-chip.active{background:rgba(100,108,255,.15);border-color:var(--accent);color:var(--accent)}
+
+        .ig-sizes{display:flex;gap:6px;margin-bottom:16px}
+        .ig-size-chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:6px 14px;font-size:.8rem;color:#aaa;cursor:pointer;transition:all .2s}
+        .ig-size-chip:hover,.ig-size-chip.active{background:rgba(100,108,255,.15);border-color:var(--accent);color:var(--accent)}
+
+        .ig-input-row{display:flex;gap:8px;margin-bottom:16px}
+        .img-input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text);font-size:.95rem;font-family:inherit;outline:none}
+        .img-input:focus{border-color:var(--accent)}
+        .img-input::placeholder{color:#555}
+        .ig-gen-btn{background:linear-gradient(135deg,var(--accent),var(--pink));border:none;border-radius:12px;padding:14px 24px;color:#fff;font-size:1rem;cursor:pointer;font-weight:700;white-space:nowrap;transition:all .3s}
+        .ig-gen-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(100,108,255,.3)}
+        .ig-gen-btn:active{transform:scale(.98)}
+        .ig-gen-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+        .ig-rand-btn{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text-dim);font-size:1rem;cursor:pointer;transition:all .2s}
+        .ig-rand-btn:hover{border-color:var(--accent);color:var(--text)}
+
+        .img-result{min-height:300px;display:flex;align-items:center;justify-content:center;margin:1.5rem 0}
+        .img-loading{text-align:center;color:var(--text-dim)}
+        .img-spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .img-prompt-text{font-size:.8rem;color:#555;margin-top:8px;font-style:italic}
+        .img-display{width:100%;text-align:center}
+        .img-display img{width:100%;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.4)}
+        .img-actions{display:flex;gap:8px;justify-content:center;margin-top:16px}
+        .img-action-btn{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 18px;color:var(--text);font-size:.85rem;cursor:pointer;font-family:inherit;transition:all .2s}
+        .img-action-btn:hover{border-color:var(--accent);color:var(--accent)}
+        .img-info{font-size:.75rem;color:#555;margin-top:10px}
+        .img-error{text-align:center;color:var(--pink);padding:40px 0}
+
+        .ig-history{margin-top:2rem;border-top:1px solid var(--border);padding-top:1.5rem}
+        .ig-history h3{font-size:.9rem;color:var(--text-dim);margin-bottom:12px}
+        .img-history-list{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+        .img-hist-item{border-radius:10px;overflow:hidden;cursor:pointer;position:relative;aspect-ratio:1}
+        .img-hist-item img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+        .img-hist-item:hover img{transform:scale(1.05)}
+        .img-hist-prompt{position:absolute;bottom:0;left:0;right:0;padding:6px 8px;background:linear-gradient(transparent,rgba(0,0,0,.8));font-size:.6rem;color:#ddd;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+        .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:2rem 0}
+        .feature{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center}
+        .feature .icon{font-size:2rem;margin-bottom:0.5rem}
+        .feature h3{font-size:1rem;margin-bottom:0.3rem}
+        .feature p{font-size:.8rem;color:var(--text-dim)}
+
+        .faq{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin:12px 0}
+        .faq h3{margin:0 0 8px;font-size:.95rem}
+        .faq p{margin:0;color:var(--text-dim);font-size:.85rem}
+
+        .related{display:flex;gap:8px;flex-wrap:wrap;margin:1.5rem 0}
+        .related a{padding:8px 16px;border:1px solid var(--border);border-radius:8px;color:var(--accent);text-decoration:none;font-size:.85rem;transition:border-color .2s}
+        .related a:hover{border-color:var(--accent)}
+
+        .footer{text-align:center;padding:2rem;color:#444;font-size:.8rem;border-top:1px solid var(--border)}
+
+        @media(max-width:768px){
+            .hero h1{font-size:1.5rem}
+            .ig-input-row{flex-direction:column}
+            .ig-gen-btn,.ig-rand-btn{width:100%;text-align:center}
+            .ig-sizes{flex-wrap:wrap}
+            .ig-size-chip{flex:1;text-align:center;min-width:60px}
+            .img-history-list{grid-template-columns:repeat(3,1fr)}
+            .ig-style-chip{padding:8px 12px;font-size:.85rem}
+            .features{grid-template-columns:1fr}
+        }
+    </style>
+</head>
+<body>
+<nav class="topbar"><a href="/">← 🐟 小鱼儿</a><span class="title">AI 画图</span></nav>
+
+<main class="container">
+    <section class="hero">
+        <h1>🎨 AI 画图</h1>
+        <p>输入文字描述，AI 自动生成图片。支持 10 种艺术风格，完全免费。</p>
+        <div class="badge-row">
+            <span class="badge">✨ Flux 模型</span>
+            <span class="badge">🆓 完全免费</span>
+            <span class="badge">🖼️ 10 种风格</span>
+            <span class="badge">📐 4 种比例</span>
+        </div>
+    </section>
+
+    <section class="tool-area">
+        <div id="fish-image-gen"></div>
+    </section>
+
+    <section class="features">
+        <div class="feature"><div class="icon">🎨</div><h3>10 种风格</h3><p>动漫、写实、油画、水彩、像素、赛博朋克、国风、3D、素描</p></div>
+        <div class="feature"><div class="icon">📐</div><h3>4 种比例</h3><p>1:1、16:9、9:16、4:3，适配各种场景</p></div>
+        <div class="feature"><div class="icon">⚡</div><h3>快速生成</h3><p>基于先进 AI 模型，数秒出图</p></div>
+        <div class="feature"><div class="icon">🆓</div><h3>完全免费</h3><p>无需注册，无水印，无限制使用</p></div>
+    </section>
+
+    <h2>适用场景</h2>
+    <p>• <strong>社交媒体配图</strong>：为你的文章、帖子生成独特配图<br>
+    • <strong>设计灵感</strong>：快速生成设计概念图，激发创意<br>
+    • <strong>内容创作</strong>：为博客、视频生成封面图<br>
+    • <strong>学习娱乐</strong>：体验 AI 技术，探索创意边界</p>
+
+    <h2>常见问题</h2>
+    <div class="faq"><h3>AI 画图怎么用？</h3><p>输入你想要的画面描述（支持中英文），选择风格和尺寸，点击「生成」即可。也可以点 🎲 获取随机灵感。</p></div>
+    <div class="faq"><h3>生成的图片可以商用吗？</h3><p>可以。生成的图片可用于个人和商业用途，适合社交媒体配图、设计素材、广告创意等。</p></div>
+    <div class="faq"><h3>支持哪些风格？</h3><p>支持自动、动漫、油画、写实、像素、水彩、赛博朋克、国风、3D、素描共 10 种风格。</p></div>
+
+    <h2>相关工具</h2>
+    <div class="related">
+        <a href="/ai-tts">🔊 文字转语音</a>
+        <a href="/ai-chat">💬 AI 聊天助手</a>
+        <a href="/tools">🧰 全部工具</a>
+    </div>
+</main>
+
+<footer class="footer">© 2026 小鱼儿的数字花园 · <a href="/">首页</a> · <a href="/tools">工具箱</a></footer>
+
+<script src="/fish-image-gen.js"></script>
+</body>
+</html>

@@ -35,6 +35,18 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  <!-- AI 画图 独立功能页 -->
+  <url>
+    <loc>https://tylerzhang.xyz/ai-image</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- AI 聊天助手 -->
+  <url>
+    <loc>https://tylerzhang.xyz/ai-chat</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
 
   <!-- 博客 -->
   <url>
@@ -129,14 +141,5 @@
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
-  <url>
-    <loc>https://tylerzhang.xyz/novel/</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://tylerzhang.xyz/games</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
+
 </urlset>
