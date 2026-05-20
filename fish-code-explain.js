@@ -34,6 +34,9 @@
           <span class="ce-btn" data-m="找出这段代码的潜在bug和改进建议">🐛 找Bug</span>
           <span class="ce-btn" data-m="优化这段代码的性能和可读性">⚡ 优化建议</span>
           <span class="ce-btn" data-m="用简单的语言解释这段代码是做什么的，适合新手理解">👶 小白版</span>
+          <span class="ce-btn" data-m="检查这段代码的安全漏洞和风险">🔒 安全检查</span>
+          <span class="ce-btn" data-m="将这段代码转换为等价的Python代码">🐍 转Python</span>
+          <span class="ce-btn" data-m="将这段代码转换为等价的JavaScript代码">📜 转JS</span>
         </div>
         <button class="ce-go" id="ce-go">💻 解读代码</button>
         <div class="ce-output" id="ce-output"></div>

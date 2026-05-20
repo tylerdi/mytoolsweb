@@ -22,6 +22,9 @@ class FishJsonViewer {
             <button class="fjv-btn fjv-secondary" id="fjv-minify">📦 压缩</button>
             <button class="fjv-btn fjv-secondary" id="fjv-copy">📋 复制</button>
             <button class="fjv-btn fjv-secondary" id="fjv-clear">🗑️ 清空</button>
+            <button class="fjv-btn fjv-secondary" id="fjv-to-yaml">📄 转YAML</button>
+            <button class="fjv-btn fjv-secondary" id="fjv-to-csv">📊 转CSV</button>
+            <button class="fjv-btn fjv-secondary" id="fjv-validate">✅ 验证</button>
             <div class="fjv-indent">
               <label>缩进</label>
               <select id="fjv-indent">
@@ -32,6 +35,10 @@ class FishJsonViewer {
             </div>
           </div>
           <textarea class="fjv-textarea" id="fjv-input" placeholder='粘贴 JSON，例如：{"name":"小鱼儿","age":1}' rows="8"></textarea>
+          <div class="fjv-path-row" style="display:flex;gap:8px;margin-top:8px;align-items:center">
+            <input id="fjv-path" class="fjv-textarea" style="min-height:auto;height:36px;flex:1;font-size:.8rem" placeholder='JSON Path 查询，例如：data.users[0].name 或 $.store.book[*].author' />
+            <button class="fjv-btn" id="fjv-query" style="white-space:nowrap">🔍 查询</button>
+          </div>
         </div>
         <div class="fjv-output" id="fjv-output">
           <div class="fjv-empty">输入 JSON 后点击「格式化」</div>
@@ -46,6 +53,11 @@ class FishJsonViewer {
     document.getElementById('fjv-format').addEventListener('click', () => this.format());
     document.getElementById('fjv-minify').addEventListener('click', () => this.minify());
     document.getElementById('fjv-copy').addEventListener('click', () => this.copy());
+    document.getElementById('fjv-to-yaml').addEventListener('click', () => this.toYaml());
+    document.getElementById('fjv-to-csv').addEventListener('click', () => this.toCsv());
+    document.getElementById('fjv-validate').addEventListener('click', () => this.validate());
+    document.getElementById('fjv-query').addEventListener('click', () => this.queryPath());
+    document.getElementById('fjv-path').addEventListener('keydown', (e) => { if (e.key === 'Enter') this.queryPath(); });
     document.getElementById('fjv-clear').addEventListener('click', () => {
       document.getElementById('fjv-input').value = '';
       document.getElementById('fjv-output').innerHTML = '<div class="fjv-empty">输入 JSON 后点击「格式化」</div>';
@@ -163,6 +175,157 @@ class FishJsonViewer {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+  }
+
+  // JSON Path 查询
+  queryPath() {
+    const input = document.getElementById('fjv-input').value.trim();
+    const path = document.getElementById('fjv-path').value.trim();
+    if (!input || !path) return;
+    try {
+      const obj = JSON.parse(input);
+      const result = this.evaluatePath(obj, path);
+      const output = document.getElementById('fjv-output');
+      if (result === undefined) {
+        output.innerHTML = '<div class="fjv-error">❌ 路径未找到结果</div>';
+      } else {
+        output.innerHTML = `<div class="fjv-tree"><pre style="margin:0;white-space:pre-wrap">${this.escape(JSON.stringify(result, null, 2))}</pre></div>`;
+      }
+    } catch (e) {
+      document.getElementById('fjv-output').innerHTML = `<div class="fjv-error">❌ ${this.escape(e.message)}</div>`;
+    }
+  }
+
+  evaluatePath(obj, path) {
+    // 支持 data.users[0].name 和 $.store.book[*].author 格式
+    const normalized = path.replace(/^\$\.?/, '').replace(/\[(\d+)\]/g, '.$1').replace(/\[\*\]/g, '.*');
+    const parts = normalized.split('.').filter(Boolean);
+    let current = obj;
+    for (const part of parts) {
+      if (part === '*') {
+        // 展开数组
+        if (Array.isArray(current)) {
+          return current.map(item => this.evaluatePath(item, parts.slice(parts.indexOf(part) + 1).join('.')));
+        }
+        return undefined;
+      }
+      if (current === null || current === undefined) return undefined;
+      if (Array.isArray(current) && /^\d+$/.test(part)) {
+        current = current[parseInt(part)];
+      } else {
+        current = current[part];
+      }
+    }
+    return current;
+  }
+
+  // JSON 转 YAML
+  toYaml() {
+    const input = document.getElementById('fjv-input').value.trim();
+    if (!input) return;
+    try {
+      const obj = JSON.parse(input);
+      const yaml = this.jsonToYaml(obj, 0);
+      document.getElementById('fjv-input').value = yaml;
+      document.getElementById('fjv-info').style.display = 'flex';
+      document.getElementById('fjv-info').innerHTML = '<span>✅ 已转换为 YAML 格式</span>';
+    } catch (e) {
+      document.getElementById('fjv-output').innerHTML = `<div class="fjv-error">❌ ${this.escape(e.message)}</div>`;
+    }
+  }
+
+  jsonToYaml(obj, indent) {
+    const prefix = '  '.repeat(indent);
+    if (obj === null) return 'null';
+    if (typeof obj === 'boolean') return obj.toString();
+    if (typeof obj === 'number') return obj.toString();
+    if (typeof obj === 'string') {
+      if (obj.includes('\n') || obj.includes(':') || obj.includes('#')) return `"${obj.replace(/"/g, '\\"')}"`;
+      return obj;
+    }
+    if (Array.isArray(obj)) {
+      if (obj.length === 0) return '[]';
+      return obj.map(item => `${prefix}- ${this.jsonToYaml(item, indent + 1)}`).join('\n');
+    }
+    if (typeof obj === 'object') {
+      const keys = Object.keys(obj);
+      if (keys.length === 0) return '{}';
+      return keys.map(key => {
+        const val = obj[key];
+        if (typeof val === 'object' && val !== null) {
+          return `${prefix}${key}:\n${this.jsonToYaml(val, indent + 1)}`;
+        }
+        return `${prefix}${key}: ${this.jsonToYaml(val, indent)}`;
+      }).join('\n');
+    }
+    return String(obj);
+  }
+
+  // JSON 转 CSV（仅对数组有效）
+  toCsv() {
+    const input = document.getElementById('fjv-input').value.trim();
+    if (!input) return;
+    try {
+      const obj = JSON.parse(input);
+      const arr = Array.isArray(obj) ? obj : [obj];
+      if (arr.length === 0 || typeof arr[0] !== 'object') {
+        document.getElementById('fjv-output').innerHTML = '<div class="fjv-error">❌ CSV 转换需要 JSON 数组格式</div>';
+        return;
+      }
+      const headers = [...new Set(arr.flatMap(item => Object.keys(item)))];
+      const csv = [headers.join(','), ...arr.map(item => headers.map(h => {
+        const val = item[h] ?? '';
+        const str = String(val);
+        return str.includes(',') || str.includes('"') || str.includes('\n') ? `"${str.replace(/"/g, '""')}"` : str;
+      }).join(','))].join('\n');
+      document.getElementById('fjv-input').value = csv;
+      document.getElementById('fjv-info').style.display = 'flex';
+      document.getElementById('fjv-info').innerHTML = `<span>✅ 已转换为 CSV 格式（${headers.length} 列 × ${arr.length} 行）</span>`;
+    } catch (e) {
+      document.getElementById('fjv-output').innerHTML = `<div class="fjv-error">❌ ${this.escape(e.message)}</div>`;
+    }
+  }
+
+  // JSON 验证
+  validate() {
+    const input = document.getElementById('fjv-input').value.trim();
+    if (!input) return;
+    try {
+      const obj = JSON.parse(input);
+      const str = JSON.stringify(obj);
+      const depth = this.getDepth(obj);
+      const keys = typeof obj === 'object' ? Object.keys(obj).length : 0;
+      const type = Array.isArray(obj) ? '数组' : typeof obj === 'object' ? '对象' : typeof obj;
+      document.getElementById('fjv-output').innerHTML = `
+        <div style="padding:16px;text-align:center">
+          <div style="font-size:2rem;margin-bottom:12px">✅</div>
+          <div style="font-size:1.1rem;font-weight:700;margin-bottom:16px">JSON 格式正确</div>
+          <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:.85rem;color:var(--text-secondary,#888)">
+            <span>类型：${type}</span>
+            <span>大小：${str.length} 字符</span>
+            ${keys ? `<span>键数：${keys}</span>` : ''}
+            <span>深度：${depth}</span>
+            <span>行数：${input.split('\n').length}</span>
+          </div>
+        </div>`;
+      document.getElementById('fjv-info').style.display = 'none';
+    } catch (e) {
+      const match = e.message.match(/position (\d+)/);
+      let hint = '';
+      if (match) {
+        const pos = parseInt(match[1]);
+        const lines = input.substring(0, pos).split('\n');
+        hint = `（第 ${lines.length} 行，第 ${lines[lines.length - 1].length} 列）`;
+      }
+      document.getElementById('fjv-output').innerHTML = `
+        <div style="padding:16px;text-align:center">
+          <div style="font-size:2rem;margin-bottom:12px">❌</div>
+          <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">JSON 格式错误</div>
+          <div style="font-size:.85rem;color:#ef4444">${this.escape(e.message)}</div>
+          ${hint ? `<div style="font-size:.8rem;color:var(--text-secondary,#888);margin-top:8px">错误位置：${hint}</div>` : ''}
+        </div>`;
+      document.getElementById('fjv-info').style.display = 'none';
+    }
   }
 }
 

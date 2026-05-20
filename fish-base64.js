@@ -39,6 +39,10 @@ render(){
         <button class="b64-btn b64-dec" id="b64-dec">解码 ↑</button>
         <button class="b64-btn b64-swap" id="b64-swap">⇅ 交换</button>
         <button class="b64-btn b64-copy" id="b64-copy-out">📋 复制结果</button>
+        <label class="b64-btn b64-file" style="cursor:pointer">
+          📁 文件转Base64
+          <input type="file" id="b64-file" style="display:none" />
+        </label>
       </div>
       <div class="b64-label">结果 <span id="b64-len-out"></span></div>
       <textarea class="b64-area" id="b64-out" placeholder="结果..." readonly></textarea>
@@ -50,6 +54,7 @@ render(){
   $('#b64-dec').onclick=()=>this.transform('decode');
   $('#b64-swap').onclick=()=>{const a=$('#b64-in'),b=$('#b64-out');const t=a.value;a.value=b.value;b.value=t};
   $('#b64-copy-out').onclick=()=>{navigator.clipboard.writeText($('#b64-out').value).then(()=>{$('#b64-info').textContent='✅ 已复制'})};
+  $('#b64-file').onchange=(e)=>this.handleFile(e);
   ['b64-in','b64-out'].forEach(id=>{$('#'+id).oninput=()=>{$('#b64-len-in').textContent=$('#b64-in').value.length+'字';$('#b64-len-out').textContent=$('#b64-out').value.length+'字'}});
 }
 transform(dir){
@@ -74,3 +79,23 @@ transform(dir){
   }catch(e){info.textContent='❌ '+e.message}
 }}
 new FishBase64();
+
+handleFile(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  const $=s=>this.el.querySelector(s);
+  const info=$('#b64-info');
+  info.textContent='⏳ 读取文件中...';
+  const reader=new FileReader();
+  reader.onload=()=>{
+    const base64=reader.result.split(',')[1];
+    $('#b64-in').value=`文件名: ${file.name}\n文件类型: ${file.type}\n文件大小: ${(file.size/1024).toFixed(1)} KB`;
+    $('#b64-out').value=base64;
+    $('#b64-len-in').textContent=file.name;
+    $('#b64-len-out').textContent=base64.length+'字';
+    info.textContent=`✅ 文件已转为 Base64，${base64.length} 字符（可复制）`;
+  };
+  reader.onerror=()=>{info.textContent='❌ 文件读取失败'};
+  reader.readAsDataURL(file);
+}
+}
