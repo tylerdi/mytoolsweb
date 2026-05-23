@@ -3,7 +3,7 @@
 // POST /api/v1/audio/speech
 // 兼容 OpenAI TTS API 格式
 
-import { validateApiKey, logUsage, deductBalance, corsHeaders, corsResponse, errorResponse } from '../../_metapi-auth.js';
+import { validateApiKey, logUsage, deductBalance, corsHeaders, corsResponse, errorResponse } from '../_metapi-auth.js';
 
 const UPSTREAM_URL = 'https://fufu.iqach.top/v1/audio/speech';
 
