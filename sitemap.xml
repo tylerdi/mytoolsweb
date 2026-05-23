@@ -47,6 +47,24 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  <!-- AI API 开放平台 -->
+  <url>
+    <loc>https://tylerzhang.xyz/ai-service</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- AI 语音转文字 -->
+  <url>
+    <loc>https://tylerzhang.xyz/ai-voice-to-text</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- 灵感墙 -->
+  <url>
+    <loc>https://tylerzhang.xyz/ideas</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
 
   <!-- 博客 -->
   <url>
