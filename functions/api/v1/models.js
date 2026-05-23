@@ -3,7 +3,7 @@
 // GET /api/v1/models
 // 兼容 OpenAI Models API 格式
 
-import { corsHeaders, corsResponse } from 'api/_metapi-auth.js';
+import { corsHeaders, corsResponse } from './api/_metapi-auth.js';
 
 // 兼容别名（用户可用 GPT/Claude 模型名调用，底层走 MIMO）
 const MODEL_ALIASES = {

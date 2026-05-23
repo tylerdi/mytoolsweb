@@ -3,7 +3,7 @@
 // POST /api/v1/chat/completions
 // 兼容 OpenAI API 格式
 
-import { validateApiKey, logUsage, deductBalance, corsHeaders, corsResponse, errorResponse } from 'api/_metapi-auth.js';
+import { validateApiKey, logUsage, deductBalance, corsHeaders, corsResponse, errorResponse } from './api/_metapi-auth.js';
 
 // MIMO 模型白名单
 const ALLOWED_MODELS = [
