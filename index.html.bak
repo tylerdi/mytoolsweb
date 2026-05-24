@@ -416,6 +416,7 @@
             <a href="/resources.html">🧰 资源</a>
             <a href="/about.html">👤 关于</a>
             <a href="/changelog.html">📋 更新日志</a>
+            <a href="/ai-service.html">🚀 AI服务</a>
         </div>
     </div>
 
@@ -452,7 +453,7 @@
             </p>
             <div class="hero-stats">
                 <div class="hero-stat"><span class="num" id="hero-days">0</span><span class="label">天</span></div>
-                <div class="hero-stat"><span class="num" id="hero-tools">69</span><span class="label">工具</span></div>
+                <div class="hero-stat"><span class="num" id="hero-tools">16</span><span class="label">工具</span></div>
                 <div class="hero-stat"><span class="num" id="hero-chapters">0</span><span class="label">章节</span></div>
             </div>
         </div>
@@ -469,6 +470,11 @@
             <p class="section-desc">一键直达你感兴趣的功能</p>
         </div>
         <div class="card-grid card-grid-4">
+            <a href="/ai-service.html" class="feature-card reveal" style="--card-color:#646cff">
+                <span class="feature-icon">🚀</span>
+                <h3>AI API 平台</h3>
+                <p>多模型接口，开发者一键接入</p>
+            </a>
             <a href="/tools.html" class="feature-card reveal" style="--card-color:#646cff">
                 <span class="feature-icon">🧰</span>
                 <h3>AI 工具箱</h3>
@@ -514,148 +520,44 @@
 
     <div class="divider-wrap"><span class="divider-icon">🐬</span></div>
 
-    <!-- ===== AI 工具 ===== -->
+    <!-- ===== AI 核心功能 ===== -->
     <section class="section">
         <div class="section-header reveal">
             <div class="section-tag">AI Tools</div>
             <h2 class="section-title">AI 工具</h2>
-            <p class="section-desc">实用AI工具大合集</p>
+            <p class="section-desc">真正能解决问题的工具</p>
         </div>
         <div class="card-grid card-grid-4">
-            <a class="feature-card reveal" href="/ai-image" style="--card-color:#646cff"><span class="feature-icon">🎨</span><h3>AI 画图</h3><p>文字生成图片</p></a>
-
-            <a class="feature-card reveal" href="/tools/ai-voice-generator.html" style="--card-color:#ec4899"><span class="feature-icon">🔊</span><h3>文字转语音</h3><p>MIMO TTS 多语言</p></a>
+            <a class="feature-card reveal" href="/ai-service.html" style="--card-color:#ec4899"><span class="feature-icon">🚀</span><h3>AI API 平台</h3><p>多模型接口，开发者一键接入</p></a>
+            <a class="feature-card reveal" href="/ai-tts" style="--card-color:#d4a853"><span class="feature-icon">🎙️</span><h3>AI 文字转语音</h3><p>高质量中文TTS，免费MP3</p></a>
+            <a class="feature-card reveal" href="/ai-image" style="--card-color:#646cff"><span class="feature-icon">🎨</span><h3>AI 画图</h3><p>文字生成图片，10种风格</p></a>
+            <a class="feature-card reveal" href="/ai-chat" style="--card-color:#ec4899"><span class="feature-icon">💬</span><h3>AI 聊天助手</h3><p>免费ChatGPT替代方案</p></a>
+            <a class="feature-card reveal" href="/ai-voice-to-text" style="--card-color:#f59e0b"><span class="feature-icon">🎙️</span><h3>语音转文字</h3><p>实时语音识别</p></a>
             <a class="feature-card reveal" href="/tools/ai-translation.html" style="--card-color:#22c55e"><span class="feature-icon">🌐</span><h3>AI 翻译</h3><p>多语言智能翻译</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-speech-to-text" style="--card-color:#f59e0b"><span class="feature-icon">🎙️</span><h3>语音转文字</h3><p>实时语音识别</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-ocr" style="--card-color:#f59e0b"><span class="feature-icon">📸</span><h3>文字识别 OCR</h3><p>拍照/图片OCR提取文字</p></a>
             <a class="feature-card reveal" href="/tool.html?id=fish-code-explain" style="--card-color:#8b5cf6"><span class="feature-icon">💻</span><h3>代码解释器</h3><p>粘贴代码AI解读</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-color" style="--card-color:#a855f7"><span class="feature-icon">🎨</span><h3>配色方案</h3><p>AI生成配色灵感</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-wenyan" style="--card-color:#06b6d4"><span class="feature-icon">🏛️</span><h3>文言文翻译</h3><p>现代文↔文言文</p></a>
+            <a class="feature-card reveal" href="/blog/" style="--card-color:#06b6d4"><span class="feature-icon">📝</span><h3>博客</h3><p>技术与AI实践记录</p></a>
         </div>
     </section>
 
-    <div class="divider-wrap"><span class="divider-icon">✍️</span></div>
+    <div class="divider-wrap"><span class="divider-icon">🛠️</span></div>
 
-    <!-- ===== AI 写作 ===== -->
+    <!-- ===== 开发者工具 ===== -->
     <section class="section">
         <div class="section-header reveal">
-            <div class="section-tag">AI Writing</div>
-            <h2 class="section-title">AI 写作</h2>
-            <p class="section-desc">让AI帮你写</p>
+            <div class="section-tag">Dev Tools</div>
+            <h2 class="section-title">开发者工具</h2>
+            <p class="section-desc">程序员必备，开箱即用</p>
         </div>
         <div class="card-grid card-grid-4">
-            <a class="feature-card reveal" href="/tool.html?id=fish-weekly" style="--card-color:#646cff"><span class="feature-icon">📝</span><h3>周报生成器</h3><p>关键词变专业周报</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-resume" style="--card-color:#ec4899"><span class="feature-icon">📄</span><h3>简历生成器</h3><p>关键词变简历</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-pyq" style="--card-color:#22c55e"><span class="feature-icon">📱</span><h3>朋友圈文案</h3><p>一键生成文案</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-lyric-writer" style="--card-color:#f59e0b"><span class="feature-icon">🎵</span><h3>歌词创作</h3><p>AI写歌词</p></a>
-
-            <a class="feature-card reveal" href="/tool.html?id=fish-imitate" style="--card-color:#8b5cf6"><span class="feature-icon">🎤</span><h3>模仿写作</h3><p>鲁迅李白甲方任选</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-book-notes" style="--card-color:#a855f7"><span class="feature-icon">📚</span><h3>读书笔记</h3><p>书名变精华笔记</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-annual-report" style="--card-color:#06b6d4"><span class="feature-icon">📊</span><h3>年度报告</h3><p>生成个人年度报告</p></a>
-        </div>
-    </section>
-
-    <div class="divider-wrap"><span class="divider-icon">🎭</span></div>
-
-    <!-- ===== AI 创意 ===== -->
-    <section class="section">
-        <div class="section-header reveal">
-            <div class="section-tag">AI Creative</div>
-            <h2 class="section-title">AI 创意</h2>
-            <p class="section-desc">AI的脑洞大开</p>
-        </div>
-        <div class="card-grid card-grid-4">
-            <a class="feature-card reveal" href="/tool.html?id=fish-story-game" style="--card-color:#646cff"><span class="feature-icon">🎭</span><h3>故事接龙</h3><p>人机协作创作故事</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-debate" style="--card-color:#ec4899"><span class="feature-icon">🤖</span><h3>AI 辩论赛</h3><p>正反方自我辩论</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-couplet" style="--card-color:#22c55e"><span class="feature-icon">🧧</span><h3>AI 对联</h3><p>上联对下联</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-naming" style="--card-color:#f59e0b"><span class="feature-icon">👶</span><h3>起名助手</h3><p>人名宠物项目公司</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-quote" style="--card-color:#8b5cf6"><span class="feature-icon">💡</span><h3>每日名言</h3><p>AI智慧语录</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-life-sim" style="--card-color:#a855f7"><span class="feature-icon">🔄</span><h3>人生重开</h3><p>如果重活一次</p></a>
-        </div>
-    </section>
-
-    <div class="divider-wrap"><span class="divider-icon">🎮</span></div>
-
-    <!-- ===== AI 互动 ===== -->
-    <section class="section">
-        <div class="section-header reveal">
-            <div class="section-tag">AI Interactive</div>
-            <h2 class="section-title">AI 互动</h2>
-            <p class="section-desc">和AI一起玩</p>
-        </div>
-        <div class="card-grid card-grid-4">
-            <a class="feature-card reveal" href="/tool.html?id=fish-quiz" style="--card-color:#646cff"><span class="feature-icon">🧠</span><h3>知识闯关</h3><p>AI出题答题</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-treehole" style="--card-color:#ec4899"><span class="feature-icon">💬</span><h3>AI 树洞</h3><p>匿名倾诉陪伴</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-horoscope" style="--card-color:#22c55e"><span class="feature-icon">🔮</span><h3>每日运势</h3><p>AI星座运势</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-recipe" style="--card-color:#f59e0b"><span class="feature-icon">🍳</span><h3>AI 菜谱</h3><p>冰箱有啥做啥</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-travel" style="--card-color:#8b5cf6"><span class="feature-icon">🗺️</span><h3>旅行规划</h3><p>AI定制行程</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-movie" style="--card-color:#a855f7"><span class="feature-icon">🎬</span><h3>影视推荐</h3><p>心情匹配片单</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-history-today" style="--card-color:#06b6d4"><span class="feature-icon">📜</span><h3>历史今天</h3><p>AI讲述历史大事</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-fitness" style="--card-color:#f472b6"><span class="feature-icon">💪</span><h3>健身计划</h3><p>AI定制训练计划</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-riddle" style="--card-color:#22d3ee"><span class="feature-icon">🤪</span><h3>脑筋急转弯</h3><p>AI出题猜谜</p></a>
-        </div>
-    </section>
-
-    <div class="divider-wrap"><span class="divider-icon">🎵</span></div>
-
-    <!-- ===== 娱乐 ===== -->
-    <section class="section">
-        <div class="section-header reveal">
-            <div class="section-tag">Fun</div>
-            <h2 class="section-title">娱乐</h2>
-            <p class="section-desc">轻松一刻</p>
-        </div>
-        <div class="card-grid card-grid-4">
-            <a class="feature-card reveal" href="/tool.html?id=fish-video-player" style="--card-color:#ec4899"><span class="feature-icon">🎬</span><h3>视频播放器</h3><p>Pexels免费视频</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-daily-poem" style="--card-color:#22c55e"><span class="feature-icon">📅</span><h3>每日诗词</h3><p>AI赋诗一首</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-funfact" style="--card-color:#f59e0b"><span class="feature-icon">🎲</span><h3>冷知识</h3><p>每天一个冷知识</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-joke" style="--card-color:#8b5cf6"><span class="feature-icon">😂</span><h3>笑话</h3><p>每天一个笑话</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-dream" style="--card-color:#a855f7"><span class="feature-icon">🔮</span><h3>AI 解梦</h3><p>解读你的梦境</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-typing-test" style="--card-color:#06b6d4"><span class="feature-icon">⌨️</span><h3>打字测速</h3><p>中文打字练习</p></a>
-        </div>
-    </section>
-
-    <div class="divider-wrap"><span class="divider-icon">📊</span></div>
-
-    <!-- ===== 我的 ===== -->
-    <section class="section">
-        <div class="section-header reveal">
-            <div class="section-tag">My Space</div>
-            <h2 class="section-title">我的</h2>
-            <p class="section-desc">你的个人空间</p>
-        </div>
-        <div class="card-grid card-grid-4">
-            <a class="feature-card reveal" href="/tool.html?id=fish-checkin" style="--card-color:#22c55e"><span class="feature-icon">✅</span><h3>每日打卡</h3><p>连续签到记录</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-mood" style="--card-color:#f472b6"><span class="feature-icon">😊</span><h3>心情日记</h3><p>记录每日心情</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-capsule" style="--card-color:#f59e0b"><span class="feature-icon">💌</span><h3>时光胶囊</h3><p>写给未来的自己</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-guestbook" style="--card-color:#8b5cf6"><span class="feature-icon">💬</span><h3>留言板</h3><p>公共留言互动</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-visitor-map" style="--card-color:#a855f7"><span class="feature-icon">🗺️</span><h3>访客地图</h3><p>全球访客可视化</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-stats" style="--card-color:#06b6d4"><span class="feature-icon">📊</span><h3>网站统计</h3><p>访问数据</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-question" style="--card-color:#f97316"><span class="feature-icon">❓</span><h3>每日一问</h3><p>AI 每天问你一个问题</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-challenge" style="--card-color:#8b5cf6"><span class="feature-icon">🏆</span><h3>每日挑战</h3><p>今天的小挑战</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-tarot" style="--card-color:#d4a853"><span class="feature-icon">🔮</span><h3>塔罗占卜</h3><p>三牌阵，AI解读命运</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-pixel-avatar" style="--card-color:#22c55e"><span class="feature-icon">🎨</span><h3>像素头像</h3><p>随机生成像素风头像</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-pomodoro" style="--card-color:#ef4444"><span class="feature-icon">🍅</span><h3>番茄钟</h3><p>专注工作高效休息</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-wheel" style="--card-color:#f97316"><span class="feature-icon">🎡</span><h3>命运转盘</h3><p>选择困难症终结者</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-slacker" style="--card-color:#ec4899"><span class="feature-icon">💰</span><h3>摸鱼计算器</h3><p>上班摸鱼赚了多少钱</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-memo" style="--card-color:#06b6d4"><span class="feature-icon">📝</span><h3>备忘录</h3><p>本地便签待办清单</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-countdown" style="--card-color:#f59e0b"><span class="feature-icon">⏰</span><h3>倒计时</h3><p>倒数重要日子</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-password" style="--card-color:#ef4444"><span class="feature-icon">🔐</span><h3>密码生成器</h3><p>安全随机密码</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-calendar" style="--card-color:#22c55e"><span class="feature-icon">📊</span><h3>贡献日历</h3><p>打卡热力图</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-qrcode" style="--card-color:#f97316"><span class="feature-icon">📱</span><h3>二维码生成</h3><p>文本/URL转二维码</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-markdown" style="--card-color:#8b5cf6"><span class="feature-icon">📓</span><h3>Markdown 笔记</h3><p>实时预览笔记本</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-json-viewer" style="--card-color:#f59e0b"><span class="feature-icon">📊</span><h3>JSON 格式化</h3><p>格式化+树形展开</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-base64" style="--card-color:#8b5cf6"><span class="feature-icon">🔧</span><h3>Base64 编解码</h3><p>Base64/URL/Hex等</p></a>
             <a class="feature-card reveal" href="/tool.html?id=fish-regex-tester" style="--card-color:#22c55e"><span class="feature-icon">🔍</span><h3>正则测试器</h3><p>实时匹配高亮</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-color-palette" style="--card-color:#f97316"><span class="feature-icon">🎨</span><h3>颜色调色板</h3><p>取色+配色方案</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-converter" style="--card-color:#06b6d4"><span class="feature-icon">📐</span><h3>单位换算</h3><p>8大类实时换算</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-markdown" style="--card-color:#8b5cf6"><span class="feature-icon">📓</span><h3>Markdown 编辑</h3><p>实时预览笔记本</p></a>
             <a class="feature-card reveal" href="/tool.html?id=fish-diff" style="--card-color:#22c55e"><span class="feature-icon">📝</span><h3>文本对比</h3><p>逐行差异高亮</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-json-viewer" style="--card-color:#f59e0b"><span class="feature-icon">📊</span><h3>JSON 可视化</h3><p>格式化+树形展开</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-clipboard" style="--card-color:#ec4899"><span class="feature-icon">📋</span><h3>剪贴板管理</h3><p>文本片段快速复制</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-todo" style="--card-color:#10b981"><span class="feature-icon">📋</span><h3>待办清单</h3><p>优先级管理+完成率</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-base64" style="--card-color:#8b5cf6"><span class="feature-icon">🔧</span><h3>编解码工具箱</h3><p>Base64/URL/Hex等</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-devtool" style="--card-color:#6366f1"><span class="feature-icon">🛠</span><h3>开发者工具箱</h3><p>Hash/正则/JSON/Cron</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-worldclock" style="--card-color:#0ea5e9"><span class="feature-icon">🌍</span><h3>世界时钟</h3><p>全球时区实时同步</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-habit" style="--card-color:#ef4444"><span class="feature-icon">🔥</span><h3>习惯打卡</h3><p>每日追踪+连续统计</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-ocr" style="--card-color:#f59e0b"><span class="feature-icon">📸</span><h3>文字识别</h3><p>拍照/图片OCR+AI解答</p></a>
-            <a class="feature-card reveal" href="/tool.html?id=fish-qrcode-scanner" style="--card-color:#14b8a6"><span class="feature-icon">📷</span><h3>二维码扫一扫</h3><p>摄像头扫描+图片解析</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-qrcode" style="--card-color:#f97316"><span class="feature-icon">📱</span><h3>二维码生成</h3><p>文本/URL转二维码</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-password" style="--card-color:#ef4444"><span class="feature-icon">🔐</span><h3>密码生成器</h3><p>安全随机密码</p></a>
+            <a class="feature-card reveal" href="/tool.html?id=fish-converter" style="--card-color:#06b6d4"><span class="feature-icon">📐</span><h3>单位换算</h3><p>8大类实时换算</p></a>
         </div>
     </section>
 
@@ -676,34 +578,7 @@
                 <div class="dash-num" id="dash-posts">0</div>
                 <div class="dash-label">博客文章</div>
             </div>
-
         </div>
-        <div style="margin-top:40px">
-        </div>
-    </section>
-
-    <!-- ===== 人生进度条 ===== -->
-    <section class="section">
-        <div class="section-header reveal">
-            <div class="section-tag">Life Progress</div>
-            <h2 class="section-title">人生进度条</h2>
-        </div>
-        <div id="fish-progress" class="reveal"></div>
-    </section>
-
-    <!-- ===== 今日运势 ===== -->
-    <section class="section">
-        <div class="section-header reveal">
-            <div class="section-tag">Daily Fortune</div>
-            <h2 class="section-title">今日运势</h2>
-        </div>
-        <div id="fish-horoscope" class="reveal"></div>
-    </section>
-
-    <!-- ===== 每日名言 ===== -->
-    <section class="wisdom">
-        <div class="wisdom-text" id="daily-wisdom">加载中...</div>
-        <div class="wisdom-author" id="wisdom-author"></div>
     </section>
 
     <!-- ===== 友情链接 ===== -->
@@ -733,26 +608,15 @@
     <!-- 脚本 -->
     <script src="/fish-ai.js?v=20260506c"></script>
 
-    <script src="/fish-horoscope.js?v=20260506c"></script>
-    <script src="/fish-progress.js?v=20260506c"></script>
-    <script src="/fish-memo.js?v=20260506c"></script>
-    <script src="/fish-countdown.js?v=20260506c"></script>
     <script src="/fish-password.js?v=20260506c"></script>
-    <script src="/fish-calendar.js?v=20260506c"></script>
     <script src="/fish-qrcode.js?v=20260506c"></script>
     <script src="/fish-markdown.js?v=20260506c"></script>
     <script src="/fish-diff.js?v=20260506c"></script>
     <script src="/fish-json-viewer.js?v=20260506c"></script>
-    <script src="/fish-clipboard.js?v=20260506c"></script>
-    <script src="/fish-todo.js?v=20260506c"></script>
     <script src="/fish-base64.js?v=20260506c"></script>
-    <script src="/fish-devtool.js?v=20260506c"></script>
-    <script src="/fish-worldclock.js?v=20260506c"></script>
-    <script src="/fish-habit.js?v=20260506c"></script>
     <script src="/fish-ocr.js?v=20260506d"></script>
     <script src="/fish-qrcode-scanner.js?v=20260506d"></script>
     <script src="/fish-regex-tester.js?v=20260506c"></script>
-    <script src="/fish-color-palette.js?v=20260506c"></script>
     <script src="/fish-converter.js?v=20260506c"></script>
     <script>
     // 滚动位置记忆

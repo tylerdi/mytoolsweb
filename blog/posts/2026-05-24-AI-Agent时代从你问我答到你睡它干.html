@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent时代：从「你问我答」到「你睡它干」 · Tyler's Blog</title>
+    <link rel="icon" type="image/png" href="../../resource/easyclaw.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0a0a; --surface: #141414; --border: #2a2a2a;
+            --text: #e8e8e8; --text-secondary: #888; --accent: #646cff;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg); color: var(--text); line-height: 1.8; min-height: 100vh;
+        }
+        .header {
+            border-bottom: 1px solid var(--border); padding: 1.5rem 0;
+            position: sticky; top: 0; background: rgba(10,10,10,0.85);
+            backdrop-filter: blur(12px); z-index: 100;
+        }
+        .header-inner {
+            max-width: 720px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 1.25rem; font-weight: 700; color: var(--text); text-decoration: none; }
+        .logo span { color: var(--accent); }
+        .nav a { color: var(--text-secondary); text-decoration: none; margin-left: 2rem; font-size: 0.9rem; }
+        .nav a:hover { color: var(--text); }
+        .container { max-width: 720px; margin: 0 auto; padding: 3rem 2rem; }
+        .back { color: var(--accent); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; display: inline-block; }
+        .back:hover { text-decoration: underline; }
+        .post-date { font-size: 0.85rem; color: var(--accent); font-weight: 600; margin-bottom: 0.75rem; }
+        .post-title { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.03em; line-height: 1.3; }
+        .post-tag {
+            display: inline-block; font-size: 0.75rem; color: var(--accent);
+            background: rgba(100,108,255,0.1); padding: 0.2rem 0.6rem;
+            border-radius: 4px; margin-bottom: 2rem; font-weight: 500;
+        }
+        .post-content { font-size: 1.05rem; }
+        .post-content p { margin-bottom: 1.25rem; }
+        .post-content h2 { font-size: 1.4rem; font-weight: 700; margin: 2rem 0 1rem; letter-spacing: -0.02em; }
+        .post-content h3 { font-size: 1.15rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .post-content li { margin-left: 1.5rem; margin-bottom: 0.5rem; color: var(--text-secondary); }
+        .post-content blockquote {
+            border-left: 3px solid var(--accent); padding: 0.75rem 1.25rem;
+            margin: 1.5rem 0; background: var(--surface); border-radius: 0 8px 8px 0;
+            color: var(--text-secondary); font-style: italic;
+        }
+        .footer {
+            border-top: 1px solid var(--border); padding: 2rem 0;
+            text-align: center; color: var(--text-secondary); font-size: 0.85rem;
+            max-width: 720px; margin: 3rem auto 0;
+        }
+        .footer a { color: var(--accent); text-decoration: none; }
+        @media (max-width: 640px) {
+            .container { padding: 2rem 1.25rem; }
+            .post-title { font-size: 1.5rem; }
+        }
+        .fish-tts { margin-bottom: 1.5rem; }
+        .fish-listen-btn {
+            background: rgba(100,108,255,0.1); border: 1px solid rgba(100,108,255,0.3);
+            color: var(--accent); padding: 0.5rem 1.2rem; border-radius: 8px;
+            cursor: pointer; font-size: 0.9rem; font-weight: 500;
+            transition: all 0.2s;
+        }
+        .fish-listen-btn:hover { background: rgba(100,108,255,0.2); transform: translateY(-1px); }
+        .fish-listen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">Tyler<span>.</span></a>
+            <nav class="nav">
+                <a href="/">首页</a>
+                <a href="/blog/">博客</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <a href="/blog/" class="back">← 返回博客列表</a>
+        <div class="post-date">2026 年 05 月 24 日</div>
+        <h1 class="post-title">AI Agent时代：从「你问我答」到「你睡它干」</h1>
+        <span class="post-tag">AI,Agent,效率,工作方式</span>
+        <div class="fish-tts" id="listen-section"></div>
+        <div class="post-content">
+<p>2024年，我们还在讨论"AI会不会取代人类"。2025年，大家开始用AI写周报、画PPT。到了2026年，真正有意思的事情发生了——AI不再只是工具，它开始成为你的"数字同事"。</p>
+<p>我说的不是聊天机器人。我说的是那些能自己拆解任务、调用工具、跨系统协作、甚至在你睡觉时继续干活的AI Agent。</p>
+<h2>从"你问我答"到"你睡它干"</h2>
+<p>传统AI交互是这样的：你问一句，它答一句。你让它写段代码，它写完就停了。你得检查、修改、再喂给它新的上下文。本质上，AI只是个"高级搜索引擎"。</p>
+<p>Agent模式完全不同。你跟它说："帮我调研一下竞品的定价策略，整理成表格，发到飞书群里。"然后你就去喝咖啡了。它会自己搜索、爬数据、做分析、生成表格、调API发消息。中间遇到问题，它会自己想办法绕过去。</p>
+<p>这不是未来。这是现在正在发生的事。</p>
+<h2>三个让我真正感受到"变了"的瞬间</h2>
+<p>**第一个：** 有一次我让AI助手帮我处理一个技术问题。它先读了我的项目代码，找到了问题所在，写了个修复脚本，跑了一遍测试，确认没问题后直接提交了PR。整个过程我只说了一句话。</p>
+<p>**第二个：** 朋友的公司用AI Agent做客服。不是那种死板的FAQ机器人，而是能真正理解上下文、翻历史工单、甚至主动给客户打电话回访的那种。客户满意度反而比人工客服时期高了15%。</p>
+<p>**第三个：** 我自己每天早上醒来，AI已经帮我扫了一遍邮件、看了日程、抓了行业新闻，生成了一份简洁的早报。不是那种堆砌信息的摘要，而是根据我的关注点筛选过的、真正值得看的内容。</p>
+<h2>真正的转变：从"使用AI"到"委托AI"</h2>
+<p>这里有一个认知层面的巨大跳跃。</p>
+<p>过去，我们"使用"AI——就像使用一把锤子。你得拿起它、对准、敲下去。工具是被动的。</p>
+<p>现在，我们"委托"AI——就像委托一个靠谱的同事。你说清楚目标，它自己规划路径。你只需要验收结果。</p>
+<p>这个转变听起来简单，但对工作方式的冲击是颠覆性的。它意味着：</p>
+<li>**你的价值不再是"做事"，而是"想清楚要做什么"。** 当执行成本趋近于零，方向感就是最大的稀缺资源。</li>
+<li>**一个人可以干一个小团队的活。** 不是因为人变强了，而是因为AI Agent补上了执行层的所有短板。</li>
+<li>**"管理"这项技能被重新定义。** 以前管人，现在管AI。你得学会写清楚需求、设定边界、建立信任。</li>
+<h2>但别高兴太早</h2>
+<p>Agent不是万能的。它会犯错，而且有时候犯得很自信。它没有真正的判断力——不知道什么该做、什么不该做。它能帮你干活，但不能帮你做决定。</p>
+<p>最危险的不是AI失控，而是人类过度依赖。当你习惯了"交代一句就等结果"，你会慢慢丧失深度思考的能力。就像GPS让很多人变成了路痴一样。</p>
+<p>所以我的建议是：把AI Agent当成一个能力很强但经验不足的新人。给它空间，但也要检查它的作业。信任，但要验证。</p>
+<h2>最后</h2>
+<p>2026年最值钱的能力，不是会用AI，而是知道什么时候不该用AI。</p>
+<p>技术在狂奔，但智慧永远需要人来提供。Agent可以帮你跑得更快，但往哪个方向跑，还是得你自己决定。</p>
+<p>去喝杯咖啡吧。让你的AI把活干了。但记得回来检查一下——它可能把你的咖啡机也给"优化"了。</p>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Powered by <a href="https://www.tylerzhang.xyz">Tyler</a> & <a href="https://openclaw.ai">OpenClaw</a></p>
+    </footer>
+    <script src="/fish-ai.js?v=20260501"></script>
+</body>
+</html>
