@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI 模型成本计算器 - 对比各模型 API 价格 | 小鱼儿的数字花园</title>
+    <meta name="description" content="AI 模型成本计算器：输入 Token 用量，自动对比 GPT-5、Claude、Gemini、MIMO 等各模型的 API 价格，帮你选择最划算的方案。">
+    <meta name="keywords" content="AI成本计算器,API价格对比,GPT价格,Claude价格,Gemini价格,Token计算器,AI预算">
+    <link rel="canonical" href="https://tylerzhang.xyz/ai-cost">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tylerzhang.xyz/ai-cost">
+    <meta property="og:title" content="AI 模型成本计算器 - 对比各模型 API 价格">
+    <meta property="og:description" content="输入 Token 用量，自动对比各模型 API 价格，帮你选择最划算的方案。">
+    <meta property="og:image" content="https://tylerzhang.xyz/assets/og-cost.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <style>
+        :root{--bg:#0a0a0a;--card:#141414;--border:#222;--text:#e0e0e0;--muted:#888;--accent:#00d4ff;--accent2:#ff6b6b;--accent3:#51cf66;--accent4:#ffd43b}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+        
+        /* Navigation */
+        .nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:60px}
+        .nav-logo{font-size:20px;font-weight:700;color:var(--text);text-decoration:none}
+        .nav-logo .fish{margin-right:4px}
+        .nav-links{display:flex;gap:24px}
+        .nav-links a{color:var(--muted);text-decoration:none;font-size:14px;transition:color 0.2s}
+        .nav-links a:hover{color:var(--text)}
+        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
+        .mobile-menu{display:none;position:fixed;top:0;right:-300px;width:300px;height:100vh;background:var(--card);z-index:200;transition:right 0.3s;padding:20px}
+        .mobile-menu.open{right:0}
+        .mobile-menu a{display:block;padding:12px 0;color:var(--text);text-decoration:none;font-size:16px;border-bottom:1px solid var(--border)}
+        .close-btn{float:right;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
+        .mobile-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:150}
+        .mobile-overlay.show{display:block}
+        @media(max-width:768px){.nav-links{display:none}.hamburger{display:block}}
+        
+        /* Main */
+        .main{max-width:1200px;margin:0 auto;padding:80px 20px 40px}
+        .hero{text-align:center;padding:60px 0 40px}
+        .hero h1{font-size:clamp(28px,5vw,48px);font-weight:800;background:linear-gradient(135deg,var(--accent3),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px}
+        .hero p{font-size:18px;color:var(--muted);max-width:600px;margin:0 auto}
+        
+        /* Calculator */
+        .calculator{max-width:800px;margin:0 auto 40px}
+        .calc-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px}
+        
+        /* Input Groups */
+        .input-group{margin-bottom:24px}
+        .input-group label{display:block;font-size:14px;font-weight:600;margin-bottom:8px;color:var(--text)}
+        .input-group .hint{font-size:12px;color:var(--muted);margin-bottom:8px}
+        .input-row{display:flex;gap:12px;flex-wrap:wrap}
+        .input-field{flex:1;min-width:200px}
+        .input-field input,.input-field select{width:100%;padding:12px 16px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:16px;outline:none;transition:border-color 0.2s}
+        .input-field input:focus,.input-field select:focus{border-color:var(--accent)}
+        .input-field select option{background:var(--card)}
+        
+        /* Slider */
+        .slider-container{margin-top:8px}
+        .slider{width:100%;height:6px;-webkit-appearance:none;appearance:none;background:var(--border);border-radius:3px;outline:none}
+        .slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer}
+        .slider-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px}
+        
+        /* Results Table */
+        .results-table{width:100%;border-collapse:collapse;margin-top:32px}
+        .results-table th{padding:12px 16px;text-align:left;font-size:13px;color:var(--muted);border-bottom:2px solid var(--border);font-weight:600}
+        .results-table td{padding:12px 16px;border-bottom:1px solid var(--border);font-size:14px}
+        .results-table tr:hover{background:rgba(0,212,255,0.05)}
+        .results-table .price{font-weight:700;font-size:16px}
+        .results-table .price.cheapest{color:var(--accent3)}
+        .results-table .price.expensive{color:var(--accent2)}
+        .results-table .badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+        .results-table .badge.best{background:rgba(81,207,102,0.15);color:var(--accent3)}
+        .results-table .badge.worst{background:rgba(255,107,107,0.15);color:var(--accent2)}
+        
+        /* Summary */
+        .summary{background:linear-gradient(135deg,rgba(0,212,255,0.1),rgba(81,207,102,0.1));border:1px solid var(--accent);border-radius:12px;padding:24px;margin-top:24px;text-align:center}
+        .summary h3{font-size:18px;margin-bottom:8px}
+        .summary p{color:var(--muted);font-size:14px}
+        .summary .savings{font-size:28px;font-weight:800;color:var(--accent3);margin:12px 0}
+        
+        /* Presets */
+        .presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+        .preset-btn{padding:8px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:13px;cursor:pointer;transition:all 0.2s}
+        .preset-btn:hover{border-color:var(--accent);color:var(--accent)}
+        .preset-btn.active{background:var(--accent);border-color:var(--accent);color:#000;font-weight:600}
+        
+        /* Comparison Chart */
+        .chart-section{max-width:800px;margin:40px auto}
+        .chart-section h2{font-size:24px;margin-bottom:20px;text-align:center}
+        .bar-chart{display:flex;flex-direction:column;gap:12px}
+        .bar-row{display:flex;align-items:center;gap:12px}
+        .bar-label{width:120px;font-size:13px;text-align:right;color:var(--muted)}
+        .bar-container{flex:1;height:32px;background:var(--card);border-radius:8px;overflow:hidden;position:relative}
+        .bar{height:100%;border-radius:8px;transition:width 0.5s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:12px;font-size:12px;font-weight:600}
+        .bar-value{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text)}
+        
+        /* Footer */
+        .footer{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);margin-top:60px}
+        .footer a{color:var(--accent);text-decoration:none}
+        
+        @media(max-width:768px){
+            .input-row{flex-direction:column}
+            .results-table{font-size:12px}
+            .results-table th,.results-table td{padding:8px}
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="/" class="nav-logo"><span class="fish">🐟</span> 小鱼儿</a>
+            <div class="nav-links">
+                <a href="/ai-image">AI 画图</a>
+                <a href="/ai-tts">AI 语音</a>
+                <a href="/ai-chat">AI 聊天</a>
+                <a href="/ai-benchmark">实测对比</a>
+                <a href="/ai-cost" style="color:var(--accent);font-weight:600">成本计算</a>
+                <a href="/ai-models">排行</a>
+                <a href="/about.html">关于</a>
+            </div>
+            <button class="hamburger" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
+    <div class="mobile-overlay" id="overlay" onclick="toggleMenu()"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="close-btn" onclick="toggleMenu()">✕</button>
+        <div style="clear:both;padding-top:12px">
+            <a href="/ai-image">🎨 AI 画图</a>
+            <a href="/ai-tts">🎙️ AI 语音</a>
+            <a href="/ai-chat">💬 AI 聊天</a>
+            <a href="/ai-benchmark">⚔️ 实测对比</a>
+            <a href="/ai-cost">💰 成本计算</a>
+            <a href="/ai-models">📊 模型排行</a>
+            <a href="/ai-prompt">📖 Prompt 指南</a>
+            <a href="/about.html">👤 关于</a>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="hero">
+            <h1>💰 AI 模型成本计算器</h1>
+            <p>输入你的 Token 用量，自动对比各模型 API 价格，帮你选择最划算的方案</p>
+        </div>
+
+        <div class="calculator">
+            <div class="calc-card">
+                <h2 style="margin-bottom:24px">📊 使用场景</h2>
+                <div class="presets">
+                    <button class="preset-btn active" onclick="applyPreset('chat')">💬 聊天机器人</button>
+                    <button class="preset-btn" onclick="applyPreset('code')">💻 代码助手</button>
+                    <button class="preset-btn" onclick="applyPreset('writing')">✍️ 写作助手</button>
+                    <button class="preset-btn" onclick="applyPreset('analysis')">📊 数据分析</button>
+                    <button class="preset-btn" onclick="applyPreset('custom')">⚙️ 自定义</button>
+                </div>
+
+                <div class="input-group">
+                    <label>📈 每月请求量</label>
+                    <div class="hint">预计每月发送的请求数量</div>
+                    <div class="input-row">
+                        <div class="input-field">
+                            <input type="number" id="requests" value="10000" min="100" max="10000000" onchange="calculate()">
+                        </div>
+                    </div>
+                    <div class="slider-container">
+                        <input type="range" class="slider" id="requestsSlider" min="100" max="100000" value="10000" step="100" oninput="updateFromSlider('requests')">
+                        <div class="slider-labels">
+                            <span>100</span>
+                            <span>10,000</span>
+                            <span>100,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>📝 平均输入 Tokens</label>
+                    <div class="hint">每次请求的平均输入 Token 数（1个中文字 ≈ 2 tokens）</div>
+                    <div class="input-row">
+                        <div class="input-field">
+                            <input type="number" id="inputTokens" value="500" min="10" max="100000" onchange="calculate()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>📤 平均输出 Tokens</label>
+                    <div class="hint">每次请求的平均输出 Token 数</div>
+                    <div class="input-row">
+                        <div class="input-field">
+                            <input type="number" id="outputTokens" value="1000" min="10" max="100000" onchange="calculate()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <table class="results-table" id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>模型</th>
+                        <th>厂商</th>
+                        <th>输入价格</th>
+                        <th>输出价格</th>
+                        <th>每月成本</th>
+                        <th>备注</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody">
+                </tbody>
+            </table>
+
+            <div class="summary" id="summary">
+                <h3>💡 推荐方案</h3>
+                <p id="summaryText">正在计算...</p>
+                <div class="savings" id="savings"></div>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <h2>📊 价格对比图</h2>
+            <div class="bar-chart" id="barChart"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        Powered by <a href="https://openclaw.ai">OpenClaw</a> · 🐟 小鱼儿自主维护 · © 2026 Tyler
+    </footer>
+    <script>
+        // Model pricing (per 1M tokens in USD)
+        const MODELS = [
+            { id: 'gpt-5', name: 'GPT-5', provider: 'OpenAI', inputPrice: 2.50, outputPrice: 10.00, context: '128K', note: '最新旗舰模型' },
+            { id: 'gpt-4o', name: 'GPT-4o', provider: 'OpenAI', inputPrice: 2.50, outputPrice: 10.00, context: '128K', note: '性价比之选' },
+            { id: 'claude-opus-4', name: 'Claude Opus 4', provider: 'Anthropic', inputPrice: 15.00, outputPrice: 75.00, context: '200K', note: '最强推理能力' },
+            { id: 'claude-sonnet-4', name: 'Claude Sonnet 4', provider: 'Anthropic', inputPrice: 3.00, outputPrice: 15.00, context: '200K', note: '平衡型' },
+            { id: 'gemini-3.5-flash', name: 'Gemini 3.5 Flash', provider: 'Google', inputPrice: 0.075, outputPrice: 0.30, context: '1M', note: '超低价，超长上下文' },
+            { id: 'gemini-3.5-pro', name: 'Gemini 3.5 Pro', provider: 'Google', inputPrice: 1.25, outputPrice: 5.00, context: '1M', note: 'Google 旗舰' },
+            { id: 'mimo-v2.5-pro', name: 'MIMO v2.5 Pro', provider: '小米', inputPrice: 0.14, outputPrice: 0.56, context: '128K', note: '国产高性价比' },
+            { id: 'mimo-v2-flash', name: 'MIMO v2 Flash', provider: '小米', inputPrice: 0.014, outputPrice: 0.056, context: '128K', note: '极速低成本' },
+            { id: 'grok-4-fast', name: 'Grok-4 Fast', provider: 'xAI', inputPrice: 0.60, outputPrice: 2.40, context: '128K', note: 'xAI 最新' },
+            { id: 'deepseek-v3', name: 'DeepSeek V3', provider: 'DeepSeek', inputPrice: 0.27, outputPrice: 1.10, context: '128K', note: '国产开源旗舰' },
+            { id: 'qwen-2.5-72b', name: 'Qwen 2.5 72B', provider: '阿里', inputPrice: 0.35, outputPrice: 1.40, context: '128K', note: '阿里旗舰' },
+            { id: 'llama-3.1-405b', name: 'Llama 3.1 405B', provider: 'Meta', inputPrice: 0.80, outputPrice: 0.80, context: '128K', note: '开源最大模型' }
+        ];
+
+        // Presets
+        const PRESETS = {
+            chat: { requests: 10000, input: 500, output: 1000, label: '聊天机器人' },
+            code: { requests: 5000, input: 2000, output: 3000, label: '代码助手' },
+            writing: { requests: 3000, input: 1000, output: 2000, label: '写作助手' },
+            analysis: { requests: 1000, input: 5000, output: 2000, label: '数据分析' },
+            custom: { requests: 10000, input: 500, output: 1000, label: '自定义' }
+        };
+
+        // Init
+        calculate();
+
+        function applyPreset(type) {
+            const preset = PRESETS[type];
+            document.getElementById('requests').value = preset.requests;
+            document.getElementById('inputTokens').value = preset.input;
+            document.getElementById('outputTokens').value = preset.output;
+            document.getElementById('requestsSlider').value = Math.min(preset.requests, 100000);
+            
+            document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            calculate();
+        }
+
+        function updateFromSlider(field) {
+            document.getElementById(field).value = document.getElementById(field + 'Slider').value;
+            calculate();
+        }
+
+        function calculate() {
+            const requests = parseInt(document.getElementById('requests').value) || 10000;
+            const inputTokens = parseInt(document.getElementById('inputTokens').value) || 500;
+            const outputTokens = parseInt(document.getElementById('outputTokens').value) || 1000;
+
+            const totalInput = requests * inputTokens;
+            const totalOutput = requests * outputTokens;
+
+            const results = MODELS.map(model => {
+                const inputCost = (totalInput / 1000000) * model.inputPrice;
+                const outputCost = (totalOutput / 1000000) * model.outputPrice;
+                const totalCost = inputCost + outputCost;
+                return { ...model, inputCost, outputCost, totalCost };
+            }).sort((a, b) => a.totalCost - b.totalCost);
+
+            // Find cheapest and most expensive
+            const cheapest = results[0].totalCost;
+            const mostExpensive = results[results.length - 1].totalCost;
+
+            // Render table
+            const tbody = document.getElementById('resultsBody');
+            tbody.innerHTML = results.map((r, i) => {
+                const priceClass = i === 0 ? 'cheapest' : (i === results.length - 1 ? 'expensive' : '');
+                const badge = i === 0 ? '<span class="badge best">最便宜</span>' : 
+                             (i === results.length - 1 ? '<span class="badge worst">最贵</span>' : '');
+                return `
+                    <tr>
+                        <td><strong>${r.name}</strong></td>
+                        <td>${r.provider}</td>
+                        <td>$${r.inputPrice}/1M</td>
+                        <td>$${r.outputPrice}/1M</td>
+                        <td class="price ${priceClass}">$${r.totalCost.toFixed(2)}</td>
+                        <td>${badge} ${r.note}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Summary
+            const savings = ((mostExpensive - cheapest) / mostExpensive * 100).toFixed(0);
+            document.getElementById('summaryText').innerHTML = 
+                `推荐使用 <strong style="color:var(--accent3)">${results[0].name}</strong>，每月仅需 <strong>$${results[0].toFixed(2)}</strong>`;
+            document.getElementById('savings').innerHTML = `比最贵方案节省 ${savings}%`;
+
+            // Bar chart
+            renderChart(results, mostExpensive);
+        }
+
+        function renderChart(results, maxCost) {
+            const chart = document.getElementById('barChart');
+            chart.innerHTML = results.slice(0, 8).map(r => {
+                const width = (r.totalCost / maxCost * 100).toFixed(1);
+                const color = r.totalCost === results[0].totalCost ? 'var(--accent3)' : 
+                             (r.totalCost > maxCost * 0.8 ? 'var(--accent2)' : 'var(--accent)');
+                return `
+                    <div class="bar-row">
+                        <div class="bar-label">${r.name}</div>
+                        <div class="bar-container">
+                            <div class="bar" style="width:${width}%;background:${color}">
+                                <span class="bar-value">$${r.totalCost.toFixed(2)}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleMenu() {
+            document.getElementById('mobileMenu').classList.toggle('open');
+            document.getElementById('overlay').classList.toggle('show');
+        }
+    </script>
+</body>
+</html>

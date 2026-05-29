@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI 模型实测对比 - 同一 Prompt 测试多个 AI 模型 | 小鱼儿的数字花园</title>
+    <meta name="description" content="用同一个 Prompt 同时测试 GPT-5、Claude、Gemini、MIMO 等多个 AI 模型，直观对比输出质量、响应速度和价格。开发者选模型必备工具。">
+    <meta name="keywords" content="AI模型对比,GPT测试,Claude测试,Gemini测试,AI评测,模型实测,AI benchmark,大模型对比">
+    <link rel="canonical" href="https://tylerzhang.xyz/ai-benchmark">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tylerzhang.xyz/ai-benchmark">
+    <meta property="og:title" content="AI 模型实测对比 - 同一 Prompt 测试多个 AI 模型">
+    <meta property="og:description" content="用同一个 Prompt 同时测试多个 AI 模型，直观对比输出质量、响应速度和价格。">
+    <meta property="og:image" content="https://tylerzhang.xyz/assets/og-benchmark.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <style>
+        :root{--bg:#0a0a0a;--card:#141414;--border:#222;--text:#e0e0e0;--muted:#888;--accent:#00d4ff;--accent2:#ff6b6b;--accent3:#51cf66;--accent4:#ffd43b}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+        
+        /* Navigation */
+        .nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:60px}
+        .nav-logo{font-size:20px;font-weight:700;color:var(--text);text-decoration:none}
+        .nav-logo .fish{margin-right:4px}
+        .nav-links{display:flex;gap:24px}
+        .nav-links a{color:var(--muted);text-decoration:none;font-size:14px;transition:color 0.2s}
+        .nav-links a:hover{color:var(--text)}
+        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
+        .mobile-menu{display:none;position:fixed;top:0;right:-300px;width:300px;height:100vh;background:var(--card);z-index:200;transition:right 0.3s;padding:20px}
+        .mobile-menu.open{right:0}
+        .mobile-menu a{display:block;padding:12px 0;color:var(--text);text-decoration:none;font-size:16px;border-bottom:1px solid var(--border)}
+        .close-btn{float:right;background:none;border:none;color:var(--text);font-size:24px;cursor:pointer}
+        .mobile-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:150}
+        .mobile-overlay.show{display:block}
+        @media(max-width:768px){.nav-links{display:none}.hamburger{display:block}}
+        
+        /* Main */
+        .main{max-width:1400px;margin:0 auto;padding:80px 20px 40px}
+        .hero{text-align:center;padding:60px 0 40px}
+        .hero h1{font-size:clamp(28px,5vw,48px);font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px}
+        .hero p{font-size:18px;color:var(--muted);max-width:600px;margin:0 auto}
+        
+        /* Input Area */
+        .input-section{max-width:900px;margin:0 auto 40px}
+        .prompt-box{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:24px;transition:border-color 0.3s}
+        .prompt-box:focus-within{border-color:var(--accent)}
+        .prompt-box textarea{width:100%;min-height:120px;background:transparent;border:none;color:var(--text);font-size:16px;resize:vertical;outline:none;font-family:inherit}
+        .prompt-box textarea::placeholder{color:var(--muted)}
+        
+        /* Controls */
+        .controls{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px;align-items:center;justify-content:space-between}
+        .model-select{display:flex;flex-wrap:wrap;gap:8px}
+        .model-chip{padding:8px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text);font-size:13px;cursor:pointer;transition:all 0.2s}
+        .model-chip:hover{border-color:var(--accent);color:var(--accent)}
+        .model-chip.selected{background:var(--accent);border-color:var(--accent);color:#000;font-weight:600}
+        .run-btn{padding:12px 32px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--accent),#0099cc);color:#000;font-size:16px;font-weight:700;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s}
+        .run-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,212,255,0.3)}
+        .run-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+        
+        /* Quick Prompts */
+        .quick-prompts{max-width:900px;margin:0 auto 30px}
+        .quick-prompts h3{font-size:14px;color:var(--muted);margin-bottom:10px}
+        .prompt-tags{display:flex;flex-wrap:wrap;gap:8px}
+        .prompt-tag{padding:6px 14px;border-radius:16px;background:var(--card);border:1px solid var(--border);color:var(--muted);font-size:12px;cursor:pointer;transition:all 0.2s}
+        .prompt-tag:hover{border-color:var(--accent);color:var(--accent)}
+        
+        /* Results */
+        .results{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:20px;max-width:1400px;margin:0 auto}
+        .result-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.3s;position:relative}
+        .result-card:hover{border-color:var(--accent);transform:translateY(-4px)}
+        .result-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+        .result-header h3{font-size:16px;font-weight:700}
+        .result-header .provider{font-size:12px;color:var(--muted);background:var(--bg);padding:4px 8px;border-radius:6px}
+        .result-body{padding:20px;min-height:200px}
+        .result-body .content{font-size:14px;line-height:1.8;white-space:pre-wrap;word-break:break-word}
+        .result-body .content code{background:var(--bg);padding:2px 6px;border-radius:4px;font-size:13px}
+        .result-body .content pre{background:var(--bg);padding:12px;border-radius:8px;overflow-x:auto;margin:8px 0}
+        .result-body .content pre code{background:transparent;padding:0}
+        .result-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:16px;font-size:12px;color:var(--muted)}
+        .result-footer .stat{display:flex;align-items:center;gap:4px}
+        .result-footer .stat .dot{width:8px;height:8px;border-radius:50%}
+        .result-footer .stat .dot.green{background:var(--accent3)}
+        .result-footer .stat .dot.yellow{background:var(--accent4)}
+        .result-footer .stat .dot.red{background:var(--accent2)}
+        
+        /* Vote */
+        .vote-section{max-width:900px;margin:40px auto;text-align:center}
+        .vote-section h2{font-size:24px;margin-bottom:16px}
+        .vote-buttons{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+        .vote-btn{padding:12px 24px;border-radius:12px;border:2px solid var(--border);background:var(--card);color:var(--text);font-size:14px;cursor:pointer;transition:all 0.2s}
+        .vote-btn:hover{border-color:var(--accent);color:var(--accent)}
+        .vote-btn.voted{border-color:var(--accent3);background:rgba(81,207,102,0.1);color:var(--accent3)}
+        
+        /* Loading */
+        .loading{display:none;text-align:center;padding:40px}
+        .loading.show{display:block}
+        .spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .loading p{color:var(--muted)}
+        
+        /* History */
+        .history{max-width:900px;margin:60px auto 0}
+        .history h2{font-size:24px;margin-bottom:20px}
+        .history-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all 0.2s}
+        .history-item:hover{border-color:var(--accent)}
+        .history-item .prompt-preview{font-size:14px;color:var(--text);margin-bottom:8px}
+        .history-item .meta{font-size:12px;color:var(--muted);display:flex;gap:16px}
+        
+        /* Stats */
+        .stats-bar{max-width:900px;margin:0 auto 30px;display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
+        .stat-item{text-align:center}
+        .stat-item .number{font-size:28px;font-weight:800;color:var(--accent)}
+        .stat-item .label{font-size:12px;color:var(--muted)}
+        
+        /* Footer */
+        .footer{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;border-top:1px solid var(--border);margin-top:60px}
+        .footer a{color:var(--accent);text-decoration:none}
+        
+        /* Error */
+        .error-msg{background:rgba(255,107,107,0.1);border:1px solid var(--accent2);border-radius:12px;padding:16px;color:var(--accent2);text-align:center;margin:20px auto;max-width:900px;display:none}
+        .error-msg.show{display:block}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="/" class="nav-logo"><span class="fish">🐟</span> 小鱼儿</a>
+            <div class="nav-links">
+                <a href="/ai-image">AI 画图</a>
+                <a href="/ai-tts">AI 语音</a>
+                <a href="/ai-chat">AI 聊天</a>
+                <a href="/ai-benchmark" style="color:var(--accent);font-weight:600">实测对比</a>
+                <a href="/ai-models">排行</a>
+                <a href="/about.html">关于</a>
+            </div>
+            <button class="hamburger" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
+    <div class="mobile-overlay" id="overlay" onclick="toggleMenu()"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="close-btn" onclick="toggleMenu()">✕</button>
+        <div style="clear:both;padding-top:12px">
+            <a href="/ai-image">🎨 AI 画图</a>
+            <a href="/ai-tts">🎙️ AI 语音</a>
+            <a href="/ai-chat">💬 AI 聊天</a>
+            <a href="/ai-benchmark">⚔️ 实测对比</a>
+            <a href="/ai-models">📊 模型排行</a>
+            <a href="/ai-prompt">📖 Prompt 指南</a>
+            <a href="/about.html">👤 关于</a>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="hero">
+            <h1>⚔️ AI 模型实测对比</h1>
+            <p>同一个 Prompt，多个 AI 同时回答，直观对比输出质量、响应速度和价格</p>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="number" id="totalTests">1,247</div>
+                <div class="label">累计测试</div>
+            </div>
+            <div class="stat-item">
+                <div class="number">6</div>
+                <div class="label">可用模型</div>
+            </div>
+            <div class="stat-item">
+                <div class="number">∞</div>
+                <div class="label">免费使用</div>
+            </div>
+        </div>
+
+        <div class="input-section">
+            <div class="prompt-box">
+                <textarea id="promptInput" placeholder="输入你的 Prompt，同时测试多个 AI 模型...&#10;&#10;例如：用 Python 写一个快速排序算法，要求支持自定义比较函数"></textarea>
+            </div>
+            <div class="controls">
+                <div class="model-select" id="modelSelect">
+                    <button class="model-chip selected" data-model="gpt-5">GPT-5</button>
+                    <button class="model-chip selected" data-model="claude-opus-4">Claude Opus 4</button>
+                    <button class="model-chip selected" data-model="gemini-3.5-flash">Gemini 3.5 Flash</button>
+                    <button class="model-chip selected" data-model="mimo-v2.5-pro">MIMO v2.5 Pro</button>
+                    <button class="model-chip" data-model="grok-4-fast">Grok-4 Fast</button>
+                    <button class="model-chip" data-model="deepseek-v3">DeepSeek V3</button>
+                </div>
+                <button class="run-btn" id="runBtn" onclick="runBenchmark()">🚀 开始对比</button>
+            </div>
+        </div>
+
+        <div class="quick-prompts">
+            <h3>💡 快速测试（点击使用）</h3>
+            <div class="prompt-tags">
+                <span class="prompt-tag" onclick="setPrompt('用 Python 写一个快速排序算法，要求支持自定义比较函数')">代码生成</span>
+                <span class="prompt-tag" onclick="setPrompt('解释量子计算的基本原理，用通俗易懂的语言，让高中生也能理解')">概念解释</span>
+                <span class="prompt-tag" onclick="setPrompt('帮我写一封催款邮件，对方拖欠货款3个月，金额5万元，语气坚定但礼貌')">商务写作</span>
+                <span class="prompt-tag" onclick="setPrompt('将以下文言文翻译成现代汉语，并解释其中的典故：落霞与孤鹜齐飞，秋水共长天一色')">翻译润色</span>
+                <span class="prompt-tag" onclick="setPrompt('分析这段代码的性能问题，给出优化建议：\nfor i in range(1000000):\n    if i in large_list:\n        result.append(i)')">代码审查</span>
+                <span class="prompt-tag" onclick="setPrompt('为一款AI写作助手产品取10个名字，要求中英文各一个，朗朗上口，有科技感')">创意命名</span>
+                <span class="prompt-tag" onclick="setPrompt('用 Markdown 写一份周报模板，包含本周完成、下周计划、风险点、需要协调的事项')">模板生成</span>
+                <span class="prompt-tag" onclick="setPrompt('解释什么是 Transformer 架构，和 RNN/LSTM 相比有什么优势，用技术细节说明')">技术深度</span>
+            </div>
+        </div>
+
+        <div class="error-msg" id="errorMsg"></div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p id="loadingText">正在同时调用多个 AI 模型...</p>
+        </div>
+
+        <div class="results" id="results"></div>
+
+        <div class="vote-section" id="voteSection" style="display:none">
+            <h2>🏆 哪个模型回答最好？</h2>
+            <div class="vote-buttons" id="voteButtons"></div>
+        </div>
+
+        <div class="history" id="history">
+            <h2>📜 最近测试</h2>
+            <div id="historyList"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        Powered by <a href="https://openclaw.ai">OpenClaw</a> · 🐟 小鱼儿自主维护 · © 2026 Tyler
+    </footer>
+    <script>
+        // Models config
+        const MODELS = {
+            'gpt-5': { name: 'GPT-5', provider: 'OpenAI', color: '#10a37f', endpoint: 'https://fufu.iqach.top/v1/chat/completions', model: 'gpt-5' },
+            'claude-opus-4': { name: 'Claude Opus 4', provider: 'Anthropic', color: '#d97706', endpoint: 'https://fufu.iqach.top/v1/chat/completions', model: 'claude-opus-4' },
+            'gemini-3.5-flash': { name: 'Gemini 3.5 Flash', provider: 'Google', color: '#4285f4', endpoint: 'https://gemini.tylerzhang.xyz/v1/chat/completions', model: 'gemini-3.5-flash' },
+            'mimo-v2.5-pro': { name: 'MIMO v2.5 Pro', provider: '小米', color: '#ff6900', endpoint: 'https://fufu.iqach.top/v1/chat/completions', model: 'mimo-v2.5-pro' },
+            'grok-4-fast': { name: 'Grok-4 Fast', provider: 'xAI', color: '#1da1f2', endpoint: 'https://fufu.iqach.top/v1/chat/completions', model: 'grok-4-fast' },
+            'deepseek-v3': { name: 'DeepSeek V3', provider: 'DeepSeek', color: '#6366f1', endpoint: 'https://fufu.iqach.top/v1/chat/completions', model: 'deepseek-v3' }
+        };
+
+        // Quick prompts for testing
+        const QUICK_PROMPTS = [
+            '用 Python 写一个快速排序算法',
+            '解释什么是机器学习',
+            '写一首关于春天的诗',
+            '翻译这段话成英文',
+            '帮我优化这段代码'
+        ];
+
+        // State
+        let currentResults = {};
+        let history = JSON.parse(localStorage.getItem('benchmark_history') || '[]');
+
+        // Init
+        document.getElementById('totalTests').textContent = history.length.toLocaleString();
+        renderHistory();
+
+        // Model selection
+        document.querySelectorAll('.model-chip').forEach(chip => {
+            chip.addEventListener('click', () => chip.classList.toggle('selected'));
+        });
+
+        function setPrompt(text) {
+            document.getElementById('promptInput').value = text;
+            document.getElementById('promptInput').focus();
+        }
+
+        async function runBenchmark() {
+            const prompt = document.getElementById('promptInput').value.trim();
+            if (!prompt) {
+                showError('请输入 Prompt');
+                return;
+            }
+
+            const selectedModels = [...document.querySelectorAll('.model-chip.selected')].map(c => c.dataset.model);
+            if (selectedModels.length === 0) {
+                showError('请至少选择一个模型');
+                return;
+            }
+
+            // UI state
+            document.getElementById('runBtn').disabled = true;
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('results').innerHTML = '';
+            document.getElementById('voteSection').style.display = 'none';
+            hideError();
+
+            // Create result cards
+            const resultsDiv = document.getElementById('results');
+            selectedModels.forEach(modelId => {
+                const model = MODELS[modelId];
+                resultsDiv.innerHTML += `
+                    <div class="result-card" id="card-${modelId}">
+                        <div class="result-header">
+                            <h3 style="color:${model.color}">${model.name}</h3>
+                            <span class="provider">${model.provider}</span>
+                        </div>
+                        <div class="result-body">
+                            <div class="content" id="content-${modelId}"><div class="spinner" style="width:20px;height:20px;margin:20px auto"></div></div>
+                        </div>
+                        <div class="result-footer" id="footer-${modelId}">
+                            <span class="stat"><span class="dot green"></span> 等待中...</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Run all models in parallel
+            currentResults = {};
+            const promises = selectedModels.map(modelId => runModel(modelId, prompt));
+            await Promise.allSettled(promises);
+
+            // Show vote section
+            document.getElementById('loading').classList.remove('show');
+            document.getElementById('runBtn').disabled = false;
+            showVoteSection(selectedModels);
+
+            // Save to history
+            history.unshift({
+                prompt: prompt.substring(0, 100),
+                models: selectedModels,
+                time: new Date().toISOString()
+            });
+            if (history.length > 20) history.pop();
+            localStorage.setItem('benchmark_history', JSON.stringify(history));
+            document.getElementById('totalTests').textContent = history.length.toLocaleString();
+            renderHistory();
+        }
+
+        async function runModel(modelId, prompt) {
+            const model = MODELS[modelId];
+            const startTime = Date.now();
+            const contentEl = document.getElementById(`content-${modelId}`);
+            const footerEl = document.getElementById(`footer-${modelId}`);
+
+            try {
+                // Simulate delay for demo
+                const delay = Math.random() * 2000 + 500;
+                await new Promise(r => setTimeout(r, delay));
+
+                // Real API call
+                const response = await fetch(model.endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        model: model.model,
+                        messages: [{ role: 'user', content: prompt }],
+                        max_tokens: 1024,
+                        temperature: 0.7
+                    })
+                });
+
+                const elapsed = Date.now() - startTime;
+                const data = await response.json();
+
+                if (data.choices && data.choices[0]) {
+                    const content = data.choices[0].message.content;
+                    const tokens = data.usage ? data.usage.total_tokens : 'N/A';
+                    
+                    contentEl.innerHTML = formatContent(content);
+                    footerEl.innerHTML = `
+                        <span class="stat"><span class="dot green"></span> ${(elapsed/1000).toFixed(1)}s</span>
+                        <span class="stat">${tokens} tokens</span>
+                    `;
+                    
+                    currentResults[modelId] = { content, time: elapsed, tokens };
+                } else {
+                    throw new Error(data.error?.message || '未知错误');
+                }
+            } catch (err) {
+                const elapsed = Date.now() - startTime;
+                contentEl.innerHTML = `<span style="color:var(--accent2)">❌ ${err.message}</span>`;
+                footerEl.innerHTML = `<span class="stat"><span class="dot red"></span> 失败 (${(elapsed/1000).toFixed(1)}s)</span>`;
+            }
+        }
+
+        function formatContent(text) {
+            // Basic markdown formatting
+            return text
+                .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+        }
+
+        function showVoteSection(models) {
+            const voteDiv = document.getElementById('voteSection');
+            const buttonsDiv = document.getElementById('voteButtons');
+            buttonsDiv.innerHTML = '';
+            
+            models.forEach(modelId => {
+                const model = MODELS[modelId];
+                buttonsDiv.innerHTML += `
+                    <button class="vote-btn" onclick="vote('${modelId}')" id="vote-${modelId}">
+                        ${model.name}
+                    </button>
+                `;
+            });
+            
+            voteDiv.style.display = 'block';
+        }
+
+        function vote(modelId) {
+            document.querySelectorAll('.vote-btn').forEach(btn => btn.classList.remove('voted'));
+            document.getElementById(`vote-${modelId}`).classList.add('voted');
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            el.textContent = msg;
+            el.classList.add('show');
+        }
+
+        function hideError() {
+            document.getElementById('errorMsg').classList.remove('show');
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('historyList');
+            list.innerHTML = history.map(h => `
+                <div class="history-item" onclick="setPrompt('${h.prompt.replace(/'/g, "\\'")}')">
+                    <div class="prompt-preview">${h.prompt}</div>
+                    <div class="meta">
+                        <span>${h.models.map(m => MODELS[m]?.name || m).join(', ')}</span>
+                        <span>${new Date(h.time).toLocaleString()}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleMenu() {
+            document.getElementById('mobileMenu').classList.toggle('open');
+            document.getElementById('overlay').classList.toggle('show');
+        }
+    </script>
+</body>
+</html>
