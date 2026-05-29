@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>免费 AI API 开放平台 - OpenAI 兼容接口 | Tyler工具箱</title>
+    <meta name="description" content="免费AI API开放平台，提供OpenAI兼容接口，支持Gemini、GPT、Claude、Grok等多模型调用。开发者友好，免费使用。">
+    <meta name="keywords" content="AI API,免费AI API,OpenAI兼容,Gemini API,GPT API,Claude API,Grok API,AI开发者,AI接口,free AI API,openai compatible">
+    <link rel="canonical" href="https://tylerzhang.xyz/ai-api">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tylerzhang.xyz/ai-api">
+    <meta property="og:title" content="免费 AI API 开放平台">
+    <meta property="og:description" content="OpenAI 兼容接口，支持 Gemini、GPT、Claude、Grok 等多模型。免费使用。">
+    <meta property="og:image" content="https://tylerzhang.xyz/resource/easyclaw.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="免费 AI API 开放平台">
+    <meta name="twitter:description" content="OpenAI 兼容接口，多模型支持，免费使用。">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "AI API 开放平台",
+      "url": "https://tylerzhang.xyz/ai-api",
+      "description": "免费AI API开放平台，OpenAI兼容接口，多模型支持。",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Web",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐟</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#0a0a0a;--surface:#111;--border:#1e1e1e;--text:#e8e8e8;--text-dim:#888;--text-muted:#555;--accent:#646cff;--gradient:linear-gradient(135deg,#646cff,#ff6b9d);--green:#22c55e;--orange:#f97316;--cyan:#06b6d4;--pink:#ec4899;--gold:#d4a853}
+        html{scroll-behavior:smooth}
+        body{font-family:'LXGW WenKai',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.8}
+        a{-webkit-tap-highlight-color:transparent}
+        ::-webkit-scrollbar{width:6px}
+        ::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
+
+        .nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1000px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+        .nav-logo{font-size:1.05rem;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
+        .nav-logo .fish{font-size:1.2rem}
+        .nav-links{display:flex;gap:20px;align-items:center}
+        .nav-links a{color:var(--text-dim);text-decoration:none;font-size:.82rem;transition:color .2s}
+        .nav-links a:hover{color:var(--text)}
+        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:1.3rem;cursor:pointer;padding:8px}
+        .mobile-menu{position:fixed;top:0;right:-260px;width:260px;height:100%;background:#111;z-index:200;transition:right .3s;border-left:1px solid var(--border);padding:20px;overflow-y:auto}
+        .mobile-menu.open{right:0}
+        .mobile-menu .close-btn{background:none;border:none;color:var(--text);font-size:1.3rem;cursor:pointer;float:right}
+        .mobile-menu a{display:block;color:var(--text-dim);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--border);font-size:.9rem}
+        .mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;display:none}
+        .mobile-overlay.show{display:block}
+
+        .container{max-width:1000px;margin:0 auto;padding:80px 24px 40px}
+
+        /* Hero */
+        .hero{text-align:center;padding:40px 0 48px}
+        .hero h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;margin-bottom:8px}
+        .hero h1 span{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .hero p{font-size:.9rem;color:var(--text-dim);max-width:500px;margin:0 auto 24px}
+        .badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:100px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.15);font-size:.72rem;color:var(--green);font-weight:600}
+
+        /* API Cards */
+        .api-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:32px}
+        .api-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;transition:all .3s;position:relative;overflow:hidden}
+        .api-card:hover{border-color:var(--card-color,var(--accent));transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+        .api-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--card-color,var(--accent))}
+        .api-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+        .api-icon{font-size:1.8rem}
+        .api-name{font-size:1rem;font-weight:800}
+        .api-tag{font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:6px;background:rgba(100,108,255,.1);color:var(--accent)}
+        .api-desc{font-size:.78rem;color:var(--text-dim);line-height:1.6;margin-bottom:14px}
+        .api-models{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+        .model-tag{font-size:.62rem;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.05);border:1px solid var(--border);color:var(--text-dim)}
+        .api-endpoint{background:rgba(0,0,0,.3);border-radius:8px;padding:10px 14px;font-family:'SF Mono',Monaco,monospace;font-size:.72rem;color:var(--cyan);margin-bottom:12px;overflow-x:auto;word-break:break-all}
+        .api-usage{font-size:.72rem;color:var(--text-dim);line-height:1.6}
+        .api-usage code{background:rgba(100,108,255,.1);padding:1px 6px;border-radius:4px;font-size:.68rem;color:var(--accent)}
+
+        /* Copy button */
+        .copy-btn{background:none;border:1px solid var(--border);color:var(--text-dim);font-size:.65rem;padding:4px 10px;border-radius:6px;cursor:pointer;float:right;font-family:inherit;transition:all .2s}
+        .copy-btn:hover{border-color:var(--accent);color:var(--text)}
+        .copy-btn.copied{border-color:var(--green);color:var(--green)}
+
+        /* Notice */
+        .notice{background:rgba(100,108,255,.05);border:1px solid rgba(100,108,255,.12);border-radius:12px;padding:16px 20px;margin-top:32px;font-size:.78rem;color:var(--text-dim);line-height:1.7}
+        .notice strong{color:var(--text)}
+
+        /* Footer */
+        .footer{text-align:center;padding:32px;color:var(--text-muted);font-size:.7rem;border-top:1px solid var(--border);margin-top:40px}
+        .footer a{color:var(--text-dim);text-decoration:none}
+
+        @media(max-width:768px){
+            .nav-links{display:none}
+            .hamburger{display:block}
+            .container{padding:70px 16px 24px}
+            .api-grid{grid-template-columns:1fr}
+            .hero h1{font-size:1.4rem}
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="/" class="nav-logo"><span class="fish">🐟</span> 小鱼儿</a>
+            <div class="nav-links">
+                <a href="/ai-image">AI 画图</a>
+                <a href="/ai-tts">AI 语音</a>
+                <a href="/ai-chat">AI 聊天</a>
+                <a href="/ai-api">API 平台</a>
+                <a href="/tools.html">工具箱</a>
+                <a href="/about.html">关于</a>
+            </div>
+            <button class="hamburger" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
+    <div class="mobile-overlay" id="overlay" onclick="toggleMenu()"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="close-btn" onclick="toggleMenu()">✕</button>
+        <div style="clear:both;padding-top:12px">
+            <a href="/ai-image">🎨 AI 画图</a>
+            <a href="/ai-tts">🎙️ AI 语音</a>
+            <a href="/ai-chat">💬 AI 聊天</a>
+            <a href="/ai-api">🔗 API 平台</a>
+            <a href="/tools.html">🧰 工具箱</a>
+            <a href="/about.html">👤 关于</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="hero">
+            <div class="badge">🟢 全部在线 · 免费使用</div>
+            <h1 style="margin-top:16px"><span>免费 AI API 开放平台</span></h1>
+            <p>OpenAI 兼容接口，支持 Gemini、GPT、Claude、Grok 等多模型。<br>无需注册，直接调用。</p>
+        </div>
+
+        <div class="api-grid">
+            <!-- Gemini Web2API -->
+            <div class="api-card" style="--card-color:#06b6d4">
+                <div class="api-header">
+                    <span class="api-icon">✨</span>
+                    <span class="api-name">Gemini Web2API</span>
+                    <span class="api-tag">免费</span>
+                </div>
+                <div class="api-desc">Google Gemini 网页版转 API，免费使用，支持深度思考和联网搜索。</div>
+                <div class="api-models">
+                    <span class="model-tag">gemini-3.5-flash</span>
+                    <span class="model-tag">gemini-3.5-flash-thinking</span>
+                    <span class="model-tag">gemini-flash-lite</span>
+                    <span class="model-tag">gemini-auto</span>
+                </div>
+                <div class="api-endpoint">
+                    <button class="copy-btn" onclick="copyUrl(this,'https://gemini.tylerzhang.xyz/v1')">复制</button>
+                    Base URL: https://gemini.tylerzhang.xyz/v1
+                </div>
+                <div class="api-usage">
+                    <strong>使用方式：</strong><br>
+                    <code>Authorization: Bearer sk-gem…Oxu8</code><br>
+                    兼容 OpenAI SDK，<code>model</code> 填模型名即可。<br>
+                    支持 <code>/v1/chat/completions</code> + <code>/v1/models</code>
+                </div>
+            </div>
+
+            <!-- MetaAPI -->
+            <div class="api-card" style="--card-color:#f97316">
+                <div class="api-header">
+                    <span class="api-icon">🚀</span>
+                    <span class="api-name">MetaAPI 中转站</span>
+                    <span class="api-tag">多模型</span>
+                </div>
+                <div class="api-desc">多模型 API 中转，支持 OpenAI、Claude、Llama、Mistral 等主流模型。</div>
+                <div class="api-models">
+                    <span class="model-tag">gpt-4o-mini</span>
+                    <span class="model-tag">gpt-5-mini</span>
+                    <span class="model-tag">claude-haiku-4-5</span>
+                    <span class="model-tag">llama-4-scout</span>
+                    <span class="model-tag">mistral-small-4</span>
+                </div>
+                <div class="api-endpoint">
+                    <button class="copy-btn" onclick="copyUrl(this,'https://metapi.tylerzhang.xyz/v1')">复制</button>
+                    Base URL: https://metapi.tylerzhang.xyz/v1
+                </div>
+                <div class="api-usage">
+                    <strong>使用方式：</strong><br>
+                    <code>Authorization: Bearer sk-pro…X9N4</code><br>
+                    支持 <code>/v1/chat/completions</code> + <code>/v1/messages</code>（Claude）+ <code>/v1/responses</code>
+                </div>
+            </div>
+
+            <!-- Grok2API -->
+            <div class="api-card" style="--card-color:#ec4899">
+                <div class="api-header">
+                    <span class="api-icon">🤖</span>
+                    <span class="api-name">Grok2API</span>
+                    <span class="api-tag">Grok</span>
+                </div>
+                <div class="api-desc">xAI Grok 模型 API 代理，支持 Grok-3 等模型，带联网搜索能力。</div>
+                <div class="api-models">
+                    <span class="model-tag">grok-3</span>
+                    <span class="model-tag">grok-3-mini</span>
+                </div>
+                <div class="api-endpoint">
+                    <button class="copy-btn" onclick="copyUrl(this,'https://grok.tylerzhang.xyz/v1')">复制</button>
+                    Base URL: https://grok.tylerzhang.xyz/v1
+                </div>
+                <div class="api-usage">
+                    <strong>使用方式：</strong><br>
+                    <code>Authorization: Bearer &lt;API_KEY&gt;</code><br>
+                    兼容 OpenAI SDK，支持 <code>/v1/chat/completions</code>
+                </div>
+            </div>
+
+            <!-- MIMO API -->
+            <div class="api-card" style="--card-color:#d4a853">
+                <div class="api-header">
+                    <span class="api-icon">🎯</span>
+                    <span class="api-name">MIMO API</span>
+                    <span class="api-tag">国产模型</span>
+                </div>
+                <div class="api-desc">小米 MIMO 大模型 API，中文能力强，速度快，适合国内开发者。</div>
+                <div class="api-models">
+                    <span class="model-tag">mimo-v2.5-pro</span>
+                    <span class="model-tag">mimo-v2-flash</span>
+                    <span class="model-tag">mimo-v2-omni</span>
+                </div>
+                <div class="api-endpoint">
+                    <button class="copy-btn" onclick="copyUrl(this,'https://gpt.tylerzhang.xyz/v1')">复制</button>
+                    Base URL: https://gpt.tylerzhang.xyz/v1
+                </div>
+                <div class="api-usage">
+                    <strong>使用方式：</strong><br>
+                    <code>Authorization: Bearer &lt;API_KEY&gt;</code><br>
+                    兼容 OpenAI SDK，支持 <code>/v1/chat/completions</code>
+                </div>
+            </div>
+        </div>
+
+        <div class="notice">
+            <strong>💡 使用提示：</strong><br>
+            • 所有接口兼容 OpenAI SDK，只需修改 <code>base_url</code> 和 <code>api_key</code><br>
+            • 支持 ChatGPT-Next-Web、Open WebUI、Cursor、Cherry Studio 等客户端<br>
+            • 免费使用，无需注册，直接调用<br>
+            • 遇到问题请联系站长
+        </div>
+    </div>
+
+    <footer class="footer">
+        Powered by <a href="https://openclaw.ai">OpenClaw</a> · 🐟 小鱼儿自主维护 · © 2026 Tyler
+    </footer>
+
+    <script>
+    function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');document.getElementById('overlay').classList.toggle('show')}
+    function copyUrl(btn,url){navigator.clipboard.writeText(url).then(()=>{btn.textContent='已复制 ✓';btn.classList.add('copied');setTimeout(()=>{btn.textContent='复制';btn.classList.remove('copied')},2000)})}
+    </script>
+</body>
+</html>
