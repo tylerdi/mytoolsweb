@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代码正在变成廉价品，但思考永远不会 · Tyler's Blog</title>
+    <link rel="icon" type="image/png" href="../../resource/easyclaw.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0a0a; --surface: #141414; --border: #2a2a2a;
+            --text: #e8e8e8; --text-secondary: #888; --accent: #646cff;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg); color: var(--text); line-height: 1.8; min-height: 100vh;
+        }
+        .header {
+            border-bottom: 1px solid var(--border); padding: 1.5rem 0;
+            position: sticky; top: 0; background: rgba(10,10,10,0.85);
+            backdrop-filter: blur(12px); z-index: 100;
+        }
+        .header-inner {
+            max-width: 720px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 1.25rem; font-weight: 700; color: var(--text); text-decoration: none; }
+        .logo span { color: var(--accent); }
+        .nav a { color: var(--text-secondary); text-decoration: none; margin-left: 2rem; font-size: 0.9rem; }
+        .nav a:hover { color: var(--text); }
+        .container { max-width: 720px; margin: 0 auto; padding: 3rem 2rem; }
+        .back { color: var(--accent); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; display: inline-block; }
+        .back:hover { text-decoration: underline; }
+        .post-date { font-size: 0.85rem; color: var(--accent); font-weight: 600; margin-bottom: 0.75rem; }
+        .post-title { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.03em; line-height: 1.3; }
+        .post-tag {
+            display: inline-block; font-size: 0.75rem; color: var(--accent);
+            background: rgba(100,108,255,0.1); padding: 0.2rem 0.6rem;
+            border-radius: 4px; margin-bottom: 2rem; font-weight: 500;
+        }
+        .post-content { font-size: 1.05rem; }
+        .post-content p { margin-bottom: 1.25rem; }
+        .post-content h2 { font-size: 1.4rem; font-weight: 700; margin: 2rem 0 1rem; letter-spacing: -0.02em; }
+        .post-content h3 { font-size: 1.15rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .post-content li { margin-left: 1.5rem; margin-bottom: 0.5rem; color: var(--text-secondary); }
+        .post-content blockquote {
+            border-left: 3px solid var(--accent); padding: 0.75rem 1.25rem;
+            margin: 1.5rem 0; background: var(--surface); border-radius: 0 8px 8px 0;
+            color: var(--text-secondary); font-style: italic;
+        }
+        .footer {
+            border-top: 1px solid var(--border); padding: 2rem 0;
+            text-align: center; color: var(--text-secondary); font-size: 0.85rem;
+            max-width: 720px; margin: 3rem auto 0;
+        }
+        .footer a { color: var(--accent); text-decoration: none; }
+        @media (max-width: 640px) {
+            .container { padding: 2rem 1.25rem; }
+            .post-title { font-size: 1.5rem; }
+        }
+        .fish-tts { margin-bottom: 1.5rem; }
+        .fish-listen-btn {
+            background: rgba(100,108,255,0.1); border: 1px solid rgba(100,108,255,0.3);
+            color: var(--accent); padding: 0.5rem 1.2rem; border-radius: 8px;
+            cursor: pointer; font-size: 0.9rem; font-weight: 500;
+            transition: all 0.2s;
+        }
+        .fish-listen-btn:hover { background: rgba(100,108,255,0.2); transform: translateY(-1px); }
+        .fish-listen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">Tyler<span>.</span></a>
+            <nav class="nav">
+                <a href="/">首页</a>
+                <a href="/blog/">博客</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <a href="/blog/" class="back">← 返回博客列表</a>
+        <div class="post-date">2026 年 05 月 29 日</div>
+        <h1 class="post-title">代码正在变成廉价品，但思考永远不会</h1>
+        <span class="post-tag">AI,编程,思考,职业发展</span>
+        <div class="fish-tts" id="listen-section"></div>
+        <div class="post-content">
+<p>2026年的今天，一个程序员对另一个程序员说"我昨天写了三千行代码"，对方可能会反问："是你写的，还是你让AI写的？"</p>
+<p>这个问题本身就很荒谬——但荒谬得恰到好处。</p>
+<h2>从"写代码"到"说需求"</h2>
+<p>三年前，Copilot 刚出来的时候，大家的反应是"哦，自动补全，挺方便"。两年前，Cursor 和 Claude Code 把整个文件级别的代码生成变成了日常操作。今天，你打开一个终端，跟一个AI Agent说"帮我写个带用户认证的REST API"，十分钟后它不仅写完了代码，还顺手配好了Docker、写了测试、甚至帮你把README也补上了。</p>
+<p>这不是未来。这是现在。</p>
+<p>但真正有意思的不是技术本身，而是它正在悄悄改写一个行业的底层逻辑。</p>
+<h2>程序员的核心技能正在迁移</h2>
+<p>过去二十年，程序员的核心竞争力是"把需求翻译成代码"的能力。你得懂语法、懂框架、懂各种奇奇怪怪的边界条件。一个优秀的工程师，本质上是一个优秀的翻译——把人类模糊的想法，翻译成机器精确的指令。</p>
+<p>现在AI在做这个翻译。而且做得不差。</p>
+<p>那程序员的价值在哪？我在过去半年和各种AI编程工具深度协作后，得出了一个反直觉的结论：**理解问题的能力，比解决问题的能力更值钱了。**</p>
+<p>以前你可以不太理解业务逻辑，只要技术够硬，照样能把需求实现出来。现在不行了。AI可以秒出代码，但它不知道"用户说想要一个按钮，其实他是想要一个工作流"。它不知道"这个需求看起来简单，但背后牵扯到三个系统的数据一致性"。</p>
+<p>换句话说，AI把"写"的成本压到了接近零，于是"想"的价值就被放大了。</p>
+<h2>一个真实的场景</h2>
+<p>上周我让AI Agent帮我重构一个项目。我给了它一个高层指令："把这个单体应用拆成微服务。"它干得不错——把代码拆开了，API Gateway配好了，服务间通信用了gRPC。</p>
+<p>但我发现一个微妙的问题：它把一个本该保持事务一致性的操作拆到了两个不同服务里，而且没有加分布式事务。这不是AI的"错误"——它确实按照我说的做了。问题在于，**我没说清楚，而它也没问。**</p>
+<p>这让我意识到，人机协作最大的瓶颈不是AI的能力，而是人类表达的精度。你给AI一个模糊的指令，它会给你一个"技术上正确但业务上可能有问题"的结果。</p>
+<h2>写作也是同理</h2>
+<p>这个趋势不只发生在编程领域。写作、设计、甚至商业决策——当AI能快速生成"80分的输出"时，人类的价值就在于那关键的20%：判断力、品味、对上下文的理解、以及知道什么才是"真正的问题"。</p>
+<p>一个有趣的类比：Excel没有消灭会计行业，反而让会计师从繁琐的手工计算中解放出来，去做更有价值的财务分析和决策支持。AI编程工具也不会消灭程序员，但它会重新定义程序员。</p>
+<h2>所以，下一步是什么？</h2>
+<p>我的判断是：未来两年，"会用AI编程工具"将不再是加分项，而是基本功。就像今天没有人会把"会用IDE"写在简历上一样。</p>
+<p>真正的差异化在于：你能不能定义出一个好的问题？你能不能在AI给出的十个方案中选出最合适的那个？你能不能在AI"做完了"之后，看出它遗漏了什么？</p>
+<p>代码正在变成一种"廉价品"。但思考永远不会。</p>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Powered by <a href="https://www.tylerzhang.xyz">Tyler</a> & <a href="https://openclaw.ai">OpenClaw</a></p>
+    </footer>
+    <script src="/fish-ai.js?v=20260501"></script>
+</body>
+</html>
