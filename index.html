@@ -8,20 +8,17 @@
     <meta name="description" content="小鱼儿的数字花园：免费在线AI工具合集，包括AI画图、AI文字转语音、AI聊天助手、AI翻译等实用工具。无需注册，开箱即用。">
     <meta name="keywords" content="AI工具,免费AI工具,AI画图,AI翻译,文字转语音,AI写作,AI聊天,在线AI工具箱,free AI tools">
     <link rel="canonical" href="https://tylerzhang.xyz/">
-    <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tylerzhang.xyz/">
     <meta property="og:title" content="小鱼儿的数字花园 - 免费AI工具合集">
-    <meta property="og:description" content="免费在线AI工具：AI画图、AI语音、AI聊天、AI翻译。无需注册，开箱即用。">
+    <meta property="og:description" content="免费在线AI工具：AI画图、AI语音、AI聊天。无需注册，开箱即用。">
     <meta property="og:image" content="https://tylerzhang.xyz/resource/easyclaw.png">
     <meta property="og:site_name" content="小鱼儿的数字花园">
     <meta property="og:locale" content="zh_CN">
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="小鱼儿的数字花园 - 免费AI工具合集">
     <meta name="twitter:description" content="免费在线AI工具：AI画图、AI语音、AI聊天。无需注册，开箱即用。">
     <meta name="twitter:image" content="https://tylerzhang.xyz/resource/easyclaw.png">
-    <!-- JSON-LD 结构化数据 -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -66,140 +63,80 @@
     <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{
-            --bg:#0a0a0a;--surface:#111;--surface2:#161616;--border:#1e1e1e;
-            --text:#e8e8e8;--text-dim:#888;--text-muted:#555;
-            --accent:#646cff;--accent-glow:rgba(100,108,255,0.25);
-            --pink:#ff6b9d;--gold:#d4a853;--green:#22c55e;--orange:#f97316;--cyan:#06b6d4;
-            --gradient:linear-gradient(135deg,var(--accent),var(--pink));
-        }
+        :root{--bg:#0a0a0a;--surface:#111;--border:#1e1e1e;--text:#e8e8e8;--text-dim:#888;--text-muted:#555;--accent:#646cff;--accent-glow:rgba(100,108,255,0.25);--pink:#ff6b9d;--gradient:linear-gradient(135deg,var(--accent),var(--pink))}
         html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
-        body{font-family:'LXGW WenKai',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.8;overflow-x:hidden}
-        a,button,.card{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-        img,video,iframe{max-width:100%;height:auto}
+        body{font-family:'LXGW WenKai',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.8;overflow-x:hidden;min-height:100vh;display:flex;flex-direction:column}
+        a,button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
         ::-webkit-scrollbar{width:6px}
         ::-webkit-scrollbar-track{background:var(--bg)}
         ::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
 
-        /* ===== Nav ===== */
-        .nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(10,10,10,.8);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:all .3s}
-        .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between}
-        .nav-logo{font-size:1.1rem;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
-        .nav-logo .fish{font-size:1.3rem}
-        .nav-links{display:flex;gap:24px;align-items:center}
-        .nav-links a{color:var(--text-dim);text-decoration:none;font-size:.85rem;transition:color .2s}
+        /* Nav */
+        .nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1000px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+        .nav-logo{font-size:1.05rem;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
+        .nav-logo .fish{font-size:1.2rem}
+        .nav-links{display:flex;gap:20px;align-items:center}
+        .nav-links a{color:var(--text-dim);text-decoration:none;font-size:.82rem;transition:color .2s}
         .nav-links a:hover{color:var(--text)}
-        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:1.4rem;cursor:pointer;padding:8px}
-        .mobile-menu{position:fixed;top:0;right:-280px;width:280px;height:100%;background:#111;z-index:200;transition:right .3s;border-left:1px solid var(--border);padding:24px;overflow-y:auto}
+        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:1.3rem;cursor:pointer;padding:8px}
+        .mobile-menu{position:fixed;top:0;right:-260px;width:260px;height:100%;background:#111;z-index:200;transition:right .3s;border-left:1px solid var(--border);padding:20px;overflow-y:auto}
         .mobile-menu.open{right:0}
-        .mobile-menu .close-btn{background:none;border:none;color:var(--text);font-size:1.4rem;cursor:pointer;float:right}
-        .mobile-menu a{display:block;color:var(--text-dim);text-decoration:none;padding:14px 0;border-bottom:1px solid var(--border)}
+        .mobile-menu .close-btn{background:none;border:none;color:var(--text);font-size:1.3rem;cursor:pointer;float:right}
+        .mobile-menu a{display:block;color:var(--text-dim);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--border);font-size:.9rem}
         .mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;display:none}
         .mobile-overlay.show{display:block}
 
-        /* ===== Hero ===== */
-        .hero{min-height:90vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:100px 24px 80px}
-        .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 40%,rgba(100,108,255,.12) 0%,transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(255,107,157,.08) 0%,transparent 50%)}
-        .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(100,108,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(100,108,255,.03) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 20%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at center,black 20%,transparent 70%)}
-        .hero-content{text-align:center;position:relative;z-index:2;max-width:700px}
-        .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:100px;background:rgba(100,108,255,.08);border:1px solid rgba(100,108,255,.15);font-size:.75rem;color:var(--accent);margin-bottom:2rem}
-        .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite}
-        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-        .hero-fish{font-size:4rem;margin-bottom:1.5rem;animation:heroFish 4s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(100,108,255,.3))}
-        @keyframes heroFish{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(3deg)}}
-        .hero-title{font-size:clamp(2rem,5vw,3.2rem);font-weight:900;line-height:1.3;margin-bottom:1rem}
+        /* Hero */
+        .hero{flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:100px 24px 60px}
+        .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 40%,rgba(100,108,255,.1) 0%,transparent 50%),radial-gradient(ellipse at 70% 60%,rgba(255,107,157,.06) 0%,transparent 50%)}
+        .hero-content{text-align:center;position:relative;z-index:2;max-width:600px}
+        .hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:100px;background:rgba(100,108,255,.08);border:1px solid rgba(100,108,255,.12);font-size:.7rem;color:var(--accent);margin-bottom:1.5rem}
+        .hero-badge .dot{width:5px;height:5px;border-radius:50%;background:#22c55e;animation:pulse 2s ease-in-out infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+        .hero-fish{font-size:3.5rem;margin-bottom:1rem;animation:heroFish 4s ease-in-out infinite;filter:drop-shadow(0 0 16px rgba(100,108,255,.25))}
+        @keyframes heroFish{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-8px) rotate(2deg)}}
+        .hero-title{font-size:clamp(1.8rem,4.5vw,2.8rem);font-weight:900;line-height:1.3;margin-bottom:.8rem}
         .hero-title span{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .hero-subtitle{font-size:1.05rem;color:var(--text-dim);margin-bottom:2.5rem;line-height:1.8}
-        .hero-typing{color:var(--accent);font-weight:600;border-right:2px solid var(--accent);animation:blink .8s step-end infinite;min-width:160px;display:inline-block;text-align:left}
+        .hero-subtitle{font-size:.95rem;color:var(--text-dim);margin-bottom:2rem;line-height:1.7}
+        .hero-typing{color:var(--accent);font-weight:600;border-right:2px solid var(--accent);animation:blink .8s step-end infinite;min-width:140px;display:inline-block;text-align:left}
         @keyframes blink{50%{border-color:transparent}}
-        .hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-        .btn{padding:12px 28px;border-radius:12px;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-flex;align-items:center;gap:8px;font-family:inherit;border:none}
-        .btn-primary{background:var(--gradient);color:#fff;box-shadow:0 4px 20px var(--accent-glow)}
-        .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-glow)}
-        .btn-ghost{background:transparent;color:var(--text-dim);border:1px solid var(--border)}
-        .btn-ghost:hover{border-color:var(--accent);color:var(--text)}
 
-        /* ===== Section ===== */
-        .section{max-width:1100px;margin:0 auto;padding:80px 24px}
-        .section-header{text-align:center;margin-bottom:48px}
-        .section-tag{font-size:.7rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
-        .section-title{font-size:1.6rem;font-weight:900}
-        .section-desc{font-size:.85rem;color:var(--text-dim);margin-top:6px}
+        /* Cards */
+        .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:2.5rem}
+        .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 20px;text-align:center;transition:all .3s;text-decoration:none;color:inherit;position:relative;overflow:hidden}
+        .card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--card-color,var(--accent));opacity:.5;transition:opacity .3s}
+        .card:hover{border-color:var(--card-color,var(--accent));transform:translateY(-6px);box-shadow:0 16px 48px rgba(0,0,0,.3)}
+        .card:hover::before{opacity:1}
+        .card-icon{font-size:2.2rem;margin-bottom:12px;display:block}
+        .card h3{font-size:1rem;font-weight:800;margin-bottom:6px}
+        .card p{font-size:.78rem;color:var(--text-dim);line-height:1.6;margin-bottom:14px}
+        .card .btn{font-size:.75rem;padding:6px 16px;border-radius:8px;background:var(--gradient);color:#fff;border:none;cursor:pointer;font-family:inherit;font-weight:600;text-decoration:none;display:inline-block}
 
-        /* ===== Card Grid ===== */
-        .card-grid{display:grid;gap:16px;grid-template-columns:repeat(3,1fr)}
-        .card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px 24px;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;text-decoration:none;color:inherit;display:block}
-        .card:hover{border-color:var(--card-color,var(--accent));transform:translateY(-6px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
-        .card-icon{font-size:2rem;margin-bottom:12px;display:block}
-        .card h3{font-size:1rem;font-weight:700;margin-bottom:6px}
-        .card p{font-size:.82rem;color:var(--text-dim);line-height:1.6}
-        .card-badge{position:absolute;top:16px;right:16px;font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(100,108,255,.12);color:var(--accent)}
+        /* More link */
+        .more-link{text-align:center;margin-top:2rem}
+        .more-link a{color:var(--text-dim);font-size:.8rem;text-decoration:none;border-bottom:1px dashed var(--border);padding-bottom:2px;transition:color .2s}
+        .more-link a:hover{color:var(--accent)}
 
-        /* ===== 核心功能大卡 ===== */
-        .hero-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
-        .hero-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px 28px;text-align:center;transition:all .4s;position:relative;overflow:hidden;text-decoration:none;color:inherit}
-        .hero-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--card-color,var(--accent));opacity:.6;transition:opacity .3s}
-        .hero-card:hover{border-color:var(--card-color,var(--accent));transform:translateY(-8px);box-shadow:0 20px 60px rgba(0,0,0,.4)}
-        .hero-card:hover::before{opacity:1}
-        .hero-card-icon{font-size:3rem;margin-bottom:16px;display:block}
-        .hero-card h3{font-size:1.2rem;font-weight:800;margin-bottom:8px}
-        .hero-card p{font-size:.85rem;color:var(--text-dim);line-height:1.6;margin-bottom:16px}
-        .hero-card .btn{font-size:.8rem;padding:8px 20px}
-
-        /* ===== 工具卡片 ===== */
-        .tools-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-        .tool-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 16px;text-align:center;transition:all .3s;text-decoration:none;color:inherit;display:block}
-        .tool-card:hover{border-color:var(--accent);transform:translateY(-4px)}
-        .tool-card .icon{font-size:1.5rem;margin-bottom:8px;display:block}
-        .tool-card .name{font-size:.8rem;font-weight:600}
-
-        /* ===== Stats ===== */
-        .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center}
-        .stat{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 16px}
-        .stat-num{font-size:2rem;font-weight:900;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-        .stat-label{font-size:.75rem;color:var(--text-dim);margin-top:4px}
-
-        /* ===== Divider ===== */
-        .divider{display:flex;align-items:center;justify-content:center;gap:16px;padding:24px 0}
-        .divider::before,.divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
-        .divider .icon{font-size:1.2rem;opacity:.4}
-
-        /* ===== Footer ===== */
-        .footer{text-align:center;padding:40px 24px;color:var(--text-muted);font-size:.75rem;border-top:1px solid var(--border)}
+        /* Footer */
+        .footer{text-align:center;padding:24px;color:var(--text-muted);font-size:.7rem;border-top:1px solid var(--border)}
         .footer a{color:var(--text-dim);text-decoration:none}
         .footer a:hover{color:var(--pink)}
 
-        /* ===== Reveal ===== */
-        .reveal{opacity:0;transform:translateY(30px);transition:opacity .5s ease,transform .5s ease}
-        .reveal.visible{opacity:1;transform:translateY(0)}
-
-        /* ===== Responsive ===== */
-        @media(max-width:1024px){
-            .card-grid,.tools-grid{grid-template-columns:repeat(2,1fr)}
-            .hero-cards{grid-template-columns:repeat(2,1fr)}
-            .stats{grid-template-columns:repeat(2,1fr)}
-        }
+        /* Responsive */
         @media(max-width:768px){
             .nav-links{display:none}
             .hamburger{display:block}
-            .hero{min-height:auto;padding:100px 16px 60px}
-            .hero-fish{font-size:3rem}
-            .hero-title{font-size:1.8rem}
-            .hero-subtitle{font-size:.9rem}
-            .hero-cards{grid-template-columns:1fr}
-            .card-grid,.tools-grid{grid-template-columns:1fr}
-            .stats{grid-template-columns:1fr 1fr}
-            .section{padding:50px 16px}
-            .hero-cta{flex-direction:column;align-items:center}
-            .hero-cta .btn{width:100%;max-width:280px;justify-content:center}
-        }
-        @supports(-webkit-touch-callout:none){
-            .hero{min-height:-webkit-fill-available}
+            .hero{padding:80px 16px 40px}
+            .hero-fish{font-size:2.8rem}
+            .hero-title{font-size:1.6rem}
+            .hero-subtitle{font-size:.85rem}
+            .cards{grid-template-columns:1fr;gap:12px}
+            .card{padding:24px 16px}
         }
     </style>
 </head>
 <body>
-    <!-- Nav -->
     <nav class="nav">
         <div class="nav-inner">
             <a href="/" class="nav-logo"><span class="fish">🐟</span> 小鱼儿</a>
@@ -208,7 +145,6 @@
                 <a href="/ai-tts">AI 语音</a>
                 <a href="/ai-chat">AI 聊天</a>
                 <a href="/tools.html">工具箱</a>
-                <a href="/blog/">博客</a>
                 <a href="/about.html">关于</a>
             </div>
             <button class="hamburger" onclick="toggleMenu()">☰</button>
@@ -217,22 +153,17 @@
     <div class="mobile-overlay" id="overlay" onclick="toggleMenu()"></div>
     <div class="mobile-menu" id="mobileMenu">
         <button class="close-btn" onclick="toggleMenu()">✕</button>
-        <div style="clear:both;padding-top:16px">
+        <div style="clear:both;padding-top:12px">
             <a href="/ai-image">🎨 AI 画图</a>
             <a href="/ai-tts">🎙️ AI 语音</a>
             <a href="/ai-chat">💬 AI 聊天</a>
             <a href="/tools.html">🧰 工具箱</a>
-            <a href="/blog/">📝 博客</a>
-            <a href="/resources.html">📚 资源库</a>
             <a href="/about.html">👤 关于</a>
-            <a href="/changelog.html">📋 更新日志</a>
         </div>
     </div>
 
-    <!-- Hero -->
     <section class="hero">
         <div class="hero-bg"></div>
-        <div class="hero-grid"></div>
         <div class="hero-content">
             <div class="hero-badge"><span class="dot"></span> AI 自主维护 · 免费使用</div>
             <div class="hero-fish">🐟</div>
@@ -241,127 +172,43 @@
                 一个由 AI 自主维护的免费工具站<br>
                 <span class="hero-typing" id="typing"></span>
             </p>
-            <div class="hero-cta">
-                <a href="/ai-image" class="btn btn-primary">🎨 开始画图</a>
-                <a href="/ai-tts" class="btn btn-ghost">🎙️ 文字转语音</a>
+            <div class="cards">
+                <a href="/ai-image" class="card" style="--card-color:#f97316">
+                    <span class="card-icon">🎨</span>
+                    <h3>AI 画图</h3>
+                    <p>输入文字，生成高质量图片<br>10 种风格 · 4 种比例</p>
+                    <span class="btn">立即体验 →</span>
+                </a>
+                <a href="/ai-tts" class="card" style="--card-color:#d4a853">
+                    <span class="card-icon">🎙️</span>
+                    <h3>AI 语音</h3>
+                    <p>文字转语音，多角色合成<br>MP3 免费下载</p>
+                    <span class="btn">立即体验 →</span>
+                </a>
+                <a href="/ai-chat" class="card" style="--card-color:#ec4899">
+                    <span class="card-icon">💬</span>
+                    <h3>AI 聊天</h3>
+                    <p>免费 ChatGPT 替代<br>多轮对话 · 代码解释</p>
+                    <span class="btn">立即体验 →</span>
+                </a>
+            </div>
+            <div class="more-link">
+                <a href="/tools.html">还有 12+ 款开发者工具 →</a>
             </div>
         </div>
     </section>
 
-    <!-- 核心功能大卡 -->
-    <section class="section">
-        <div class="section-header reveal">
-            <div class="section-tag">Core Tools</div>
-            <h2 class="section-title">三大核心 AI 工具</h2>
-            <p class="section-desc">真正能解决问题的免费工具，无需注册，开箱即用</p>
-        </div>
-        <div class="hero-cards">
-            <a href="/ai-image" class="hero-card reveal" style="--card-color:#f97316">
-                <span class="hero-card-icon">🎨</span>
-                <h3>AI 画图</h3>
-                <p>输入文字，AI 帮你生成高质量图片。支持 10 种艺术风格、4 种比例，从写实到动漫一键切换。</p>
-                <span class="btn btn-primary" style="font-size:.8rem;padding:8px 20px">立即体验 →</span>
-            </a>
-            <a href="/ai-tts" class="hero-card reveal" style="--card-color:#d4a853">
-                <span class="hero-card-icon">🎙️</span>
-                <h3>AI 文字转语音</h3>
-                <p>基于 MIMO TTS 模型，支持中英文多角色语音合成。MP3 免费下载，适合配音、有声书、学习。</p>
-                <span class="btn btn-primary" style="font-size:.8rem;padding:8px 20px">立即体验 →</span>
-            </a>
-            <a href="/ai-chat" class="hero-card reveal" style="--card-color:#ec4899">
-                <span class="hero-card-icon">💬</span>
-                <h3>AI 聊天助手</h3>
-                <p>免费 ChatGPT 替代方案，支持多轮对话、代码解释、文案写作。基于 MIMO 大模型，响应迅速。</p>
-                <span class="btn btn-primary" style="font-size:.8rem;padding:8px 20px">立即体验 →</span>
-            </a>
-        </div>
-    </section>
-
-    <div class="divider"><span class="icon">🌊</span></div>
-
-    <!-- 更多工具 -->
-    <section class="section">
-        <div class="section-header reveal">
-            <div class="section-tag">More Tools</div>
-            <h2 class="section-title">更多实用工具</h2>
-            <p class="section-desc">开发者工具 + AI 工具，持续更新中</p>
-        </div>
-        <div class="tools-grid">
-            <a href="/ai-voice-to-text" class="tool-card reveal"><span class="icon">🎤</span><span class="name">语音转文字</span></a>
-            <a href="/tools/ai-translation.html" class="tool-card reveal"><span class="icon">🌐</span><span class="name">AI 翻译</span></a>
-            <a href="/tool.html?id=fish-ocr" class="tool-card reveal"><span class="icon">📸</span><span class="name">文字识别</span></a>
-            <a href="/tool.html?id=fish-code-explain" class="tool-card reveal"><span class="icon">💻</span><span class="name">代码解释</span></a>
-            <a href="/tool.html?id=fish-json-viewer" class="tool-card reveal"><span class="icon">📊</span><span class="name">JSON 格式化</span></a>
-            <a href="/tool.html?id=fish-base64" class="tool-card reveal"><span class="icon">🔧</span><span class="name">Base64</span></a>
-            <a href="/tool.html?id=fish-regex-tester" class="tool-card reveal"><span class="icon">🔍</span><span class="name">正则测试</span></a>
-            <a href="/tool.html?id=fish-qrcode" class="tool-card reveal"><span class="icon">📱</span><span class="name">二维码生成</span></a>
-            <a href="/tool.html?id=fish-markdown" class="tool-card reveal"><span class="icon">📓</span><span class="name">Markdown</span></a>
-            <a href="/tool.html?id=fish-diff" class="tool-card reveal"><span class="icon">📝</span><span class="name">文本对比</span></a>
-            <a href="/tool.html?id=fish-password" class="tool-card reveal"><span class="icon">🔐</span><span class="name">密码生成</span></a>
-            <a href="/tool.html?id=fish-converter" class="tool-card reveal"><span class="icon">📐</span><span class="name">单位换算</span></a>
-        </div>
-        <div style="text-align:center;margin-top:32px" class="reveal">
-            <a href="/tools.html" class="btn btn-ghost">查看全部工具 →</a>
-        </div>
-    </section>
-
-    <div class="divider"><span class="icon">🐬</span></div>
-
-    <!-- 数据 -->
-    <section class="section">
-        <div class="stats reveal">
-            <div class="stat">
-                <div class="stat-num" id="stat-days">0</div>
-                <div class="stat-label">已上线天数</div>
-            </div>
-            <div class="stat">
-                <div class="stat-num">16+</div>
-                <div class="stat-label">在线工具</div>
-            </div>
-            <div class="stat">
-                <div class="stat-num">免费</div>
-                <div class="stat-label">无需注册</div>
-            </div>
-            <div class="stat">
-                <div class="stat-num">每日</div>
-                <div class="stat-label">AI 自动更新</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
     <footer class="footer">
-        <p>Powered by <a href="https://openclaw.ai">OpenClaw</a> · 由 🐟 小鱼儿自主维护</p>
-        <p style="margin-top:6px">© 2026 Tyler · <a href="/changelog.html">更新日志</a> · <a href="/about.html">关于</a></p>
+        Powered by <a href="https://openclaw.ai">OpenClaw</a> · 🐟 小鱼儿自主维护 · © 2026 Tyler
     </footer>
 
-    <script src="/fish-ai.js?v=20260529"></script>
     <script>
-    // Menu
     function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');document.getElementById('overlay').classList.toggle('show')}
-
-    // Typing
-    const phrases=['免费AI画图','AI文字转语音','AI智能翻译','免费AI聊天助手','开发者工具箱','每天更新 🐟'];
+    const phrases=['免费AI画图','AI文字转语音','AI智能翻译','免费AI聊天助手','每天更新 🐟'];
     let pi=0,ci=0,del=false;
     const te=document.getElementById('typing');
-    function typeLoop(){const c=phrases[pi];if(!del){te.textContent=c.slice(0,++ci);if(ci===c.length){del=true;setTimeout(typeLoop,1800);return}}else{te.textContent=c.slice(0,--ci);if(ci===0){del=false;pi=(pi+1)%phrases.length}}setTimeout(typeLoop,del?40:80)}
+    function typeLoop(){const c=phrases[pi];if(!del){te.textContent=c.slice(0,++ci);if(ci===c.length){del=true;setTimeout(typeLoop,1800);return}}else{te.textContent=c.slice(0,--ci);if(ci===0){del=false;pi=(pi+1)%phrases.length}}setTimeout(typeLoop,del?35:70)}
     typeLoop();
-
-    // Stats
-    (function(){
-        const launch=new Date('2026-04-30');
-        const days=Math.ceil((new Date()-launch)/86400000);
-        const el=document.getElementById('stat-days');
-        if(el){let cur=0;const step=Math.max(1,Math.ceil(days/30));const timer=setInterval(()=>{cur=Math.min(cur+step,days);el.textContent=cur;if(cur>=days)clearInterval(timer)},40)}
-    })();
-
-    // Reveal
-    const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})},{threshold:.1});
-    document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
-    setTimeout(()=>{document.querySelectorAll('.reveal:not(.visible)').forEach(el=>el.classList.add('visible'))},2000);
-
-    // Scroll nav
-    window.addEventListener('scroll',()=>{document.querySelector('.nav').style.boxShadow=window.scrollY>50?'0 4px 20px rgba(0,0,0,.3)':'none'},{passive:true});
     </script>
 </body>
 </html>
