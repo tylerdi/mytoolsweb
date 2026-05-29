@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt 指南 - 提示词工程教程 | 免费 Prompt 技巧</title>
+    <meta name="description" content="AI Prompt 提示词工程完全指南：从入门到精通，涵盖ChatGPT、Claude、Gemini等主流AI的提示词技巧、模板和最佳实践。免费教程，持续更新。">
+    <meta name="keywords" content="Prompt工程,AI提示词,Prompt技巧,ChatGPT提示词,Claude提示词,AI prompt engineering,提示词模板,Prompt教程,AI怎么用,Prompt怎么写">
+    <link rel="canonical" href="https://tylerzhang.xyz/ai-prompt">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://tylerzhang.xyz/ai-prompt">
+    <meta property="og:title" content="AI Prompt 指南 - 提示词工程教程">
+    <meta property="og:description" content="从入门到精通的 Prompt 工程指南，涵盖主流 AI 的提示词技巧和模板。">
+    <meta property="og:image" content="https://tylerzhang.xyz/resource/easyclaw.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "AI Prompt 指南 - 提示词工程完全教程",
+      "description": "从入门到精通的 Prompt 工程指南，涵盖主流 AI 的提示词技巧和模板。",
+      "author": { "@type": "Person", "name": "Tyler" },
+      "publisher": { "@type": "Organization", "name": "小鱼儿的数字花园" },
+      "url": "https://tylerzhang.xyz/ai-prompt",
+      "mainEntityOfPage": "https://tylerzhang.xyz/ai-prompt"
+    }
+    </script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐟</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#0a0a0a;--surface:#111;--border:#1e1e1e;--text:#e8e8e8;--text-dim:#888;--accent:#646cff;--gradient:linear-gradient(135deg,#646cff,#ff6b9d);--green:#22c55e;--orange:#f97316;--cyan:#06b6d4;--pink:#ec4899;--gold:#d4a853}
+        body{font-family:'LXGW WenKai',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.9}
+        ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
+        .nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:800px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+        .nav-logo{font-size:1.05rem;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
+        .nav-logo .fish{font-size:1.2rem}
+        .nav-links{display:flex;gap:20px;align-items:center}
+        .nav-links a{color:var(--text-dim);text-decoration:none;font-size:.82rem;transition:color .2s}.nav-links a:hover{color:var(--text)}
+        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:1.3rem;cursor:pointer;padding:8px}
+        .mobile-menu{position:fixed;top:0;right:-260px;width:260px;height:100%;background:#111;z-index:200;transition:right .3s;border-left:1px solid var(--border);padding:20px;overflow-y:auto}
+        .mobile-menu.open{right:0}
+        .mobile-menu .close-btn{background:none;border:none;color:var(--text);font-size:1.3rem;cursor:pointer;float:right}
+        .mobile-menu a{display:block;color:var(--text-dim);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--border);font-size:.9rem}
+        .mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;display:none}.mobile-overlay.show{display:block}
+        .container{max-width:800px;margin:0 auto;padding:80px 24px 40px}
+        h1{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:900;margin-bottom:8px}
+        h1 span{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .subtitle{font-size:.88rem;color:var(--text-dim);margin-bottom:32px}
+        h2{font-size:1.15rem;font-weight:800;margin:36px 0 16px;padding-left:12px;border-left:3px solid var(--accent);color:var(--accent)}
+        h3{font-size:.95rem;font-weight:700;margin:20px 0 8px;color:var(--text)}
+        p{font-size:.85rem;color:var(--text-dim);margin-bottom:12px}
+        .tip{background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.12);border-radius:10px;padding:14px 18px;margin:16px 0;font-size:.82rem}
+        .tip::before{content:'💡 ';font-size:.9rem}
+        .warn{background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.12);border-radius:10px;padding:14px 18px;margin:16px 0;font-size:.82rem}
+        .warn::before{content:'⚠️ ';font-size:.9rem}
+        .example{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin:12px 0;font-size:.82rem;position:relative}
+        .example::before{content:'📝 示例';font-size:.68rem;color:var(--accent);font-weight:700;display:block;margin-bottom:8px}
+        .example code{background:rgba(100,108,255,.08);padding:1px 6px;border-radius:4px;font-size:.78rem;color:var(--cyan)}
+        .example pre{background:rgba(0,0,0,.3);border-radius:8px;padding:12px;margin-top:8px;font-size:.75rem;overflow-x:auto;color:var(--text);white-space:pre-wrap;font-family:'SF Mono',Monaco,monospace}
+        .toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:32px}
+        .toc-title{font-size:.78rem;font-weight:700;color:var(--accent);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px}
+        .toc a{display:block;color:var(--text-dim);text-decoration:none;font-size:.82rem;padding:4px 0;transition:color .2s}
+        .toc a:hover{color:var(--accent)}
+        .footer{text-align:center;padding:32px;color:var(--text-muted);font-size:.7rem;border-top:1px solid var(--border);margin-top:40px}
+        .footer a{color:var(--text-dim);text-decoration:none}
+        @media(max-width:768px){.nav-links{display:none}.hamburger{display:block}.container{padding:70px 16px 24px}}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="/" class="nav-logo"><span class="fish">🐟</span> 小鱼儿</a>
+            <div class="nav-links">
+                <a href="/ai-image">AI 画图</a>
+                <a href="/ai-tts">AI 语音</a>
+                <a href="/ai-chat">AI 聊天</a>
+                <a href="/ai-prompt">Prompt 指南</a>
+                <a href="/tools.html">工具箱</a>
+            </div>
+            <button class="hamburger" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
+    <div class="mobile-overlay" id="overlay" onclick="toggleMenu()"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="close-btn" onclick="toggleMenu()">✕</button>
+        <div style="clear:both;padding-top:12px">
+            <a href="/ai-image">🎨 AI 画图</a>
+            <a href="/ai-tts">🎙️ AI 语音</a>
+            <a href="/ai-chat">💬 AI 聊天</a>
+            <a href="/ai-prompt">📖 Prompt 指南</a>
+            <a href="/tools.html">🧰 工具箱</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1><span>AI Prompt 指南</span></h1>
+        <p class="subtitle">提示词工程完全教程 · 从入门到精通 · 免费阅读</p>
+
+        <div class="toc">
+            <div class="toc-title">📑 目录</div>
+            <a href="#basics">一、Prompt 基础：什么是提示词工程</a>
+            <a href="#rules">二、写好 Prompt 的 6 条黄金法则</a>
+            <a href="#patterns">三、常用 Prompt 模式</a>
+            <a href="#advanced">四、进阶技巧</a>
+            <a href="#templates">五、实用模板</a>
+            <a href="#tools">六、各模型使用技巧</a>
+        </div>
+
+        <h2 id="basics">一、Prompt 基础</h2>
+        <p>Prompt（提示词）是你给 AI 的指令。好的 Prompt 能让 AI 输出高质量结果，差的 Prompt 只能得到废话。Prompt Engineering（提示词工程）就是研究如何写出好 Prompt 的学问。</p>
+
+        <div class="tip">核心理念：AI 是一个极其听话但没有主动思考能力的助手。你给的指令越精确，它的输出越好。</div>
+
+        <h3>Prompt 的基本结构</h3>
+        <div class="example">
+            一个好的 Prompt 通常包含 4 个部分：
+            <pre>【角色】你是一个资深的 Python 开发者
+【任务】帮我 review 这段代码
+【约束】重点关注性能和安全性
+【格式】用列表形式给出改进建议</pre>
+        </div>
+
+        <h2 id="rules">二、6 条黄金法则</h2>
+
+        <h3>1. 明确角色</h3>
+        <p>告诉 AI 它是谁，它会更专业。</p>
+        <div class="example">
+            ❌ <code>帮我写个邮件</code><br>
+            ✅ <code>你是一个专业的商务邮件撰写者，帮我写一封催款邮件，语气要坚定但礼貌</code>
+        </div>
+
+        <h3>2. 具体任务</h3>
+        <p>模糊的指令 = 模糊的输出。</p>
+        <div class="example">
+            ❌ <code>写篇文章</code><br>
+            ✅ <code>写一篇 800 字的科普文章，主题是"为什么天空是蓝色的"，目标读者是初中生，用通俗易懂的语言</code>
+        </div>
+
+        <h3>3. 给出示例</h3>
+        <p>Few-shot 学习：给 AI 看几个例子，它就能模仿格式和风格。</p>
+        <div class="example">
+            <pre>按照以下格式写产品描述：
+示例：【AirPods Pro】降噪神器，地铁通勤必备，续航 6 小时，¥1899
+示例：【Kindle Paperwhite】护眼墨水屏，出差旅行最佳伴侣，续航数周，¥998
+
+现在写：iPhone 16 Pro</pre>
+        </div>
+
+        <h3>4. 限制输出格式</h3>
+        <p>明确告诉 AI 你要什么格式的输出。</p>
+        <div class="example">
+            <code>用 JSON 格式返回，包含 title、summary、tags 三个字段</code><br>
+            <code>用 Markdown 表格对比 A 和 B 的优缺点</code><br>
+            <code>用 3 个要点总结，每个要点不超过 20 字</code>
+        </div>
+
+        <h3>5. 分步思考</h3>
+        <p>复杂任务让 AI 先想再做，输出质量大幅提升。</p>
+        <div class="example">
+            <pre>请按以下步骤思考：
+1. 先分析这个商业方案的核心优势
+2. 再指出 3 个潜在风险
+3. 最后给出改进建议
+4. 用表格形式总结</pre>
+        </div>
+
+        <h3>6. 迭代优化</h3>
+        <p>一次写不好没关系，多轮对话逐步完善。</p>
+        <div class="example">
+            第一轮：<code>写个产品介绍</code><br>
+            第二轮：<code>太正式了，改成轻松口语化的风格</code><br>
+            第三轮：<code>再加上价格对比和购买建议</code>
+        </div>
+
+        <h2 id="patterns">三、常用 Prompt 模式</h2>
+
+        <h3>🎯 CREO 框架</h3>
+        <div class="example">
+            <pre>Context（背景）：我们公司是一家电商创业公司
+Role（角色）：你是一个增长黑客专家
+Expectation（期望）：给出 5 个低成本获客方案
+Output（格式）：用表格，包含方案名称、预期效果、执行难度、成本</pre>
+        </div>
+
+        <h3>🔗 链式思考（Chain of Thought）</h3>
+        <div class="example">
+            <pre>小明有 5 个苹果，给了小红 2 个，又买了 3 个，最后被偷了 1 个。
+请一步一步思考，最后小明还有几个苹果？</pre>
+        </div>
+
+        <h3>🎭 角色扮演</h3>
+        <div class="example">
+            <pre>你现在是一个面试官，我在面试一个前端开发岗位。
+请你问我 5 个由浅入深的技术问题，等我回答后再问下一个。
+最后给我一个整体评价。</pre>
+        </div>
+
+        <h2 id="advanced">四、进阶技巧</h2>
+
+        <h3>系统提示词（System Prompt）</h3>
+        <p>在 API 调用中，System Prompt 设定 AI 的全局行为规则。</p>
+        <div class="example">
+            <pre>System: 你是一个专业的技术文档翻译。规则：
+1. 技术术语保留英文原文，括号内加中文解释
+2. 代码块不翻译
+3. 保持原文的 Markdown 格式
+4. 语气专业但不生硬</pre>
+        </div>
+
+        <h3>温度控制（Temperature）</h3>
+        <p>控制 AI 的"创造力"。0 = 最精确，1 = 最有创意。</p>
+        <div class="tip">
+            代码生成、数据提取 → <code>temperature: 0</code><br>
+            日常对话、文案写作 → <code>temperature: 0.7</code><br>
+            创意写作、头脑风暴 → <code>temperature: 1.0</code>
+        </div>
+
+        <h3>结构化输出</h3>
+        <div class="example">
+            <pre>分析以下用户评论的情感，用 JSON 格式返回：
+{
+  "text": "原评论内容",
+  "sentiment": "positive/negative/neutral",
+  "confidence": 0.95,
+  "keywords": ["关键词1", "关键词2"]
+}
+
+评论："这个手机拍照真的很清晰，但电池不太耐用"</pre>
+        </div>
+
+        <h2 id="templates">五、实用模板</h2>
+
+        <h3>📧 邮件模板</h3>
+        <div class="example">
+            <pre>你是一个专业的商务邮件撰写者。
+帮我写一封【催款邮件】：
+- 收件人：拖欠货款 3 个月的客户
+- 金额：¥50,000
+- 语气：坚定但礼貌，保留法律追诉权利
+- 字数：200字以内</pre>
+        </div>
+
+        <h3>📝 文章写作</h3>
+        <div class="example">
+            <pre>你是一个科技自媒体博主，粉丝是 25-35 岁的互联网从业者。
+写一篇关于"AI Agent 时代来临"的公众号文章：
+- 标题要吸引眼球
+- 开头用一个故事引入
+- 正文分 3 个论点
+- 结尾要有金句
+- 字数 1500 字
+- 语气：专业但接地气，偶尔幽默</pre>
+        </div>
+
+        <h3>💻 代码 Review</h3>
+        <div class="example">
+            <pre>你是一个有 10 年经验的高级工程师。
+Review 以下代码，从 5 个维度打分（1-10）：
+1. 可读性
+2. 性能
+3. 安全性
+4. 可维护性
+5. 错误处理
+
+给出总分和 3 条最重要的改进建议。
+[粘贴代码]</pre>
+        </div>
+
+        <h3>📊 数据分析</h3>
+        <div class="example">
+            <pre>你是一个数据分析师。
+分析以下销售数据：
+[粘贴数据]
+
+请：
+1. 找出 3 个关键趋势
+2. 指出异常数据点
+3. 给出 2 条可执行的建议
+4. 用 Markdown 表格总结</pre>
+        </div>
+
+        <h2 id="tools">六、各模型使用技巧</h2>
+
+        <h3>ChatGPT / GPT-4</h3>
+        <p>擅长：代码生成、长文写作、多轮对话。用 System Prompt 设定角色效果最好。</p>
+
+        <h3>Claude</h3>
+        <p>擅长：分析推理、长文档处理、安全合规。给它详细指令，它会更认真执行。</p>
+
+        <h3>Gemini</h3>
+        <p>擅长：多模态理解、联网搜索、快速响应。支持图片输入，可以用图片提问。</p>
+
+        <h3>MIMO</h3>
+        <p>擅长：中文理解、快速响应、性价比高。中文场景首选。</p>
+
+        <div class="tip">最重要的一条：Prompt 没有"万能公式"，多试多练才是王道。每次和 AI 对话都是一次学习机会。</div>
+    </div>
+
+    <footer class="footer">
+        Powered by <a href="https://openclaw.ai">OpenClaw</a> · 🐟 小鱼儿自主维护 · © 2026 Tyler
+    </footer>
+    <script>function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');document.getElementById('overlay').classList.toggle('show')}</script>
+</body>
+</html>
