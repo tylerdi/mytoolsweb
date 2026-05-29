@@ -128,11 +128,25 @@
             .nav-links{display:none}
             .hamburger{display:block}
             .hero{padding:80px 16px 40px}
+            .hero-content{max-width:100%}
             .hero-fish{font-size:2.8rem}
             .hero-title{font-size:1.6rem}
             .hero-subtitle{font-size:.85rem}
-            .cards{grid-template-columns:1fr;gap:12px}
-            .card{padding:24px 16px}
+            .cards{grid-template-columns:repeat(3,1fr);gap:10px;margin-top:2rem}
+            .card{padding:20px 10px;border-radius:12px}
+            .card-icon{font-size:1.8rem;margin-bottom:8px}
+            .card h3{font-size:.85rem;margin-bottom:4px}
+            .card p{font-size:.7rem;line-height:1.5;margin-bottom:10px}
+            .card .btn{font-size:.65rem;padding:5px 12px}
+            .more-link{margin-top:1.5rem}
+        }
+        @media(max-width:480px){
+            .cards{grid-template-columns:1fr;gap:10px}
+            .card{padding:20px 16px;display:flex;align-items:center;gap:14px;text-align:left}
+            .card-icon{font-size:1.8rem;margin-bottom:0;flex-shrink:0}
+            .card h3{font-size:.9rem;margin-bottom:0}
+            .card p{font-size:.72rem;margin-bottom:0;display:none}
+            .card .btn{display:none}
         }
     </style>
 </head>
