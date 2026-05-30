@@ -227,5 +227,6 @@
     function typeLoop(){const c=phrases[pi];if(!del){te.textContent=c.slice(0,++ci);if(ci===c.length){del=true;setTimeout(typeLoop,1800);return}}else{te.textContent=c.slice(0,--ci);if(ci===0){del=false;pi=(pi+1)%phrases.length}}setTimeout(typeLoop,del?35:70)}
     typeLoop();
     </script>
+<script src="/fish-tracker.js"></script>
 </body>
 </html>
