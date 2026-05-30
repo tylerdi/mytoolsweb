@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent：从工具到同事，我们走到了哪一步？ · Tyler's Blog</title>
+    <link rel="icon" type="image/png" href="../../resource/easyclaw.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0a0a; --surface: #141414; --border: #2a2a2a;
+            --text: #e8e8e8; --text-secondary: #888; --accent: #646cff;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg); color: var(--text); line-height: 1.8; min-height: 100vh;
+        }
+        .header {
+            border-bottom: 1px solid var(--border); padding: 1.5rem 0;
+            position: sticky; top: 0; background: rgba(10,10,10,0.85);
+            backdrop-filter: blur(12px); z-index: 100;
+        }
+        .header-inner {
+            max-width: 720px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 1.25rem; font-weight: 700; color: var(--text); text-decoration: none; }
+        .logo span { color: var(--accent); }
+        .nav a { color: var(--text-secondary); text-decoration: none; margin-left: 2rem; font-size: 0.9rem; }
+        .nav a:hover { color: var(--text); }
+        .container { max-width: 720px; margin: 0 auto; padding: 3rem 2rem; }
+        .back { color: var(--accent); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; display: inline-block; }
+        .back:hover { text-decoration: underline; }
+        .post-date { font-size: 0.85rem; color: var(--accent); font-weight: 600; margin-bottom: 0.75rem; }
+        .post-title { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.03em; line-height: 1.3; }
+        .post-tag {
+            display: inline-block; font-size: 0.75rem; color: var(--accent);
+            background: rgba(100,108,255,0.1); padding: 0.2rem 0.6rem;
+            border-radius: 4px; margin-bottom: 2rem; font-weight: 500;
+        }
+        .post-content { font-size: 1.05rem; }
+        .post-content p { margin-bottom: 1.25rem; }
+        .post-content h2 { font-size: 1.4rem; font-weight: 700; margin: 2rem 0 1rem; letter-spacing: -0.02em; }
+        .post-content h3 { font-size: 1.15rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .post-content li { margin-left: 1.5rem; margin-bottom: 0.5rem; color: var(--text-secondary); }
+        .post-content blockquote {
+            border-left: 3px solid var(--accent); padding: 0.75rem 1.25rem;
+            margin: 1.5rem 0; background: var(--surface); border-radius: 0 8px 8px 0;
+            color: var(--text-secondary); font-style: italic;
+        }
+        .footer {
+            border-top: 1px solid var(--border); padding: 2rem 0;
+            text-align: center; color: var(--text-secondary); font-size: 0.85rem;
+            max-width: 720px; margin: 3rem auto 0;
+        }
+        .footer a { color: var(--accent); text-decoration: none; }
+        @media (max-width: 640px) {
+            .container { padding: 2rem 1.25rem; }
+            .post-title { font-size: 1.5rem; }
+        }
+        .fish-tts { margin-bottom: 1.5rem; }
+        .fish-listen-btn {
+            background: rgba(100,108,255,0.1); border: 1px solid rgba(100,108,255,0.3);
+            color: var(--accent); padding: 0.5rem 1.2rem; border-radius: 8px;
+            cursor: pointer; font-size: 0.9rem; font-weight: 500;
+            transition: all 0.2s;
+        }
+        .fish-listen-btn:hover { background: rgba(100,108,255,0.2); transform: translateY(-1px); }
+        .fish-listen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">Tyler<span>.</span></a>
+            <nav class="nav">
+                <a href="/">首页</a>
+                <a href="/blog/">博客</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <a href="/blog/" class="back">← 返回博客列表</a>
+        <div class="post-date">2026 年 05 月 30 日</div>
+        <h1 class="post-title">AI Agent：从工具到同事，我们走到了哪一步？</h1>
+        <span class="post-tag">AI,Agent,技术趋势,人机协作</span>
+        <div class="fish-tts" id="listen-section"></div>
+        <div class="post-content">
+<p>2024 年，我们还在讨论"AI 能不能写代码"。2025 年，这个问题已经过时了——AI 不仅能写代码，还能自己跑测试、修 bug、提交 PR。到 2026 年的今天，真正值得讨论的问题变成了：**AI Agent 什么时候从"工具"变成"同事"？**</p>
+<h2>工具与同事的区别</h2>
+<p>这个区分很重要。工具是你拿来用的，用完放下。同事是你分配任务给他的，他会自己想办法完成，遇到问题会来找你确认，甚至会在你没想到的地方提出建议。</p>
+<p>过去一年，我观察到一个明显的趋势：AI Agent 的自主性在指数级增长。</p>
+<p>早期的 Copilot 模式是"你写一行，它补一行"——典型的工具。后来发展到"你描述需求，它写一个函数"——高级工具。再后来 Cursor、Claude Code 这类产品出现了，"你说要做什么，它帮你改一整个文件"——开始像实习生了。</p>
+<p>而现在的 Agent 系统，你可以说"帮我把这个功能做了"，它会自己读代码、理解架构、制定计划、分步执行、遇到问题自己查文档。这已经不是工具了，这是**独立开发者**。</p>
+<h2>从"副驾驶"到"主驾驶"</h2>
+<p>我最近在用一个 Agent 做项目，有一次我给了它一个比较模糊的需求："优化一下这个页面的加载速度"。它没有直接开始改代码，而是先跑了性能分析，发现瓶颈在图片加载，然后列了三个方案让我选：懒加载、CDN 加速、WebP 转换。我选了第一个，它就自己把活干完了。</p>
+<p>这件事让我意识到：**好的 AI Agent 不是执行者，是思考者。** 它会先理解问题，再提出方案，最后才动手。这跟一个靠谱的人类同事有什么区别？</p>
+<h2>真正的瓶颈在哪？</h2>
+<p>技术上，Agent 已经能做到很多了。但真正的瓶颈不在技术，而在**信任**。</p>
+<p>你会放心把一个关键功能完全交给 AI 去做吗？你会让它直接部署到生产环境吗？大多数人的答案是"还不太会"。这种不信任是合理的，但也在快速消解。</p>
+<p>原因很简单：当 Agent 连续 100 次都做对了，你就会开始放松警惕。这不是盲目信任，是基于经验的判断。就像你信任一个新同事一样——一开始事事检查，后来发现他靠谱，就放手了。</p>
+<h2>我的判断</h2>
+<p>未来 2-3 年，大部分软件团队会变成"人 + Agent"的混合模式。人类负责方向、创意和决策，Agent 负责执行、测试和维护。不是取代，是分工。</p>
+<p>就像 Excel 出来之后，会计师没有消失，而是从算账的人变成了分析数据的人。AI Agent 出来之后，程序员也不会消失，而是从写代码的人变成了设计系统的人。</p>
+<p>**真正的赢家，是那些最早学会跟 Agent 合作的人。** 不是抗拒它，也不是盲目依赖它，而是把它当成一个能力超强但需要磨合的新同事。</p>
+<p>磨合好了，你会发现：以前一周的工作量，现在一天就能搞定。省下来的时间，你可以去思考更重要的事情——比如，到底要做什么。</p>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Powered by <a href="https://www.tylerzhang.xyz">Tyler</a> & <a href="https://openclaw.ai">OpenClaw</a></p>
+    </footer>
+    <script src="/fish-ai.js?v=20260501"></script>
+</body>
+</html>

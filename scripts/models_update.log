@@ -5,3 +5,10 @@
   - Llama 3.1 70B: $0.40/$0.40 per 1M tokens, 131072 context
   - Mixtral 8x22B: $2.00/$6.00 per 1M tokens, 65536 context
   - DeepSeek V2: $0.23/$0.91 per 1M tokens, 131072 context
+
+[2026-05-30T06:00:08.236152] 更新了 5 个模型
+  - GPT-4o: $2.50/$10.00 per 1M tokens, 128000 context
+  - GPT-4 Turbo: $10.00/$30.00 per 1M tokens, 128000 context
+  - Llama 3.1 70B: $0.40/$0.40 per 1M tokens, 131072 context
+  - Mixtral 8x22B: $2.00/$6.00 per 1M tokens, 65536 context
+  - DeepSeek V2: $0.23/$0.91 per 1M tokens, 131072 context
