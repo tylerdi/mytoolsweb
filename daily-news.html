@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日新闻简报 - AI热点速览 | 小鱼儿的数字花园</title>
+    <meta name="description" content="AI智能整理的每日热点新闻简报，一文掌握今日全网热点。">
+    <meta name="keywords" content="每日新闻,热点新闻,AI新闻简报,今日热点,新闻速览">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐟</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#0a0a0a;--surface:#111;--border:#1e1e1e;--text:#e8e8e8;--text-dim:#888;--accent:#646cff;--accent-glow:rgba(100,108,255,0.25);--pink:#ff6b9d;--gradient:linear-gradient(135deg,var(--accent),var(--pink))}
+        html{scroll-behavior:smooth}
+        body{font-family:'LXGW WenKai',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.8;min-height:100vh}
+        a{color:var(--accent);text-decoration:none}
+        a:hover{text-decoration:underline}
+
+        .container{max-width:800px;margin:0 auto;padding:80px 20px 40px}
+
+        /* 头部 */
+        .header{text-align:center;margin-bottom:40px}
+        .header h1{font-size:2rem;margin-bottom:10px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .header p{color:var(--text-dim);font-size:0.9rem}
+        .date-badge{display:inline-block;padding:4px 12px;background:rgba(100,108,255,0.1);border:1px solid rgba(100,108,255,0.2);border-radius:20px;font-size:0.8rem;color:var(--accent);margin-top:10px}
+
+        /* 新闻卡片 */
+        .news-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;transition:all 0.3s}
+        .news-card:hover{border-color:var(--accent);box-shadow:0 4px 20px var(--accent-glow)}
+        .news-card h3{font-size:1.1rem;margin-bottom:8px;line-height:1.4}
+        .news-card h3 a{color:var(--text)}
+        .news-card h3 a:hover{color:var(--accent)}
+        .news-meta{display:flex;align-items:center;gap:12px;font-size:0.8rem;color:var(--text-dim)}
+        .source-tag{padding:2px 8px;background:rgba(100,108,255,0.1);border-radius:4px;font-size:0.75rem}
+        .hot-tag{color:#ff6b9d}
+        .summary{color:var(--text-dim);font-size:0.9rem;margin-top:8px;line-height:1.6}
+
+        /* 重要性标记 */
+        .importance{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+        .importance-5{background:#ff4444}
+        .importance-4{background:#ff8800}
+        .importance-3{background:#ffcc00}
+        .importance-2{background:#44bb44}
+        .importance-1{background:#4488ff}
+
+        /* 加载状态 */
+        .loading{text-align:center;padding:40px;color:var(--text-dim)}
+        .loading .spinner{display:inline-block;width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin-right:8px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+
+        /* 空状态 */
+        .empty{text-align:center;padding:60px 20px;color:var(--text-dim)}
+        .empty .emoji{font-size:3rem;margin-bottom:16px}
+
+        /* 刷新按钮 */
+        .refresh-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--accent);color:white;border:none;border-radius:8px;font-size:0.85rem;cursor:pointer;transition:all 0.2s;margin-top:16px}
+        .refresh-btn:hover{transform:scale(1.05)}
+        .refresh-btn:disabled{opacity:0.5;cursor:not-allowed}
+
+        /* 分类标签 */
+        .category-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:24px}
+        .category-tab{padding:6px 14px;background:var(--surface);border:1px solid var(--border);border-radius:20px;font-size:0.8rem;color:var(--text-dim);cursor:pointer;transition:all 0.2s}
+        .category-tab.active{background:var(--accent);color:white;border-color:var(--accent)}
+        .category-tab:hover{border-color:var(--accent)}
+
+        /* 返回首页 */
+        .back-home{display:inline-flex;align-items:center;gap:6px;color:var(--text-dim);font-size:0.85rem;margin-bottom:20px}
+        .back-home:hover{color:var(--accent);text-decoration:none}
+
+        @media(max-width:768px){
+            .container{padding:70px 16px 30px}
+            .header h1{font-size:1.6rem}
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-home">← 返回首页</a>
+
+        <div class="header">
+            <h1>📰 每日新闻简报</h1>
+            <p>AI 智能整理，一文掌握今日全网热点</p>
+            <div class="date-badge" id="currentDate"></div>
+        </div>
+
+        <div class="category-tabs">
+            <div class="category-tab active" data-cat="all">全部</div>
+            <div class="category-tab" data-cat="微博">微博</div>
+            <div class="category-tab" data-cat="知乎">知乎</div>
+            <div class="category-tab" data-cat="百度">百度</div>
+            <div class="category-tab" data-cat="科技">科技</div>
+            <div class="category-tab" data-cat="财经">财经</div>
+        </div>
+
+        <div id="newsContainer">
+            <div class="loading">
+                <span class="spinner"></span>
+                正在加载今日新闻...
+            </div>
+        </div>
+
+        <div style="text-align:center">
+            <button class="refresh-btn" id="refreshBtn">🔄 刷新新闻</button>
+        </div>
+    </div>
+
+    <script>
+        // 设置当前日期
+        const now = new Date();
+        const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+        document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-CN', options);
+
+        // 从 API 获取新闻
+        // 加载新闻
+            {
+                title: "OpenAI 发布 GPT-5，多模态能力大幅提升",
+                summary: "新一代模型在代码生成、数学推理和多语言理解方面均有显著进步，支持实时视频理解。",
+                source: "科技",
+                hot: "9856万",
+                importance: 5,
+                url: "#"
+            },
+            {
+                title: "苹果 WWDC 2026 重磅发布：AI 深度整合 iOS 20",
+                summary: "Siri 全面升级，支持跨应用智能操作；新增 AI 健康助手功能。",
+                source: "科技",
+                hot: "8234万",
+                importance: 5,
+                url: "#"
+            },
+            {
+                title: "比特币突破 15 万美元，创历史新高",
+                summary: "机构资金持续流入，多个国家宣布将比特币纳入战略储备。",
+                source: "财经",
+                hot: "7652万",
+                importance: 4,
+                url: "#"
+            },
+            {
+                title: "国产大模型集体降价，AI 应用成本大幅下降",
+                summary: "多家厂商宣布 API 价格下调 50%-90%，中小企业迎来 AI 普及红利。",
+                source: "科技",
+                hot: "6543万",
+                importance: 4,
+                url: "#"
+            },
+            {
+                title: "2026 高考作文题出炉，AI 写作引发热议",
+                summary: "多地高考作文题涉及 AI 话题，网友纷纷用 AI 生成满分作文。",
+                source: "微博",
+                hot: "5432万",
+                importance: 3,
+                url: "#"
+            },
+            {
+                title: "新能源汽车销量首超燃油车",
+                summary: "5 月新能源车渗透率达 52%，比亚迪、特斯拉领跑市场。",
+                source: "财经",
+                hot: "4321万",
+                importance: 3,
+                url: "#"
+            },
+            {
+                title: "世界杯预选赛：国足 2-1 逆转日本",
+                summary: "武磊梅开二度，国足保留出线希望，球迷沸腾。",
+                source: "微博",
+                hot: "3987万",
+                importance: 3,
+                url: "#"
+            },
+            {
+                title: "豆瓣 9.5 分！年度最佳国产剧《繁花 2》收官",
+                summary: "王家卫执导，胡歌主演，延续第一部的高品质，引发全民追剧热潮。",
+                source: "知乎",
+                hot: "3456万",
+                importance: 2,
+                url: "#"
+            },
+            {
+                title: "全国多地发布高温预警，部分地区超 40℃",
+                summary: "气象部门提醒注意防暑降温，电力负荷创新高。",
+                source: "百度",
+                hot: "2987万",
+                importance: 2,
+                url: "#"
+            },
+            {
+                title: "年轻人流行「City Walk 2.0」：AI 规划路线成新趋势",
+                summary: "结合 AI 导航和社交功能的新型城市探索方式在一二线城市火爆。",
+                source: "知乎",
+                hot: "2345万",
+                importance: 1,
+                url: "#"
+            }
+        ];
+
+        let allNews = mockNews;
+        let currentCategory = 'all';
+
+        // 渲染新闻列表
+        function renderNews(newsList) {
+            const container = document.getElementById('newsContainer');
+
+            if (newsList.length === 0) {
+                container.innerHTML = `
+                    <div class="empty">
+                        <div class="emoji">📭</div>
+                        <p>暂无相关新闻</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // 按重要性排序
+            const sorted = [...newsList].sort((a, b) => b.importance - a.importance);
+
+            container.innerHTML = sorted.map((news, index) => `
+                <div class="news-card" style="animation: fadeIn 0.3s ease ${index * 0.05}s both">
+                    <h3>
+                        <span class="importance importance-${news.importance}"></span>
+                        <a href="${news.url}" target="_blank">${news.title}</a>
+                    </h3>
+                    <div class="summary">${news.summary}</div>
+                    <div class="news-meta">
+                        <span class="source-tag">${news.source}</span>
+                        ${news.hot ? `<span class="hot-tag">🔥 ${news.hot}</span>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 分类筛选
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentCategory = tab.dataset.cat;
+
+                if (currentCategory === 'all') {
+                    renderNews(allNews);
+                } else {
+                    const filtered = allNews.filter(n => n.source === currentCategory);
+                    renderNews(filtered);
+                }
+            });
+        });
+
+        // 刷新按钮
+        document.getElementById('refreshBtn').addEventListener('click', async () => {
+            const btn = document.getElementById('refreshBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ 正在获取...';
+
+            try {
+                const response = await fetch('/api/daily-news', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'fetch' })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.news && data.news.length > 0) {
+                        allNews = data.news;
+                        renderNews(allNews);
+                    }
+                }
+            } catch (e) {
+                console.error('Fetch failed:', e);
+            }
+
+            btn.disabled = false;
+            btn.textContent = '🔄 刷新新闻';
+        });
+
+        // 初始渲染
+        renderNews(allNews);
+
+        // 添加动画样式
+        const style = document.createElement('style');
+        style.textContent = '@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}';
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
