@@ -30,7 +30,7 @@ async function getAiReply(content, mood) {
           },
           {
             role: 'user',
-            content: `${moodHint}${content}`,`
+            content: `${moodHint}${content}`,
           },
         ],
         max_tokens: 200,
