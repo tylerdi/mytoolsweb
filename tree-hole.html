@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI 树洞 — 说给风听 | tylerzhang.xyz</title>
+    <meta name="description" content="AI 树洞：匿名倾诉你的心事，AI 温暖回应。这里没有评判，只有倾听。">
+    <meta name="keywords" content="AI树洞,匿名倾诉,心事,树洞,情绪出口,AI陪伴,心理疏导">
+    <link rel="canonical" href="https://tylerzhang.xyz/tree-hole.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="AI 树洞 — 说给风听">
+    <meta property="og:description" content="匿名写下心事，AI 温暖回应。这里没有评判，只有倾听。">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌳</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#0a0a0a;--surface:#111;--border:#1e1e1e;--text:#e8e8e8;--text-dim:#666;--text-muted:#444;--accent:#646cff;--accent-glow:rgba(100,108,255,0.3);--warm:#f59e0b;--warm-glow:rgba(245,158,11,0.15)}
+        html{scroll-behavior:smooth}
+        body{font-family:'LXGW WenKai',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.8;min-height:100vh}
+
+        .nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+        .nav-logo{font-size:1.1rem;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
+        .nav-logo:hover{text-decoration:none}
+
+        .container{max-width:700px;margin:0 auto;padding:80px 24px 60px}
+
+        .hero{text-align:center;margin-bottom:48px}
+        .hero-icon{font-size:4rem;margin-bottom:12px;display:block;animation:float 3s ease-in-out infinite}
+        .hero h1{font-size:2rem;font-weight:900;margin-bottom:8px}
+        .hero p{color:var(--text-dim);font-size:.9rem}
+
+        @keyframes float{
+            0%,100%{transform:translateY(0)}
+            50%{transform:translateY(-10px)}
+        }
+
+        /* 写心事区域 */
+        .write-section{
+            background:var(--surface);border:1px solid var(--border);border-radius:20px;
+            padding:28px 24px;margin-bottom:32px;
+        }
+        .mood-selector{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+        .mood-btn{
+            padding:6px 14px;border-radius:20px;border:1px solid var(--border);
+            background:transparent;color:var(--text-dim);font-size:.85rem;
+            cursor:pointer;font-family:inherit;transition:all .2s;
+            display:flex;align-items:center;gap:4px;
+        }
+        .mood-btn:hover{border-color:var(--warm);color:var(--warm)}
+        .mood-btn.active{background:var(--warm-glow);border-color:var(--warm);color:var(--warm)}
+
+        .write-area{
+            width:100%;min-height:120px;padding:14px 16px;
+            background:#0d0d0d;border:1px solid var(--border);border-radius:14px;
+            color:var(--text);font-family:inherit;font-size:.95rem;
+            resize:vertical;outline:none;transition:border-color .2s;
+            line-height:1.8;
+        }
+        .write-area:focus{border-color:var(--warm)}
+        .write-area::placeholder{color:var(--text-muted)}
+
+        .write-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+        .char-count{font-size:.75rem;color:var(--text-muted)}
+        .submit-btn{
+            padding:10px 28px;border-radius:12px;border:none;
+            background:var(--warm);color:#000;font-size:.9rem;font-weight:600;
+            cursor:pointer;font-family:inherit;transition:all .2s;
+        }
+        .submit-btn:hover{opacity:.85;transform:translateY(-1px)}
+        .submit-btn:disabled{opacity:.4;cursor:not-allowed}
+
+        /* AI 回复 */
+        .ai-reply{
+            margin-top:20px;padding:16px 18px;
+            background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.15);
+            border-radius:14px;display:none;
+        }
+        .ai-reply.show{display:block;animation:fadeIn 0.4s ease}
+        .ai-reply .label{font-size:.75rem;color:var(--warm);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+        .ai-reply .text{color:var(--text);font-size:.9rem;line-height:1.8}
+
+        @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+        /* 心事列表 */
+        .section-title{
+            font-size:1.1rem;font-weight:700;margin-bottom:20px;
+            display:flex;align-items:center;gap:8px;
+        }
+        .holes-list{display:flex;flex-direction:column;gap:16px}
+
+        .hole-card{
+            background:var(--surface);border:1px solid var(--border);border-radius:16px;
+            padding:20px 18px;transition:border-color .3s;
+        }
+        .hole-card:hover{border-color:rgba(245,158,11,0.2)}
+
+        .hole-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+        .hole-mood{font-size:1.1rem}
+        .hole-time{font-size:.75rem;color:var(--text-muted)}
+
+        .hole-content{color:var(--text);font-size:.9rem;line-height:1.8;margin-bottom:12px}
+
+        .hole-reply{
+            padding:12px 14px;background:rgba(245,158,11,0.05);
+            border-left:3px solid var(--warm);border-radius:0 10px 10px 0;
+            margin-bottom:12px;
+        }
+        .hole-reply .label{font-size:.7rem;color:var(--warm);margin-bottom:4px}
+        .hole-reply .text{font-size:.85rem;color:var(--text-dim);line-height:1.7}
+
+        .hole-actions{display:flex;gap:16px;align-items:center}
+        .hole-action{
+            background:none;border:none;color:var(--text-muted);
+            font-size:.8rem;cursor:pointer;font-family:inherit;
+            display:flex;align-items:center;gap:4px;transition:color .2s;
+        }
+        .hole-action:hover{color:var(--warm)}
+        .hole-action.hugged{color:var(--warm)}
+
+        .load-more{
+            width:100%;padding:12px;border-radius:12px;border:1px dashed var(--border);
+            background:transparent;color:var(--text-dim);font-size:.85rem;
+            cursor:pointer;font-family:inherit;transition:all .2s;margin-top:8px;
+        }
+        .load-more:hover{border-color:var(--warm);color:var(--warm)}
+
+        .empty{text-align:center;color:var(--text-muted);padding:48px 0;font-size:.9rem}
+        .empty .icon{font-size:3rem;margin-bottom:12px;display:block}
+
+        .footer{text-align:center;padding:40px 24px;color:var(--text-muted);font-size:.8rem;border-top:1px solid var(--border);margin-top:60px}
+        .footer a{color:var(--text-dim)}
+
+        @media(max-width:768px){
+            .container{padding:70px 16px 40px}
+            .hero h1{font-size:1.5rem}
+            .hero-icon{font-size:3rem}
+            .mood-selector{gap:6px}
+            .mood-btn{padding:5px 10px;font-size:.8rem}
+        }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-inner">
+        <a href="/" class="nav-logo"><span style="font-size:1.3rem">🐟</span> 小鱼儿</a>
+        <a href="/" style="color:var(--text-dim);font-size:.85rem">← 返回首页</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="hero">
+        <span class="hero-icon">🌳</span>
+        <h1>AI 树洞</h1>
+        <p>匿名写下心事，这里没有评判，只有倾听</p>
+    </div>
+
+    <div class="write-section">
+        <div class="mood-selector">
+            <button class="mood-btn" data-mood="happy" onclick="selectMood(this)">😊 开心</button>
+            <button class="mood-btn" data-mood="sad" onclick="selectMood(this)">😢 难过</button>
+            <button class="mood-btn" data-mood="angry" onclick="selectMood(this)">😤 生气</button>
+            <button class="mood-btn" data-mood="anxious" onclick="selectMood(this)">😰 焦虑</button>
+            <button class="mood-btn" data-mood="confused" onclick="selectMood(this)">😶 迷茫</button>
+            <button class="mood-btn" data-mood="grateful" onclick="selectMood(this)">🥰 感恩</button>
+            <button class="mood-btn" data-mood="lonely" onclick="selectMood(this)">🥺 孤独</button>
+            <button class="mood-btn" data-mood="calm" onclick="selectMood(this)">😌 平静</button>
+        </div>
+        <textarea class="write-area" id="writeArea" placeholder="今天有什么想说的？这里是安全的…&#10;&#10;可以是开心的事、烦心的事、或者只是随便想说的话。" maxlength="1000"></textarea>
+        <div class="write-footer">
+            <span class="char-count"><span id="charCount">0</span>/1000</span>
+            <button class="submit-btn" id="submitBtn" onclick="submitHole()">说出来 🌬️</button>
+        </div>
+        <div class="ai-reply" id="aiReply">
+            <div class="label">🌿 树洞的回应</div>
+            <div class="text" id="aiReplyText"></div>
+        </div>
+    </div>
+
+    <div class="section-title">🌙 大家的心事</div>
+    <div class="holes-list" id="holesList">
+        <div class="empty">
+            <span class="icon">🍃</span>
+            <p>还没有人说过心事…<br>做第一个分享的人吧</p>
+        </div>
+    </div>
+    <button class="load-more" id="loadMore" style="display:none" onclick="loadMore()">加载更多…</button>
+</div>
+
+<div class="footer">
+    <p>🐟 小鱼儿的数字花园 · <a href="/">tylerzhang.xyz</a></p>
+</div>
+
+<script>
+const API = '/api/tree-hole';
+let selectedMood = '';
+let offset = 0;
+let isSubmitting = false;
+let huggedIds = new Set(JSON.parse(localStorage.getItem('treeHoleHugs') || '[]'));
+
+// 心情映射
+const moodMap = {
+    happy: { emoji: '😊', label: '开心' },
+    sad: { emoji: '😢', label: '难过' },
+    angry: { emoji: '😤', label: '生气' },
+    anxious: { emoji: '😰', label: '焦虑' },
+    confused: { emoji: '😶', label: '迷茫' },
+    grateful: { emoji: '🥰', label: '感恩' },
+    lonely: { emoji: '🥺', label: '孤独' },
+    calm: { emoji: '😌', label: '平静' },
+    unknown: { emoji: '💭', label: '' },
+};
+
+// 初始化
+document.getElementById('writeArea').addEventListener('input', function() {
+    document.getElementById('charCount').textContent = this.value.length;
+});
+
+function selectMood(btn) {
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+    if (selectedMood === btn.dataset.mood) {
+        selectedMood = '';
+    } else {
+        btn.classList.add('active');
+        selectedMood = btn.dataset.mood;
+    }
+}
+
+async function submitHole() {
+    if (isSubmitting) return;
+    const content = document.getElementById('writeArea').value.trim();
+    if (!content) return;
+
+    isSubmitting = true;
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = '正在说…';
+
+    try {
+        const visitor_id = getVisitorId();
+        const res = await fetch(API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ visitor_id, content, mood: selectedMood }),
+        });
+        const data = await res.json();
+
+        if (!data.ok) throw new Error(data.error || '发送失败');
+
+        // 显示 AI 回复
+        const reply = document.getElementById('aiReply');
+        document.getElementById('aiReplyText').textContent = data.hole.ai_reply || '谢谢你愿意说出来 🤗';
+        reply.classList.add('show');
+
+        // 清空输入
+        document.getElementById('writeArea').value = '';
+        document.getElementById('charCount').textContent = '0';
+        document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+        selectedMood = '';
+
+        // 刷新列表
+        offset = 0;
+        await loadHoles();
+
+    } catch (err) {
+        alert('发送失败：' + err.message);
+    }
+
+    isSubmitting = false;
+    btn.disabled = false;
+    btn.textContent = '说出来 🌬️';
+}
+
+async function loadHoles() {
+    try {
+        const res = await fetch(`${API}?limit=10&offset=${offset}`);
+        const data = await res.json();
+        if (!data.ok) return;
+
+        const list = document.getElementById('holesList');
+        const loadMoreBtn = document.getElementById('loadMore');
+
+        if (offset === 0 && data.holes.length === 0) {
+            list.innerHTML = `<div class="empty"><span class="icon">🍃</span><p>还没有人说过心事…<br>做第一个分享的人吧</p></div>`;
+            loadMoreBtn.style.display = 'none';
+            return;
+        }
+
+        if (offset === 0) list.innerHTML = '';
+
+        data.holes.forEach(h => {
+            const mood = moodMap[h.mood] || moodMap.unknown;
+            const isHugged = huggedIds.has(h.id);
+            const timeStr = formatTime(h.created_at);
+
+            const card = document.createElement('div');
+            card.className = 'hole-card';
+            card.innerHTML = `
+                <div class="hole-header">
+                    <span class="hole-mood">${mood.emoji}</span>
+                    ${mood.label ? `<span style="font-size:.75rem;color:var(--text-dim)">${mood.label}</span>` : ''}
+                    <span class="hole-time">${timeStr}</span>
+                </div>
+                <div class="hole-content">${escapeHtml(h.content)}</div>
+                ${h.ai_reply ? `<div class="hole-reply"><div class="label">🌿 树洞的回应</div><div class="text">${escapeHtml(h.ai_reply)}</div></div>` : ''}
+                <div class="hole-actions">
+                    <button class="hole-action ${isHugged ? 'hugged' : ''}" onclick="hug(${h.id}, this)">
+                        🤗 <span>${h.hugs || 0}</span>
+                    </button>
+                </div>
+            `;
+            list.appendChild(card);
+        });
+
+        loadMoreBtn.style.display = data.holes.length < 10 ? 'none' : 'block';
+
+    } catch (err) {
+        console.error('加载失败:', err);
+    }
+}
+
+async function loadMore() {
+    offset += 10;
+    await loadHoles();
+}
+
+async function hug(id, btn) {
+    if (huggedIds.has(id)) return;
+    huggedIds.add(id);
+    localStorage.setItem('treeHoleHugs', JSON.stringify([...huggedIds]));
+
+    btn.classList.add('hugged');
+    const span = btn.querySelector('span');
+    span.textContent = parseInt(span.textContent) + 1;
+
+    try {
+        await fetch(API, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, action: 'hug' }),
+        });
+    } catch {}
+}
+
+function getVisitorId() {
+    let id = localStorage.getItem('treeHoleVisitorId');
+    if (!id) {
+        id = 'th_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+        localStorage.setItem('treeHoleVisitorId', id);
+    }
+    return id;
+}
+
+function formatTime(ts) {
+    const d = new Date(ts);
+    const now = new Date();
+    const diff = now - d;
+    if (diff < 60000) return '刚刚';
+    if (diff < 3600000) return Math.floor(diff / 60000) + '分钟前';
+    if (diff < 86400000) return Math.floor(diff / 3600000) + '小时前';
+    if (diff < 604800000) return Math.floor(diff / 86400000) + '天前';
+    return `${d.getMonth()+1}月${d.getDate()}日`;
+}
+
+function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+}
+
+// 初始加载
+loadHoles();
+</script>
+
+</body>
+</html>
