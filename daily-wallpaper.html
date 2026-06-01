@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>每日壁纸 — AI 为你生成的专属壁纸 | tylerzhang.xyz</title>
+    <meta name="description" content="每天一张 AI 生成的独特壁纸，风景、动漫、赛博朋克、星空…风格随机，永不重复。免费下载，设为手机壁纸。">
+    <meta name="keywords" content="每日壁纸,AI壁纸,免费壁纸,手机壁纸,4K壁纸,AI生成壁纸,风景壁纸,动漫壁纸">
+    <link rel="canonical" href="https://tylerzhang.xyz/daily-wallpaper.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="每日壁纸 — AI 为你生成的专属壁纸">
+    <meta property="og:description" content="每天一张 AI 生成的独特壁纸，风格随机，永不重复。">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖼️</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#0a0a0a;--surface:#111;--border:#1e1e1e;--text:#e8e8e8;--text-dim:#666;--text-muted:#444;--accent:#646cff;--accent-glow:rgba(100,108,255,0.3)}
+        html{scroll-behavior:smooth}
+        body{font-family:'LXGW WenKai',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.8;min-height:100vh}
+
+        .nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
+        .nav-logo{font-size:1.1rem;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
+        .nav-logo:hover{text-decoration:none}
+
+        .container{max-width:500px;margin:0 auto;padding:80px 24px 60px}
+
+        .hero{text-align:center;margin-bottom:32px}
+        .hero h1{font-size:2rem;font-weight:900;margin-bottom:8px}
+        .hero p{color:var(--text-dim);font-size:.9rem}
+
+        /* 壁纸预览 */
+        .wallpaper-card{
+            background:var(--surface);border:1px solid var(--border);border-radius:20px;
+            overflow:hidden;margin-bottom:24px;
+        }
+        .wallpaper-img{
+            width:100%;aspect-ratio:9/16;object-fit:cover;display:block;
+            background:#1a1a1a;cursor:pointer;transition:transform .3s;
+        }
+        .wallpaper-img:hover{transform:scale(1.02)}
+        .wallpaper-img.loading{
+            animation:pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse{
+            0%,100%{opacity:0.4}
+            50%{opacity:0.7}
+        }
+
+        .wallpaper-info{padding:20px}
+        .wallpaper-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+        .wallpaper-date{font-size:.85rem;color:var(--text-dim)}
+        .wallpaper-style{
+            display:inline-flex;align-items:center;gap:4px;
+            padding:4px 12px;border-radius:20px;font-size:.75rem;
+            background:rgba(100,108,255,0.15);color:var(--accent);
+        }
+        .wallpaper-prompt{font-size:.8rem;color:var(--text-muted);margin-bottom:16px;line-height:1.6}
+
+        .wallpaper-actions{display:flex;gap:12px;flex-wrap:wrap}
+        .btn{
+            flex:1;padding:12px;border-radius:12px;border:1px solid var(--border);
+            background:transparent;color:var(--text-dim);font-size:.9rem;
+            cursor:pointer;font-family:inherit;transition:all .2s;
+            display:flex;align-items:center;justify-content:center;gap:6px;
+            min-width:120px;
+        }
+        .btn:hover{border-color:var(--accent);color:var(--accent)}
+        .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+        .btn.primary:hover{opacity:.85}
+
+        /* 历史壁纸 */
+        .history{margin-top:48px}
+        .history h3{font-size:1rem;color:var(--text-dim);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+        .history-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+        .history-item{
+            aspect-ratio:9/16;border-radius:12px;overflow:hidden;
+            border:1px solid var(--border);cursor:pointer;position:relative;
+            transition:border-color .3s;
+        }
+        .history-item:hover{border-color:var(--accent)}
+        .history-item img{width:100%;height:100%;object-fit:cover}
+        .history-item .overlay{
+            position:absolute;bottom:0;left:0;right:0;
+            padding:8px;background:linear-gradient(transparent,rgba(0,0,0,0.8));
+            font-size:.7rem;color:var(--text-dim);
+        }
+
+        .load-more{
+            width:100%;padding:12px;border-radius:12px;border:1px dashed var(--border);
+            background:transparent;color:var(--text-dim);font-size:.85rem;
+            cursor:pointer;font-family:inherit;transition:all .2s;margin-top:16px;
+        }
+        .load-more:hover{border-color:var(--accent);color:var(--accent)}
+
+        .empty{text-align:center;color:var(--text-muted);padding:48px 0;font-size:.9rem}
+        .empty .icon{font-size:3rem;margin-bottom:12px;display:block}
+
+        .toast{
+            position:fixed;top:80px;left:50%;transform:translateX(-50%);
+            background:#22c55e;color:#fff;padding:8px 20px;border-radius:8px;
+            font-size:.85rem;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;
+        }
+        .toast.show{opacity:1}
+
+        .footer{text-align:center;padding:40px 24px;color:var(--text-muted);font-size:.8rem;border-top:1px solid var(--border);margin-top:60px}
+        .footer a{color:var(--text-dim)}
+
+        @media(max-width:768px){
+            .container{padding:70px 16px 40px}
+            .hero h1{font-size:1.5rem}
+            .history-grid{grid-template-columns:repeat(2,1fr)}
+            .btn{min-width:100px;padding:10px}
+        }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-inner">
+        <a href="/" class="nav-logo"><span style="font-size:1.3rem">🐟</span> 小鱼儿</a>
+        <a href="/" style="color:var(--text-dim);font-size:.85rem">← 返回首页</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="hero">
+        <h1>🖼️ 每日壁纸</h1>
+        <p>AI 每天为你生成一张独特壁纸</p>
+    </div>
+
+    <div class="wallpaper-card" id="wallpaperCard">
+        <img class="wallpaper-img loading" id="wallpaperImg" src="" alt="每日壁纸" onclick="openFull()">
+        <div class="wallpaper-info">
+            <div class="wallpaper-meta">
+                <span class="wallpaper-date" id="wallpaperDate">加载中…</span>
+                <span class="wallpaper-style" id="wallpaperStyle"></span>
+            </div>
+            <div class="wallpaper-prompt" id="wallpaperPrompt"></div>
+            <div class="wallpaper-actions">
+                <button class="btn primary" id="downloadBtn" onclick="downloadWallpaper()">⬇️ 下载壁纸</button>
+                <button class="btn" onclick="shareWallpaper()">📤 分享</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="history" id="historySection" style="display:none">
+        <h3>📅 往期壁纸</h3>
+        <div class="history-grid" id="historyGrid"></div>
+        <button class="load-more" id="loadMore" style="display:none" onclick="loadHistory()">加载更多…</button>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="footer">
+    <p>🐟 小鱼儿的数字花园 · <a href="/">tylerzhang.xyz</a></p>
+</div>
+
+<script>
+const API = '/api/daily-wallpaper';
+let currentWallpaper = null;
+let historyOffset = 0;
+
+// 初始化
+async function init() {
+    await loadToday();
+    await loadHistory();
+}
+
+async function loadToday() {
+    try {
+        const res = await fetch(API);
+        const data = await res.json();
+
+        if (data.ok && data.wallpaper) {
+            showWallpaper(data.wallpaper);
+        } else {
+            // 没有今日壁纸，尝试生成
+            await generateNew();
+        }
+    } catch (err) {
+        document.getElementById('wallpaperDate').textContent = '加载失败';
+    }
+}
+
+function showWallpaper(wp) {
+    currentWallpaper = wp;
+    const img = document.getElementById('wallpaperImg');
+    img.src = wp.image_catbox || wp.image_url;
+    img.classList.remove('loading');
+    img.onload = () => img.classList.remove('loading');
+    img.onerror = () => {
+        img.src = wp.image_url;
+        img.classList.remove('loading');
+    };
+
+    document.getElementById('wallpaperDate').textContent = formatDate(wp.date);
+    document.getElementById('wallpaperStyle').textContent = wp.style || '随机';
+    document.getElementById('wallpaperPrompt').textContent = wp.prompt;
+    document.getElementById('downloadBtn').disabled = false;
+}
+
+async function generateNew() {
+    try {
+        document.getElementById('wallpaperDate').textContent = '正在生成今日壁纸…';
+        document.getElementById('wallpaperImg').classList.add('loading');
+
+        const res = await fetch(API, { method: 'POST' });
+        const data = await res.json();
+
+        if (data.ok && data.wallpaper) {
+            showWallpaper(data.wallpaper);
+            showToast('今日壁纸已生成 ✨');
+        } else {
+            document.getElementById('wallpaperDate').textContent = '生成失败，请稍后再试';
+        }
+    } catch (err) {
+        document.getElementById('wallpaperDate').textContent = '生成失败';
+    }
+}
+
+async function downloadWallpaper() {
+    if (!currentWallpaper) return;
+    const url = currentWallpaper.image_catbox || currentWallpaper.image_url;
+    try {
+        const res = await fetch(url);
+        const blob = await res.blob();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `wallpaper-${currentWallpaper.date}.jpg`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+        showToast('已开始下载 📥');
+    } catch {
+        // 跨域下载失败，直接打开新窗口
+        window.open(url, '_blank');
+        showToast('已在新窗口打开，长按保存');
+    }
+}
+
+function shareWallpaper() {
+    if (!currentWallpaper) return;
+    const text = `今日壁纸：${currentWallpaper.style}\n${currentWallpaper.prompt}\n\n—— 来自 tylerzhang.xyz 每日壁纸`;
+    if (navigator.share) {
+        navigator.share({ title: '每日壁纸', text, url: window.location.href });
+    } else {
+        navigator.clipboard.writeText(text).then(() => showToast('已复制，去粘贴分享吧 ✨'));
+    }
+}
+
+function openFull() {
+    if (!currentWallpaper) return;
+    const url = currentWallpaper.image_catbox || currentWallpaper.image_url;
+    window.open(url, '_blank');
+}
+
+async function loadHistory() {
+    try {
+        // 获取最近的壁纸列表
+        const res = await fetch(`${API}?limit=20`);
+        const data = await res.json();
+
+        if (data.ok && data.wallpaper) {
+            // API 返回的是最新一张，我们需要一个列表端点
+            // 暂时用当前这张作为展示
+        }
+    } catch {}
+
+    // 历史功能暂时隐藏，等积累足够多的壁纸后再展示
+}
+
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    const now = new Date();
+    const diff = Math.floor((now - d) / 86400000);
+
+    if (diff === 0) return '📅 今天';
+    if (diff === 1) return '📅 昨天';
+    if (diff < 7) return `📅 ${diff}天前`;
+
+    return `📅 ${d.getMonth()+1}月${d.getDate()}日`;
+}
+
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+init();
+</script>
+
+</body>
+</html>
