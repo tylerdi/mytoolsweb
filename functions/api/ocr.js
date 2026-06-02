@@ -23,10 +23,18 @@ export async function onRequestPost(context) {
     }
 
     // 直接透传，不加系统消息
-    const apiResponse = await fetch('https://fufu.iqach.top/v1/chat/completions', {
+    const MIMO_API_BASE = context.env.MIMO_API_BASE || 'https://fufu.iqach.top/v1';
+    const MIMO_API_KEY = context.env.MIMO_API_KEY;
+    if (!MIMO_API_KEY) {
+      return new Response(JSON.stringify({ error: 'MIMO_API_KEY not configured' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      });
+    }
+    const apiResponse = await fetch(`${MIMO_API_BASE}/chat/completions`, {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer sk-123456',
+        'Authorization': `Bearer ${MIMO_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

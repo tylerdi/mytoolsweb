@@ -3,13 +3,16 @@
 import { createDb } from './_supabase.js';
 
 // AI 回复（温暖语气）
-async function getAiReply(content, mood) {
+async function getAiReply(content, mood, env) {
   try {
+    const MIMO_API_BASE = env.MIMO_API_BASE || 'https://fufu.iqach.top/v1';
+    const MIMO_API_KEY = env.MIMO_API_KEY;
+    if (!MIMO_API_KEY) throw new Error('MIMO_API_KEY not configured');
     const moodHint = mood && mood !== 'unknown' ? `（用户选择的心情：${mood}）` : '';
-    const res = await fetch('https://fufu.iqach.top/v1/chat/completions', {
+    const res = await fetch(`${MIMO_API_BASE}/chat/completions`, {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer sk-123456',
+        'Authorization': `Bearer ${MIMO_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -67,7 +70,7 @@ export async function onRequestPost(context) {
     const hole = result[0];
 
     // 异步获取 AI 回复并更新
-    const aiReply = await getAiReply(content, mood);
+    const aiReply = await getAiReply(content, mood, context.env);
     await db.update('tree_holes', { ai_reply: aiReply }, { id: `eq.${hole.id}` });
 
     return new Response(JSON.stringify({
