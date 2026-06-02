@@ -13,7 +13,7 @@ export async function onRequestPost(context) {
 
   try {
     const body = await request.json();
-    const { model = 'mimo-v2-omni', messages, max_tokens = 4096 } = body;
+    const { model = 'mimo-v2.5', messages, max_tokens = 4096 } = body;
 
     if (!messages || !Array.isArray(messages)) {
       return new Response(JSON.stringify({ error: 'messages 必须是数组' }), {

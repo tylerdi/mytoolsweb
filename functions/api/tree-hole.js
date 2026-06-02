@@ -16,7 +16,7 @@ async function getAiReply(content, mood, env) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'mimo-v2-flash',
+        model: 'mimo-v2.5',
         messages: [
           {
             role: 'system',

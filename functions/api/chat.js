@@ -22,7 +22,7 @@ export async function onRequestPost(context) {
     }
 
     const body = await request.json();
-    const { messages, model = 'mimo-v2-flash', stream = true, max_tokens = 500 } = body;
+    const { messages, model = 'mimo-v2.5', stream = true, max_tokens = 500 } = body;
 
     if (!messages || !Array.isArray(messages)) {
       return new Response(JSON.stringify({ error: 'messages 必须是数组' }), {

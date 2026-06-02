@@ -7,46 +7,20 @@ import { corsHeaders, corsResponse } from './metapi-auth.js';
 
 // 兼容别名（用户可用 GPT/Claude 模型名调用，底层走 MIMO）
 const MODEL_ALIASES = {
-  'gpt-4o':            'mimo-v2-pro',
-  'gpt-4o-mini':       'mimo-v2-flash',
+  'gpt-4o':            'mimo-v2.5-pro',
+  'gpt-4o-mini':       'mimo-v2.5',
   'gpt-4':             'mimo-v2.5-pro',
-  'gpt-3.5-turbo':     'mimo-v2-flash',
-  'claude-3.5-sonnet': 'mimo-v2-pro',
-  'claude-3-haiku':    'mimo-v2-flash',
+  'gpt-3.5-turbo':     'mimo-v2.5',
+  'claude-3.5-sonnet': 'mimo-v2.5-pro',
+  'claude-3-haiku':    'mimo-v2.5',
+  // 旧模型兼容
+  'mimo-v2-flash':     'mimo-v2.5',
+  'mimo-v2-omni':      'mimo-v2.5',
+  'mimo-v2-pro':       'mimo-v2.5-pro',
 };
 
-// 中转站提供的模型列表（带定价信息）
+// 中转站提供的模型列表（只支持 v2.5 和 v2.5-pro）
 const MODELS = [
-  {
-    id: 'mimo-v2-flash',
-    object: 'model',
-    created: 1700000000,
-    owned_by: 'mimo',
-    context_length: 256000,
-    max_tokens: 256000,
-    pricing: { input: 0.5, output: 1.0, unit: 'per_million_tokens', currency: 'CNY' },
-    description: '快速轻量模型，适合日常对话',
-  },
-  {
-    id: 'mimo-v2-pro',
-    object: 'model',
-    created: 1700000000,
-    owned_by: 'mimo',
-    context_length: 1048576,
-    max_tokens: 1048576,
-    pricing: { input: 2.0, output: 5.0, unit: 'per_million_tokens', currency: 'CNY' },
-    description: '专业级模型，复杂推理能力强',
-  },
-  {
-    id: 'mimo-v2-omni',
-    object: 'model',
-    created: 1700000000,
-    owned_by: 'mimo',
-    context_length: 256000,
-    max_tokens: 256000,
-    pricing: { input: 2.0, output: 5.0, unit: 'per_million_tokens', currency: 'CNY' },
-    description: '多模态模型，支持图片理解',
-  },
   {
     id: 'mimo-v2.5',
     object: 'model',
@@ -55,7 +29,7 @@ const MODELS = [
     context_length: 1048576,
     max_tokens: 1048576,
     pricing: { input: 3.0, output: 6.0, unit: 'per_million_tokens', currency: 'CNY' },
-    description: '2.5代基础模型，性能均衡',
+    description: '2.5代基础模型，支持多模态，性能均衡',
   },
   {
     id: 'mimo-v2.5-pro',

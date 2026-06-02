@@ -5,23 +5,24 @@
 
 import { validateApiKey, logUsage, deductBalance, corsHeaders, corsResponse, errorResponse } from '../metapi-auth.js';
 
-// MIMO 模型白名单
+// MIMO 模型白名单（只支持 v2.5 和 v2.5-pro）
 const ALLOWED_MODELS = [
-  'mimo-v2-flash',
-  'mimo-v2-pro',
-  'mimo-v2-omni',
   'mimo-v2.5',
   'mimo-v2.5-pro',
 ];
 
 // 兼容别名：用户传 GPT/Claude 模型名 → 映射到 MIMO
 const MODEL_ALIAS = {
-  'gpt-4o':            'mimo-v2-pro',
-  'gpt-4o-mini':       'mimo-v2-flash',
+  'gpt-4o':            'mimo-v2.5-pro',
+  'gpt-4o-mini':       'mimo-v2.5',
   'gpt-4':             'mimo-v2.5-pro',
-  'gpt-3.5-turbo':     'mimo-v2-flash',
-  'claude-3.5-sonnet': 'mimo-v2-pro',
-  'claude-3-haiku':    'mimo-v2-flash',
+  'gpt-3.5-turbo':     'mimo-v2.5',
+  'claude-3.5-sonnet': 'mimo-v2.5-pro',
+  'claude-3-haiku':    'mimo-v2.5',
+  // 旧模型兼容
+  'mimo-v2-flash':     'mimo-v2.5',
+  'mimo-v2-omni':      'mimo-v2.5',
+  'mimo-v2-pro':       'mimo-v2.5-pro',
 };
 
 const UPSTREAM_URL = 'https://fufu.iqach.top/v1/chat/completions';
@@ -44,7 +45,7 @@ export async function onRequestPost(context) {
       return errorResponse('Invalid JSON body', 400);
     }
 
-    const { model = 'mimo-v2-flash', messages, stream = false, max_tokens, temperature, top_p, ...rest } = body;
+    const { model = 'mimo-v2.5', messages, stream = false, max_tokens, temperature, top_p, ...rest } = body;
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return errorResponse('messages is required and must be a non-empty array', 400);
@@ -53,7 +54,7 @@ export async function onRequestPost(context) {
     // 3. 模型校验（支持别名）
     const resolvedModel = ALLOWED_MODELS.includes(model)
       ? model
-      : (MODEL_ALIAS[model] || 'mimo-v2-flash');
+      : (MODEL_ALIAS[model] || 'mimo-v2.5');
 
     // 4. 构造上游请求
     const upstreamBody = {
