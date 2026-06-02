@@ -2,7 +2,18 @@
 // TTS API - 代理小米 MIMO TTS（流式分段用）
 
 export async function onRequestPost(context) {
+  const { env } = context;
+  const MIMO_API_BASE = env.MIMO_API_BASE || 'https://fufu.iqach.top/v1';
+  const MIMO_API_KEY = env.MIMO_API_KEY;
+
   try {
+    if (!MIMO_API_KEY) {
+      return new Response(JSON.stringify({ error: 'MIMO_API_KEY not configured' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
     const { text, speed } = await context.request.json();
 
     if (!text) {
@@ -16,7 +27,7 @@ export async function onRequestPost(context) {
     const truncated = text.slice(0, 500);
 
     // 调用小米 MIMO TTS API（不传 voice，用默认）
-    const audioData = await generateMimoTTS(truncated, speed || 1.0);
+    const audioData = await generateMimoTTS(MIMO_API_BASE, MIMO_API_KEY, truncated, speed || 1.0);
 
     return new Response(audioData, {
       headers: {
@@ -34,10 +45,13 @@ export async function onRequestPost(context) {
   }
 }
 
-async function generateMimoTTS(text, speed) {
-  const res = await fetch('https://fufu.iqach.top/v1/audio/speech', {
+async function generateMimoTTS(baseUrl, apiKey, text, speed) {
+  const res = await fetch(`${baseUrl}/audio/speech`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify({
       model: 'mimo-v2-tts',
       input: text,

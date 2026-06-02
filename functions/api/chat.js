@@ -3,7 +3,9 @@
 // 返回 SSE 流式响应
 
 export async function onRequestPost(context) {
-  const { request } = context;
+  const { request, env } = context;
+  const MIMO_API_BASE = env.MIMO_API_BASE || 'https://fufu.iqach.top/v1';
+  const MIMO_API_KEY = env.MIMO_API_KEY;
 
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -12,6 +14,13 @@ export async function onRequestPost(context) {
   };
 
   try {
+    if (!MIMO_API_KEY) {
+      return new Response(JSON.stringify({ error: 'MIMO_API_KEY not configured' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      });
+    }
+
     const body = await request.json();
     const { messages, model = 'mimo-v2-flash', stream = true, max_tokens = 500 } = body;
 
@@ -35,10 +44,10 @@ export async function onRequestPost(context) {
 回复要简短有趣，不要超过 200 字。`,
     };
 
-    const apiResponse = await fetch('https://fufu.iqach.top/v1/chat/completions', {
+    const apiResponse = await fetch(`${MIMO_API_BASE}/chat/completions`, {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer sk-123456',
+        'Authorization': `Bearer ${MIMO_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
