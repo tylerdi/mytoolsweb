@@ -47,9 +47,7 @@ export async function onRequestPost(context) {
     console.log(`[CHAT] URL: ${MIMO_API_BASE}/chat/completions, Key: ${MIMO_API_KEY ? MIMO_API_KEY.slice(0,8)+'...' : 'MISSING'}`);
     const apiResponse = await fetch(`${MIMO_API_BASE}/chat/completions`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${MIMO_API_KEY}`,
-        'Content-Type': 'application/json',
+      headers: {        'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
         'Origin': 'https://tylerzhang.xyz',
         'Referer': 'https://tylerzhang.xyz/',

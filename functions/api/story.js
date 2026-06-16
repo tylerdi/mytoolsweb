@@ -50,9 +50,7 @@ export async function onRequestPost(context) {
 
     const response = await fetch(`${MIMO_API_BASE}/chat/completions`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${MIMO_API_KEY}`,
-        'Content-Type': 'application/json',
+      headers: {        'Content-Type': 'application/json',
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
         'Origin': 'https://tylerzhang.xyz',
         'Referer': 'https://tylerzhang.xyz/',
@@ -113,9 +111,7 @@ async function generateImagePrompt(apiBase, apiKey, storyStart, currentText, par
 
     const response = await fetch(`${apiBase}/chat/completions`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
+      headers: {        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         model: 'mimo-v2.5-free',
