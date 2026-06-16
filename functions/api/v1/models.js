@@ -14,7 +14,7 @@ const MODEL_ALIASES = {
   'claude-3.5-sonnet': 'mimo-v2.5-pro',
   'claude-3-haiku':    'mimo-v2.5',
   // 旧模型兼容
-  'mimo-v2-flash':     'mimo-v2.5',
+  'mimo-v2.5-free':     'mimo-v2.5',
   'mimo-v2-omni':      'mimo-v2.5',
   'mimo-v2-pro':       'mimo-v2.5-pro',
 };

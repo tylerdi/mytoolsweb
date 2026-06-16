@@ -5,7 +5,7 @@ import { createDb } from './_supabase.js';
 // AI 回复（温暖语气）
 async function getAiReply(content, mood, env) {
   try {
-    const MIMO_API_BASE = env.MIMO_API_BASE || 'https://fufu.iqach.top/v1';
+    const MIMO_API_BASE = env.MIMO_API_BASE || 'https://opencode.ai/zen/v1';
     const MIMO_API_KEY = env.MIMO_API_KEY;
     if (!MIMO_API_KEY) throw new Error('MIMO_API_KEY not configured');
     const moodHint = mood && mood !== 'unknown' ? `（用户选择的心情：${mood}）` : '';

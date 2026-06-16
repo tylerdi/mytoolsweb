@@ -5,7 +5,7 @@
 
 import { validateApiKey, logUsage, deductBalance, corsHeaders, corsResponse, errorResponse } from '../metapi-auth.js';
 
-const UPSTREAM_URL = 'https://fufu.iqach.top/v1/audio/speech';
+const UPSTREAM_URL = 'https://opencode.ai/zen/v1/audio/speech';
 
 // MIMO TTS 模型
 const TTS_MODELS = ['mimo-v2-tts', 'mimo-v2.5-tts', 'mimo-v2.5-tts-voicedesign', 'mimo-v2.5-tts-voiceclone'];

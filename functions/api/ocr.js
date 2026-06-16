@@ -23,7 +23,7 @@ export async function onRequestPost(context) {
     }
 
     // 直接透传，不加系统消息
-    const MIMO_API_BASE = context.env.MIMO_API_BASE || 'https://fufu.iqach.top/v1';
+    const MIMO_API_BASE = context.env.MIMO_API_BASE || 'https://opencode.ai/zen/v1';
     const MIMO_API_KEY = context.env.MIMO_API_KEY;
     if (!MIMO_API_KEY) {
       return new Response(JSON.stringify({ error: 'MIMO_API_KEY not configured' }), {

@@ -73,7 +73,7 @@ export async function onRequestPost(context) {
     const chosen = available[Math.floor(Math.random() * available.length)];
 
     // 调 AI 生成
-    const MIMO_API_BASE = context.env.MIMO_API_BASE || 'https://fufu.iqach.top/v1';
+    const MIMO_API_BASE = context.env.MIMO_API_BASE || 'https://opencode.ai/zen/v1';
     const MIMO_API_KEY = context.env.MIMO_API_KEY;
     if (!MIMO_API_KEY) {
       return new Response(JSON.stringify({ error: 'MIMO_API_KEY not configured' }), {

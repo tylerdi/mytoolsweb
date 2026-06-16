@@ -3,7 +3,7 @@
 
 export async function onRequestPost(context) {
   const { env } = context;
-  const MIMO_API_BASE = env.MIMO_API_BASE || 'https://fufu.iqach.top/v1';
+  const MIMO_API_BASE = env.MIMO_API_BASE || 'https://opencode.ai/zen/v1';
   const MIMO_API_KEY = env.MIMO_API_KEY;
 
   try {

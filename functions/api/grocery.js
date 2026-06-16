@@ -5,7 +5,7 @@ import { createDb } from './_supabase.js';
 // 杂货店老爷爷的回信
 async function getShopReply(content, mood, env) {
   try {
-    const MIMO_API_BASE = env.MIMO_API_BASE || 'https://fufu.iqach.top/v1';
+    const MIMO_API_BASE = env.MIMO_API_BASE || 'https://opencode.ai/zen/v1';
     const MIMO_API_KEY = env.MIMO_API_KEY;
     if (!MIMO_API_KEY) throw new Error('MIMO_API_KEY not configured');
     const moodHint = mood && mood !== 'unknown' ? `（来信人的心情：${mood}）` : '';

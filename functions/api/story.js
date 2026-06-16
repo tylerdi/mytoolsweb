@@ -4,7 +4,7 @@
 
 export async function onRequestPost(context) {
   const { request, env } = context;
-  const MIMO_API_BASE = env.MIMO_API_BASE || 'https://fufu.iqach.top/v1';
+  const MIMO_API_BASE = env.MIMO_API_BASE || 'https://opencode.ai/zen/v1';
   const MIMO_API_KEY = env.MIMO_API_KEY;
 
   const corsHeaders = {
@@ -55,7 +55,7 @@ export async function onRequestPost(context) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'mimo-v2-flash',
+        model: 'mimo-v2.5-free',
         messages: [{ role: 'user', content: systemPrompt }],
         max_tokens: 400,
         temperature: 0.9,
@@ -110,7 +110,7 @@ async function generateImagePrompt(apiBase, apiKey, storyStart, currentText, par
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'mimo-v2-flash',
+        model: 'mimo-v2.5-free',
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 100,
         temperature: 0.7,
