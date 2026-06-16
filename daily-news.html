@@ -20,69 +20,37 @@
     <meta name="keywords" content="每日新闻,热点新闻,AI新闻简报,今日热点,新闻速览">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐟</text></svg>">
     <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css?v2">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{--bg:#0a0a0a;--surface:#111;--border:#1e1e1e;--text:#e8e8e8;--text-dim:#888;--accent:#646cff;--accent-glow:rgba(100,108,255,0.25);--pink:#ff6b9d;--gradient:linear-gradient(135deg,var(--accent),var(--pink))}
-        html{scroll-behavior:smooth}
-        body{font-family:'LXGW WenKai',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.8;min-height:100vh}
-        a{color:var(--accent);text-decoration:none}
-        a:hover{text-decoration:underline}
-
-        .container{max-width:800px;margin:0 auto;padding:80px 20px 40px}
-
-        /* 头部 */
-        
-        
-        
-        .date-badge{display:inline-block;padding:4px 12px;background:rgba(100,108,255,0.1);border:1px solid rgba(100,108,255,0.2);border-radius:20px;font-size:0.8rem;color:var(--accent);margin-top:10px}
-
-        /* 新闻卡片 */
-        .news-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;transition:all 0.3s}
+        .news-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;transition:all .3s}
         .news-card:hover{border-color:var(--accent);box-shadow:0 4px 20px var(--accent-glow)}
         .news-card h3{font-size:1.1rem;margin-bottom:8px;line-height:1.4}
         .news-card h3 a{color:var(--text)}
         .news-card h3 a:hover{color:var(--accent)}
-        .news-meta{display:flex;align-items:center;gap:12px;font-size:0.8rem;color:var(--text-dim)}
-        .source-tag{padding:2px 8px;background:rgba(100,108,255,0.1);border-radius:4px;font-size:0.75rem}
+        .news-meta{display:flex;align-items:center;gap:12px;font-size:.8rem;color:var(--text-dim)}
+        .source-tag{padding:2px 8px;background:rgba(100,108,255,.1);border-radius:4px;font-size:.75rem}
         .hot-tag{color:#ff6b9d}
-        .summary{color:var(--text-dim);font-size:0.9rem;margin-top:8px;line-height:1.6}
-
-        /* 重要性标记 */
+        .summary{color:var(--text-dim);font-size:.9rem;margin-top:8px;line-height:1.6}
         .importance{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
         .importance-5{background:#ff4444}
         .importance-4{background:#ff8800}
         .importance-3{background:#ffcc00}
         .importance-2{background:#44bb44}
         .importance-1{background:#4488ff}
-
-        /* 加载状态 */
         .loading{text-align:center;padding:40px;color:var(--text-dim)}
         .loading .spinner{display:inline-block;width:24px;height:24px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin-right:8px}
         @keyframes spin{to{transform:rotate(360deg)}}
-
-        /* 空状态 */
         .empty{text-align:center;padding:60px 20px;color:var(--text-dim)}
         .empty .emoji{font-size:3rem;margin-bottom:16px}
-
-        /* 刷新按钮 */
-        .refresh-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--accent);color:white;border:none;border-radius:8px;font-size:0.85rem;cursor:pointer;transition:all 0.2s;margin-top:16px}
+        .refresh-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--accent);color:white;border:none;border-radius:8px;font-size:.85rem;cursor:pointer;transition:all .2s;margin-top:16px}
         .refresh-btn:hover{transform:scale(1.05)}
-        .refresh-btn:disabled{opacity:0.5;cursor:not-allowed}
-
-        /* 分类标签 */
+        .refresh-btn:disabled{opacity:.5;cursor:not-allowed}
         .category-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:24px}
-        .category-tab{padding:6px 14px;background:var(--surface);border:1px solid var(--border);border-radius:20px;font-size:0.8rem;color:var(--text-dim);cursor:pointer;transition:all 0.2s}
+        .category-tab{padding:6px 14px;background:var(--surface);border:1px solid var(--border);border-radius:20px;font-size:.8rem;color:var(--text-dim);cursor:pointer;transition:all .2s}
         .category-tab.active{background:var(--accent);color:white;border-color:var(--accent)}
         .category-tab:hover{border-color:var(--accent)}
-
-        /* 返回首页 */
-        .back-home{display:inline-flex;align-items:center;gap:6px;color:var(--text-dim);font-size:0.85rem;margin-bottom:20px}
+        .back-home{display:inline-flex;align-items:center;gap:6px;color:var(--text-dim);font-size:.85rem;margin-bottom:20px}
         .back-home:hover{color:var(--accent);text-decoration:none}
-
-        @media(max-width:768px){
-            .container{padding:70px 16px 30px}
-            
-        }
     </style>
 </head>
 <body>
