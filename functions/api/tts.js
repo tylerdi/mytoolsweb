@@ -52,7 +52,7 @@ async function generateMimoTTS(baseUrl, apiKey, text, speed) {
         'Content-Type': 'application/json',
       },
     body: JSON.stringify({
-      model: 'mimo-v2-tts',
+      model: env.MIMO_TTS_MODEL || 'mimo-v2-tts',
       input: text,
       voice: '',
     }),

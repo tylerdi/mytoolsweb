@@ -86,7 +86,7 @@ ${roundContext}
         'Content-Type': 'application/json',
       },
     body: JSON.stringify({
-      model: 'mimo-v2.5-free',
+      model: env.MIMO_MODEL || 'mimo-v2.5-free',
       messages: [{ role: 'user', content: systemPrompt }],
       max_tokens: 600,
       temperature: 0.8,

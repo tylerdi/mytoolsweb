@@ -15,7 +15,7 @@ async function getShopReply(content, mood, env) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'mimo-v2.5-free',
+        model: env.MIMO_MODEL || 'mimo-v2.5-free',
         messages: [
           {
             role: 'system',
