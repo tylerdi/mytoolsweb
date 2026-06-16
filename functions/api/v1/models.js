@@ -8,21 +8,21 @@ import { corsHeaders, corsResponse } from './metapi-auth.js';
 // 兼容别名（用户可用 GPT/Claude 模型名调用，底层走 MIMO）
 const MODEL_ALIASES = {
   'gpt-4o':            'mimo-v2.5-pro',
-  'gpt-4o-mini':       'mimo-v2.5',
+  'gpt-4o-mini':       'mimo-v2.5-free',
   'gpt-4':             'mimo-v2.5-pro',
-  'gpt-3.5-turbo':     'mimo-v2.5',
+  'gpt-3.5-turbo':     'mimo-v2.5-free',
   'claude-3.5-sonnet': 'mimo-v2.5-pro',
-  'claude-3-haiku':    'mimo-v2.5',
+  'claude-3-haiku':    'mimo-v2.5-free',
   // 旧模型兼容
-  'mimo-v2.5-free':     'mimo-v2.5',
-  'mimo-v2-omni':      'mimo-v2.5',
+  'mimo-v2.5-free':     'mimo-v2.5-free',
+  'mimo-v2-omni':      'mimo-v2.5-free',
   'mimo-v2-pro':       'mimo-v2.5-pro',
 };
 
 // 中转站提供的模型列表（只支持 v2.5 和 v2.5-pro）
 const MODELS = [
   {
-    id: 'mimo-v2.5',
+    id: 'mimo-v2.5-free',
     object: 'model',
     created: 1700000000,
     owned_by: 'mimo',

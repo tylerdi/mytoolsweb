@@ -86,7 +86,7 @@ export async function onRequestPost(context) {
         'Sec-Fetch-Site': 'cross-site',
       },
       body: JSON.stringify({
-        model: 'mimo-v2.5',
+        model: 'mimo-v2.5-free',
         messages: [
           { role: 'system', content: config.system },
           { role: 'user', content: input || '随机来一个' },

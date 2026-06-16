@@ -94,7 +94,7 @@ export async function onRequestPost(context) {
         'Sec-Fetch-Site': 'cross-site',
       },
       body: JSON.stringify({
-        model: 'mimo-v2.5',
+        model: 'mimo-v2.5-free',
         messages: [
           { role: 'system', content: '你是一个有趣的内容生成器。严格按要求输出，不要加任何多余的话。' },
           { role: 'user', content: chosen.prompt },

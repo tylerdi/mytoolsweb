@@ -22,7 +22,7 @@ async function getAiReply(content, mood, env) {
         'Sec-Fetch-Site': 'cross-site',
       },
       body: JSON.stringify({
-        model: 'mimo-v2.5',
+        model: 'mimo-v2.5-free',
         messages: [
           {
             role: 'system',
