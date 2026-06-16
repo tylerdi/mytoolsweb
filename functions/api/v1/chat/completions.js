@@ -25,7 +25,7 @@ const MODEL_ALIAS = {
   'mimo-v2-pro':       'mimo-v2.5-pro',
 };
 
-const UPSTREAM_URL = 'https://opencode.ai/zen/v1/chat/completions';
+const getUpstreamUrl = (env) => (env.MIMO_API_BASE || '') + '/chat/completions';
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -68,7 +68,7 @@ export async function onRequestPost(context) {
     if (top_p !== undefined) upstreamBody.top_p = top_p;
 
     // 5. 调用上游 MIMO API
-    const upstreamRes = await fetch(UPSTREAM_URL, {
+    const upstreamRes = await fetch(getUpstreamUrl(env), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

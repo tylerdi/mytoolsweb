@@ -64,7 +64,7 @@ export async function onRequestPost(context) {
 
     const config = PROMPTS[type];
 
-    const MIMO_API_BASE = context.env.MIMO_API_BASE || 'https://opencode.ai/zen/v1';
+    const MIMO_API_BASE = env.MIMO_API_BASE;
     const MIMO_API_KEY = context.env.MIMO_API_KEY;
     if (!MIMO_API_KEY) {
       return new Response(JSON.stringify({ error: 'MIMO_API_KEY not configured' }), {

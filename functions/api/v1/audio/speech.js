@@ -5,7 +5,7 @@
 
 import { validateApiKey, logUsage, deductBalance, corsHeaders, corsResponse, errorResponse } from '../metapi-auth.js';
 
-const UPSTREAM_URL = 'https://opencode.ai/zen/v1/audio/speech';
+const getUpstreamUrl = (env) => (env.MIMO_API_BASE || '') + '/audio/speech';
 
 // MIMO TTS 模型
 const TTS_MODELS = ['mimo-v2-tts', 'mimo-v2.5-tts', 'mimo-v2.5-tts-voicedesign', 'mimo-v2.5-tts-voiceclone'];
@@ -49,7 +49,7 @@ export async function onRequestPost(context) {
     if (speed) upstreamBody.speed = speed;
 
     // 5. 调用上游
-    const upstreamRes = await fetch(UPSTREAM_URL, {
+    const upstreamRes = await fetch(getUpstreamUrl(env), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(upstreamBody),
