@@ -44,6 +44,7 @@ export async function onRequestPost(context) {
 回复要简短有趣，不要超过 200 字。`,
     };
 
+    console.log(`[CHAT] URL: ${MIMO_API_BASE}/chat/completions, Key: ${MIMO_API_KEY ? MIMO_API_KEY.slice(0,8)+'...' : 'MISSING'}`);
     const apiResponse = await fetch(`${MIMO_API_BASE}/chat/completions`, {
       method: 'POST',
       headers: {
