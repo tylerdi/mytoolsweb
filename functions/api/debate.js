@@ -85,6 +85,9 @@ ${roundContext}
     headers: {
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+      'Origin': 'https://tylerzhang.xyz',
+      'Referer': 'https://tylerzhang.xyz/',
     },
     body: JSON.stringify({
       model: 'mimo-v2.5-free',
