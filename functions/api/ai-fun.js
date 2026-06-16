@@ -75,15 +75,8 @@ export async function onRequestPost(context) {
 
     const res = await fetch(`${MIMO_API_BASE}/chat/completions`, {
       method: 'POST',
-      headers: {        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-        'Origin': 'https://tylerzhang.xyz',
-        'Referer': 'https://tylerzhang.xyz/',
-        'Accept': 'application/json',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Sec-Fetch-Dest': 'empty',
-        'Sec-Fetch-Mode': 'cors',
-        'Sec-Fetch-Site': 'cross-site',
+      headers: {
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         model: 'mimo-v2.5-free',
