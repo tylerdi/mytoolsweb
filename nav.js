@@ -14,6 +14,9 @@
     {href:'/grocery.html', label:'杂货店', icon:'🏪'},
     {href:'/daily-wallpaper.html', label:'壁纸', icon:'🖼️'},
     {href:'/ai-fun.html', label:'趣味', icon:'🎭'},
+    {href:'/ai-debate.html', label:'辩论', icon:'⚔️'},
+    {href:'/story-radio.html', label:'故事电台', icon:'📻'},
+    {href:'/deep-sea-museum.html', label:'深海博物馆', icon:'🌊'},
     {href:'/about.html', label:'关于', icon:'👤'}
   ];
   var path = location.pathname.replace(/\.html$/,'').replace(/\/$/,'') || '/';

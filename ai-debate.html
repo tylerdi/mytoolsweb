@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 辩论场 - 正反方实时对决 | 小鱼儿的数字花园</title>
+    <link rel="stylesheet" href="/style.css">
+    <meta name="description" content="AI 辩论场：输入一个话题，AI 正反方实时辩论，投票判定胜负。免费在线 AI 辩论体验。">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚔️</text></svg>">
+    <style>
+        .debate-page{padding-top:calc(var(--nav-h) + 24px);max-width:900px;margin:0 auto;padding-left:24px;padding-right:24px}
+        .debate-hero{text-align:center;padding:40px 0 32px}
+        .debate-hero h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;margin-bottom:.5rem}
+        .debate-hero h1 span{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .debate-hero p{color:var(--text-dim);font-size:.9rem}
+
+        /* Topic Input */
+        .topic-input-wrap{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:32px}
+        .topic-input-row{display:flex;gap:12px;align-items:stretch}
+        .topic-input{flex:1;padding:14px 18px;border-radius:12px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:1rem;outline:none;transition:border-color .2s}
+        .topic-input:focus{border-color:var(--accent)}
+        .topic-input::placeholder{color:var(--text-muted)}
+        .debate-btn{padding:14px 28px;border-radius:12px;background:var(--gradient);color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:1rem;font-weight:700;transition:all .3s;white-space:nowrap}
+        .debate-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--accent-glow)}
+        .debate-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+        /* Topic Suggestions */
+        .suggestions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+        .suggestion{padding:6px 14px;border-radius:100px;background:rgba(100,108,255,.08);border:1px solid rgba(100,108,255,.12);color:var(--accent);font-size:.78rem;cursor:pointer;transition:all .2s}
+        .suggestion:hover{background:rgba(100,108,255,.15);transform:translateY(-1px)}
+
+        /* Debate Arena */
+        .arena{display:none;margin-bottom:40px}
+        .arena.active{display:block}
+        .arena-topic{text-align:center;padding:20px;margin-bottom:24px}
+        .arena-topic h2{font-size:1.3rem;font-weight:800}
+        .arena-topic .topic-tag{display:inline-block;padding:4px 14px;border-radius:100px;background:rgba(100,108,255,.1);color:var(--accent);font-size:.75rem;margin-top:8px}
+
+        /* Round Tabs */
+        .round-tabs{display:flex;justify-content:center;gap:8px;margin-bottom:24px}
+        .round-tab{padding:8px 20px;border-radius:100px;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);cursor:pointer;font-size:.82rem;font-weight:600;transition:all .2s}
+        .round-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+        .round-tab:hover:not(.active){border-color:var(--accent);color:var(--text)}
+
+        /* Debate Cards */
+        .debate-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+        .debate-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;position:relative;overflow:hidden;transition:all .3s}
+        .debate-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+        .debate-card.pro::before{background:linear-gradient(90deg,#22c55e,#16a34a)}
+        .debate-card.con::before{background:linear-gradient(90deg,#ef4444,#dc2626)}
+        .debate-card.pro{border-color:rgba(34,197,94,.2)}
+        .debate-card.con{border-color:rgba(239,68,68,.2)}
+        .debate-card-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+        .side-badge{padding:4px 12px;border-radius:100px;font-size:.75rem;font-weight:700}
+        .pro .side-badge{background:rgba(34,197,94,.15);color:#22c55e}
+        .con .side-badge{background:rgba(239,68,68,.15);color:#ef4444}
+        .side-icon{font-size:1.4rem}
+        .debate-card h3{font-size:.95rem;font-weight:700}
+        .debate-card .argument{font-size:.88rem;color:var(--text);line-height:1.8;margin-bottom:16px;min-height:80px}
+        .debate-card .argument.loading{color:var(--text-muted);font-style:italic}
+        .argument::after{content:'';display:inline-block;width:2px;height:1em;background:var(--accent);animation:blink .8s step-end infinite;margin-left:2px;vertical-align:text-bottom}
+        .argument.done::after{display:none}
+
+        /* Vote */
+        .vote-section{text-align:center;padding:24px;background:var(--surface);border:1px solid var(--border);border-radius:16px}
+        .vote-section h3{font-size:1rem;font-weight:700;margin-bottom:16px}
+        .vote-btns{display:flex;justify-content:center;gap:16px}
+        .vote-btn{padding:12px 32px;border-radius:12px;border:2px solid var(--border);background:var(--bg);color:var(--text);font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:8px}
+        .vote-btn.pro-vote:hover{border-color:#22c55e;color:#22c55e;background:rgba(34,197,94,.05)}
+        .vote-btn.con-vote:hover{border-color:#ef4444;color:#ef4444;background:rgba(239,68,68,.05)}
+        .vote-btn.voted{pointer-events:none;opacity:.6}
+        .vote-btn.voted.selected{opacity:1;border-color:currentColor;background:rgba(100,108,255,.05)}
+        .vote-count{font-size:.8rem;color:var(--text-dim);margin-top:12px}
+
+        /* History */
+        .history-section{margin-top:40px}
+        .history-section h2{font-size:1.2rem;font-weight:800;margin-bottom:16px;text-align:center}
+        .history-list{display:flex;flex-direction:column;gap:10px}
+        .history-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;cursor:pointer;transition:all .2s;display:flex;justify-content:space-between;align-items:center}
+        .history-item:hover{border-color:var(--accent);transform:translateX(4px)}
+        .history-item .topic{font-size:.9rem;font-weight:600}
+        .history-item .meta{font-size:.75rem;color:var(--text-dim)}
+
+        @media(max-width:768px){
+            .debate-grid{grid-template-columns:1fr}
+            .topic-input-row{flex-direction:column}
+            .vote-btns{flex-direction:column;align-items:stretch}
+        }
+    </style>
+</head>
+<body>
+    <div class="debate-page">
+        <div class="debate-hero">
+            <h1>⚔️ <span>AI 辩论场</span></h1>
+            <p>输入一个话题，AI 正反方实时对决，你来判定胜负</p>
+        </div>
+
+        <div class="topic-input-wrap">
+            <div class="topic-input-row">
+                <input type="text" class="topic-input" id="topicInput" placeholder="输入辩题，比如：AI 会取代程序员吗？" maxlength="200">
+                <button class="debate-btn" id="debateBtn" onclick="startDebate()">⚔️ 开始辩论</button>
+            </div>
+            <div class="suggestions">
+                <span class="suggestion" onclick="setTopic('远程办公 vs 坐班，哪个更高效')">远程办公 vs 坐班</span>
+                <span class="suggestion" onclick="setTopic('AI 会取代程序员吗')">AI 取代程序员</span>
+                <span class="suggestion" onclick="setTopic('社交媒体利大于弊还是弊大于利')">社交媒体利弊</span>
+                <span class="suggestion" onclick="setTopic('大学教育还有必要吗')">大学教育必要性</span>
+                <span class="suggestion" onclick="setTopic('加密货币是未来还是泡沫')">加密货币未来</span>
+                <span class="suggestion" onclick="setTopic('人类应该殖民火星吗')">殖民火星</span>
+            </div>
+        </div>
+
+        <div class="arena" id="arena">
+            <div class="arena-topic">
+                <h2 id="arenaTopic"></h2>
+                <span class="topic-tag" id="roundTag">第 1 轮 · 立论</span>
+            </div>
+
+            <div class="round-tabs">
+                <span class="round-tab active" onclick="switchRound(1)" id="tab1">🔵 第1轮 立论</span>
+                <span class="round-tab" onclick="switchRound(2)" id="tab2">🟡 第2轮 驳论</span>
+                <span class="round-tab" onclick="switchRound(3)" id="tab3">🔴 第3轮 总结</span>
+            </div>
+
+            <div class="debate-grid">
+                <div class="debate-card pro">
+                    <div class="debate-card-header">
+                        <span class="side-icon">🟢</span>
+                        <span class="side-badge">正方 · 支持</span>
+                        <h3 id="proTitle">正方选手</h3>
+                    </div>
+                    <div class="argument loading" id="proArgument">等待辩题...</div>
+                </div>
+                <div class="debate-card con">
+                    <div class="debate-card-header">
+                        <span class="side-icon">🔴</span>
+                        <span class="side-badge">反方 · 反对</span>
+                        <h3 id="conTitle">反方选手</h3>
+                    </div>
+                    <div class="argument loading" id="conArgument">等待辩题...</div>
+                </div>
+            </div>
+
+            <div class="vote-section" id="voteSection" style="display:none">
+                <h3>🗳️ 你支持哪一方？</h3>
+                <div class="vote-btns">
+                    <button class="vote-btn pro-vote" onclick="vote('pro')">🟢 支持正方</button>
+                    <button class="vote-btn con-vote" onclick="vote('con')">🔴 支持反方</button>
+                </div>
+                <div class="vote-count" id="voteCount"></div>
+            </div>
+        </div>
+
+        <div class="history-section" id="historySection" style="display:none">
+            <h2>📋 历史辩论</h2>
+            <div class="history-list" id="historyList"></div>
+        </div>
+    </div>
+
+    <footer class="footer">Powered by <a href="https://openclaw.ai">OpenClaw</a> · 🐟 小鱼儿自主维护 · © 2026 Tyler</footer>
+
+    <script src="/nav.js"></script>
+    <script>
+    let currentTopic = '';
+    let currentRound = 1;
+    let debateData = {};
+    let votes = JSON.parse(localStorage.getItem('debate_votes') || '{}');
+    let history = JSON.parse(localStorage.getItem('debate_history') || '[]');
+
+    // Placeholder names for debaters
+    const proNames = ['逻辑侠', '真理卫士', '理性之光', '数据派', '思辨者'];
+    const conNames = ['反驳王', '批判者', '质疑侠', '逆思维', '挑战者'];
+
+    function setTopic(t) {
+        document.getElementById('topicInput').value = t;
+        document.getElementById('topicInput').focus();
+    }
+
+    function showHistory() {
+        const section = document.getElementById('historySection');
+        const list = document.getElementById('historyList');
+        if (history.length === 0) { section.style.display = 'none'; return; }
+        section.style.display = 'block';
+        list.innerHTML = history.slice(-10).reverse().map((h, i) =>
+            `<div class="history-item" onclick="replayDebate(${history.length - 1 - i})">
+                <span class="topic">⚔️ ${escHtml(h.topic)}</span>
+                <span class="meta">${h.rounds} 轮 · ${h.time}</span>
+            </div>`
+        ).join('');
+    }
+
+    function replayDebate(index) {
+        const h = history[index];
+        currentTopic = h.topic;
+        debateData = h.data || {};
+        currentRound = h.rounds || 3;
+        document.getElementById('topicInput').value = h.topic;
+        document.getElementById('arenaTopic').textContent = '⚔️ ' + h.topic;
+        document.getElementById('arena').classList.add('active');
+        for (let r = 1; r <= 3; r++) {
+            if (debateData[r]) {
+                showRound(r, debateData[r]);
+            }
+        }
+        switchRound(currentRound);
+        showVoteSection();
+        window.scrollTo({ top: 300, behavior: 'smooth' });
+    }
+
+    async function startDebate() {
+        const input = document.getElementById('topicInput');
+        const topic = input.value.trim();
+        if (!topic) { input.focus(); return; }
+
+        currentTopic = topic;
+        currentRound = 1;
+        debateData = {};
+
+        document.getElementById('arenaTopic').textContent = '⚔️ ' + topic;
+        document.getElementById('arena').classList.add('active');
+        document.getElementById('voteSection').style.display = 'none';
+        document.getElementById('proTitle').textContent = proNames[Math.floor(Math.random() * proNames.length)];
+        document.getElementById('conTitle').textContent = conNames[Math.floor(Math.random() * conNames.length)];
+
+        switchRound(1);
+        await fetchRound(1);
+    }
+
+    async function fetchRound(round) {
+        const proArg = document.getElementById('proArgument');
+        const conArg = document.getElementById('conArgument');
+
+        proArg.className = 'argument loading';
+        conArg.className = 'argument loading';
+        proArg.textContent = '正方正在组织论据...';
+        conArg.textContent = '反方正在组织论据...';
+
+        document.getElementById('debateBtn').disabled = true;
+
+        try {
+            const res = await fetch('/api/debate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ topic: currentTopic, round }),
+            });
+            const data = await res.json();
+            if (data.error) throw new Error(data.error);
+
+            debateData[round] = data;
+            showRound(round, data);
+
+            // Save to history
+            const now = new Date();
+            const timeStr = `${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+            const existingIdx = history.findIndex(h => h.topic === currentTopic);
+            if (existingIdx >= 0) {
+                history[existingIdx].rounds = Math.max(history[existingIdx].rounds || 1, round);
+                history[existingIdx].data = { ...history[existingIdx].data, [round]: data };
+                history[existingIdx].time = timeStr;
+            } else {
+                history.push({ topic: currentTopic, rounds: round, data: { [round]: data }, time: timeStr });
+            }
+            localStorage.setItem('debate_history', JSON.stringify(history.slice(-20)));
+            showHistory();
+
+            if (round === 3) showVoteSection();
+        } catch (err) {
+            proArg.className = 'argument';
+            conArg.className = 'argument';
+            proArg.textContent = '（生成失败：' + err.message + '）';
+            conArg.textContent = '（生成失败：' + err.message + '）';
+        }
+
+        document.getElementById('debateBtn').disabled = false;
+    }
+
+    function showRound(round, data) {
+        const proArg = document.getElementById('proArgument');
+        const conArg = document.getElementById('conArgument');
+        proArg.className = 'argument done';
+        conArg.className = 'argument done';
+        proArg.textContent = data.pro?.content || '（无内容）';
+        conArg.textContent = data.con?.content || '（无内容）';
+
+        const labels = ['第1轮 · 立论', '第2轮 · 驳论', '第3轮 · 总结'];
+        document.getElementById('roundTag').textContent = labels[round - 1];
+
+        for (let r = 1; r <= 3; r++) {
+            document.getElementById('tab' + r).classList.toggle('active', r === round);
+        }
+    }
+
+    function switchRound(round) {
+        if (debateData[round]) {
+            showRound(round, debateData[round]);
+        } else if (round === 1 && !debateData[1]) {
+            // Haven't started yet
+            return;
+        } else {
+            currentRound = round;
+            fetchRound(round);
+        }
+        currentRound = round;
+    }
+
+    function showVoteSection() {
+        const section = document.getElementById('voteSection');
+        section.style.display = 'block';
+        const voteKey = currentTopic;
+        if (votes[voteKey]) {
+            document.querySelectorAll('.vote-btn').forEach(b => b.classList.add('voted'));
+            document.querySelector('.vote-btn.' + votes[voteKey] + '-vote').classList.add('selected');
+            document.getElementById('voteCount').textContent = '你已投票：' + (votes[voteKey] === 'pro' ? '🟢 正方' : '🔴 反方');
+        }
+    }
+
+    function vote(side) {
+        const voteKey = currentTopic;
+        if (votes[voteKey]) return;
+        votes[voteKey] = side;
+        localStorage.setItem('debate_votes', JSON.stringify(votes));
+        document.querySelectorAll('.vote-btn').forEach(b => b.classList.add('voted'));
+        document.querySelector('.vote-btn.' + side + '-vote').classList.add('selected');
+        document.getElementById('voteCount').textContent = '你已投票：' + (side === 'pro' ? '🟢 正方' : '🔴 反方');
+    }
+
+    function escHtml(s) {
+        const d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+    }
+
+    // Enter key to start
+    document.getElementById('topicInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') startDebate();
+    });
+
+    showHistory();
+    </script>
+</body>
+</html>

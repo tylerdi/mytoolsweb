@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 有声故事电台 - 有声绘本生成器 | 小鱼儿的数字花园</title>
+    <link rel="stylesheet" href="/style.css">
+    <meta name="description" content="AI 有声故事电台：输入故事开头，AI 自动续写 + 配音 + 插画，生成专属有声绘本。免费在线体验。">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📻</text></svg>">
+    <style>
+        .story-page{padding-top:calc(var(--nav-h) + 24px);max-width:800px;margin:0 auto;padding-left:24px;padding-right:24px}
+        .story-hero{text-align:center;padding:40px 0 32px}
+        .story-hero h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;margin-bottom:.5rem}
+        .story-hero h1 span{background:linear-gradient(135deg,#d4a853,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .story-hero p{color:var(--text-dim);font-size:.9rem}
+
+        /* Input */
+        .story-input-wrap{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:32px}
+        .story-textarea{width:100%;min-height:100px;padding:14px 18px;border-radius:12px;background:var(--bg);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:.95rem;outline:none;resize:vertical;line-height:1.7;transition:border-color .2s}
+        .story-textarea:focus{border-color:var(--accent)}
+        .story-textarea::placeholder{color:var(--text-muted)}
+        .story-actions{display:flex;gap:12px;margin-top:14px;align-items:center}
+        .story-btn{padding:12px 24px;border-radius:12px;background:linear-gradient(135deg,#d4a853,#f97316);color:#fff;border:none;cursor:pointer;font-family:inherit;font-size:.9rem;font-weight:700;transition:all .3s}
+        .story-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(249,115,22,.3)}
+        .story-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+        .story-btn.secondary{background:var(--surface);border:1px solid var(--border);color:var(--text)}
+        .story-btn.secondary:hover{border-color:var(--accent)}
+        .char-count{font-size:.75rem;color:var(--text-muted);margin-left:auto}
+
+        /* Suggestions */
+        .story-suggestions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+        .story-sug{padding:6px 14px;border-radius:100px;background:rgba(212,168,83,.08);border:1px solid rgba(212,168,83,.15);color:#d4a853;font-size:.78rem;cursor:pointer;transition:all .2s}
+        .story-sug:hover{background:rgba(212,168,83,.15)}
+
+        /* Story Book */
+        .book{display:none;margin-bottom:40px}
+        .book.active{display:block}
+        .book-title{text-align:center;padding:16px;margin-bottom:24px}
+        .book-title h2{font-size:1.2rem;font-weight:800}
+        .book-title .progress{display:flex;justify-content:center;gap:6px;margin-top:12px}
+        .book-title .dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:all .3s}
+        .book-title .dot.active{background:#d4a853}
+        .book-title .dot.done{background:#22c55e}
+
+        /* Paragraph Card */
+        .para-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;opacity:0;transform:translateY(20px);transition:all .5s}
+        .para-card.visible{opacity:1;transform:translateY(0)}
+        .para-card .para-num{font-size:.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+        .para-card .para-text{font-size:1rem;line-height:2;color:var(--text);margin-bottom:16px;min-height:40px}
+        .para-card .para-text.loading{color:var(--text-muted);font-style:italic}
+        .para-card .para-img{width:100%;border-radius:12px;margin-bottom:16px;max-height:300px;object-fit:cover;background:var(--bg)}
+        .para-card .para-img.loading{height:200px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:.85rem}
+        .para-card .para-controls{display:flex;gap:8px;align-items:center}
+        .play-btn{padding:8px 16px;border-radius:10px;background:rgba(212,168,83,.1);border:1px solid rgba(212,168,83,.2);color:#d4a853;cursor:pointer;font-family:inherit;font-size:.82rem;font-weight:600;transition:all .2s;display:flex;align-items:center;gap:6px}
+        .play-btn:hover{background:rgba(212,168,83,.2)}
+        .play-btn:disabled{opacity:.4;cursor:not-allowed}
+        .play-btn.playing{background:rgba(212,168,83,.2);border-color:#d4a853}
+
+        /* Player Bar */
+        .player-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,10,.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:12px 24px;display:none;z-index:100}
+        .player-bar.active{display:flex}
+        .player-bar .player-info{flex:1;font-size:.85rem;color:var(--text)}
+        .player-bar .player-controls{display:flex;gap:8px}
+        .player-bar button{background:none;border:1px solid var(--border);color:var(--text);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:.8rem}
+        .player-bar button:hover{border-color:var(--accent)}
+
+        /* Completion */
+        .completion{text-align:center;padding:40px 20px;display:none}
+        .completion.active{display:block}
+        .completion h2{font-size:1.4rem;font-weight:900;margin-bottom:.5rem}
+        .completion p{color:var(--text-dim);margin-bottom:20px}
+        .completion .share-btns{display:flex;justify-content:center;gap:12px}
+
+        @media(max-width:768px){
+            .story-actions{flex-direction:column}
+            .char-count{margin-left:0}
+        }
+    </style>
+</head>
+<body>
+    <div class="story-page">
+        <div class="story-hero">
+            <h1>📻 <span>有声故事电台</span></h1>
+            <p>写一句话开头，AI 续写故事 + 配音 + 插画，生成专属有声绘本</p>
+        </div>
+
+        <div class="story-input-wrap" id="inputWrap">
+            <textarea class="story-textarea" id="storyInput" placeholder="从前有一条住在深海的小鱼，它有一个秘密..." maxlength="500"></textarea>
+            <div class="story-actions">
+                <button class="story-btn" id="startBtn" onclick="startStory()">✨ 开始创作</button>
+                <span class="char-count"><span id="charCount">0</span>/500</span>
+            </div>
+            <div class="story-suggestions">
+                <span class="story-sug" onclick="setPrompt('从前有一条住在深海的小鱼，它有一个秘密')">深海小鱼</span>
+                <span class="story-sug" onclick="setPrompt('一个程序员在凌晨三点收到了一封来自未来的邮件')">未来邮件</span>
+                <span class="story-sug" onclick="setPrompt('在一座漂浮的城市里，天空是紫色的')">漂浮城市</span>
+                <span class="story-sug" onclick="setPrompt('小女孩在阁楼发现了一本会说话的旧书')">会说话的书</span>
+            </div>
+        </div>
+
+        <div class="book" id="book">
+            <div class="book-title">
+                <h2 id="bookTitle"></h2>
+                <div class="progress" id="progress"></div>
+            </div>
+            <div id="paragraphs"></div>
+        </div>
+
+        <div class="completion" id="completion">
+            <h2>🎉 故事完成！</h2>
+            <p>你的专属有声绘本已生成</p>
+            <div class="share-btns">
+                <button class="story-btn secondary" onclick="resetStory()">✨ 再创作一个</button>
+                <button class="story-btn" onclick="playAll()">🔊 从头播放</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="player-bar" id="playerBar">
+        <div class="player-info" id="playerInfo">正在播放...</div>
+        <div class="player-controls">
+            <button onclick="stopPlay()">⏹ 停止</button>
+        </div>
+    </div>
+
+    <footer class="footer">Powered by <a href="https://openclaw.ai">OpenClaw</a> · 🐟 小鱼儿自主维护 · © 2026 Tyler</footer>
+
+    <script src="/nav.js"></script>
+    <script>
+    let storyPrompt = '';
+    let currentParagraph = 0;
+    let storyData = [];
+    let audioQueue = [];
+    let isPlaying = false;
+
+    const paraLabels = ['第一章', '第二章', '第三章', '第四章', '第五章'];
+
+    function setPrompt(t) {
+        document.getElementById('storyInput').value = t;
+        document.getElementById('charCount').textContent = t.length;
+    }
+
+    document.getElementById('storyInput').addEventListener('input', function() {
+        document.getElementById('charCount').textContent = this.value.length;
+    });
+
+    async function startStory() {
+        const input = document.getElementById('storyInput');
+        storyPrompt = input.value.trim();
+        if (!storyPrompt) { input.focus(); return; }
+
+        document.getElementById('inputWrap').style.display = 'none';
+        document.getElementById('book').classList.add('active');
+        document.getElementById('bookTitle').textContent = storyPrompt.slice(0, 30) + (storyPrompt.length > 30 ? '...' : '');
+
+        // Init progress dots
+        const progress = document.getElementById('progress');
+        progress.innerHTML = Array.from({length: 5}, (_, i) =>
+            `<span class="dot" id="dot${i}"></span>`
+        ).join('');
+
+        storyData = [];
+        currentParagraph = 0;
+        document.getElementById('paragraphs').innerHTML = '';
+
+        for (let i = 1; i <= 5; i++) {
+            currentParagraph = i;
+            updateProgress(i);
+            await generateParagraph(i);
+        }
+
+        document.getElementById('completion').classList.add('active');
+        updateProgress(6); // all done
+    }
+
+    function updateProgress(current) {
+        for (let i = 1; i <= 5; i++) {
+            const dot = document.getElementById('dot' + (i-1));
+            if (!dot) continue;
+            if (i < current) { dot.className = 'dot done'; }
+            else if (i === current) { dot.className = 'dot active'; }
+            else { dot.className = 'dot'; }
+        }
+    }
+
+    async function generateParagraph(num) {
+        const container = document.getElementById('paragraphs');
+        const cardId = 'para-' + num;
+
+        // Create card
+        const card = document.createElement('div');
+        card.className = 'para-card';
+        card.id = cardId;
+        card.innerHTML = `
+            <div class="para-num">${paraLabels[num-1]}</div>
+            <div class="para-text loading">正在创作中...</div>
+            <div class="para-img loading">🎨 正在绘制插画...</div>
+            <div class="para-controls">
+                <button class="play-btn" disabled onclick="playParagraph(${num-1})">🔊 播放</button>
+            </div>
+        `;
+        container.appendChild(card);
+        setTimeout(() => card.classList.add('visible'), 50);
+
+        try {
+            const res = await fetch('/api/story', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: storyPrompt, paragraph: num }),
+            });
+            const data = await res.json();
+            if (data.error) throw new Error(data.error);
+
+            storyData.push(data);
+
+            // Update text
+            const textEl = card.querySelector('.para-text');
+            textEl.className = 'para-text';
+            textEl.textContent = data.text;
+
+            // Generate image
+            if (data.imagePrompt) {
+                const imgUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(data.imagePrompt + ', storybook illustration, soft colors, whimsical')}?width=800&height=400&nologo=true`;
+                const imgEl = card.querySelector('.para-img');
+                const img = new Image();
+                img.className = 'para-img';
+                img.src = imgUrl;
+                img.alt = '故事插画';
+                img.loading = 'lazy';
+                img.onload = () => { imgEl.replaceWith(img); };
+                img.onerror = () => { imgEl.textContent = '（插画生成失败）'; imgEl.className = 'para-img'; };
+            } else {
+                card.querySelector('.para-img').style.display = 'none';
+            }
+
+            // Enable play button
+            const playBtn = card.querySelector('.play-btn');
+            playBtn.disabled = false;
+
+        } catch (err) {
+            card.querySelector('.para-text').className = 'para-text';
+            card.querySelector('.para-text').textContent = '（创作失败：' + err.message + '）';
+            card.querySelector('.para-img').style.display = 'none';
+        }
+    }
+
+    async function playParagraph(index) {
+        if (isPlaying) return;
+        const text = storyData[index]?.text;
+        if (!text) return;
+
+        isPlaying = true;
+        const btn = document.querySelectorAll('.play-btn')[index];
+        if (btn) { btn.classList.add('playing'); btn.textContent = '🔊 播放中...'; }
+
+        const playerBar = document.getElementById('playerBar');
+        playerBar.classList.add('active');
+        document.getElementById('playerInfo').textContent = `正在播放：${paraLabels[index]}`;
+
+        try {
+            const res = await fetch('/api/tts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text, voice: 'zh-CN-XiaoxiaoNeural' }),
+            });
+
+            if (res.ok) {
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const audio = new Audio(url);
+                audio.onended = () => {
+                    URL.revokeObjectURL(url);
+                    stopPlay();
+                };
+                audio.onerror = () => stopPlay();
+                audio.play();
+            } else {
+                stopPlay();
+            }
+        } catch {
+            stopPlay();
+        }
+    }
+
+    async function playAll() {
+        for (let i = 0; i < storyData.length; i++) {
+            await new Promise(resolve => {
+                const text = storyData[i]?.text;
+                if (!text) { resolve(); return; }
+
+                const playerBar = document.getElementById('playerBar');
+                playerBar.classList.add('active');
+                document.getElementById('playerInfo').textContent = `正在播放：${paraLabels[i]}`;
+
+                const btn = document.querySelectorAll('.play-btn')[i];
+                if (btn) { btn.classList.add('playing'); btn.textContent = '🔊 播放中...'; }
+
+                fetch('/api/tts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, voice: 'zh-CN-XiaoxiaoNeural' }),
+                }).then(res => res.blob()).then(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const audio = new Audio(url);
+                    audio.onended = () => {
+                        URL.revokeObjectURL(url);
+                        if (btn) { btn.classList.remove('playing'); btn.textContent = '🔊 播放'; }
+                        resolve();
+                    };
+                    audio.onerror = () => { stopPlay(); resolve(); };
+                    audio.play();
+                }).catch(() => { stopPlay(); resolve(); });
+            });
+        }
+        stopPlay();
+    }
+
+    function stopPlay() {
+        isPlaying = false;
+        document.getElementById('playerBar').classList.remove('active');
+        document.querySelectorAll('.play-btn').forEach(btn => {
+            btn.classList.remove('playing');
+            btn.textContent = '🔊 播放';
+        });
+    }
+
+    function resetStory() {
+        document.getElementById('inputWrap').style.display = 'block';
+        document.getElementById('book').classList.remove('active');
+        document.getElementById('completion').classList.remove('active');
+        document.getElementById('paragraphs').innerHTML = '';
+        document.getElementById('storyInput').value = '';
+        document.getElementById('charCount').textContent = '0';
+        storyData = [];
+        stopPlay();
+    }
+    </script>
+</body>
+</html>
