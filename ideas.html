@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>每日灵感 · Tyler的小工具</title>
+    <link rel="stylesheet" href="/style.css">
   <meta name="description" content="每日灵感点子墙：AI、创业、产品、技术、生活、设计、效率领域的创意火花。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=LXGW+Wenkai&display=swap" rel="stylesheet">
@@ -21,11 +22,6 @@
     body { background: var(--bg); color: var(--text); font-family: 'LXGW WenKai', -apple-system, sans-serif; min-height: 100vh; }
 
     /* Nav */
-    .nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; max-width: 1100px; margin: 0 auto; }
-    .nav-brand { font-size: 1.1rem; font-weight: 700; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 6px; }
-    .nav-links { display: flex; gap: 16px; }
-    .nav-links a { color: var(--text2); text-decoration: none; font-size: .85rem; transition: color .2s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
 
     /* Back */
     .back-link { display: inline-flex; align-items: center; gap: 4px; color: var(--text2); text-decoration: none; font-size: .85rem; margin-bottom: 20px; transition: color .2s; }
@@ -65,8 +61,7 @@
     footer { text-align: center; padding: 40px 24px; color: var(--text2); font-size: .75rem; border-top: 1px solid var(--border); margin-top: 40px; }
 
     @media(max-width:768px) {
-      .nav { padding: 12px 16px; }
-      .nav-links { gap: 10px; }
+
       .section { padding: 24px 16px; }
       .section h1 { font-size: 1.4rem; }
       .ideas-grid { grid-template-columns: 1fr; }
@@ -74,15 +69,7 @@
   </style>
 </head>
 <body>
-  <nav class="nav">
-    <a class="nav-brand" href="/">🐟 Tyler的小工具</a>
-    <div class="nav-links">
-      <a href="/">首页</a>
-      <a href="/tools.html">工具</a>
-      <a href="/blog/">博客</a>
-      <a href="/about.html">关于</a>
-    </div>
-  </nav>
+  
 
   <section class="section">
     <a class="back-link" href="/">← 返回首页</a>
@@ -91,9 +78,7 @@
     <div class="ideas-grid" id="ideas-grid"></div>
   </section>
 
-  <footer>
-    <p>© 2026 Tyler的小工具 · 用 ❤️ 和 AI 构建</p>
-  </footer>
+      <footer class="footer">Powered by <a href="https://openclaw.ai">OpenClaw</a> · 🐟 小鱼儿自主维护 · © 2026 Tyler</footer>
 
   <script>
     const ideas = [
@@ -153,6 +138,7 @@
       });
     }
   </script>
+    <script src="/nav.js"></script>
 </body>
 </html>
 y>

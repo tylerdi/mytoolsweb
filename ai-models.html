@@ -30,18 +30,7 @@
         :root{--bg:#0a0a0a;--surface:#111;--border:#1e1e1e;--text:#e8e8e8;--text-dim:#888;--accent:#646cff;--gradient:linear-gradient(135deg,#646cff,#ff6b9d);--green:#22c55e;--orange:#f97316;--cyan:#06b6d4;--pink:#ec4899;--gold:#d4a853;--red:#ef4444}
         body{font-family:'LXGW WenKai',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.8}
         ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
-        .nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-        .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
-        .nav-logo{font-size:1.05rem;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
-        .nav-logo .fish{font-size:1.2rem}
-        .nav-links{display:flex;gap:20px;align-items:center}
-        .nav-links a{color:var(--text-dim);text-decoration:none;font-size:.82rem;transition:color .2s}.nav-links a:hover{color:var(--text)}
-        .hamburger{display:none;background:none;border:none;color:var(--text);font-size:1.3rem;cursor:pointer;padding:8px}
-        .mobile-menu{position:fixed;top:0;right:-260px;width:260px;height:100%;background:#111;z-index:200;transition:right .3s;border-left:1px solid var(--border);padding:20px;overflow-y:auto}
-        .mobile-menu.open{right:0}
-        .mobile-menu .close-btn{background:none;border:none;color:var(--text);font-size:1.3rem;cursor:pointer;float:right}
-        .mobile-menu a{display:block;color:var(--text-dim);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--border);font-size:.9rem}
-        .mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;display:none}.mobile-overlay.show{display:block}
+
         .container{max-width:1100px;margin:0 auto;padding:80px 24px 40px}
         .hero{text-align:center;padding:20px 0 32px}
         .hero h1{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:900;margin-bottom:8px}
@@ -85,7 +74,7 @@
         .footer a{color:var(--text-dim);text-decoration:none}
 
         @media(max-width:768px){
-            .nav-links{display:none}.hamburger{display:block}
+            
             .container{padding:70px 16px 24px}
             th,td{padding:8px 10px;font-size:.72rem}
             .model-name{font-size:.78rem}
@@ -93,29 +82,6 @@
     </style>
 </head>
 <body>
-    <nav class="nav">
-        <div class="nav-inner">
-            <a href="/" class="nav-logo"><span class="fish">🐟</span> 小鱼儿</a>
-            <div class="nav-links">
-                <a href="/ai-image">AI 画图</a>
-                <a href="/ai-tts">AI 语音</a>
-                <a href="/ai-chat">AI 聊天</a>
-                <a href="/ai-models">模型排行</a>
-            </div>
-            <button class="hamburger" onclick="toggleMenu()">☰</button>
-        </div>
-    </nav>
-    <div class="mobile-overlay" id="overlay" onclick="toggleMenu()"></div>
-    <div class="mobile-menu" id="mobileMenu">
-        <button class="close-btn" onclick="toggleMenu()">✕</button>
-        <div style="clear:both;padding-top:12px">
-            <a href="/ai-image">🎨 AI 画图</a>
-            <a href="/ai-tts">🎙️ AI 语音</a>
-            <a href="/ai-chat">💬 AI 聊天</a>
-            <a href="/ai-models">📊 模型排行</a>
-            <a href="/ai-prompt">📖 Prompt 指南</a>
-        </div>
-    </div>
 
     <div class="container">
         <div class="hero">
@@ -263,11 +229,8 @@
         </div>
     </div>
 
-    <footer class="footer">
-        Powered by <a href="https://openclaw.ai">OpenClaw</a> · 🐟 小鱼儿自主维护 · © 2026 Tyler
-    </footer>
+        <footer class="footer">Powered by <a href="https://openclaw.ai">OpenClaw</a> · 🐟 小鱼儿自主维护 · © 2026 Tyler</footer>
     <script>
-    function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');document.getElementById('overlay').classList.toggle('show')}
     function filterModels(tag){
         document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
         event.target.classList.add('active');
@@ -279,5 +242,6 @@
     }
     </script>
 <script src="/fish-tracker.js"></script>
+    <script src="/nav.js"></script>
 </body>
 </html>

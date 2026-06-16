@@ -19,11 +19,6 @@
         html{scroll-behavior:smooth}
         body{font-family:'LXGW WenKai',-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.8;min-height:100vh}
 
-        .nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-        .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
-        .nav-logo{font-size:1.1rem;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
-        .nav-logo:hover{text-decoration:none}
-
         .container{max-width:1100px;margin:0 auto;padding:80px 24px 60px}
 
         .hero{text-align:center;margin-bottom:48px}
@@ -102,13 +97,6 @@
     </style>
 </head>
 <body>
-
-<nav class="nav">
-    <div class="nav-inner">
-        <a href="/" class="nav-logo"><span style="font-size:1.3rem">🐟</span> 小鱼儿</a>
-        <a href="/" style="color:var(--text-dim);font-size:.85rem">← 返回首页</a>
-    </div>
-</nav>
 
 <div class="container">
     <div class="hero">
@@ -409,5 +397,6 @@ function showToast(msg) {
 }
 </script>
 
+    <script src="/nav.js"></script>
 </body>
 </html>

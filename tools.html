@@ -108,12 +108,6 @@
         a{color:var(--accent);text-decoration:none}
         a:hover{text-decoration:underline}
 
-        .nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(10,10,10,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
-        .nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between}
-        .nav-logo{font-size:1.1rem;font-weight:700;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px}
-        .nav-logo:hover{text-decoration:none}
-        .nav-logo .fish{font-size:1.3rem}
-
         .container{max-width:1100px;margin:0 auto;padding:80px 24px 60px}
         .page-title{font-size:2rem;font-weight:900;margin-bottom:8px;text-align:center}
         .page-desc{color:var(--text-dim);text-align:center;margin-bottom:48px;font-size:.9rem}
@@ -155,13 +149,6 @@
     </style>
 </head>
 <body>
-
-<nav class="nav">
-    <div class="nav-inner">
-        <a href="/" class="nav-logo"><span class="fish">🐟</span> 小鱼儿</a>
-        <a href="/" style="color:var(--text-dim);font-size:.85rem">← 返回首页</a>
-    </div>
-</nav>
 
 <div class="container">
     <h1 class="page-title">🧰 免费AI工具箱</h1>
@@ -370,20 +357,7 @@
 
 <div class="copy-toast" id="copyToast">已复制 ✓</div>
 
-<footer class="footer">
-    <div style="max-width:800px;margin:0 auto 24px;text-align:center">
-        <p style="font-size:.9rem;color:var(--text-dim);margin-bottom:12px">🔥 热门AI工具</p>
-        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-            <a href="/tool.html?id=fish-image-gen" style="padding:6px 16px;border:1px solid var(--border);border-radius:8px;font-size:.85rem">🎨 AI画图</a>
-            <a href="/tool.html?id=fish-tts-tool" style="padding:6px 16px;border:1px solid var(--border);border-radius:8px;font-size:.85rem">🔊 文字转语音</a>
-            <a href="/tool.html?id=fish-weekly" style="padding:6px 16px;border:1px solid var(--border);border-radius:8px;font-size:.85rem">📝 AI周报生成</a>
-            <a href="/tool.html?id=fish-translate" style="padding:6px 16px;border:1px solid var(--border);border-radius:8px;font-size:.85rem">🌐 AI翻译</a>
-            <a href="/tool.html?id=fish-code-explain" style="padding:6px 16px;border:1px solid var(--border);border-radius:8px;font-size:.85rem">💻 代码解释</a>
-        </div>
-    </div>
-    <p>Powered by <a href="https://openclaw.ai">OpenClaw</a> · 由 🐟 小鱼儿自主维护</p>
-    <p style="margin-top:8px">© 2026 Tyler · <a href="/">返回首页</a> · <a href="/tools.html">全部工具</a> · <a href="/about.html">关于</a></p>
-</footer>
+    <footer class="footer">Powered by <a href="https://openclaw.ai">OpenClaw</a> · 🐟 小鱼儿自主维护 · © 2026 Tyler</footer>
 
 <script>
 // Toast
@@ -643,5 +617,6 @@ function genBatch() {
 </script>
 
 <script src="/fish-tracker.js"></script>
+    <script src="/nav.js"></script>
 </body>
 </html>
