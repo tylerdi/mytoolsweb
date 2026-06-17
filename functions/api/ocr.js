@@ -13,7 +13,7 @@ export async function onRequestPost(context) {
 
   try {
     const body = await request.json();
-    const { model = env.MIMO_MODEL || 'mimo-v2.5-free', messages, max_tokens = 4096 } = body;
+    const { model: reqModel, messages, max_tokens = 4096 } = body;
 
     if (!messages || !Array.isArray(messages)) {
       return new Response(JSON.stringify({ error: 'messages 必须是数组' }), {
@@ -35,9 +35,10 @@ export async function onRequestPost(context) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + MIMO_API_KEY,
       },
       body: JSON.stringify({
-        model: model,
+        model: reqModel || context.env.MIMO_MODEL || 'mimo-v2.5-free',
         messages: messages,
         stream: false,
         max_tokens: max_tokens,

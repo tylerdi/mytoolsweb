@@ -73,7 +73,7 @@ export async function onRequestPost(context) {
     const chosen = available[Math.floor(Math.random() * available.length)];
 
     // 调 AI 生成
-    const MIMO_API_BASE = env.MIMO_API_BASE;
+    const MIMO_API_BASE = context.env.MIMO_API_BASE;
     const MIMO_API_KEY = context.env.MIMO_API_KEY;
     if (!MIMO_API_KEY) {
       return new Response(JSON.stringify({ error: 'MIMO_API_KEY not configured' }), {
@@ -85,9 +85,10 @@ export async function onRequestPost(context) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + MIMO_API_KEY,
       },
       body: JSON.stringify({
-        model: env.MIMO_MODEL || 'mimo-v2.5-free',
+        model: context.env.MIMO_MODEL || 'mimo-v2.5-free',
         messages: [
           { role: 'system', content: '你是一个有趣的内容生成器。严格按要求输出，不要加任何多余的话。' },
           { role: 'user', content: chosen.prompt },

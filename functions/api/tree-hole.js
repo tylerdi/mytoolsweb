@@ -13,6 +13,7 @@ async function getAiReply(content, mood, env) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + MIMO_API_KEY,
       },
       body: JSON.stringify({
         model: env.MIMO_MODEL || 'mimo-v2.5-free',

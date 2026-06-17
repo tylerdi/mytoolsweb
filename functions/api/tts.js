@@ -50,9 +50,10 @@ async function generateMimoTTS(baseUrl, apiKey, text, speed) {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + apiKey,
       },
     body: JSON.stringify({
-      model: env.MIMO_TTS_MODEL || 'mimo-v2-tts',
+      model: 'mimo-v2-tts',
       input: text,
       voice: '',
     }),

@@ -52,6 +52,7 @@ export async function onRequestPost(context) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + MIMO_API_KEY,
       },
       body: JSON.stringify({
         model: env.MIMO_MODEL || 'mimo-v2.5-free',
@@ -104,10 +105,12 @@ async function generateImagePrompt(apiBase, apiKey, storyStart, currentText, par
 
     const response = await fetch(`${apiBase}/chat/completions`, {
       method: 'POST',
-      headers: {        'Content-Type': 'application/json',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + apiKey,
       },
       body: JSON.stringify({
-        model: env.MIMO_MODEL || 'mimo-v2.5-free',
+        model: 'mimo-v2.5-free',
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 100,
         temperature: 0.7,

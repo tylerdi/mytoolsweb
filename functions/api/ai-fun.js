@@ -64,7 +64,7 @@ export async function onRequestPost(context) {
 
     const config = PROMPTS[type];
 
-    const MIMO_API_BASE = env.MIMO_API_BASE;
+    const MIMO_API_BASE = context.env.MIMO_API_BASE;
     const MIMO_API_KEY = context.env.MIMO_API_KEY;
     if (!MIMO_API_KEY) {
       return new Response(JSON.stringify({ error: 'MIMO_API_KEY not configured' }), {
@@ -77,9 +77,10 @@ export async function onRequestPost(context) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + MIMO_API_KEY,
       },
       body: JSON.stringify({
-        model: env.MIMO_MODEL || 'mimo-v2.5-free',
+        model: context.env.MIMO_MODEL || 'mimo-v2.5-free',
         messages: [
           { role: 'system', content: config.system },
           { role: 'user', content: input || '随机来一个' },
