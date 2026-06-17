@@ -87,7 +87,7 @@ ${roundContext}
         'Authorization': 'Bearer ' + apiKey,
       },
     body: JSON.stringify({
-      model: env.MIMO_MODEL || 'xiaomi/mimo-v2.5',
+      model: 'xiaomi/mimo-v2.5',
       messages: [{ role: 'user', content: systemPrompt }],
       max_tokens: 600,
       temperature: 0.8,
