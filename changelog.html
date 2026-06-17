@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>更新日志 · Tyler</title>
-    <link rel="stylesheet" href="/style.css?v2">
     <link rel="icon" type="image/png" href="resource/easyclaw.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -16,11 +15,19 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg); color: var(--text); line-height: 1.7; min-height: 100vh;
         }
-        
-        
+        .header {
+            border-bottom: 1px solid var(--border); padding: 1.5rem 0;
+            position: sticky; top: 0; background: rgba(10,10,10,0.85);
+            backdrop-filter: blur(12px); z-index: 100;
+        }
+        .header-inner {
+            max-width: 720px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
         .logo { font-size: 1.25rem; font-weight: 700; color: var(--text); text-decoration: none; }
         .logo span { color: var(--accent); }
-
+        .nav a { color: var(--text-secondary); text-decoration: none; margin-left: 2rem; font-size: 0.9rem; }
+        .nav a:hover { color: var(--text); }
         .container { max-width: 720px; margin: 0 auto; padding: 3rem 2rem; }
         .page-header h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
         .page-header p { color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 2rem; }
@@ -49,7 +56,19 @@
     </style>
 </head>
 <body>
-    
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">Tyler<span>.</span></a>
+            <nav class="nav">
+                <a href="/">首页</a>
+                <a href="/blog/">博客</a>
+                <a href="/ideas.html">灵感</a>
+                <a href="/resources.html">资源</a>
+                <a href="/changelog.html">日志</a>
+                <a href="/about.html">关于</a>
+            </nav>
+        </div>
+    </header>
 
     <main class="container">
         <div class="page-header">
@@ -58,7 +77,93 @@
         </div>
 
         <div class="changelog">
+        <div class="changelog-date">2026 年 06 月 17 日</div>
+        <div class="changelog-entry">
+            <span class="entry-icon">⚡</span>
+            <span class="entry-msg">ideas: 每日灵感</span>
+            <span class="entry-hash">27afbd9</span>
+        </div>
+        <div class="changelog-entry">
+            <span class="entry-icon">📝</span>
+            <span class="entry-msg">AI每日资讯: 2026-06-17 (14条)</span>
+            <span class="entry-hash">4d2d710</span>
+        </div>
         <div class="changelog-date">2026 年 06 月 16 日</div>
+        <div class="changelog-entry">
+            <span class="entry-icon">✨</span>
+            <span class="entry-msg">feat: base URL / API Key / 模型名全部走环境变量</span>
+            <span class="entry-hash">1bc3399</span>
+        </div>
+        <div class="changelog-entry">
+            <span class="entry-icon">🐛</span>
+            <span class="entry-msg">fix: 移除 MIMO API 的浏览器伪装头，避免触发反爬限流</span>
+            <span class="entry-hash">d47b94a</span>
+        </div>
+        <div class="changelog-entry">
+            <span class="entry-icon">🐛</span>
+            <span class="entry-msg">fix: 模型名 mimo-v2.5 → mimo-v2.5-free (opencode.ai 只认 free 版本)</span>
+            <span class="entry-hash">bcdc510</span>
+        </div>
+        <div class="changelog-entry">
+            <span class="entry-icon">🐛</span>
+            <span class="entry-msg">fix: opencode.ai 不需要 API Key，移除所有 Authorization header</span>
+            <span class="entry-hash">d48581c</span>
+        </div>
+        <div class="changelog-entry">
+            <span class="entry-icon">📝</span>
+            <span class="entry-msg">debug: 加 env 检查 + chat API 日志</span>
+            <span class="entry-hash">3f760b5</span>
+        </div>
+        <div class="changelog-entry">
+            <span class="entry-icon">♻️</span>
+            <span class="entry-msg">refactor: 所有 API 从环境变量读取 base URL 和 key，不写死</span>
+            <span class="entry-hash">4062310</span>
+        </div>
+        <div class="changelog-entry">
+            <span class="entry-icon">🐛</span>
+            <span class="entry-msg">fix: 补全浏览器请求头 (Sec-Fetch-*) 绕过 Cloudflare 防爬</span>
+            <span class="entry-hash">7d0d0d5</span>
+        </div>
+        <div class="changelog-entry">
+            <span class="entry-icon">📝</span>
+            <span class="entry-msg">debug: test env var</span>
+            <span class="entry-hash">163a6c8</span>
+        </div>
+        <div class="changelog-entry">
+            <span class="entry-icon">🐛</span>
+            <span class="entry-msg">fix: API 请求加 User-Agent 绕过 Cloudflare 防爬</span>
+            <span class="entry-hash">f79da35</span>
+        </div>
+        <div class="changelog-entry">
+            <span class="entry-icon">🐛</span>
+            <span class="entry-msg">fix: 全站导航统一 + 手机适配修复</span>
+            <span class="entry-hash">20d851d</span>
+        </div>
+        <div class="changelog-entry">
+            <span class="entry-icon">🐛</span>
+            <span class="entry-msg">fix: 破缓存 — CSS/JS 加版本号 + Cloudflare 缓存策略</span>
+            <span class="entry-hash">c3009bb</span>
+        </div>
+        <div class="changelog-entry">
+            <span class="entry-icon">♻️</span>
+            <span class="entry-msg">refactor: 重构导航栏 — 下拉菜单分组 + 首页展示新功能</span>
+            <span class="entry-hash">da73534</span>
+        </div>
+        <div class="changelog-entry">
+            <span class="entry-icon">✨</span>
+            <span class="entry-msg">feat: 三个全新功能 — AI辩论场/有声故事电台/深海博物馆</span>
+            <span class="entry-hash">e25fa3d</span>
+        </div>
+        <div class="changelog-entry">
+            <span class="entry-icon">🐛</span>
+            <span class="entry-msg">fix: 移除所有页面残留的旧导航栏(topbar/header)</span>
+            <span class="entry-hash">70129f4</span>
+        </div>
+        <div class="changelog-entry">
+            <span class="entry-icon">♻️</span>
+            <span class="entry-msg">refactor: 提取公共CSS+导航栏，统一全站设计</span>
+            <span class="entry-hash">4c9bd40</span>
+        </div>
         <div class="changelog-entry">
             <span class="entry-icon">⚡</span>
             <span class="entry-msg">ideas: 每日灵感</span>
@@ -171,110 +276,12 @@
             <span class="entry-msg">daily: AI资讯 2026-06-04 (14条)</span>
             <span class="entry-hash">b2b3e10</span>
         </div>
-        <div class="changelog-date">2026 年 06 月 03 日</div>
-        <div class="changelog-entry">
-            <span class="entry-icon">⚡</span>
-            <span class="entry-msg">ideas: 每日灵感</span>
-            <span class="entry-hash">39c81b7</span>
-        </div>
-        <div class="changelog-entry">
-            <span class="entry-icon">💡</span>
-            <span class="entry-msg">blog: 每日创意 - AI记忆革命：你的AI认识你吗？</span>
-            <span class="entry-hash">b2804f8</span>
-        </div>
-        <div class="changelog-entry">
-            <span class="entry-icon">📝</span>
-            <span class="entry-msg">AI daily news 2026-06-03</span>
-            <span class="entry-hash">0738245</span>
-        </div>
-        <div class="changelog-date">2026 年 06 月 02 日</div>
-        <div class="changelog-entry">
-            <span class="entry-icon">✨</span>
-            <span class="entry-msg">feat: migrate all api endpoints to mimo-v2.5 / v2.5-pro only</span>
-            <span class="entry-hash">13802d2</span>
-        </div>
-        <div class="changelog-entry">
-            <span class="entry-icon">🐛</span>
-            <span class="entry-msg">fix: migrate remaining 5 api files to use env keys</span>
-            <span class="entry-hash">4158a5f</span>
-        </div>
-        <div class="changelog-entry">
-            <span class="entry-icon">♻️</span>
-            <span class="entry-msg">refactor: API key 从环境变量读取，不再硬编码</span>
-            <span class="entry-hash">9ef3093</span>
-        </div>
-        <div class="changelog-entry">
-            <span class="entry-icon">✨</span>
-            <span class="entry-msg">feat: AI daily news 2026-06-02</span>
-            <span class="entry-hash">996a6d0</span>
-        </div>
-        <div class="changelog-date">2026 年 06 月 01 日</div>
-        <div class="changelog-entry">
-            <span class="entry-icon">✨</span>
-            <span class="entry-msg">feat: 新增 AI 趣味工具箱（10 款工具）</span>
-            <span class="entry-hash">7b905cf</span>
-        </div>
-        <div class="changelog-entry">
-            <span class="entry-icon">🐛</span>
-            <span class="entry-msg">fix: 修复 tree-hole.js 多余反引号导致 build 失败</span>
-            <span class="entry-hash">f038dea</span>
-        </div>
-        <div class="changelog-entry">
-            <span class="entry-icon">✨</span>
-            <span class="entry-msg">feat: 新增每日壁纸页面</span>
-            <span class="entry-hash">9d0506b</span>
-        </div>
-        <div class="changelog-entry">
-            <span class="entry-icon">✨</span>
-            <span class="entry-msg">feat: 新增解忧杂货店页面</span>
-            <span class="entry-hash">66511b6</span>
-        </div>
-        <div class="changelog-entry">
-            <span class="entry-icon">✨</span>
-            <span class="entry-msg">feat: 新增 AI 盲盒 + AI 树洞两个互动页面</span>
-            <span class="entry-hash">51ec95a</span>
-        </div>
-        <div class="changelog-entry">
-            <span class="entry-icon">⚡</span>
-            <span class="entry-msg">ideas: 每日灵感 2026-06-01</span>
-            <span class="entry-hash">c938a30</span>
-        </div>
-        <div class="changelog-entry">
-            <span class="entry-icon">💡</span>
-            <span class="entry-msg">blog: 每日创意 - 2026年，你的AI同事已经上岗了</span>
-            <span class="entry-hash">7afaf82</span>
-        </div>
-        <div class="changelog-entry">
-            <span class="entry-icon">📖</span>
-            <span class="entry-msg">docs: AI daily news 2026-06-01</span>
-            <span class="entry-hash">4276cee</span>
-        </div>
-        <div class="changelog-date">2026 年 05 月 31 日</div>
-        <div class="changelog-entry">
-            <span class="entry-icon">⚡</span>
-            <span class="entry-msg">ideas: 每日灵感</span>
-            <span class="entry-hash">681c8c5</span>
-        </div>
-        <div class="changelog-entry">
-            <span class="entry-icon">💡</span>
-            <span class="entry-msg">blog: 每日创意 - 你有几个AI同事？从工具到同事的三级跳</span>
-            <span class="entry-hash">4e943fe</span>
-        </div>
-        <div class="changelog-entry">
-            <span class="entry-icon">📝</span>
-            <span class="entry-msg">seo: 完善 Open Graph 和 Twitter Card 标签</span>
-            <span class="entry-hash">3911361</span>
-        </div>
-        <div class="changelog-entry">
-            <span class="entry-icon">📝</span>
-            <span class="entry-msg">seo: 完善所有页面的 SEO 标签</span>
-            <span class="entry-hash">c84381d</span>
-        </div>
 
         </div>
     </main>
 
-        <footer class="footer">Powered by <a href="https://openclaw.ai">OpenClaw</a> · 🐟 小鱼儿自主维护 · © 2026 Tyler</footer>
-    <script src="/nav.js?v2"></script>
+    <footer class="footer">
+        <p>自动生成于 Git 历史 · <a href="https://github.com/tylerdi/mytoolsweb">View on GitHub</a></p>
+    </footer>
 </body>
 </html>
