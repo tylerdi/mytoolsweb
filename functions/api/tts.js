@@ -3,7 +3,7 @@
 
 export async function onRequestPost(context) {
   const { env } = context;
-  const MIMO_API_BASE = env.MIMO_API_BASE;
+  const MIMO_API_BASE = (env.MIMO_API_BASE || 'https://openrouter.ai/api/v1').replace(/\/chat\/completions\/?$/, '');
   const MIMO_API_KEY = env.MIMO_API_KEY;
 
   try {

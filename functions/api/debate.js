@@ -4,7 +4,7 @@
 
 export async function onRequestPost(context) {
   const { request, env } = context;
-  const MIMO_API_BASE = env.MIMO_API_BASE;
+  const MIMO_API_BASE = (env.MIMO_API_BASE || 'https://openrouter.ai/api/v1').replace(/\/chat\/completions\/?$/, '');
   const MIMO_API_KEY = env.MIMO_API_KEY;
 
   const corsHeaders = {
@@ -87,7 +87,7 @@ ${roundContext}
         'Authorization': 'Bearer ' + apiKey,
       },
     body: JSON.stringify({
-      model: 'mimo-v2.5-free',
+      model: env.MIMO_MODEL || 'xiaomi/mimo-v2.5',
       messages: [{ role: 'user', content: systemPrompt }],
       max_tokens: 600,
       temperature: 0.8,

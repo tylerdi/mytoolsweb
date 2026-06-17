@@ -22,7 +22,7 @@ const MODEL_ALIASES = {
 // 中转站提供的模型列表（只支持 v2.5 和 v2.5-pro）
 const MODELS = [
   {
-    id: 'mimo-v2.5-free',
+    id: 'xiaomi/mimo-v2.5',
     object: 'model',
     created: 1700000000,
     owned_by: 'mimo',

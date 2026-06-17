@@ -25,7 +25,7 @@ const MODEL_ALIAS = {
   'mimo-v2-pro':       'mimo-v2.5-pro',
 };
 
-const getUpstreamUrl = (env) => (env.MIMO_API_BASE || '') + '/chat/completions';
+const getUpstreamUrl = (env) => ((env.MIMO_API_BASE || 'https://openrouter.ai/api/v1').replace(/\/chat\/completions\/?$/, '')) + '/chat/completions';
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -45,7 +45,7 @@ export async function onRequestPost(context) {
       return errorResponse('Invalid JSON body', 400);
     }
 
-    const { model = env.MIMO_MODEL || 'mimo-v2.5-free', messages, stream = false, max_tokens, temperature, top_p, ...rest } = body;
+    const { model = env.MIMO_MODEL || 'xiaomi/mimo-v2.5', messages, stream = false, max_tokens, temperature, top_p, ...rest } = body;
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return errorResponse('messages is required and must be a non-empty array', 400);
@@ -54,7 +54,7 @@ export async function onRequestPost(context) {
     // 3. 模型校验（支持别名）
     const resolvedModel = ALLOWED_MODELS.includes(model)
       ? model
-      : (MODEL_ALIAS[model] || (env.MIMO_MODEL || 'mimo-v2.5-free'));
+      : (MODEL_ALIAS[model] || (env.MIMO_MODEL || 'xiaomi/mimo-v2.5'));
 
     // 4. 构造上游请求
     const upstreamBody = {

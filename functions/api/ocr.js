@@ -23,7 +23,7 @@ export async function onRequestPost(context) {
     }
 
     // 直接透传，不加系统消息
-    const MIMO_API_BASE = context.env.MIMO_API_BASE;
+    const MIMO_API_BASE = (context.env.MIMO_API_BASE || 'https://openrouter.ai/api/v1').replace(/\/chat\/completions\/?$/, '');
     const MIMO_API_KEY = context.env.MIMO_API_KEY;
     if (!MIMO_API_KEY) {
       return new Response(JSON.stringify({ error: 'MIMO_API_KEY not configured' }), {
@@ -38,7 +38,7 @@ export async function onRequestPost(context) {
         'Authorization': 'Bearer ' + MIMO_API_KEY,
       },
       body: JSON.stringify({
-        model: reqModel || context.env.MIMO_MODEL || 'mimo-v2.5-free',
+        model: reqModel || context.env.MIMO_MODEL || 'xiaomi/mimo-v2.5',
         messages: messages,
         stream: false,
         max_tokens: max_tokens,

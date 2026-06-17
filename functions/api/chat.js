@@ -4,7 +4,7 @@
 
 export async function onRequestPost(context) {
   const { request, env } = context;
-  const MIMO_API_BASE = env.MIMO_API_BASE;
+  const MIMO_API_BASE = (env.MIMO_API_BASE || 'https://openrouter.ai/api/v1').replace(/\/chat\/completions\/?$/, '');
   const MIMO_API_KEY = env.MIMO_API_KEY;
 
   const corsHeaders = {
@@ -22,7 +22,7 @@ export async function onRequestPost(context) {
     }
 
     const body = await request.json();
-    const { messages, model = env.MIMO_MODEL || 'mimo-v2.5-free', stream = true, max_tokens = 500 } = body;
+    const { messages, model = env.MIMO_MODEL || 'xiaomi/mimo-v2.5', stream = true, max_tokens = 500 } = body;
 
     if (!messages || !Array.isArray(messages)) {
       return new Response(JSON.stringify({ error: 'messages 必须是数组' }), {
