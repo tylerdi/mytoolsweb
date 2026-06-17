@@ -72,6 +72,7 @@ export async function onRequestPost(context) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + env.MIMO_API_KEY,
       },
       body: JSON.stringify(upstreamBody),
     });
