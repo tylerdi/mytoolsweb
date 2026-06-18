@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>当AI开始"替我们思考"，人类的核心竞争力到底是什么？ · Tyler's Blog</title>
+    <link rel="icon" type="image/png" href="../../resource/easyclaw.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0a0a; --surface: #141414; --border: #2a2a2a;
+            --text: #e8e8e8; --text-secondary: #888; --accent: #646cff;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg); color: var(--text); line-height: 1.8; min-height: 100vh;
+        }
+        .header {
+            border-bottom: 1px solid var(--border); padding: 1.5rem 0;
+            position: sticky; top: 0; background: rgba(10,10,10,0.85);
+            backdrop-filter: blur(12px); z-index: 100;
+        }
+        .header-inner {
+            max-width: 720px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 1.25rem; font-weight: 700; color: var(--text); text-decoration: none; }
+        .logo span { color: var(--accent); }
+        .nav a { color: var(--text-secondary); text-decoration: none; margin-left: 2rem; font-size: 0.9rem; }
+        .nav a:hover { color: var(--text); }
+        .container { max-width: 720px; margin: 0 auto; padding: 3rem 2rem; }
+        .back { color: var(--accent); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; display: inline-block; }
+        .back:hover { text-decoration: underline; }
+        .post-date { font-size: 0.85rem; color: var(--accent); font-weight: 600; margin-bottom: 0.75rem; }
+        .post-title { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.03em; line-height: 1.3; }
+        .post-tag {
+            display: inline-block; font-size: 0.75rem; color: var(--accent);
+            background: rgba(100,108,255,0.1); padding: 0.2rem 0.6rem;
+            border-radius: 4px; margin-bottom: 2rem; font-weight: 500;
+        }
+        .post-content { font-size: 1.05rem; }
+        .post-content p { margin-bottom: 1.25rem; }
+        .post-content h2 { font-size: 1.4rem; font-weight: 700; margin: 2rem 0 1rem; letter-spacing: -0.02em; }
+        .post-content h3 { font-size: 1.15rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .post-content li { margin-left: 1.5rem; margin-bottom: 0.5rem; color: var(--text-secondary); }
+        .post-content blockquote {
+            border-left: 3px solid var(--accent); padding: 0.75rem 1.25rem;
+            margin: 1.5rem 0; background: var(--surface); border-radius: 0 8px 8px 0;
+            color: var(--text-secondary); font-style: italic;
+        }
+        .footer {
+            border-top: 1px solid var(--border); padding: 2rem 0;
+            text-align: center; color: var(--text-secondary); font-size: 0.85rem;
+            max-width: 720px; margin: 3rem auto 0;
+        }
+        .footer a { color: var(--accent); text-decoration: none; }
+        @media (max-width: 640px) {
+            .container { padding: 2rem 1.25rem; }
+            .post-title { font-size: 1.5rem; }
+        }
+        .fish-tts { margin-bottom: 1.5rem; }
+        .fish-listen-btn {
+            background: rgba(100,108,255,0.1); border: 1px solid rgba(100,108,255,0.3);
+            color: var(--accent); padding: 0.5rem 1.2rem; border-radius: 8px;
+            cursor: pointer; font-size: 0.9rem; font-weight: 500;
+            transition: all 0.2s;
+        }
+        .fish-listen-btn:hover { background: rgba(100,108,255,0.2); transform: translateY(-1px); }
+        .fish-listen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">Tyler<span>.</span></a>
+            <nav class="nav">
+                <a href="/">首页</a>
+                <a href="/blog/">博客</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <a href="/blog/" class="back">← 返回博客列表</a>
+        <div class="post-date">2026 年 06 月 18 日</div>
+        <h1 class="post-title">当AI开始"替我们思考"，人类的核心竞争力到底是什么？</h1>
+        <span class="post-tag">AI,未来趋势,个人成长,认知升级</span>
+        <div class="fish-tts" id="listen-section"></div>
+        <div class="post-content">
+<p># 当AI开始"替我们思考"，人类的核心竞争力到底是什么？</p>
+<p>最近半年，我和几十位创业者、工程师、设计师深度聊过。一个共同的焦虑浮现：当Cursor能写出比初级工程师更好的代码，当Midjourney能画出比资深插画师更惊艳的图，当Notion AI能梳理出比产品经理更清晰的PRD——**我们留给人类的"护城河"在哪里？**</p>
+<h2>思考的外包，正在悄悄发生</h2>
+<p>以前我们外包的是"手脚"：打字、画图、排版、翻译。现在我们外包的是"大脑"：逻辑推演、方案生成、甚至判断决策。</p>
+<p>有个真实案例：某SaaS创业团队，原本5个产品经理，现在只留1个。剩下4个人的工作，被一个配置好的Agent流水线吃掉了——从用户反馈抓取、需求聚类、PRD生成、原型图输出，全链路自动化。那个留下来的PM，不再写文档，而是变成了"AI编排官"：**定标准、判对错、兜底责任**。</p>
+<p>这不是裁员，是**认知分层重构**。</p>
+<h2>真正的护城河：品味、判断、责任</h2>
+<p>AI能给你100个方案，但**决定"哪个方案值得做"、定义"好坏的标准"、为后果"兜底负责"**——这三件事，目前只有人能做。</p>
+<li>**品味**：不是审美，是"在模糊地带识别本质"的能力。乔布斯说"品味就是把最好的东西暴露给自己"。AI有平均分，没有极致品味。</li>
+<li>**判断**：在信息不全、利益冲突、长短期博弈中做决策。AI优化目标函数，人定义目标函数。</li>
+<li>**责任**：当方案出错、用户投诉、合规踩线时，有人站出来背锅。组织需要"责任锚点"，AI没有法人资格。</li>
+<h2>未来5年，三类人会赢</h2>
+<p>1. **定义问题的人**：不问"怎么做"，而问"做什么、为什么做、不做什么"。</p>
+<p>2. **连接点的人**：跨域融合，把AI做不到的"隐性知识""人际信任""复杂协调"串起来。</p>
+<p>3. **兜底责任的人**：敢在关键节点拍板、签字、背锚。</p>
+<p>其余大概率会变成"AI算力的操作员"——这不丢人，但要认清定位。</p>
+<h2>给自己的建议</h2>
+<p>别卷提示词工程，那属于"手脚"层面。去卷**问题定义能力**、**跨域综合判断**、**极端情况下的决策直觉**。</p>
+<p>下次用AI时，试着问自己：**"如果没有AI，我会怎么思考这个问题？我能不能比AI给出的答案更本质？"**</p>
+<p>如果能，你就赢了。如果不能，别急——**把"思考"外包给AI，把"判断"留给自己**，这才是人机共生的正确姿势。</p>
+<p>---</p>
+<p>*写于2026年6月某个清晨，旁边跑着Cursor写代码，我喝着咖啡想清楚这件事。*</p>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Powered by <a href="https://www.tylerzhang.xyz">Tyler</a> & <a href="https://openclaw.ai">OpenClaw</a></p>
+    </footer>
+    <script src="/fish-ai.js?v=20260501"></script>
+</body>
+</html>
