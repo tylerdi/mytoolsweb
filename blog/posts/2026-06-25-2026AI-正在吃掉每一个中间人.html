@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026，AI 正在吃掉每一个「中间人」 · Tyler's Blog</title>
+    <link rel="icon" type="image/png" href="../../resource/easyclaw.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0a0a; --surface: #141414; --border: #2a2a2a;
+            --text: #e8e8e8; --text-secondary: #888; --accent: #646cff;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg); color: var(--text); line-height: 1.8; min-height: 100vh;
+        }
+        .header {
+            border-bottom: 1px solid var(--border); padding: 1.5rem 0;
+            position: sticky; top: 0; background: rgba(10,10,10,0.85);
+            backdrop-filter: blur(12px); z-index: 100;
+        }
+        .header-inner {
+            max-width: 720px; margin: 0 auto; padding: 0 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 1.25rem; font-weight: 700; color: var(--text); text-decoration: none; }
+        .logo span { color: var(--accent); }
+        .nav a { color: var(--text-secondary); text-decoration: none; margin-left: 2rem; font-size: 0.9rem; }
+        .nav a:hover { color: var(--text); }
+        .container { max-width: 720px; margin: 0 auto; padding: 3rem 2rem; }
+        .back { color: var(--accent); text-decoration: none; font-size: 0.9rem; margin-bottom: 2rem; display: inline-block; }
+        .back:hover { text-decoration: underline; }
+        .post-date { font-size: 0.85rem; color: var(--accent); font-weight: 600; margin-bottom: 0.75rem; }
+        .post-title { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.03em; line-height: 1.3; }
+        .post-tag {
+            display: inline-block; font-size: 0.75rem; color: var(--accent);
+            background: rgba(100,108,255,0.1); padding: 0.2rem 0.6rem;
+            border-radius: 4px; margin-bottom: 2rem; font-weight: 500;
+        }
+        .post-content { font-size: 1.05rem; }
+        .post-content p { margin-bottom: 1.25rem; }
+        .post-content h2 { font-size: 1.4rem; font-weight: 700; margin: 2rem 0 1rem; letter-spacing: -0.02em; }
+        .post-content h3 { font-size: 1.15rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
+        .post-content li { margin-left: 1.5rem; margin-bottom: 0.5rem; color: var(--text-secondary); }
+        .post-content blockquote {
+            border-left: 3px solid var(--accent); padding: 0.75rem 1.25rem;
+            margin: 1.5rem 0; background: var(--surface); border-radius: 0 8px 8px 0;
+            color: var(--text-secondary); font-style: italic;
+        }
+        .footer {
+            border-top: 1px solid var(--border); padding: 2rem 0;
+            text-align: center; color: var(--text-secondary); font-size: 0.85rem;
+            max-width: 720px; margin: 3rem auto 0;
+        }
+        .footer a { color: var(--accent); text-decoration: none; }
+        @media (max-width: 640px) {
+            .container { padding: 2rem 1.25rem; }
+            .post-title { font-size: 1.5rem; }
+        }
+        .fish-tts { margin-bottom: 1.5rem; }
+        .fish-listen-btn {
+            background: rgba(100,108,255,0.1); border: 1px solid rgba(100,108,255,0.3);
+            color: var(--accent); padding: 0.5rem 1.2rem; border-radius: 8px;
+            cursor: pointer; font-size: 0.9rem; font-weight: 500;
+            transition: all 0.2s;
+        }
+        .fish-listen-btn:hover { background: rgba(100,108,255,0.2); transform: translateY(-1px); }
+        .fish-listen-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <a href="/" class="logo">Tyler<span>.</span></a>
+            <nav class="nav">
+                <a href="/">首页</a>
+                <a href="/blog/">博客</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <a href="/blog/" class="back">← 返回博客列表</a>
+        <div class="post-date">2026 年 06 月 25 日</div>
+        <h1 class="post-title">2026，AI 正在吃掉每一个「中间人」</h1>
+        <span class="post-tag">AI,趋势,商业模式</span>
+        <div class="fish-tts" id="listen-section"></div>
+        <div class="post-content">
+<p># 2026，AI 正在吃掉每一个「中间人」</p>
+<p>从中间商到中间件，AI 正在重构价值链。你的工作会被替代吗？</p>
+<p>---</p>
+<p>互联网消灭了信息不对称，AI 正在消灭**能力不对称**。这不是一句口号，而是一场正在发生的静默革命。</p>
+<h2>中间人的黄昏</h2>
+<p>想想传统的商业模式：旅行社、房产中介、保险代理人、招聘猎头……这些角色的核心价值是什么？**信息差 + 专业壁垒**。他们知道你不知道的，他们会做你不会的，于是你付钱给他们。</p>
+<p>但 2026 年的现实是：AI 已经能检索全球实时信息、分析市场数据、生成合同条款、甚至面试候选人。当信息变得公开透明的瞬间，专业壁垒也开始崩塌。</p>
+<p>看看 Airbnb 在做什么。他们最近推出的 AI Concierge 不仅帮你订房，还规划行程、推荐餐厅、预订门票。传统旅行社的最后一公里，正在被 AI 吃掉。</p>
+<h2>不是取代，是重构</h2>
+<p>我见过太多人恐慌：AI 会让我失业吗？答案是：**AI 不会取代你，但会用 AI 的人会。**</p>
+<p>真正的趋势不是「AI 替代人」，而是「AI 压缩中间层」。过去一个公司需要市场部、销售部、客服部、运营部——每个部门里层层叠叠的中间管理者负责信息的传递和决策的协调。现在，AI 可以直接连接一线和决策层。</p>
+<p>一个 10 人的 AI 原生团队，可以完成过去 100 人才能做的事。这不是夸张，这是 Y Combinator 2026 年 Demo Day 上超过 40% 的创业公司的真实写照。</p>
+<h2>中间商的出路在哪？</h2>
+<p>如果你今天的工作本质是「传递信息」或「执行流程」——你该焦虑。但如果你在做的是**判断、创造、建立信任**——AI 是你的放大器，不是替代品。</p>
+<p>我最近访谈了几个成功的 AI 时代创业者，发现一个共同点：他们不是 AI 专家，而是**行业专家 + AI 使用者**。一个懂装修的包工头，用 AI 工具把客户沟通、预算管理、工期排期全部自动化，一个人管 20 个工地，效率翻了 5 倍。</p>
+<h2>新的「中间人」正在崛起</h2>
+<p>旧中间人被吃掉，新中间人正在长出来：</p>
+<li>**Prompt 工程师** — 把人的需求翻译成 AI 能理解的指令</li>
+<li>**AI 审计师** — 确保 AI 的输出靠谱、合规、不偏见</li>
+<li>**人机协作设计师** — 设计人和 AI 一起工作的流程和界面</li>
+<li>**数据策展人** — 从海量数据中筛选出真正有价值的内容</li>
+<p>这些角色今天听起来新鲜，几年后就会像「产品经理」一样普通。</p>
+<h2>写在最后</h2>
+<p>2026 年最大的寓言不是 AI 多强大，而是**适应速度决定了生存概率**。恐龙不是不够强，是变得太慢。</p>
+<p>问问自己：我今天做的事，AI 能不能做得更好？如果能，我怎么用 AI 做到更好？</p>
+<p>中间人不会消失，但会被重新定义。希望屏幕前的你，是定义者，而不是被定义者。</p>
+<p>---</p>
+<p>*博客首发于 [tylerzhang.xyz](https://tylerzhang.xyz)*</p>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Powered by <a href="https://www.tylerzhang.xyz">Tyler</a> & <a href="https://openclaw.ai">OpenClaw</a></p>
+    </footer>
+    <script src="/fish-ai.js?v=20260501"></script>
+</body>
+</html>
