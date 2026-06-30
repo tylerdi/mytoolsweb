@@ -3,156 +3,130 @@
   <!-- 主页 -->
   <url>
     <loc>https://tylerzhang.xyz/</loc>
-    <changefreq>daily</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- 工具页 -->
+  <!-- 核心工具页 -->
   <url>
-    <loc>https://tylerzhang.xyz/tools</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://tylerzhang.xyz/tools.html</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
-  <!-- 独立工具页（SEO优化） -->
   <url>
-    <loc>https://tylerzhang.xyz/tools/ai-image-generator</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://tylerzhang.xyz/ai-tts.html</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tylerzhang.xyz/tools/ai-voice-generator</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://tylerzhang.xyz/ai-image.html</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tylerzhang.xyz/tools/ai-translation</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://tylerzhang.xyz/ai-chat.html</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  <!-- AI TTS 独立功能页 -->
   <url>
-    <loc>https://tylerzhang.xyz/ai-tts</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://tylerzhang.xyz/ai-voice-to-text.html</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <!-- AI 画图 独立功能页 -->
-  <url>
-    <loc>https://tylerzhang.xyz/ai-image</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <!-- AI 聊天助手 -->
-  <url>
-    <loc>https://tylerzhang.xyz/ai-chat</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <!-- AI API 开放平台 -->
-  <url>
-    <loc>https://tylerzhang.xyz/ai-service</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <!-- AI 语音转文字 -->
-  <url>
-    <loc>https://tylerzhang.xyz/ai-voice-to-text</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <!-- 灵感墙 -->
-  <url>
-    <loc>https://tylerzhang.xyz/ideas</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
   </url>
 
-  <!-- 博客 -->
+  <!-- 博客首页 -->
   <url>
-    <loc>https://tylerzhang.xyz/blog/</loc>
-    <changefreq>daily</changefreq>
+    <loc>https://tylerzhang.xyz/blog.html</loc>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+
+  <!-- 博客文章（保留的12篇） -->
   <url>
-    <loc>https://tylerzhang.xyz/blog/posts/2026-05-01-五一特稿AI-不是在消灭工作是在消灭打工感</loc>
+    <loc>https://tylerzhang.xyz/blog/posts/2026-05-01-五一特稿AI-不是在消灭工作是在消灭打工感.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://tylerzhang.xyz/blog/posts/2026-05-01-第一篇AI-如何改变我们的早晨</loc>
+    <loc>https://tylerzhang.xyz/blog/posts/2026-05-04-AI-终于开始记住你了记忆革命正在重新定义人机关系.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://tylerzhang.xyz/blog/posts/2026-05-02-AI-不再是工具当-Agent-成为数字世界的中间层</loc>
+    <loc>https://tylerzhang.xyz/blog/posts/2026-05-06-AI-正在成为你的新操作系统.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://tylerzhang.xyz/blog/posts/2026-05-03-会偷懒的人赢了AI-时代的委托思维</loc>
+    <loc>https://tylerzhang.xyz/blog/posts/2026-05-07-AI-Agent正在重新定义陪伴.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://tylerzhang.xyz/blog/posts/2026-05-04-AI-终于开始记住你了记忆革命正在重新定义人机关系</loc>
+    <loc>https://tylerzhang.xyz/blog/posts/2026-05-24-AI-Agent时代从你问我答到你睡它干.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://tylerzhang.xyz/blog/posts/2026-05-05-2026你的AI员工已上线</loc>
+    <loc>https://tylerzhang.xyz/blog/posts/2026-05-29-代码正在变成廉价品但思考永远不会.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://tylerzhang.xyz/blog/posts/2026-05-06-AI-正在成为你的新操作系统</loc>
+    <loc>https://tylerzhang.xyz/blog/posts/2026-06-05-从ChatGPT到AgentAI正在从问答机器变成数字员工.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://tylerzhang.xyz/blog/posts/2026-05-07-AI-Agent正在重新定义陪伴</loc>
+    <loc>https://tylerzhang.xyz/blog/posts/2026-06-16-从会说话到会干活AI-智能体正在重塑软件工程的底层逻辑.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://tylerzhang.xyz/blog/posts/2026-05-09-AI-Agent-不再是工具而是你的数字同事</loc>
+    <loc>https://tylerzhang.xyz/blog/posts/2026-06-18-当AI开始替我们思考人类的核心竞争力到底是什么.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://tylerzhang.xyz/blog/posts/2026-05-10-AI时代的创作者焦虑生成和创作到底差在哪</loc>
+    <loc>https://tylerzhang.xyz/blog/posts/2026-06-22-AI-写作的恐怖谷时刻当完美变得不舒服.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://tylerzhang.xyz/blog/posts/2026-05-12-App-的黄昏当-AI-Agent-取代你的手机屏幕</loc>
+    <loc>https://tylerzhang.xyz/blog/posts/2026-06-24-当-AI-Agent-开始接管你的数字生活一个正在发生的范式转移.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://tylerzhang.xyz/blog/posts/2026-05-13-AI-Agent-时代当软件的界面消失</loc>
+    <loc>https://tylerzhang.xyz/blog/posts/2026-06-24-当-AI-成为你的第二大脑.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <!-- 其他页面 -->
   <url>
-    <loc>https://tylerzhang.xyz/about</loc>
+    <loc>https://tylerzhang.xyz/about.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://tylerzhang.xyz/gallery</loc>
+    <loc>https://tylerzhang.xyz/ideas.html</loc>
     <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://tylerzhang.xyz/gallery.html</loc>
+    <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://tylerzhang.xyz/changelog</loc>
+    <loc>https://tylerzhang.xyz/resources.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://tylerzhang.xyz/changelog.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
-  <url>
-    <loc>https://tylerzhang.xyz/resources</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
-  </url>
-
 </urlset>
