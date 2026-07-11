@@ -17,11 +17,11 @@ def add_idea(emoji, title, desc, tag):
     with open(index_path, 'r', encoding='utf-8') as f:
         content = f.read()
     
-    new_entry = f'''            {{ emoji: "{emoji}", title: "{title}", desc: "{desc}", tag: "{tag}", date: "{today}" }},'''
+    new_entry = f'            {{ emoji: "{emoji}", title: "{title}", desc: "{desc}", tag: "{tag}", date: "{today}" }},'
     
     content = content.replace(
-        '// IDEAS_PLACEHOLDER',
-        '// IDEAS_PLACEHOLDER\n' + new_entry
+        '        const ideas = [',
+        '        const ideas = [\n' + new_entry
     )
     
     with open(index_path, 'w', encoding='utf-8') as f:

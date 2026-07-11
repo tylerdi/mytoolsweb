@@ -60,7 +60,12 @@
     <div class="container">
         <h1>💡 灵感墙</h1>
         <div class="ideas-grid">
-            // IDEAS_PLACEHOLDER
+        </div>
+        <p class="footer">✨ 每日灵感，点亮思维</p>
+    </div>
+    
+    <script>
+        const ideas = [
             { emoji: "🎨", title: "情绪色卡", desc: "每天用颜色记录心情，年终生成一幅专属情绪画卷", tag: "设计,生活", date: "2026-07-11" },
             { emoji: "🔄", title: "反向日历", desc: "从截止日期倒推，AI自动帮你规划每天该做什么", tag: "效率,产品", date: "2026-07-11" },
             { emoji: "🧠", title: "AI睡眠教练", desc: "用AI分析你的睡眠数据，像私人教练一样帮你优化作息节奏", tag: "AI,生活", date: "2026-07-11" },
@@ -75,12 +80,7 @@
             { emoji: "🎵", title: "情绪调频器", desc: "根据你的文字输入，AI自动匹配一首BGM并生成专属氛围页面", tag: "AI", date: "2026-07-04" },
             { emoji: "🪞", title: "数字镜像人格", desc: "AI分析你的聊天记录生成你的说话风格模型，帮你预览发出前的语气", tag: "AI", date: "2026-07-04" },
             { emoji: "🌊", title: "反向闹钟", desc: "只在你睡过头时才响，根据你的日程智能判断是否需要叫醒", tag: "产品", date: "2026-07-04" },
-        </div>
-        <p class="footer">✨ 每日灵感，点亮思维</p>
-    </div>
-    
-    <script>
-        const ideas = [];
+        ];
         
         // 渲染灵感卡片
         function renderIdeas() {
