@@ -45,12 +45,11 @@ export async function onRequestPost(context) {
 回复要简短有趣，不要超过 200 字。`,
     };
 
+    // Don't send API key to opencode.ai - invalid keys cause 429
+    // opencode.ai allows unauthenticated access for free models
     const headers = {
       'Content-Type': 'application/json',
     };
-    if (MIMO_API_KEY) {
-      headers['Authorization'] = 'Bearer ' + MIMO_API_KEY;
-    }
 
     console.log('[Chat] Request:', MIMO_API_BASE + '/chat/completions', 'model:', model, 'hasKey:', !!MIMO_API_KEY);
     const apiResponse = await fetch(`${MIMO_API_BASE}/chat/completions`, {
