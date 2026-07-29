@@ -3,11 +3,12 @@ name = "mytoolsweb"
 compatibility_date = "2024-03-12"
 pages_build_output_dir = "."
 
-# 环境变量（需要在Cloudflare后台配置SUPABASE_URL和SUPABASE_ANON_KEY）
+# 环境变量
 [vars]
 SUPABASE_URL = "https://twyosmombfrcheyjujvb.supabase.co"
-SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eW9zbW9tYmZyY2hleWp1anZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjAwMDQsImV4cCI6MjA4ODIzNjAwNH0.70lVXwcjRqVNLDwkvIwEJHB5rRLBQttiWrW2hKi1bwo"
-# MIMO_API_BASE / MIMO_MODEL / MIMO_API_KEY 改为 Cloudflare Dashboard Secrets 管理
+SUPABASE_ANON_KEY = "eyJhbG…1bwo"
+MIMO_API_BASE = "https://integrate.api.nvidia.com/v1"
+MIMO_MODEL = "stepfun-ai/step-3.7-flash"
 
 # Functions 配置
 [functions]
