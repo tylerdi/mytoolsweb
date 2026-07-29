@@ -7,8 +7,7 @@ pages_build_output_dir = "."
 [vars]
 SUPABASE_URL = "https://twyosmombfrcheyjujvb.supabase.co"
 SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3eW9zbW9tYmZyY2hleWp1anZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjAwMDQsImV4cCI6MjA4ODIzNjAwNH0.70lVXwcjRqVNLDwkvIwEJHB5rRLBQttiWrW2hKi1bwo"
-MIMO_API_BASE = "https://integrate.api.nvidia.com/v1"
-MIMO_MODEL = "stepfun-ai/step-3.7-flash"
+# MIMO_API_BASE / MIMO_MODEL / MIMO_API_KEY 改为 Cloudflare Dashboard Secrets 管理
 
 # Functions 配置
 [functions]
