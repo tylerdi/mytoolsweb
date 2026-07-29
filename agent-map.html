@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agent 架构地图 - AI Agent 全景图 | Tyler工具箱</title>
-    <meta name="description" content="交互式Agent架构全景图：核心模块、记忆系统、规划引擎、工具使用、多Agent协作。可视化理解AI Agent的工作原理。">
-    <meta name="keywords" content="Agent架构,AI Agent,Agent地图,LLM Agent,多Agent,Agent记忆,Agent规划">
+    <meta name="description" content="交互式Agent架构全景图：14个核心模块，从核心循环到多Agent协作，可视化理解AI Agent的工作原理。">
+    <meta name="keywords" content="Agent架构,AI Agent,Agent地图,LLM Agent,多Agent,Agent记忆,Agent规划,Agent工具">
     <meta property="og:title" content="Agent 架构地图 - AI Agent 全景图">
     <meta property="og:url" content="https://tylerzhang.xyz/agent-map.html">
     <meta property="og:type" content="website">
@@ -15,381 +15,425 @@
     <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
     <link rel="stylesheet" href="/style.css?v2">
     <style>
-        .map-hero{text-align:center;padding:2rem 1rem 1rem}
-        .map-hero h1{font-size:2rem;margin-bottom:.3rem}
-        .map-hero p{color:var(--text-dim);font-size:.9rem;max-width:500px;margin:0 auto}
-        .map-container{max-width:900px;margin:0 auto;padding:0 1rem 2rem}
-        /* SVG 地图 */
-        .map-svg{width:100%;margin:1rem auto;display:block}
-        .map-svg text{font-family:'LXGW WenKai',sans-serif;fill:var(--text)}
-        .node{cursor:pointer;transition:transform .2s}
-        .node:hover{transform:scale(1.05)}
-        .node rect{rx:12;ry:12;stroke-width:2;transition:all .2s}
-        .node:hover rect{filter:brightness(1.2)}
-        .node-center rect{fill:var(--accent);stroke:var(--accent)}
-        .node-center text{fill:#fff;font-weight:700}
-        .edge{stroke:var(--border);stroke-width:2;fill:none}
+        :root{--sidebar-w:260px;--toolbar-h:52px;--accent:#646cff;--c-core:#646cff;--c-tool:#f59e0b;--c-perm:#ef4444;--c-life:#8b5cf6;--c-prompt:#22c55e;--c-ctx:#06b6d4;--c-mem:#a855f7;--c-resil:#f97316;--c-recover:#ec4899;--c-plan:#14b8a6;--c-sub:#6366f1;--c-trigger:#eab308;--c-channel:#3b82f6;--c-integ:#10b981}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'LXGW WenKai',-apple-system,sans-serif;background:#0a0a0a;color:#e8e8e8;overflow:hidden;height:100vh}
+        /* 左侧导航 */
+        .sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:#111;border-right:1px solid #1e1e1e;overflow-y:auto;z-index:100;padding-top:var(--toolbar-h)}
+        .sidebar-header{padding:12px 16px;border-bottom:1px solid #1e1e1e;position:sticky;top:0;background:#111;z-index:1}
+        .sidebar-header h2{font-size:1rem;margin-bottom:6px}
+        .sidebar-search{width:100%;padding:6px 10px;border:1px solid #333;border-radius:6px;background:#1a1a1a;color:#e8e8e8;font-size:.8rem;outline:none}
+        .sidebar-search:focus{border-color:var(--accent)}
+        .sidebar-group{margin:8px 0}
+        .sidebar-group-title{font-size:.7rem;color:#666;text-transform:uppercase;letter-spacing:1px;padding:8px 16px 4px;font-weight:600}
+        .sidebar-item{display:flex;align-items:center;gap:8px;padding:7px 16px;cursor:pointer;font-size:.82rem;color:#aaa;transition:all .15s;border-left:3px solid transparent}
+        .sidebar-item:hover{background:#1a1a1a;color:#e8e8e8}
+        .sidebar-item.active{color:var(--accent);border-left-color:var(--accent);background:rgba(100,108,255,.08)}
+        .sidebar-item .num{font-size:.7rem;color:#555;width:22px;flex-shrink:0}
+        .sidebar-item.active .num{color:var(--accent)}
+        /* 顶部工具栏 */
+        .toolbar{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--toolbar-h);background:#111;border-bottom:1px solid #1e1e1e;display:flex;align-items:center;padding:0 20px;gap:12px;z-index:100}
+        .toolbar-title{font-size:1rem;font-weight:600;white-space:nowrap}
+        .toolbar-pos{font-size:.75rem;color:#666;margin-left:8px}
+        .toolbar-spacer{flex:1}
+        .toolbar-btn{padding:5px 12px;border:1px solid #333;border-radius:6px;background:#1a1a1a;color:#aaa;font-size:.78rem;cursor:pointer;transition:all .15s}
+        .toolbar-btn:hover{border-color:var(--accent);color:var(--accent)}
+        .toolbar-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+        /* 移动端汉堡 */
+        .hamburger{display:none;position:fixed;top:10px;left:12px;z-index:200;background:#111;border:1px solid #333;border-radius:6px;padding:6px 10px;color:#e8e8e8;font-size:1.2rem;cursor:pointer}
+        /* 主内容区 */
+        .main{margin-left:var(--sidebar-w);margin-top:var(--toolbar-h);height:calc(100vh - var(--toolbar-h));overflow-y:auto;scroll-behavior:smooth}
+        /* 每个专题区域 */
+        .section{padding:32px 40px;min-height:400px;border-bottom:1px solid #1a1a1a}
+        .section-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+        .section-num{font-size:1.8rem;font-weight:700;opacity:.15}
+        .section-title{font-size:1.3rem;font-weight:600}
+        .section-subtitle{font-size:.8rem;color:#666;margin-top:2px}
+        /* SVG 流程图 */
+        .flow-container{background:#0d0d0d;border:1px solid #1e1e1e;border-radius:12px;padding:24px;margin:16px 0;overflow-x:auto}
+        .flow-svg{display:block;margin:0 auto}
+        .flow-svg text{font-family:'LXGW WenKai',sans-serif}
+        .node-rect{rx:10;ry:10;stroke-width:2;cursor:pointer;transition:all .2s}
+        .node-rect:hover{filter:brightness(1.3) drop-shadow(0 0 8px currentColor)}
+        .node-label{font-size:13px;fill:#e8e8e8;pointer-events:none}
+        .node-sub{font-size:10px;fill:#888;pointer-events:none}
+        .edge{stroke:#333;stroke-width:1.5;fill:none;marker-end:url(#arrow)}
+        .edge-active{stroke:var(--accent);stroke-width:2}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+        .pulse{animation:pulse 1.5s ease-in-out infinite}
         /* 详情面板 */
-        .detail-panel{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:1rem;display:none;animation:fadeIn .3s}
-        .detail-panel.show{display:block}
-        @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-        .detail-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem}
-        .detail-icon{font-size:2rem}
-        .detail-header h2{font-size:1.3rem;margin:0}
-        .detail-header p{font-size:.85rem;color:var(--text-dim);margin:0}
-        .detail-close{margin-left:auto;background:none;border:none;color:var(--text-dim);font-size:1.5rem;cursor:pointer;padding:4px 8px}
-        .detail-close:hover{color:var(--text)}
-        .detail-content{font-size:.9rem;line-height:1.8}
-        .detail-content h3{font-size:1rem;color:var(--accent);margin:1rem 0 .5rem}
-        .detail-content ul{padding-left:1.2rem}
-        .detail-content li{margin-bottom:.3rem}
-        .detail-content .example{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.8rem;margin:.5rem 0;font-size:.85rem}
-        .detail-content .example::before{content:'💡 示例：';font-weight:600;color:var(--accent)}
-        /* 对比表 */
-        .compare-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
-        .compare-table th,.compare-table td{padding:.6rem .8rem;border:1px solid var(--border);text-align:left}
-        .compare-table th{background:var(--bg);color:var(--accent);font-weight:600}
-        .compare-table td:first-child{color:var(--text-dim);width:30%}
-        /* 底部卡片 */
-        .bottom-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:1.5rem}
-        .bottom-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center;cursor:pointer;transition:all .2s}
-        .bottom-card:hover{border-color:var(--accent);transform:translateY(-2px)}
-        .bottom-card .icon{font-size:1.5rem;margin-bottom:.3rem}
-        .bottom-card h4{font-size:.9rem;margin:0 0 .2rem}
-        .bottom-card p{font-size:.75rem;color:var(--text-dim);margin:0}
+        .detail{background:#111;border:1px solid #1e1e1e;border-radius:12px;margin:16px 0;padding:20px;display:none;animation:fadeIn .3s}
+        .detail.show{display:block}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+        .detail-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+        .detail-icon{font-size:1.5rem}
+        .detail-head h3{font-size:1.1rem;margin:0}
+        .detail-head p{font-size:.8rem;color:#666;margin:0}
+        .detail-close{margin-left:auto;background:none;border:none;color:#666;font-size:1.3rem;cursor:pointer}
+        .detail-close:hover{color:#e8e8e8}
+        .detail-body{font-size:.88rem;line-height:1.8;color:#ccc}
+        .detail-body h4{color:var(--accent);font-size:.95rem;margin:12px 0 6px}
+        .detail-body ul{padding-left:1.2rem}
+        .detail-body li{margin-bottom:4px}
+        .detail-body .analogy{background:#1a1a1a;border-left:3px solid var(--accent);padding:10px 14px;border-radius:0 8px 8px 0;margin:8px 0;font-size:.85rem}
+        .detail-body .analogy::before{content:'💡 类比：';font-weight:600;color:var(--accent)}
+        .detail-body .example{background:#0d0d0d;border:1px solid #1e1e1e;border-radius:8px;padding:10px 14px;margin:8px 0;font-size:.85rem}
+        .detail-body .example::before{content:'🔧 实际应用：';font-weight:600;color:#f59e0b}
+        /* 移动端适配 */
         @media(max-width:768px){
-            .map-hero h1{font-size:1.5rem}
-            .detail-panel{padding:1rem}
+            .sidebar{transform:translateX(-100%);transition:transform .3s}
+            .sidebar.open{transform:translateX(0)}
+            .hamburger{display:block}
+            .toolbar{left:0}
+            .main{margin-left:0}
+            .section{padding:20px 16px}
         }
     </style>
 </head>
 <body>
-    <section class="map-hero">
-        <div style="font-size:2.5rem;margin-bottom:.3rem">🗺️</div>
-        <h1>Agent 架构地图</h1>
-        <p>点击任意模块，深入了解 AI Agent 的工作原理</p>
-    </section>
+    <!-- 汉堡菜单 -->
+    <button class="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
 
-    <div class="map-container">
-        <!-- SVG 交互地图 -->
-        <svg class="map-svg" viewBox="0 0 800 520" xmlns="http://www.w3.org/2000/svg">
-            <!-- 连线 -->
-            <path class="edge" d="M400,260 L400,100"/>
-            <path class="edge" d="M400,260 L200,180"/>
-            <path class="edge" d="M400,260 L600,180"/>
-            <path class="edge" d="M400,260 L200,370"/>
-            <path class="edge" d="M400,260 L600,370"/>
-            <path class="edge" d="M200,370 L200,470" stroke-dasharray="5,5"/>
-            <path class="edge" d="M600,370 L600,470" stroke-dasharray="5,5"/>
-
-            <!-- 中心：Agent 核心 -->
-            <g class="node node-center" onclick="showDetail('core')">
-                <rect x="320" y="220" width="160" height="80" fill="#646cff" stroke="#646cff"/>
-                <text x="400" y="255" text-anchor="middle" font-size="18" fill="#fff">🧠 Agent 核心</text>
-                <text x="400" y="278" text-anchor="middle" font-size="11" fill="rgba(255,255,255,.7)">LLM + 推理引擎</text>
-            </g>
-
-            <!-- 记忆系统 -->
-            <g class="node" onclick="showDetail('memory')">
-                <rect x="320" y="50" width="160" height="70" fill="#1a1a2e" stroke="#a855f7"/>
-                <text x="400" y="82" text-anchor="middle" font-size="15" fill="#a855f7">💾 记忆系统</text>
-                <text x="400" y="102" text-anchor="middle" font-size="10" fill="#888">短期 · 长期 · 工作记忆</text>
-            </g>
-
-            <!-- 规划引擎 -->
-            <g class="node" onclick="showDetail('planning')">
-                <rect x="100" y="140" width="160" height="70" fill="#1a1a2e" stroke="#22c55e"/>
-                <text x="180" y="172" text-anchor="middle" font-size="15" fill="#22c55e">📋 规划引擎</text>
-                <text x="180" y="192" text-anchor="middle" font-size="10" fill="#888">任务分解 · 路径规划</text>
-            </g>
-
-            <!-- 工具使用 -->
-            <g class="node" onclick="showDetail('tools')">
-                <rect x="540" y="140" width="160" height="70" fill="#1a1a2e" stroke="#f59e0b"/>
-                <text x="620" y="172" text-anchor="middle" font-size="15" fill="#f59e0b">🔧 工具使用</text>
-                <text x="620" y="192" text-anchor="middle" font-size="10" fill="#888">API · 代码 · 搜索</text>
-            </g>
-
-            <!-- 多Agent协作 -->
-            <g class="node" onclick="showDetail('multi-agent')">
-                <rect x="100" y="330" width="160" height="70" fill="#1a1a2e" stroke="#ec4899"/>
-                <text x="180" y="362" text-anchor="middle" font-size="15" fill="#ec4899">🤝 多Agent协作</text>
-                <text x="180" y="382" text-anchor="middle" font-size="10" fill="#888">分工 · 通信 · 协调</text>
-            </g>
-
-            <!-- 反馈循环 -->
-            <g class="node" onclick="showDetail('feedback')">
-                <rect x="540" y="330" width="160" height="70" fill="#1a1a2e" stroke="#06b6d4"/>
-                <text x="620" y="362" text-anchor="middle" font-size="15" fill="#06b6d4">🔄 反馈循环</text>
-                <text x="620" y="382" text-anchor="middle" font-size="10" fill="#888">评估 · 纠错 · 迭代</text>
-            </g>
-
-            <!-- 感知层 -->
-            <g class="node" onclick="showDetail('perception')">
-                <rect x="110" y="440" width="140" height="55" fill="#1a1a2e" stroke="#666"/>
-                <text x="180" y="465" text-anchor="middle" font-size="13" fill="#aaa">👁️ 感知层</text>
-                <text x="180" y="482" text-anchor="middle" font-size="9" fill="#666">文本·图像·语音·视频</text>
-            </g>
-
-            <!-- 行动层 -->
-            <g class="node" onclick="showDetail('action')">
-                <rect x="550" y="440" width="140" height="55" fill="#1a1a2e" stroke="#666"/>
-                <text x="620" y="465" text-anchor="middle" font-size="13" fill="#aaa">⚡ 行动层</text>
-                <text x="620" y="482" text-anchor="middle" font-size="9" fill="#666">生成·执行·部署</text>
-            </g>
-        </svg>
-
-        <!-- 详情面板 -->
-        <div class="detail-panel" id="detailPanel">
-            <div class="detail-header">
-                <span class="detail-icon" id="detailIcon"></span>
-                <div>
-                    <h2 id="detailTitle"></h2>
-                    <p id="detailDesc"></p>
-                </div>
-                <button class="detail-close" onclick="hideDetail()">✕</button>
-            </div>
-            <div class="detail-content" id="detailContent"></div>
+    <!-- 左侧导航 -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>🗺️ Agent 架构地图</h2>
+            <input type="text" class="sidebar-search" placeholder="搜索节点..." id="searchInput" oninput="filterNodes(this.value)">
         </div>
+        <div id="sidebarNav"></div>
+    </nav>
 
-        <!-- 底部：Agent 特征卡片 -->
-        <div class="bottom-cards">
-            <div class="bottom-card" onclick="showDetail('autonomy')">
-                <div class="icon">🎯</div>
-                <h4>自主性</h4>
-                <p>无需人类干预，自主决策</p>
-            </div>
-            <div class="bottom-card" onclick="showDetail('reactivity')">
-                <div class="icon">⚡</div>
-                <h4>反应性</h4>
-                <p>感知环境，实时响应</p>
-            </div>
-            <div class="bottom-card" onclick="showDetail('proactivity')">
-                <div class="icon">🚀</div>
-                <h4>主动性</h4>
-                <p>主动规划，抢占先机</p>
-            </div>
-            <div class="bottom-card" onclick="showDetail('social')">
-                <div class="icon">👥</div>
-                <h4>社交性</h4>
-                <p>与人和其他Agent交互</p>
-            </div>
-        </div>
+    <!-- 顶部工具栏 -->
+    <div class="toolbar">
+        <span class="toolbar-title">🗺️ Agent 架构地图</span>
+        <span class="toolbar-pos" id="posIndicator">u01 核心循环</span>
+        <div class="toolbar-spacer"></div>
+        <button class="toolbar-btn" onclick="expandAll()">展开全部</button>
+        <button class="toolbar-btn" onclick="collapseAll()">收起全部</button>
     </div>
 
-    <footer class="footer">Powered by <a href="https://openclaw.ai">OpenClaw</a> · 🤖 AI 自主维护 · © 2026 Tyler</footer>
+    <!-- 主内容区 -->
+    <div class="main" id="mainContent">
+        <!-- 内容由 JS 动态生成 -->
+    </div>
+
+    <!-- 底部详情面板（fixed） -->
+    <div class="detail" id="detailPanel">
+        <div class="detail-head">
+            <span class="detail-icon" id="detailIcon"></span>
+            <div><h3 id="detailTitle"></h3><p id="detailDesc"></p></div>
+            <button class="detail-close" onclick="hideDetail()">✕</button>
+        </div>
+        <div class="detail-body" id="detailBody"></div>
+    </div>
 
     <script src="/nav.js?v2"></script>
     <script>
-    const DETAILS = {
-      'core': {
-        icon: '🧠', title: 'Agent 核心', desc: 'LLM + 推理引擎，Agent 的大脑',
-        content: `
-          <h3>核心组成</h3>
-          <ul>
-            <li><strong>大语言模型（LLM）</strong>— 理解语言、生成回复的基础能力</li>
-            <li><strong>推理引擎</strong>— Chain-of-Thought、Tree-of-Thought 等推理策略</li>
-            <li><strong>系统提示（System Prompt）</strong>— 定义 Agent 的角色、能力边界、行为规则</li>
-          </ul>
-          <div class="example">Agent 核心就像一个人的大脑：LLM 是基础智力，System Prompt 是性格和价值观，推理策略是思维方式。</div>
-          <h3>常见架构模式</h3>
-          <ul>
-            <li><strong>ReAct</strong>— 推理(Reasoning) + 行动(Acting)交替进行</li>
-            <li><strong>Plan-and-Execute</strong>— 先规划完整方案，再逐步执行</li>
-            <li><strong>Reflexion</strong>— 通过自我反思不断改进</li>
-          </ul>
-        `
+    // ========== 数据定义 ==========
+    const SECTIONS = [
+      { id:'u01', title:'核心循环', en:'Agent Loop', group:'core', icon:'🔄', color:'var(--c-core)',
+        desc:'一切 Agent 的公分母：触发 → 装配上下文 → LLM 推理 → 工具调用? → 执行 → 回馈 → while 循环',
+        nodes:['trigger','context_assembly','llm_reason','tool_decide','execute','feedback'],
+        detail:{
+          trigger:{title:'触发 Trigger',desc:'启动 Agent 循环的入口',body:'<h4>触发方式</h4><ul><li><strong>用户消息</strong>— 最常见，用户发一条消息触发回复</li><li><strong>定时事件</strong>— Cron/Heartbeat 定期唤醒</li><li><strong>系统事件</strong>— 文件变化、Webhook、其他 Agent 消息</li><li><strong>内部事件</strong>— 子任务完成、超时、错误恢复</li></ul><div class="analogy">就像人的"闹钟"：可以是别人叫你（用户消息）、闹钟响了（定时）、或者听到门铃（系统事件）</div><div class="example">OpenClaw 的 Heartbeat 每30分钟触发一次，检查邮件、日历等</div>'},
+          context_assembly:{title:'装配上下文',desc:'把所有相关信息打包给 LLM',body:'<h4>上下文组成</h4><ul><li><strong>System Prompt</strong>— Agent 的身份、能力、规则</li><li><strong>对话历史</strong>— 最近 N 轮对话</li><li><strong>工具定义</strong>— 可用工具的 JSON Schema</li><li><strong>RAG 检索结果</strong>— 从知识库拉取的相关文档</li><li><strong>环境信息</strong>— 时间、地点、用户偏好</li></ul><div class="analogy">就像你开会前整理资料：把相关文件、邮件、数据都摊在桌上</div>'},
+          llm_reason:{title:'LLM 推理',desc:'大模型理解上下文，决定下一步',body:'<h4>推理策略</h4><ul><li><strong>Chain-of-Thought</strong>— 一步步推理</li><li><strong>Tree-of-Thought</strong>— 探索多条路径</li><li><strong>ReAct</strong>— 推理+行动交替</li></ul><div class="analogy">就像大脑思考：看到问题 → 调动记忆 → 分析判断 → 决定做什么</div>'},
+          tool_decide:{title:'工具决策',desc:'LLM 判断是否需要调用工具',body:'<h4>决策逻辑</h4><ul><li>LLM 输出工具调用请求（JSON）</li><li>如果没有工具调用 → 直接回复用户</li><li>如果有工具调用 → 执行工具后继续循环</li></ul><div class="analogy">就像你判断"这件事我自己能做"还是"需要查一下/问一下别人"</div>'},
+          execute:{title:'执行 Action',desc:'调用工具或生成回复',body:'<h4>执行类型</h4><ul><li><strong>工具执行</strong>— 调用 API、运行代码、操作文件</li><li><strong>文本生成</strong>— 直接回复用户</li><li><strong>子任务派发</strong>— 把任务交给子 Agent</li></ul><div class="example">OpenClaw 的 exec 工具可以运行 shell 命令、read 可以读文件</div>'},
+          feedback:{title:'反馈 Feedback',desc:'执行结果回馈给 LLM，决定是否继续',body:'<h4>反馈循环</h4><ul><li>工具返回结果 → 注入上下文 → LLM 再次推理</li><li>如果 LLM 判断"任务完成" → 回复用户</li><li>如果 LLM 判断"还需要做" → 继续循环</li></ul><div class="analogy">就像你做菜：尝一口（反馈）→ 咸了加水淡了加盐（调整）→ 再尝 → 直到满意</div>'}
       },
-      'memory': {
-        icon: '💾', title: '记忆系统', desc: '短期记忆 · 长期记忆 · 工作记忆',
-        content: `
-          <h3>三层记忆架构</h3>
-          <table class="compare-table">
-            <tr><th>类型</th><th>容量</th><th>持久性</th><th>类比</th></tr>
-            <tr><td>工作记忆</td><td>最小</td><td>当前任务</td><td>桌面上正在看的文件</td></tr>
-            <tr><td>短期记忆</td><td>中等</td><td>当前对话</td><td>今天的工作笔记</td></tr>
-            <tr><td>长期记忆</td><td>最大</td><td>永久</td><td>档案室的文件柜</td></tr>
-          </table>
-          <h3>实现方式</h3>
-          <ul>
-            <li><strong>上下文窗口</strong>— LLM 原生的短期记忆（Context Window）</li>
-            <li><strong>RAG</strong>— 检索增强生成，按需从知识库调取信息</li>
-            <li><strong>向量数据库</strong>— 存储和检索语义相似的信息</li>
-            <li><strong>摘要压缩</strong>— 定期压缩旧对话，释放上下文空间</li>
-          </ul>
-          <div class="example">就像人的记忆：你不会记住昨天午餐吃了什么（短期），但会记住重要的技能和知识（长期），工作时同时处理手头几件事（工作记忆）。</div>
-        `
+      { id:'u02', title:'工具系统', en:'Tool Use', group:'core', icon:'🔧', color:'var(--c-tool)',
+        desc:'给 AI 装上手和脚：Function Calling 机制、工具注册、参数校验',
+        nodes:['fc_mechanism','tool_registry','param_schema','result_handling'],
+        detail:{
+          fc_mechanism:{title:'Function Calling',desc:'LLM 输出结构化的工具调用请求',body:'<h4>机制流程</h4><ul><li>定义工具的 JSON Schema（名称、参数、描述）</li><li>LLM 分析用户意图，决定调用哪个工具</li><li>LLM 输出 JSON 格式的调用请求</li><li>系统执行工具，返回结果</li><li>LLM 基于结果生成最终回复</li></ul><div class="analogy">就像你给下属下指令：说清楚"做什么"、"用什么参数"，下属执行后汇报结果</div>'},
+          tool_registry:{title:'工具注册',desc:'告诉 LLM 有哪些工具可用',body:'<h4>注册方式</h4><ul><li><strong>静态注册</strong>— 在 System Prompt 中定义所有工具</li><li><strong>动态注册</strong>— 根据场景加载相关工具</li><li><strong>MCP 协议</strong>— 标准化的工具发现和调用协议</li></ul><div class="example">OpenClaw 通过 Skills 系统注册工具，每个 Skill 定义自己的工具集</div>'},
+          param_schema:{title:'参数校验',desc:'确保 LLM 传入合法参数',body:'<h4>校验层</h4><ul><li><strong>类型检查</strong>— string/number/boolean/array/object</li><li><strong>必填检查</strong>— 哪些参数是必须的</li><li><strong>范围检查</strong>— 数值范围、字符串长度</li><li><strong>自定义校验</strong>— 业务逻辑校验</li></ul>'},
+          result_handling:{title:'结果处理',desc:'工具返回结果的标准化和错误处理',body:'<h4>处理策略</h4><ul><li><strong>成功</strong>— 格式化结果注入上下文</li><li><strong>失败</strong>— 错误信息注入，LLM 决定重试或换方案</li><li><strong>超时</strong>— 设置合理超时，避免无限等待</li><li><strong>重试</strong>— 网络错误自动重试</li></ul><div class="example">OpenClaw 的 exec 工具有 yieldMs 参数，长命令自动后台化</div>'}
       },
-      'planning': {
-        icon: '📋', title: '规划引擎', desc: '任务分解 · 路径规划 · 策略选择',
-        content: `
-          <h3>规划能力</h3>
-          <ul>
-            <li><strong>任务分解</strong>— 把复杂目标拆成可执行的小步骤</li>
-            <li><strong>路径规划</strong>— 选择最优执行路径</li>
-            <li><strong>资源分配</strong>— 决定用哪些工具、花多少资源</li>
-            <li><strong>风险评估</strong>— 预判可能的失败，准备备选方案</li>
-          </ul>
-          <h3>规划策略</h3>
-          <ul>
-            <li><strong>CoT（Chain-of-Thought）</strong>— 一步步推理</li>
-            <li><strong>ToT（Tree-of-Thought）</strong>— 探索多条路径，选最优</li>
-            <li><strong>GoT（Graph-of-Thought）</strong>— 图结构的复杂推理</li>
-          </ul>
-          <div class="example">像项目经理：接到需求后，先拆任务、排优先级、分配资源、定时间表，然后跟踪执行。</div>
-        `
+      { id:'u03', title:'权限与确认', en:'Permission', group:'core', icon:'🔐', color:'var(--c-perm)',
+        desc:'安全边界：哪些操作需要确认，哪些可以自主执行',
+        nodes:['permission_levels','confirmation_flow','sandbox'],
+        detail:{
+          permission_levels:{title:'权限分级',desc:'不同操作的风险等级',body:'<h4>三级权限</h4><ul><li><strong>绿色（自由执行）</strong>— 读文件、搜索、查日历</li><li><strong>黄色（需要确认）</strong>— 发邮件、发消息、修改配置</li><li><strong>红色（严格限制）</strong>— 删除数据、执行破坏性命令</li></ul><div class="analogy">就像公司的审批流程：日常采购自己定，大额支出要老板批</div>'},
+          confirmation_flow:{title:'确认流程',desc:'高风险操作的审批机制',body:'<h4>流程</h4><ul><li>Agent 判断操作风险等级</li><li>高风险 → 暂停，向用户展示操作详情</li><li>用户确认 → 执行；用户拒绝 → 取消或换方案</li><li>allow-once 模式：仅本次授权，下次重新确认</li></ul><div class="example">OpenClaw 的 elevated 权限：sudo 命令需要用户手动 /approve</div>'},
+          sandbox:{title:'沙箱隔离',desc:'限制 Agent 的能力边界',body:'<h4>隔离机制</h4><ul><li><strong>文件系统</strong>— 限制可访问的目录</li><li><strong>网络</strong>— 限制可访问的外部地址</li><li><strong>进程</strong>— 限制可执行的命令</li><li><strong>资源</strong>— 限制 CPU/内存/Token 用量</li></ul><div class="analogy">就像儿童安全锁：可以玩，但有些柜子打不开</div>'}
       },
-      'tools': {
-        icon: '🔧', title: '工具使用', desc: 'API 调用 · 代码执行 · 外部搜索',
-        content: `
-          <h3>常见工具类型</h3>
-          <ul>
-            <li><strong>搜索工具</strong>— Google、Bing、Perplexity 等联网搜索</li>
-            <li><strong>代码工具</strong>— 执行 Python/JS 代码、操作文件</li>
-            <li><strong>API 工具</strong>— 调用天气、地图、数据库等外部服务</li>
-            <li><strong>浏览器工具</strong>— 打开网页、填写表单、截图</li>
-            <li><strong>文件工具</strong>— 读写文件、生成报告</li>
-          </ul>
-          <h3>Function Calling 机制</h3>
-          <ul>
-            <li>定义函数的 JSON Schema（参数、类型、描述）</li>
-            <li>LLM 决定是否调用、传什么参数</li>
-            <li>执行函数，返回结果给 LLM</li>
-            <li>LLM 基于结果生成最终回复</li>
-          </ul>
-          <div class="example">就像给 AI 装上了手和脚：以前它只能「说」，现在能真正「做」——查天气、发邮件、写代码、操作数据库。</div>
-        `
+      { id:'u04', title:'生命周期钩子', en:'Lifecycle', group:'core', icon:'♻️', color:'var(--c-life)',
+        desc:'Agent 从启动到结束的完整生命周期管理',
+        nodes:['init','warmup','run','cleanup','error'],
+        detail:{
+          init:{title:'初始化 Init',desc:'加载配置、注册工具、建立连接',body:'<h4>初始化步骤</h4><ul><li>加载 System Prompt 和配置</li><li>注册可用工具和 Skill</li><li>建立数据库/API 连接</li><li>恢复上次会话状态</li></ul>'},
+          warmup:{title:'预热 Warmup',desc:'加载模型、缓存数据、预编译',body:'<h4>预热内容</h4><ul><li>模型加载到 GPU（如果自部署）</li><li>常用数据缓存到内存</li><li>向量索引预加载</li><li>工具连接池初始化</li></ul>'},
+          run:{title:'运行 Run',desc:'处理请求、执行任务的主循环',body:'<h4>运行模式</h4><ul><li><strong>单次</strong>— 处理一个请求后结束</li><li><strong>持续</strong>— 保持运行，等待新请求</li><li><strong>流式</strong>— 边生成边输出</li></ul>'},
+          cleanup:{title:'清理 Cleanup',desc:'释放资源、保存状态、关闭连接',body:'<h4>清理内容</h4><ul><li>关闭数据库连接</li><li>保存会话状态到磁盘</li><li>清理临时文件</li><li>释放 GPU 显存</li></ul>'},
+          error:{title:'错误处理 Error',desc:'异常捕获、降级、恢复策略',body:'<h4>错误策略</h4><ul><li><strong>捕获</strong>— try/catch 包裹所有关键操作</li><li><strong>降级</strong>— 主方案失败用备选方案</li><li><strong>重试</strong>— 网络错误自动重试</li><li><strong>上报</strong>— 严重错误通知用户</li></ul><div class="example">OpenClaw 的 fallback 模型：主模型 429 时自动切换备选模型</div>'}
       },
-      'multi-agent': {
-        icon: '🤝', title: '多Agent协作', desc: '分工 · 通信 · 协调 · 竞争',
-        content: `
-          <h3>协作模式</h3>
-          <table class="compare-table">
-            <tr><th>模式</th><th>描述</th><th>适用场景</th></tr>
-            <tr><td>层级式</td><td>主 Agent 分配任务给子 Agent</td><td>项目管理、复杂任务</td></tr>
-            <tr><td>对等式</td><td>Agent 平等协作，投票决策</td><td>辩论、集体决策</td></tr>
-            <tr><td>竞争式</td><td>多个 Agent 竞争，选最优方案</td><td>方案比选、创意生成</td></tr>
-            <tr><td>流水线</td><td>前一个 Agent 的输出是后一个的输入</td><td>内容生产、数据处理</td></tr>
-          </table>
-          <div class="example">OpenClaw 的三丰/乔峰/清扬就是多Agent协作：三丰是主力，乔峰管多模态，清扬写代码，各司其职。</div>
-        `
+      { id:'u05', title:'提示词与技能', en:'Prompt & Skills', group:'context', icon:'📝', color:'var(--c-prompt)',
+        desc:'System Prompt 设计、Skill 系统、动态指令注入',
+        nodes:['system_prompt','skill_system','dynamic_injection'],
+        detail:{
+          system_prompt:{title:'System Prompt',desc:'定义 Agent 的身份、能力、行为规则',body:'<h4>设计原则</h4><ul><li><strong>身份定义</strong>— 你是谁、你的角色</li><li><strong>能力边界</strong>— 你能做什么、不能做什么</li><li><strong>行为规则</strong>— 回复风格、安全约束</li><li><strong>输出格式</strong>— JSON/Markdown/纯文本</li></ul><div class="analogy">就像员工手册：新员工入职第一天，先读一遍公司规定</div>'},
+          skill_system:{title:'Skill 系统',desc:'模块化的能力扩展',body:'<h4>Skill 架构</h4><ul><li><strong>SKILL.md</strong>— 技能描述和使用指南</li><li><strong>工具定义</strong>— 技能提供的工具集</li><li><strong>示例</strong>— 典型使用场景</li><li><strong>版本控制</strong>— 技能的版本管理</li></ul><div class="example">OpenClaw 的 Skills：weather、slack、notion 等，每个 Skill 封装一个领域能力</div>'},
+          dynamic_injection:{title:'动态注入',desc:'根据上下文动态调整 Prompt',body:'<h4>注入内容</h4><ul><li><strong>用户偏好</strong>— MEMORY.md 中的长期记忆</li><li><strong>项目上下文</strong>— AGENTS.md、当前项目文件</li><li><strong>环境信息</strong>— 时间、日期、天气</li><li><strong>工具状态</strong>— 哪些工具可用、哪些故障</li></ul>'}
       },
-      'feedback': {
-        icon: '🔄', title: '反馈循环', desc: '评估 · 纠错 · 迭代优化',
-        content: `
-          <h3>反馈机制</h3>
-          <ul>
-            <li><strong>自我评估</strong>— Agent 检查自己的输出质量</li>
-            <li><strong>环境反馈</strong>— 执行结果（成功/失败）作为下一步的输入</li>
-            <li><strong>人类反馈</strong>— 用户的纠正和指导</li>
-            <li><strong>Agent 互评</strong>— 其他 Agent 审核和提建议</li>
-          </ul>
-          <h3>经典框架</h3>
-          <ul>
-            <li><strong>Reflexion</strong>— 自我反思 + 经验积累</li>
-            <li><strong>LATS</strong>— 结合蒙特卡洛树搜索的反馈规划</li>
-            <li><strong>CRT（Critique-Refine-Think）</strong>— 批评→改进→再思考</li>
-          </ul>
-          <div class="example">就像运动员训练：跑一次→看回放→发现问题→调整姿势→再跑→再看回放……不断逼近最优。</div>
-        `
+      { id:'u06', title:'上下文压缩', en:'Context Compression', group:'context', icon:'🗜️', color:'var(--c-ctx)',
+        desc:'在有限的 Context Window 内塞入最多有效信息',
+        nodes:['window_management','summarization','rag','sliding_window'],
+        detail:{
+          window_management:{title:'窗口管理',desc:'Context Window 的分配策略',body:'<h4>分配优先级</h4><ul><li>System Prompt（固定）</li><li>工具定义（固定）</li><li>当前任务上下文（动态）</li><li>对话历史（可压缩）</li><li>RAG 检索结果（按需）</li></ul><div class="analogy">就像行李箱打包：先放必需品（System Prompt），再放衣服（历史），最后看空间塞日用品（RAG）</div>'},
+          summarization:{title:'摘要压缩',desc:'用 LLM 或规则压缩旧对话',body:'<h4>压缩策略</h4><ul><li><strong>滑动窗口</strong>— 只保留最近 N 轮</li><li><strong>LLM 摘要</strong>— 用小模型总结旧对话</li><li><strong>关键信息提取</strong>— 只保留决策和结论</li><li><strong>分层压缩</strong>— 近期详细、远期简略</li></ul>'},
+          rag:{title:'RAG 检索增强',desc:'按需从外部知识库检索相关信息',body:'<h4>RAG 流程</h4><ul><li>用户问题 → 向量化 → 在知识库中搜索相似片段</li><li>Top-K 结果注入上下文</li><li>LLM 基于检索结果生成回复</li></ul><div class="analogy">就像开卷考试：不需要记住所有知识，知道去哪查就行</div>'},
+          sliding_window:{title:'滑动窗口',desc:'只保留最近的对话，丢弃旧的',body:'<h4>实现方式</h4><ul><li>保留最近 10-20 轮对话</li><li>旧对话用摘要替代</li><li>关键决策单独记录到长期记忆</li></ul><div class="example">ChatGPT 的对话长度限制就是一种滑动窗口</div>'}
       },
-      'perception': {
-        icon: '👁️', title: '感知层', desc: '多模态输入处理',
-        content: `
-          <h3>感知能力</h3>
-          <ul>
-            <li><strong>文本理解</strong>— 自然语言解析、意图识别、情感分析</li>
-            <li><strong>图像理解</strong>— OCR、物体识别、场景理解（Vision LLM）</li>
-            <li><strong>语音识别</strong>— STT，将语音转为文字</li>
-            <li><strong>视频理解</strong>— 多帧分析、动作识别</li>
-            <li><strong>结构化数据</strong>— 读取 JSON、CSV、数据库</li>
-          </ul>
-          <div class="example">感知层是 Agent 的「眼睛和耳朵」：没有它，Agent 就是个只能处理文字的「盲人」。</div>
-        `
+      { id:'u07', title:'记忆系统', en:'Memory', group:'context', icon:'💾', color:'var(--c-mem)',
+        desc:'短期记忆 · 长期记忆 · 工作记忆的三层架构',
+        nodes:['short_term','long_term','working_memory','retrieval'],
+        detail:{
+          short_term:{title:'短期记忆',desc:'当前对话的完整历史',body:'<h4>特点</h4><ul><li>容量：当前 Context Window</li><li>持久性：会话结束即丢失</li><li>访问：直接读取，无需检索</li></ul><div class="analogy">就像你今天的工作笔记：随手记的，下班就扔了</div>'},
+          long_term:{title:'长期记忆',desc:'跨会话的持久化信息',body:'<h4>存储方式</h4><ul><li><strong>文件系统</strong>— MEMORY.md、日志文件</li><li><strong>向量数据库</strong>— 语义检索</li><li><strong>关系型数据库</strong>— 结构化数据</li></ul><div class="analogy">就像你的日记本和档案柜：重要的事情写下来，以后翻出来看</div><div class="example">OpenClaw 的 memory/YYYY-MM-DD.md + MEMORY.md 就是典型的短期+长期记忆</div>'},
+          working_memory:{title:'工作记忆',desc:'当前任务正在处理的信息',body:'<h4>特点</h4><ul><li>容量：最小，只存当前任务相关信息</li><li>访问：最快，LLM 直接可用</li><li>更新：每一步推理后刷新</li></ul><div class="analogy">就像你桌上正在看的那几份文件：只关注眼前的事</div>'},
+          retrieval:{title:'记忆检索',desc:'从长期记忆中找到相关信息',body:'<h4>检索方式</h4><ul><li><strong>关键词匹配</strong>— 简单但不精确</li><li><strong>语义搜索</strong>— 向量相似度，更智能</li><li><strong>混合检索</strong>— 关键词 + 语义结合</li></ul>'}
       },
-      'action': {
-        icon: '⚡', title: '行动层', desc: '任务执行与输出',
-        content: `
-          <h3>行动能力</h3>
-          <ul>
-            <li><strong>文本生成</strong>— 写文章、代码、邮件、报告</li>
-            <li><strong>代码执行</strong>— 运行脚本、调试、部署</li>
-            <li><strong>文件操作</strong>— 创建、读取、修改文件</li>
-            <li><strong>API 调用</strong>— 发邮件、发消息、调用服务</li>
-            <li><strong>环境交互</strong>— 操作浏览器、控制设备</li>
-          </ul>
-          <div class="example">行动层是 Agent 的「手和脚」：感知了环境、想好了方案，最终要靠行动来落地。</div>
-        `
+      { id:'u08', title:'韧性', en:'Resilience', group:'reliability', icon:'💪', color:'var(--c-resil)',
+        desc:'Agent 面对异常情况的自我恢复能力',
+        nodes:['retry','fallback','circuit_breaker','graceful_degradation'],
+        detail:{
+          retry:{title:'重试机制',desc:'自动重试失败的操作',body:'<h4>重试策略</h4><ul><li><strong>固定间隔</strong>— 每 5 秒重试一次</li><li><strong>指数退避</strong>— 5s → 10s → 20s → 40s</li><li><strong>抖动</strong>— 在退避基础上加随机偏移</li><li><strong>最大次数</strong>— 超过 N 次放弃</li></ul><div class="analogy">就像你打电话：占线 → 等一会儿再打 → 等更久 → 打不通就算了</div>'},
+          fallback:{title:'降级方案',desc:'主方案失败时的替代方案',body:'<h4>降级策略</h4><ul><li><strong>模型降级</strong>— 主模型不可用切换备选</li><li><strong>功能降级</strong>— 复杂功能用简单替代</li><li><strong>数据降级</strong>— 实时数据用缓存数据</li></ul><div class="example">OpenClaw 的 fallback 模型列表：mimo-v2.5 → deepseek-v4 → gemini-flash</div>'},
+          circuit_breaker:{title:'熔断器',desc:'连续失败时自动停止调用，避免雪崩',body:'<h4>熔断状态</h4><ul><li><strong>关闭</strong>— 正常调用</li><li><strong>打开</strong>— 连续失败 N 次，停止调用</li><li><strong>半开</strong>— 冷却后试探性调用一次</li></ul><div class="analogy">就像保险丝：电流太大时自动断开，保护整个电路</div>'},
+          graceful_degradation:{title:'优雅降级',desc:'功能受损但仍能提供基本服务',body:'<h4>降级策略</h4><ul><li>AI 聊天不可用 → 显示"服务维护中"</li><li>搜索失败 → 返回缓存结果</li><li>TTS 失败 → 显示文字版</li></ul>'}
       },
-      'autonomy': {
-        icon: '🎯', title: '自主性', desc: '无需人类干预，自主决策和执行',
-        content: `
-          <p>自主性是 Agent 区别于普通 AI 对话的核心特征。</p>
-          <ul>
-            <li><strong>目标驱动</strong>— 给定目标，自主规划路径</li>
-            <li><strong>自主决策</strong>— 遇到选择时自己判断，不事事问人</li>
-            <li><strong>错误恢复</strong>— 失败后自动尝试其他方案</li>
-            <li><strong>资源管理</strong>— 自己决定用什么工具、花多少资源</li>
-          </ul>
-          <div class="example">自主性的光谱：ChatGPT（0%自主）→ Copilot（30%）→ AutoGPT（70%）→ OpenClaw Agent（80%+）</div>
-        `
+      { id:'u09', title:'错误恢复', en:'Error Recovery', group:'reliability', icon:'🔄', color:'var(--c-recover)',
+        desc:'从错误中学习，避免重复犯错',
+        nodes:['error_classification','self_reflection','lesson_learning'],
+        detail:{
+          error_classification:{title:'错误分类',desc:'区分可恢复和不可恢复的错误',body:'<h4>错误类型</h4><ul><li><strong>临时错误</strong>— 网络超时、服务限流 → 可重试</li><li><strong>永久错误</strong>— 参数错误、权限不足 → 需换方案</li><li><strong>逻辑错误</strong>— 输出不符合预期 → 需调整 Prompt</li></ul>'},
+          self_reflection:{title:'自我反思',desc:'分析错误原因，调整策略',body:'<h4>反思框架</h4><ul><li><strong>Reflexion</strong>— 失败后自我分析，记录教训</li><li><strong>CRT</strong>— Critique（批评）→ Refine（改进）→ Think（再思考）</li><li><strong>LATS</strong>— 结合蒙特卡洛树搜索的反思规划</li></ul><div class="analogy">就像运动员看比赛录像：哪里做错了、怎么改进、下次怎么做</div>'},
+          lesson_learning:{title:'经验积累',desc:'把错误教训记录到长期记忆',body:'<h4>记录方式</h4><ul><li><strong>错误日志</strong>— 记录错误类型和处理方式</li><li><strong>经验库</strong>— 重复出现的问题和解决方案</li><li><strong>Prompt 优化</strong>— 根据错误调整 System Prompt</li></ul><div class="example">OpenClaw 的 self-improvement Skill：自动捕获错误和纠正，持续改进</div>'}
       },
-      'reactivity': {
-        icon: '⚡', title: '反应性', desc: '感知环境变化，实时响应',
-        content: `
-          <p>Agent 能感知环境变化并及时做出反应。</p>
-          <ul>
-            <li><strong>事件驱动</strong>— 收到消息、定时触发、文件变化</li>
-            <li><strong>实时响应</strong>— 几秒内处理并回复</li>
-            <li><strong>优先级判断</strong>— 区分紧急和非紧急</li>
-            <li><strong>降级处理</strong>— 服务不可用时的备选方案</li>
-          </ul>
-          <div class="example">OpenClaw 的 Heartbeat 就是反应性：每30分钟检查邮件、日历、天气，有事主动通知。</div>
-        `
+      { id:'u10', title:'规划与任务', en:'Planning', group:'multi', icon:'📋', color:'var(--c-plan)',
+        desc:'任务分解、路径规划、资源分配',
+        nodes:['task_decomposition','path_planning','resource_allocation'],
+        detail:{
+          task_decomposition:{title:'任务分解',desc:'把复杂目标拆成可执行的小步骤',body:'<h4>分解策略</h4>          task_decomposition:{title:'任务分解',desc:'把复杂目标拆成可执行的小步骤',body:'<h4>分解策略</h4><ul><li><strong>自顶向下</strong>— 从目标逐层拆解</li><li><strong>自底向上</strong>— 从已知步骤组合</li><li><strong>模板匹配</strong>— 用历史任务模板</li></ul><div class="analogy">就像做菜：先定菜单（目标），再列食材（子任务），最后安排步骤</div>'},
+          path_planning:{title:'路径规划',desc:'选择最优执行路径',body:'<h4>规划算法</h4><ul><li><strong>CoT</strong>— 一步步推理</li><li><strong>ToT</strong>— 探索多条路径选最优</li><li><strong>GoT</strong>— 图结构的复杂推理</li></ul>'},
+          resource_allocation:{title:'资源分配',desc:'决定用哪些工具、花多少资源',body:'<h4>资源类型</h4><ul><li><strong>Token 预算</strong>— 控制 LLM 调用成本</li><li><strong>时间预算</strong>— 设置任务超时</li><li><strong>工具选择</strong>— 选最合适的工具</li></ul>'}
+        }
       },
-      'proactivity': {
-        icon: '🚀', title: '主动性', desc: '不等指令，主动发现问题和机会',
-        content: `
-          <p>最高级的 Agent 不只是被动响应，而是主动出击。</p>
-          <ul>
-            <li><strong>主动监控</strong>— 持续检查关键指标</li>
-            <li><strong>预警通知</strong>— 发现异常主动告警</li>
-            <li><strong>机会发现</strong>— 识别可优化的点，主动建议</li>
-            <li><strong>预防性维护</strong>— 在问题发生前修复</li>
-          </ul>
-          <div class="example">被动 Agent：你说「帮我查天气」→ 查。主动 Agent：看到要下雨→「明天有雨，建议带伞，已加到日历提醒」。</div>
-        `
+      { id:'u11', title:'子代理与团队', en:'Sub-agents', group:'multi', icon:'🤖', color:'var(--c-sub)',
+        desc:'多 Agent 协作：分工、通信、协调',
+        nodes:['delegation','communication','coordination'],
+        detail:{
+          delegation:{title:'任务委派',desc:'主 Agent 把子任务分配给子 Agent',body:'<h4>委派模式</h4><ul><li><strong>层级式</strong>— 主 Agent 分配，子 Agent 执行</li><li><strong>对等式</strong>— Agent 平等协作</li><li><strong>竞争式</strong>— 多个 Agent 竞争，选最优</li></ul><div class="example">OpenClaw 的 sessions_spawn：主 Agent 派生子 Agent 执行独立任务</div>'},
+          communication:{title:'Agent 通信',desc:'Agent 之间的消息传递',body:'<h4>通信方式</h4><ul><li><strong>直接消息</strong>— sessions_send 实时通信</li><li><strong>共享文件</strong>— 通过共享 Workspace 交换信息</li><li><strong>事件总线</strong>— 发布/订阅模式</li></ul>'},
+          coordination:{title:'协调机制',desc:'确保多个 Agent 不冲突',body:'<h4>协调策略</h4><ul><li><strong>锁机制</strong>— 同一资源同一时间只有一个 Agent 操作</li><li><strong>队列</strong>— 任务排队执行</li><li><strong>优先级</strong>— 高优先级任务先执行</li></ul><div class="example">OpenClaw 三丰/乔峰/清扬：共享 Workspace 但各有分工</div>'}
+        }
       },
-      'social': {
-        icon: '👥', title: '社交性', desc: '与人类和其他 Agent 交互',
-        content: `
-          <p>Agent 不是孤岛，需要与外界交互。</p>
-          <ul>
-            <li><strong>人机交互</strong>— 理解人类意图，用人类能理解的方式回复</li>
-            <li><strong>Agent 间通信</strong>— 标准化的消息协议</li>
-            <li><strong>群体智能</strong>— 多 Agent 协作产生涌现行为</li>
-            <li><strong>社会规范</strong>— 遵守安全、伦理、隐私规则</li>
-          </ul>
-          <div class="example">OpenClaw 的多 Agent 系统：三丰在飞书和你聊天，乔峰在另一个群回答问题，清扬在写代码——它们互相知道对方的存在。</div>
-        `
+      { id:'u12', title:'触发与调度', en:'Trigger & Scheduling', group:'multi', icon:'⏰', color:'var(--c-trigger)',
+        desc:'定时任务、事件驱动、唤醒机制',
+        nodes:['cron','heartbeat','event_driven'],
+        detail:{
+          cron:{title:'定时任务 Cron',desc:'精确时间触发的任务',body:'<h4>调度类型</h4><ul><li><strong>at</strong>— 一次性定时执行</li><li><strong>every</strong>— 固定间隔重复</li><li><strong>cron 表达式</strong>— 复杂时间规则</li></ul><div class="example">OpenClaw 的 cron：早报 8:30、打卡 9:00/17:00</div>'},
+          heartbeat:{title:'心跳轮询',desc:'定期检查和主动发现',body:'<h4>心跳机制</h4><ul><li>每 30 分钟唤醒一次</li><li>检查邮件、日历、通知</li><li>有事主动通知用户</li><li>无事静默（HEARTBEAT_OK）</li></ul><div class="analogy">就像保安巡逻：每隔一段时间走一圈，有异常就报告</div>'},
+          event_driven:{title:'事件驱动',desc:'外部事件触发 Agent 响应',body:'<h4>事件类型</h4><ul><li><strong>消息事件</strong>— 用户发来消息</li><li><strong>文件事件</strong>— 文件被修改</li><li><strong>Webhook</strong>— 外部服务推送</li><li><strong>子任务完成</strong>— 子 Agent 返回结果</li></ul>'}
+        }
       },
-    };
+      { id:'u13', title:'接入与投递', en:'Channel & Delivery', group:'integ', icon:'📡', color:'var(--c-channel)',
+        desc:'多渠道接入：飞书、Discord、Telegram、Web',
+        nodes:['channel_routing','message_format','delivery_guarantee'],
+        detail:{
+          channel_routing:{title:'渠道路由',desc:'根据来源选择合适的回复渠道',body:'<h4>路由规则</h4><ul><li><strong>飞书</strong>— 企业协作场景</li><li><strong>Discord</strong>— 社区场景</li><li><strong>Telegram</strong>— 个人助手场景</li><li><strong>Web</strong>— 网站嵌入场景</li></ul><div class="example">OpenClaw 的 inbound_meta：自动识别来源渠道，回复自动路由回去</div>'},
+          message_format:{title:'消息格式',desc:'不同平台的消息格式适配',body:'<h4>格式适配</h4><ul><li><strong>Markdown</strong>— Web/Discord</li><li><strong>富文本</strong>— 飞书</li><li><strong>纯文本</strong>— Telegram</li><li><strong>语音</strong>— 语音消息场景</li></ul>'},
+          delivery_guarantee:{title:'投递保证',desc:'确保消息可靠送达',body:'<h4>保证策略</h4><ul><li><strong>重试</strong>— 发送失败自动重试</li><li><strong>降级</strong>— 富文本失败降级为纯文本</li><li><strong>队列</strong>— 消息排队，避免丢失</li></ul>'}
+        }
+      },
+      { id:'u14', title:'外部集成与隔离', en:'Integration', group:'integ', icon:'🔌', color:'var(--c-integ)',
+        desc:'与外部系统的安全集成：API、数据库、第三方服务',
+        nodes:['api_integration','data_isolation','security'],
+        detail:{
+          api_integration:{title:'API 集成',desc:'与外部 API 的标准化对接',body:'<h4>集成方式</h4><ul><li><strong>REST API</strong>— 最常见的 HTTP 接口</li><li><strong>GraphQL</strong>— 灵活的数据查询</li><li><strong>WebSocket</strong>— 实时双向通信</li><li><strong>MCP</strong>— 标准化的 Agent 工具协议</li></ul>'},
+          data_isolation:{title:'数据隔离',desc:'保护敏感数据不泄露',body:'<h4>隔离策略</h4><ul><li><strong>环境变量</strong>— API Key 等敏感配置不写代码</li><li><strong>RLS</strong>— 数据库行级安全</li><li><strong>沙箱</strong>— 文件系统隔离</li></ul><div class="example">OpenClaw 的 env-only 配置：API Key 只从环境变量读取，代码里不写默认值</div>'},
+          security:{title:'安全防护',desc:'防止恶意输入和攻击',body:'<h4>防护措施</h4><ul><li><strong>输入过滤</strong>— 过滤恶意 Prompt 注入</li><li><strong>速率限制</strong>— 防止 API 滥用</li><li><strong>审计日志</strong>— 记录所有操作</li><li><strong>最小权限</strong>— 只给必要的权限</li></ul>'}
+        }
+      }
+    ];
 
-    function showDetail(key) {
-      const d = DETAILS[key];
-      if (!d) return;
-      document.getElementById('detailIcon').textContent = d.icon;
+    const GROUPS = [
+      { id:'core', label:'🧠 核心架构', items:['u01','u02','u03','u04'] },
+      { id:'context', label:'📝 上下文工程', items:['u05','u06','u07'] },
+      { id:'reliability', label:'💪 韧性与可靠性', items:['u08','u09'] },
+      { id:'multi', label:'🤝 多Agent协作', items:['u10','u11','u12'] },
+      { id:'integ', label:'🔌 接入与集成', items:['u13','u14'] }
+    ];
+
+    // ========== 渲染左侧导航 ==========
+    function renderSidebar() {
+      const nav = document.getElementById('sidebarNav');
+      let html = '';
+      GROUPS.forEach(g => {
+        html += '<div class="sidebar-group"><div class="sidebar-group-title">' + g.label + '</div>';
+        g.items.forEach(id => {
+          const s = SECTIONS.find(x => x.id === id);
+          html += '<div class="sidebar-item" data-id="' + id + '" onclick="scrollToSection(\'' + id + '\')">'
+            + '<span class="num">' + id + '</span>'
+            + '<span>' + s.icon + ' ' + s.title + '</span>'
+            + '</div>';
+        });
+        html += '</div>';
+      });
+      nav.innerHTML = html;
+    }
+
+    // ========== 渲染主内容 ==========
+    function renderSections() {
+      const main = document.getElementById('mainContent');
+      let html = '';
+      SECTIONS.forEach(s => {
+        html += '<div class="section" id="section-' + s.id + '">';
+        html += '<div class="section-header">';
+        html += '<span class="section-num" style="color:' + s.color + '">' + s.id.toUpperCase() + '</span>';
+        html += '<div><div class="section-title">' + s.icon + ' ' + s.title + '</div>';
+        html += '<div class="section-subtitle">' + s.en + ' — ' + s.desc + '</div></div>';
+        html += '</div>';
+
+        // SVG 流程图
+        html += '<div class="flow-container">';
+        html += renderFlow(s);
+        html += '</div>';
+
+        // 详情面板占位
+        html += '<div class="detail" id="detail-' + s.id + '"></div>';
+        html += '</div>';
+      });
+      main.innerHTML = html;
+    }
+
+    // ========== 渲染单个流程图 ==========
+    function renderFlow(section) {
+      const nodes = section.nodes;
+      const n = nodes.length;
+      const nodeW = 140, nodeH = 50, gap = 40;
+      const totalW = n * nodeW + (n-1) * gap;
+      const svgW = Math.max(totalW + 60, 500);
+      const svgH = 120;
+
+      let svg = '<svg class="flow-svg" viewBox="0 0 ' + svgW + ' ' + svgH + '" width="' + svgW + '" height="' + svgH + '">';
+      svg += '<defs><marker id="arrow" viewBox="0 0 10 6" refX="10" refY="3" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3 L0,6" fill="#444"/></marker></defs>';
+
+      // 连线
+      for (let i = 0; i < n - 1; i++) {
+        const x1 = 30 + i * (nodeW + gap) + nodeW;
+        const x2 = 30 + (i+1) * (nodeW + gap);
+        const y = svgH / 2;
+        svg += '<line class="edge" x1="' + x1 + '" y1="' + y + '" x2="' + x2 + '" y2="' + y + '"/>';
+      }
+      // 循环线（从最后一个节点回到第一个）
+      if (n > 2) {
+        const lastX = 30 + (n-1) * (nodeW + gap) + nodeW/2;
+        const firstX = 30 + nodeW/2;
+        const loopY = svgH - 10;
+        svg += '<path class="edge" d="M' + lastX + ',' + (svgH/2+nodeH/2) + ' L' + lastX + ',' + loopY + ' L' + firstX + ',' + loopY + ' L' + firstX + ',' + (svgH/2+nodeH/2) + '" stroke-dasharray="4,4"/>';
+      }
+
+      // 节点
+      nodes.forEach((nid, i) => {
+        const x = 30 + i * (nodeW + gap);
+        const y = svgH/2 - nodeH/2;
+        const detail = section.detail[nid];
+        const label = detail ? detail.title : nid;
+        const sub = detail ? detail.desc : '';
+        svg += '<g class="node" onclick="showDetail(\'' + section.id + '\',\'' + nid + '\')">';
+        svg += '<rect class="node-rect" x="' + x + '" y="' + y + '" width="' + nodeW + '" height="' + nodeH + '" fill="#1a1a2e" stroke="' + section.color + '"/>';
+        svg += '<text class="node-label" x="' + (x+nodeW/2) + '" y="' + (y+nodeH/2-4) + '" text-anchor="middle">' + label + '</text>';
+        svg += '<text class="node-sub" x="' + (x+nodeW/2) + '" y="' + (y+nodeH/2+12) + '" text-anchor="middle">' + sub.slice(0,12) + '</text>';
+        svg += '</g>';
+      });
+
+      svg += '</svg>';
+      return svg;
+    }
+
+    // ========== 详情面板 ==========
+    function showDetail(sectionId, nodeId) {
+      const section = SECTIONS.find(s => s.id === sectionId);
+      if (!section || !section.detail[nodeId]) return;
+      const d = section.detail[nodeId];
+
+      document.getElementById('detailIcon').textContent = section.icon;
       document.getElementById('detailTitle').textContent = d.title;
       document.getElementById('detailDesc').textContent = d.desc;
-      document.getElementById('detailContent').innerHTML = d.content;
+      document.getElementById('detailBody').innerHTML = d.body;
+
+      // 高亮侧边栏
+      document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+      const sidebarItem = document.querySelector('.sidebar-item[data-id="' + sectionId + '"]');
+      if (sidebarItem) sidebarItem.classList.add('active');
+
       const panel = document.getElementById('detailPanel');
       panel.classList.add('show');
-      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      panel.scrollIntoView({behavior:'smooth',block:'nearest'});
     }
 
     function hideDetail() {
       document.getElementById('detailPanel').classList.remove('show');
     }
+
+    // ========== 导航 ==========
+    function scrollToSection(id) {
+      const el = document.getElementById('section-' + id);
+      if (el) {
+        el.scrollIntoView({behavior:'smooth'});
+        document.querySelectorAll('.sidebar-item').forEach(e => e.classList.remove('active'));
+        document.querySelector('.sidebar-item[data-id="' + id + '"]').classList.add('active');
+        document.getElementById('posIndicator').textContent = id.toUpperCase() + ' ' + SECTIONS.find(s=>s.id===id).title;
+      }
+      // 移动端关闭侧边栏
+      document.querySelector('.sidebar').classList.remove('open');
+    }
+
+    function expandAll() {
+      document.querySelectorAll('.detail').forEach(el => el.classList.add('show'));
+    }
+    function collapseAll() {
+      document.querySelectorAll('.detail').forEach(el => el.classList.remove('show'));
+      hideDetail();
+    }
+
+    // ========== 搜索 ==========
+    function filterNodes(query) {
+      const q = query.toLowerCase();
+      document.querySelectorAll('.sidebar-item').forEach(el => {
+        const id = el.dataset.id;
+        const s = SECTIONS.find(x => x.id === id);
+        const match = !q || s.title.toLowerCase().includes(q) || s.en.toLowerCase().includes(q) || s.id.includes(q);
+        el.style.display = match ? '' : 'none';
+      });
+      // 分组标题显示/隐藏
+      document.querySelectorAll('.sidebar-group').forEach(g => {
+        const visible = g.querySelectorAll('.sidebar-item:not([style*="display: none"])').length;
+        g.style.display = visible ? '' : 'none';
+      });
+    }
+
+    // ========== 滚动监听 ==========
+    document.getElementById('mainContent').addEventListener('scroll', function() {
+      const sections = document.querySelectorAll('.section');
+      let current = 'u01';
+      sections.forEach(s => {
+        if (s.getBoundingClientRect().top < 200) {
+          current = s.id.replace('section-','');
+        }
+      });
+      document.getElementById('posIndicator').textContent = current.toUpperCase() + ' ' + (SECTIONS.find(s=>s.id===current)||{}).title;
+      document.querySelectorAll('.sidebar-item').forEach(el => {
+        el.classList.toggle('active', el.dataset.id === current);
+      });
+    });
+
+    // ========== 初始化 ==========
+    renderSidebar();
+    renderSections();
     </script>
 </body>
 </html>
