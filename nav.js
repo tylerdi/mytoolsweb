@@ -33,7 +33,7 @@
     {href:'/gallery.html', label:'AI 画廊', icon:'🖼️', desc:'作品展示'},
     {href:'/daily-wallpaper.html', label:'每日壁纸', icon:'🎨', desc:'每日一图'},
     {href:'/resources.html', label:'资源库', icon:'📚', desc:'精选资源'},
-    {href:'/about.html', label:'关于', icon:'👤', desc:'关于小鱼儿'},
+    {href:'/ai-learn.html', label:'学习路径', icon:'📚', desc:'AI互动教程'},{href:'/about.html', label:'关于', icon:'👤', desc:'关于Tyler'},
   ];
 
   var path = location.pathname.replace(/\.html$/,'').replace(/\/$/,'') || '/';
