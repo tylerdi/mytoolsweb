@@ -16,7 +16,7 @@ async function getShopReply(content, mood, env) {
         'Authorization': 'Bearer ' + MIMO_API_KEY,
       },
       body: JSON.stringify({
-        model: 'deepseek-v4-flash-free',
+        model: env.MIMO_MODEL || 'deepseek-v4-flash-free',
         messages: [
           {
             role: 'system',

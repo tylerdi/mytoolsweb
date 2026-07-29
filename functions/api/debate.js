@@ -87,7 +87,7 @@ ${roundContext}
         'Authorization': 'Bearer ' + apiKey,
       },
     body: JSON.stringify({
-      model: 'deepseek-v4-flash-free',
+      model: env.MIMO_MODEL || 'deepseek-v4-flash-free',
       messages: [{ role: 'user', content: systemPrompt }],
       max_tokens: 600,
       temperature: 0.8,

@@ -80,7 +80,7 @@ export async function onRequestPost(context) {
         'Authorization': 'Bearer ' + MIMO_API_KEY,
       },
       body: JSON.stringify({
-        model: context.'deepseek-v4-flash-free',
+        model: env.MIMO_MODEL || 'deepseek-v4-flash-free',
         messages: [
           { role: 'system', content: config.system },
           { role: 'user', content: input || '随机来一个' },

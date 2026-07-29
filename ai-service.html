@@ -282,7 +282,7 @@ const client = new OpenAI({
 });
 
 const stream = await client.chat.completions.create({
-    model: 'deepseek-v4-flash-free',
+    model: env.MIMO_MODEL,
     messages: [{ role: 'user', content: '你好' }],
     stream: true
 });
