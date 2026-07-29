@@ -232,11 +232,7 @@
             btn.textContent = '⏳ 正在获取...';
 
             try {
-                const response = await fetch('/api/daily-news', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'fetch' })
-                });
+                const response = await fetch('/api/daily-news');
 
                 if (response.ok) {
                     const data = await response.json();
@@ -253,8 +249,24 @@
             btn.textContent = '🔄 刷新新闻';
         });
 
-        // 初始渲染
+        // 初始渲染（显示加载状态）
         renderNews(allNews);
+
+        // 自动获取新闻
+        (async () => {
+            try {
+                const response = await fetch('/api/daily-news');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.news && data.news.length > 0) {
+                        allNews = data.news;
+                        renderNews(allNews);
+                    }
+                }
+            } catch (e) {
+                console.error('Auto-load failed:', e);
+            }
+        })();
 
         // 添加动画样式
         const style = document.createElement('style');
