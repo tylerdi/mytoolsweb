@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 学习路径 - 从零到精通的互动教程 | Tyler工具箱</title>
+    <meta name="description" content="免费AI学习路径，从零基础到高级应用。互动教程+实操练习，每课对接真实AI工具，边学边用。">
+    <meta name="keywords" content="AI学习,AI教程,人工智能入门,Prompt工程,AI工具使用,免费AI课程">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css?v2">
+    <style>
+        .learn-hero{text-align:center;padding:3rem 1rem 2rem}
+        .learn-hero h1{font-size:2.2rem;margin-bottom:.5rem}
+        .learn-hero p{color:var(--text-dim);max-width:600px;margin:0 auto;font-size:.95rem}
+        .path-tabs{display:flex;gap:8px;justify-content:center;margin:1.5rem 0;flex-wrap:wrap}
+        .path-tab{padding:.5rem 1rem;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text-dim);cursor:pointer;font-size:.85rem;transition:all .2s;font-family:inherit}
+        .path-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+        .path-tab:hover:not(.active){border-color:var(--accent);color:var(--text)}
+        .progress-bar{max-width:600px;margin:1.5rem auto;background:var(--border);border-radius:8px;height:8px;overflow:hidden}
+        .progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),#ec4899);border-radius:8px;transition:width .5s ease}
+        .progress-text{text-align:center;font-size:.8rem;color:var(--text-dim);margin-bottom:2rem}
+        .stations{max-width:800px;margin:0 auto;padding:0 1rem}
+        .station{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;margin-bottom:16px;overflow:hidden;transition:all .3s}
+        .station:hover{border-color:var(--accent);box-shadow:0 4px 20px rgba(100,108,255,.1)}
+        .station-header{display:flex;align-items:center;gap:1rem;padding:1.2rem 1.5rem;cursor:pointer;user-select:none}
+        .station-num{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;flex-shrink:0;background:linear-gradient(135deg,var(--accent),#ec4899);color:#fff}
+        .station-num.done{background:linear-gradient(135deg,#10b981,#06b6d4)}
+        .station-info{flex:1}
+        .station-info h3{font-size:1rem;margin:0 0 .2rem}
+        .station-info p{font-size:.8rem;color:var(--text-dim);margin:0}
+        .station-toggle{font-size:1.2rem;color:var(--text-dim);transition:transform .3s}
+        .station.open .station-toggle{transform:rotate(180deg)}
+        .station-body{display:none;padding:0 1.5rem 1.5rem}
+        .station.open .station-body{display:block}
+        .concept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:1rem 0}
+        .concept-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem;transition:all .2s}
+        .concept-card:hover{border-color:var(--accent)}
+        .concept-card h4{font-size:.9rem;margin:0 0 .3rem;color:var(--accent)}
+        .concept-card .analogy{font-size:.8rem;color:var(--text-dim);margin:.4rem 0;padding:.5rem;background:var(--surface);border-radius:6px;border-left:3px solid var(--accent)}
+        .concept-card .analogy::before{content:'💡 类比：';font-weight:600;color:var(--accent)}
+        .concept-card .usage{font-size:.8rem;color:var(--text-dim)}
+        .concept-card .usage::before{content:'🎯 场景：';font-weight:600}
+        .concept-card .level{display:inline-block;font-size:.7rem;padding:2px 6px;border-radius:4px;margin-bottom:.3rem}
+        .level-must{background:rgba(239,68,68,.15);color:#ef4444}
+        .level-should{background:rgba(245,158,11,.15);color:#f59e0b}
+        .level-nice{background:rgba(16,185,129,.15);color:#10b981}
+        .exercise{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-top:1rem}
+        .exercise h4{font-size:.9rem;margin:0 0 .5rem;display:flex;align-items:center;gap:.5rem}
+        .exercise textarea{width:100%;min-height:80px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.8rem;color:var(--text);font-family:inherit;resize:vertical;font-size:.85rem}
+        .exercise textarea:focus{outline:none;border-color:var(--accent)}
+        .exercise-btn{margin-top:.5rem;padding:.5rem 1rem;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-size:.85rem;font-family:inherit;transition:opacity .2s}
+        .exercise-btn:hover{opacity:.9}
+        .exercise-result{margin-top:.8rem;padding:.8rem;background:var(--surface);border-radius:8px;font-size:.85rem;white-space:pre-wrap;display:none;border:1px solid var(--border)}
+        .quiz{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-top:1rem}
+        .quiz h4{font-size:.9rem;margin:0 0 .8rem}
+        .quiz-option{display:block;width:100%;text-align:left;padding:.6rem .8rem;margin-bottom:6px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:.85rem;font-family:inherit;transition:all .2s}
+        .quiz-option:hover{border-color:var(--accent)}
+        .quiz-option.correct{border-color:#10b981;background:rgba(16,185,129,.1)}
+        .quiz-option.wrong{border-color:#ef4444;background:rgba(239,68,68,.1)}
+        .quiz-option:disabled{cursor:default}
+        .quiz-feedback{margin-top:.5rem;font-size:.85rem;display:none}
+        .tool-link{display:inline-flex;align-items:center;gap:4px;padding:.3rem .6rem;border-radius:6px;background:rgba(100,108,255,.1);color:var(--accent);text-decoration:none;font-size:.8rem;margin-top:.5rem;transition:background .2s}
+        .tool-link:hover{background:rgba(100,108,255,.2)}
+        .station-check{width:24px;height:24px;border-radius:6px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0}
+        .station-check.checked{background:var(--accent);border-color:var(--accent);color:#fff}
+        @media(max-width:768px){
+            .learn-hero h1{font-size:1.6rem}
+            .concept-grid{grid-template-columns:1fr}
+            .station-header{padding:1rem}
+        }
+    </style>
+</head>
+<body>
+    <section class="learn-hero">
+        <div style="font-size:3rem;margin-bottom:.5rem">📚</div>
+        <h1>AI 学习路径</h1>
+        <p>从零到精通，每课对接真实AI工具。边学边用，不纸上谈兵。</p>
+        <div class="path-tabs">
+            <button class="path-tab active" data-path="beginner">🌱 零基础入门</button>
+            <button class="path-tab" data-path="creator">🎨 内容创作者</button>
+            <button class="path-tab" data-path="developer">💻 开发者进阶</button>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+        <div class="progress-text" id="progressText">已完成 0 / 8 站</div>
+    </section>
+
+    <div class="stations" id="stations"></div>
+
+    <footer class="footer" style="margin-top:2rem">Powered by <a href="https://openclaw.ai">OpenClaw</a> · 🤖 AI 自主维护 · © 2026 Tyler</footer>
+
+    <script src="/nav.js?v2"></script>
+    <script>
+    // ============ 学习路径数据 ============
+    const PATHS = {
+      beginner: [
+        {
+          title: 'AI 词汇地图',
+          desc: '先听懂 AI 在说什么',
+          concepts: [
+            { name:'LLM', level:'must', desc:'大语言模型，就是会聊天、会写作的 AI 大脑。', analogy:'像是一个读过全世界图书馆的实习生，知道很多，但需要你告诉它具体做什么。', usage:'当你打开 ChatGPT、Kimi 时，你就在和 LLM 说话。' },
+            { name:'Token', level:'must', desc:'AI 计算文字的最小单位，可以粗略理解为「字」或「词」。', analogy:'就像发短信按条收费，AI 按 Token 计费；一条长消息可能被拆成多个 Token。', usage:'看到「这个月用了 100 万 Token」时，就是在说用量。' },
+            { name:'上下文', level:'must', desc:'AI 当前能看到的对话范围，超过这个范围它就「忘记」了。', analogy:'像金鱼的记忆，AI 的记忆只有最近几千字。', usage:'聊了很久后 AI 突然问「我们刚才在说什么？」，就是上下文溢出了。' },
+            { name:'Prompt', level:'must', desc:'你给 AI 的指令，决定了 AI 回答的质量。', analogy:'像点菜：说得越清楚，上菜越对味。「来碗面」和「来碗少辣牛肉面加蛋」结果完全不同。', usage:'你输入的每句话都是一个 Prompt。' },
+            { name:'Temperature', level:'should', desc:'控制 AI 回答的「创意度」。低=稳定，高=随机。', analogy:'像调节收音机：调低听新闻（稳定），调高听即兴脱口秀（创意）。', usage:'写代码时调低，写故事时调高。' },
+            { name:'Fine-tune', level:'nice', desc:'用特定数据二次训练模型，让它更懂某个领域。', analogy:'像实习生入职后学公司内部流程，从「什么都知道一点」变成「这个领域很精通」。', usage:'企业用微调让 AI 更懂自己的业务。' },
+          ],
+          quiz: [
+            { q:'AI 按什么计费？', options:['按字数','按 Token','按对话次数','按时间'], answer:1, explain:'AI 按 Token 计费，一个中文字通常等于 1-2 个 Token。' },
+            { q:'Prompt 越长越好吗？', options:['是的，越长越好','不一定，要清晰具体','越短越好','无所谓'], answer:1, explain:'Prompt 的关键是清晰具体，不是越长越好。' },
+          ],
+          tool: null,
+        },
+        {
+          title: '第一次把 AI 用起来',
+          desc: '动手试试，打破恐惧',
+          concepts: [
+            { name:'对话式交互', level:'must', desc:'和 AI 聊天是最基础的使用方式。', analogy:'像和一个知识渊博的朋友微信聊天，你问一句它答一句。', usage:'问问题、让它写邮件、翻译、解释概念。' },
+            { name:'多轮对话', level:'must', desc:'在同一个对话中连续交流，AI 能记住上下文。', analogy:'像打电话，不是每句话都重新自我介绍。', usage:'先问「什么是Python」，再问「给我写个例子」，AI 知道你在说 Python。' },
+            { name:'角色设定', level:'should', desc:'告诉 AI 扮演特定角色，它的回答会更专业。', analogy:'像去餐厅点名找「王医生」咨询，而不是随便抓个人问。', usage:'「你是一个资深产品经理，请帮我分析这个需求」' },
+          ],
+          quiz: [
+            { q:'想让 AI 写一封正式邮件，最好怎么做？', options:['直接说「写邮件」','说明收件人、目的、语气等细节','不需要说明，AI 会自己判断','只说「写」就行'], answer:1, explain:'越具体的指令，AI 回答越精准。' },
+          ],
+          tool: '/ai-chat',
+          toolName: '打开 AI 聊天试试',
+        },
+        {
+          title: '把需求说清楚',
+          desc: 'Prompt 工程的第一课',
+          concepts: [
+            { name:'明确指令', level:'must', desc:'告诉 AI 你要什么、不要什么、什么格式。', analogy:'像写外卖备注：「不要香菜、多加辣、送到门口别打电话」。', usage:'「用中文写一段 100 字以内的产品描述，面向年轻人，语气活泼」' },
+            { name:'Few-shot 示例', level:'should', desc:'给 AI 看几个例子，它就能模仿着做。', analogy:'像教小孩画画：先画一个给他看，他就能照着画。', usage:'「参考这个风格写：[示例]，然后写新的：[你的需求]」' },
+            { name:'思维链', level:'should', desc:'让 AI 一步步思考，而不是直接给答案。', analogy:'像数学老师让你「把解题过程写出来」，而不是只写答案。', usage:'「请一步一步分析这个问题，先列出已知条件，再推理」' },
+          ],
+          quiz: [
+            { q:'以下哪个 Prompt 最好？', options:['「写个文案」','「写一段 200 字的咖啡店宣传文案，面向白领，温馨风格」','「帮我写」','「文案」'], answer:1, explain:'具体说明字数、场景、受众、风格，AI 才能精准输出。' },
+          ],
+          tool: '/ai-chat',
+          toolName: '用 AI 聊天练习写 Prompt',
+        },
+        {
+          title: '上下文与越聊越跑偏',
+          desc: '管理 AI 的记忆力',
+          concepts: [
+            { name:'上下文窗口', level:'must', desc:'AI 一次能「看到」的对话长度有限。', analogy:'像一张桌子只能摆 10 道菜，放不下的就被挤掉了。', usage:'超长对话后 AI 忘了前面的内容，就是上下文溢出了。' },
+            { name:'上下文管理', level:'must', desc:'主动管理对话长度，必要时开新对话。', analogy:'像整理桌面：太乱了就收拾一下，重要的东西放眼前。', usage:'重要的信息重复告诉 AI，或开新对话重新说明背景。' },
+            { name:'系统提示', level:'should', desc:'在对话开头设置 AI 的行为规则。', analogy:'像给新员工一份入职手册，告诉他工作规范。', usage:'「你是一个专业的翻译，请只输出翻译结果，不要解释」' },
+          ],
+          quiz: [
+            { q:'AI 突然忘了你之前说的内容，最可能的原因是？', options:['AI 坏了','上下文溢出','网络问题','手机没电'], answer:1, explain:'AI 的上下文窗口有限，超长对话会丢失前面的内容。' },
+          ],
+          tool: '/ai-chat',
+          toolName: '试试长对话，观察 AI 记忆',
+        },
+        {
+          title: '从 Prompt 到 Agent',
+          desc: '让 AI 自己干活',
+          concepts: [
+            { name:'Agent', level:'must', desc:'能自主规划和执行任务的 AI 系统。', analogy:'像一个能自己查资料、做计划、打电话的助理，不只是回答问题。', usage:'让 AI 帮你做市场调研、写报告、发邮件。' },
+            { name:'工具调用', level:'should', desc:'AI 调用外部工具完成任务（搜索、计算、绘图等）。', analogy:'像一个人会用电脑、手机、打印机，而不只是用嘴说。', usage:'AI 搜索最新新闻、生成图片、读取文件。' },
+            { name:'多 Agent 协作', level:'nice', desc:'多个 AI 分工合作完成复杂任务。', analogy:'像一个团队：有人调研、有人写作、有人审核。', usage:'一个 AI 写代码，另一个 AI 审查代码。' },
+          ],
+          quiz: [
+            { q:'Agent 和普通 AI 对话的最大区别是？', options:['Agent 更聪明','Agent 能自主执行任务','Agent 回答更快','Agent 价格更贵'], answer:1, explain:'Agent 的核心是能自主规划、使用工具、完成任务，而不只是回答问题。' },
+          ],
+          tool: '/ai-chat',
+          toolName: '体验 AI 聊天',
+        },
+        {
+          title: '验收、反馈与迭代',
+          desc: '和 AI 高效协作的关键',
+          concepts: [
+            { name:'输出验收', level:'must', desc:'永远不要盲信 AI 的输出，要人工检查。', analogy:'像老板审稿：AI 是写手，你是主编，最终拍板的是你。', usage:'AI 写的代码要测试，写的文章要核实事实。' },
+            { name:'反馈循环', level:'must', desc:'告诉 AI 哪里不好，让它改进。', analogy:'像改论文：导师说「这里论据不够」，你修改后再给导师看。', usage:'「这个回答太长了，请压缩到 100 字以内」' },
+            { name:'迭代优化', level:'should', desc:'通过多次调整 Prompt 获得更好结果。', analogy:'像调镜头焦距：慢慢微调，直到画面清晰。', usage:'第一次结果不好？加条件、改措辞、给示例，再试。' },
+          ],
+          quiz: [
+            { q:'AI 的回答不满意，第一步应该？', options:['换个 AI','给更具体的反馈告诉它哪里不好','放弃不用','重启电脑'], answer:1, explain:'反馈循环是和 AI 协作的核心——告诉它哪里不好，让它改进。' },
+          ],
+          tool: '/ai-chat',
+          toolName: '练习给 AI 反馈',
+        },
+        {
+          title: 'AI 安全与伦理',
+          desc: '负责任地使用 AI',
+          concepts: [
+            { name:'幻觉', level:'must', desc:'AI 会一本正经地编造不存在的信息。', analogy:'像一个实习生不懂装懂，自信满满地说了错误答案。', usage:'AI 引用的论文、数据、人名都要核实。' },
+            { name:'隐私意识', level:'must', desc:'不要把敏感信息发给 AI。', analogy:'像在公共场合打电话：你不知道谁在旁边听。', usage:'不要发身份证号、密码、商业机密给 AI。' },
+            { name:'成本意识', level:'should', desc:'不同模型、不同用法成本差异巨大。', analogy:'像手机流量：刷视频和发短信用量完全不同。', usage:'了解 Token 计费，选择合适的模型。' },
+          ],
+          quiz: [
+            { q:'以下哪条信息不应该发给 AI？', options:['今天天气真好','帮我翻译这句话','我的银行卡密码是123456','推荐一本好书'], answer:2, explain:'密码等敏感信息绝不应该发给 AI，因为可能被记录或泄露。' },
+          ],
+          tool: null,
+        },
+        {
+          title: 'AI 工具全景图',
+          desc: '知道有什么，才能用起来',
+          concepts: [
+            { name:'文本类', level:'must', desc:'ChatGPT、Claude、Kimi 等对话工具。', analogy:'像各种品牌的手机，核心功能一样，体验不同。', usage:'日常问答、写作、翻译、编程。' },
+            { name:'图像类', level:'should', desc:'Midjourney、DALL-E、Flux 等绘图工具。', analogy:'像不同风格的画师：写实、动漫、油画各有专长。', usage:'生成配图、设计素材、创意作品。' },
+            { name:'语音类', level:'should', desc:'TTS 文字转语音、STT 语音转文字。', analogy:'像请了一个随身翻译和速记员。', usage:'做视频配音、会议记录、有声读物。' },
+            { name:'Agent 类', level:'nice', desc:'能自主执行任务的 AI 系统。', analogy:'像请了一个全栈助理，不只是聊天。', usage:'自动调研、数据分析、工作流自动化。' },
+          ],
+          quiz: [
+            { q:'想把一篇文章变成音频，应该用？', options:['AI 聊天','AI 画图','AI 语音合成','AI 翻译'], answer:2, explain:'TTS（文字转语音）工具可以把文本变成自然语音。' },
+          ],
+          tool: '/tools.html',
+          toolName: '浏览全部 AI 工具',
+        },
+      ],
+      creator: [
+        {
+          title: 'AI 写作加速',
+          desc: '从大纲到成稿，效率翻倍',
+          concepts: [
+            { name:'大纲生成', level:'must', desc:'用 AI 快速生成文章结构。', analogy:'像建筑师先画蓝图，再砌墙。', usage:'「帮我列一篇关于健康饮食的公众号文章大纲」' },
+            { name:'扩写与缩写', level:'must', desc:'AI 帮你扩展或精简内容。', analogy:'像橡皮筋，可长可短。', usage:'「把这段话扩写到 500 字」或「压缩到 100 字」' },
+            { name:'风格转换', level:'should', desc:'同一内容换不同表达风格。', analogy:'像翻译官，同一件事用不同语气说。', usage:'「把这段改成口语化风格」或「改成正式商务语气」' },
+          ],
+          quiz: [
+            { q:'写公众号文章，AI 最适合帮你做什么？', options:['直接发布','生成大纲和初稿，你来改','替你运营账号','不需要人工参与'], answer:1, explain:'AI 擅长生成初稿和结构，但最终质量需要人工把控。' },
+          ],
+          tool: '/ai-chat',
+          toolName: '用 AI 聊天练习写作',
+        },
+        {
+          title: 'AI 配图创作',
+          desc: '文字生图，创意无限',
+          concepts: [
+            { name:'Prompt 描述', level:'must', desc:'用文字描述你想要的画面。', analogy:'像给画师下需求单：越详细，画出来越接近你想要的。', usage:'「一个女孩在樱花树下看书，水彩风格，暖色调」' },
+            { name:'风格控制', level:'must', desc:'指定画风：写实、动漫、油画、赛博朋克等。', analogy:'像选择滤镜：同一张照片，不同滤镜效果完全不同。', usage:'「用赛博朋克风格」或「水墨画风格」' },
+            { name:'比例与构图', level:'should', desc:'选择图片尺寸和构图方式。', analogy:'像选相框：横版、竖版、方形各有用途。', usage:'手机壁纸用竖版，公众号头图用横版。' },
+          ],
+          quiz: [
+            { q:'生成 AI 图片时，Prompt 应该？', options:['越短越好','描述画面内容、风格、色调等细节','只说「画一张图」','不需要描述'], answer:1, explain:'详细的 Prompt 能生成更精确的图像。' },
+          ],
+          tool: '/ai-image',
+          toolName: '用 AI 画图工具实践',
+        },
+        {
+          title: 'AI 视频配音',
+          desc: '文字转语音，有声内容制作',
+          concepts: [
+            { name:'TTS 语音合成', level:'must', desc:'把文字变成自然语音。', analogy:'像请了一个播音员，你说什么它读什么。', usage:'为视频配音、做有声读物、播客。' },
+            { name:'语速语调', level:'should', desc:'调整语音的速度和情感。', analogy:'像调节音乐播放器的速度和音效。', usage:'讲故事用慢速有感情，新闻播报用正常速度。' },
+            { name:'多角色配音', level:'nice', desc:'不同角色用不同声音。', analogy:'像广播剧：旁白、主角、配角各有声音。', usage:'制作有声故事、广播剧。' },
+          ],
+          quiz: [
+            { q:'想为视频配音，第一步是？', options:['直接录音','准备好文案脚本','找人帮忙','买设备'], answer:1, explain:'TTS 需要文字输入，先准备好文案是第一步。' },
+          ],
+          tool: '/ai-tts',
+          toolName: '用 AI 语音工具试试',
+        },
+        {
+          title: '内容工作流',
+          desc: '打造你的 AI 内容生产线',
+          concepts: [
+            { name:'模板化', level:'must', desc:'把常用 Prompt 做成模板。', analogy:'像厨师的菜谱卡，每次做菜照着来。', usage:'固定文章结构、风格、长度的 Prompt 模板。' },
+            { name:'批处理', level:'should', desc:'一次处理多条内容。', analogy:'像工厂流水线，批量生产。', usage:'批量生成社交媒体帖子、产品描述。' },
+            { name:'质量检查', level:'must', desc:'AI 生成的内容必须人工审核。', analogy:'像质检员：出厂前必须检查。', usage:'检查事实准确性、品牌调性、错别字。' },
+          ],
+          quiz: [
+            { q:'用 AI 批量生成内容后，最重要的一步是？', options:['直接发布','人工审核质量','不需要检查','删掉重来'], answer:1, explain:'AI 生成的内容必须经过人工审核，确保质量和准确性。' },
+          ],
+          tool: '/ai-tools',
+          toolName: '探索更多 AI 工具',
+        },
+      ],
+      developer: [
+        {
+          title: 'AI 辅助编程',
+          desc: 'Copilot 级别的开发体验',
+          concepts: [
+            { name:'代码生成', level:'must', desc:'用自然语言描述需求，AI 生成代码。', analogy:'像结对编程伙伴，你说逻辑它写代码。', usage:'「用 Python 写一个读取 CSV 并按列排序的脚本」' },
+            { name:'代码解释', level:'must', desc:'让 AI 解释复杂代码。', analogy:'像老员工给新人 code review 讲解。', usage:'「解释一下这段正则表达式在匹配什么」' },
+            { name:'Debug 辅助', level:'should', desc:'把错误信息发给 AI，让它帮你找 Bug。', analogy:'像请了一个经验丰富的调试专家。', usage:'贴上报错信息和相关代码，让 AI 分析原因。' },
+          ],
+          quiz: [
+            { q:'AI 生成的代码，你应该？', options:['直接用到生产环境','先理解逻辑，测试后再用','不需要看，直接复制','问 AI 为什么要这样写'], answer:1, explain:'AI 代码需要理解、审查、测试后才能使用。' },
+          ],
+          tool: '/ai-chat',
+          toolName: '用 AI 聊天辅助编程',
+        },
+        {
+          title: 'Prompt 工程进阶',
+          desc: '写出专业级 Prompt',
+          concepts: [
+            { name:'结构化 Prompt', level:'must', desc:'用固定格式组织复杂指令。', analogy:'像写需求文档：背景、目标、约束、输出格式。', usage:'角色 + 任务 + 约束 + 格式 + 示例' },
+            { name:'Chain-of-Thought', level:'must', desc:'让 AI 分步骤推理。', analogy:'像数学证明题，一步步推导。', usage:'「请一步一步分析，先列出已知条件...」' },
+            { name:'元提示', level:'nice', desc:'让 AI 帮你优化 Prompt。', analogy:'像让老师帮你改作文指导。', usage:'「帮我优化以下 Prompt，使其更清晰具体：[原始 Prompt]」' },
+          ],
+          quiz: [
+            { q:'Chain-of-Thought 的核心思想是？', options:['让 AI 更快回答','让 AI 分步骤推理','让 AI 回答更短','让 AI 不思考'], answer:1, explain:'CoT 通过引导 AI 展示推理过程，提高复杂问题的回答质量。' },
+          ],
+          tool: '/ai-chat',
+          toolName: '练习结构化 Prompt',
+        },
+        {
+          title: 'RAG 与知识库',
+          desc: '让 AI 学习你的私有数据',
+          concepts: [
+            { name:'RAG 原理', level:'must', desc:'检索增强生成：先检索相关文档，再让 AI 基于文档回答。', analogy:'像开卷考试：AI 先翻书找答案，再组织语言回答。', usage:'让 AI 基于你的产品文档回答客户问题。' },
+            { name:'向量数据库', level:'should', desc:'存储文本的语义向量，用于相似度检索。', analogy:'像图书管理员，按内容主题（而非书名）找书。', usage:'Pinecone、Milvus、Supabase pgvector。' },
+            { name:'Embedding', level:'should', desc:'把文本转换成数字向量。', analogy:'像把文字翻译成计算机能理解的「数字语言」。', usage:'用于语义搜索、相似文本匹配。' },
+          ],
+          quiz: [
+            { q:'RAG 的核心思路是？', options:['让 AI 背诵所有知识','先检索相关文档，再让 AI 基于文档回答','让 AI 记住所有对话','不需要外部数据'], answer:1, explain:'RAG 通过检索外部知识来增强 AI 的回答，特别适合私有数据场景。' },
+          ],
+          tool: null,
+        },
+        {
+          title: 'Agent 开发实战',
+          desc: '构建你的 AI 助手',
+          concepts: [
+            { name:'Agent 架构', level:'must', desc:'感知→规划→执行→反馈的循环。', analogy:'像自动驾驶：感知环境→规划路线→执行操作→反馈调整。', usage:'构建能自动处理工单、回复邮件的 Agent。' },
+            { name:'Function Calling', level:'must', desc:'让 AI 调用你定义的函数。', analogy:'像给 AI 装上了手和脚，它能真正「做事」。', usage:'AI 调用天气 API、数据库查询、发邮件。' },
+            { name:'Multi-Agent', level:'nice', desc:'多个 Agent 协作完成复杂任务。', analogy:'像一个团队：PM、设计师、开发者各司其职。', usage:'调研 Agent + 写作 Agent + 审核 Agent 协作产出报告。' },
+          ],
+          quiz: [
+            { q:'Agent 的核心循环是？', options:['输入→输出','感知→规划→执行→反馈','搜索→回答','训练→部署'], answer:1, explain:'Agent 通过感知环境、规划行动、执行任务、接收反馈来完成目标。' },
+          ],
+          tool: null,
+        },
+      ],
+    };
+
+    // ============ 渲染逻辑 ============
+    let currentPath = 'beginner';
+    let completed = JSON.parse(localStorage.getItem('ai-learn-progress') || '{}');
+
+    function saveProgress() {
+      localStorage.setItem('ai-learn-progress', JSON.stringify(completed));
+    }
+
+    function updateProgress() {
+      const path = PATHS[currentPath];
+      const done = path.filter((_, i) => completed[`${currentPath}-${i}`]).length;
+      const pct = Math.round(done / path.length * 100);
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressText').textContent = `已完成 ${done} / ${path.length} 站`;
+    }
+
+    function renderStations() {
+      const container = document.getElementById('stations');
+      const path = PATHS[currentPath];
+      container.innerHTML = path.map((s, i) => {
+        const isOpen = i === 0;
+        const isDone = completed[`${currentPath}-${i}`];
+        return `
+        <div class="station ${isOpen ? 'open' : ''}" id="station-${i}">
+          <div class="station-header" onclick="toggleStation(${i})">
+            <div class="station-num ${isDone ? 'done' : ''}">${isDone ? '✓' : String(i+1).padStart(2,'0')}</div>
+            <div class="station-info">
+              <h3>${s.title}</h3>
+              <p>${s.desc}</p>
+            </div>
+            <div class="station-check ${isDone ? 'checked' : ''}" onclick="event.stopPropagation();toggleDone(${i})" title="标记完成">✓</div>
+            <div class="station-toggle">▼</div>
+          </div>
+          <div class="station-body">
+            <div class="concept-grid">
+              ${s.concepts.map(c => `
+                <div class="concept-card">
+                  <span class="level level-${c.level}">${c.level === 'must' ? '核心' : c.level === 'should' ? '重要' : '进阶'}</span>
+                  <h4>${c.name}</h4>
+                  <p style="font-size:.85rem;margin:.3rem 0">${c.desc}</p>
+                  <div class="analogy">${c.analogy}</div>
+                  <div class="usage">${c.usage}</div>
+                </div>
+              `).join('')}
+            </div>
+
+            ${s.tool ? `<a href="${s.tool}" class="tool-link" target="_blank">🔗 ${s.toolName || '打开工具'}</a>` : ''}
+
+            ${s.quiz.length ? `
+            <div class="quiz" id="quiz-${i}">
+              <h4>🧠 小测验</h4>
+              ${s.quiz.map((q, qi) => `
+                <div class="quiz-item" data-qi="${qi}">
+                  <p style="font-size:.9rem;margin-bottom:.5rem">${q.q}</p>
+                  ${q.options.map((o, oi) => `
+                    <button class="quiz-option" onclick="checkQuiz(${i},${qi},${oi})">${o}</button>
+                  `).join('')}
+                  <div class="quiz-feedback" id="feedback-${i}-${qi}"></div>
+                </div>
+              `).join('')}
+            </div>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+      updateProgress();
+    }
+
+    function toggleStation(i) {
+      document.getElementById('station-' + i).classList.toggle('open');
+    }
+
+    function toggleDone(i) {
+      const key = `${currentPath}-${i}`;
+      completed[key] = !completed[key];
+      saveProgress();
+      renderStations();
+    }
+
+    function checkQuiz(stationIdx, questionIdx, optionIdx) {
+      const q = PATHS[currentPath][stationIdx].quiz[questionIdx];
+      const item = document.querySelector(`#quiz-${stationIdx} .quiz-item[data-qi="${questionIdx}"]`);
+      const btns = item.querySelectorAll('.quiz-option');
+      const fb = document.getElementById(`feedback-${stationIdx}-${questionIdx}`);
+
+      btns.forEach((b, idx) => {
+        b.disabled = true;
+        if (idx === q.answer) b.classList.add('correct');
+        else if (idx === optionIdx && idx !== q.answer) b.classList.add('wrong');
+      });
+
+      fb.style.display = 'block';
+      if (optionIdx === q.answer) {
+        fb.innerHTML = `<span style="color:#10b981">✅ 正确！</span> ${q.explain}`;
+      } else {
+        fb.innerHTML = `<span style="color:#ef4444">❌ 不对。</span> ${q.explain}`;
+      }
+    }
+
+    // 路径切换
+    document.querySelectorAll('.path-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.path-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentPath = tab.dataset.path;
+        renderStations();
+      });
+    });
+
+    renderStations();
+    </script>
+</body>
+</html>
