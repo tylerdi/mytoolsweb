@@ -55,7 +55,7 @@ export async function onRequestPost(context) {
         'Authorization': 'Bearer ' + MIMO_API_KEY,
       },
       body: JSON.stringify({
-        model: env.MIMO_MODEL || 'xiaomi/mimo-v2.5',
+        model: env.MIMO_MODEL || 'deepseek-v4-flash-free',
         messages: [{ role: 'user', content: systemPrompt }],
         max_tokens: 400,
         temperature: 0.9,
@@ -110,7 +110,7 @@ async function generateImagePrompt(apiBase, apiKey, storyStart, currentText, par
         'Authorization': 'Bearer ' + apiKey,
       },
       body: JSON.stringify({
-        model: 'xiaomi/mimo-v2.5',
+        model: 'deepseek-v4-flash-free',
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 100,
         temperature: 0.7,

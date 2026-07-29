@@ -88,7 +88,7 @@ export async function onRequestPost(context) {
         'Authorization': 'Bearer ' + MIMO_API_KEY,
       },
       body: JSON.stringify({
-        model: context.env.MIMO_MODEL || 'xiaomi/mimo-v2.5',
+        model: context.env.MIMO_MODEL || 'deepseek-v4-flash-free',
         messages: [
           { role: 'system', content: '你是一个有趣的内容生成器。严格按要求输出，不要加任何多余的话。' },
           { role: 'user', content: chosen.prompt },

@@ -317,7 +317,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        model: 'mimo-v2-flash',
+                        model: 'deepseek-v4-flash-free',
                         messages: [
                             { role: 'system', content: currentTool.systemPrompt + (selectedOption ? ` 风格/模式：${selectedOption}` : '') },
                             { role: 'user', content: input }

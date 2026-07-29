@@ -242,7 +242,7 @@
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "mimo-v2.5-pro",
+    "model": "deepseek-v4-flash-free",
     "messages": [
       {"role": "user", "content": "你好，介绍一下你自己"}
     ],
@@ -261,7 +261,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="mimo-v2.5-pro",
+    model="deepseek-v4-flash-free",
     messages=[{"role": "user", "content": "你好"}],
     stream=True
 )
@@ -282,7 +282,7 @@ const client = new OpenAI({
 });
 
 const stream = await client.chat.completions.create({
-    model: 'mimo-v2.5-pro',
+    model: 'deepseek-v4-flash-free',
     messages: [{ role: 'user', content: '你好' }],
     stream: true
 });

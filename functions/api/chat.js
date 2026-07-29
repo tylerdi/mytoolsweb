@@ -23,7 +23,7 @@ export async function onRequestPost(context) {
     // }
 
     const body = await request.json();
-    const { messages, model = env.MIMO_MODEL || 'xiaomi/mimo-v2.5', stream = true, max_tokens = 500 } = body;
+    const { messages, model = env.MIMO_MODEL || 'deepseek-v4-flash-free', stream = true, max_tokens = 500 } = body;
 
     if (!messages || !Array.isArray(messages)) {
       return new Response(JSON.stringify({ error: 'messages 必须是数组' }), {

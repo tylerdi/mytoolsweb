@@ -38,7 +38,7 @@ export async function onRequestPost(context) {
         'Authorization': 'Bearer ' + MIMO_API_KEY,
       },
       body: JSON.stringify({
-        model: reqModel || context.env.MIMO_MODEL || 'xiaomi/mimo-v2.5',
+        model: reqModel || context.env.MIMO_MODEL || 'deepseek-v4-flash-free',
         messages: messages,
         stream: false,
         max_tokens: max_tokens,
