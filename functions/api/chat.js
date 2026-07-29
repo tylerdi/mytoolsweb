@@ -52,6 +52,7 @@ export async function onRequestPost(context) {
       headers['Authorization'] = 'Bearer ' + MIMO_API_KEY;
     }
 
+    console.log('[Chat] Request:', MIMO_API_BASE + '/chat/completions', 'model:', model, 'hasKey:', !!MIMO_API_KEY);
     const apiResponse = await fetch(`${MIMO_API_BASE}/chat/completions`, {
       method: 'POST',
       headers,
@@ -65,7 +66,8 @@ export async function onRequestPost(context) {
 
     if (!apiResponse.ok) {
       const errText = await apiResponse.text();
-      return new Response(JSON.stringify({ error: `Chat API 错误: ${apiResponse.status}` }), {
+      console.error('[Chat] API error:', apiResponse.status, errText.substring(0, 200));
+      return new Response(JSON.stringify({ error: `Chat API 错误: ${apiResponse.status}`, detail: errText.substring(0, 500), url: MIMO_API_BASE + '/chat/completions' }), {
         status: apiResponse.status,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
