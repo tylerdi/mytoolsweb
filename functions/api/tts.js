@@ -7,13 +7,7 @@ export async function onRequestPost(context) {
   const MIMO_API_KEY = env.MIMO_API_KEY;
 
   try {
-    if (!MIMO_API_KEY) {
-      return new Response(JSON.stringify({ error: 'MIMO_API_KEY not configured' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-
+    // API key is optional
     const { text, speed } = await context.request.json();
 
     if (!text) {

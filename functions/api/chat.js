@@ -14,12 +14,13 @@ export async function onRequestPost(context) {
   };
 
   try {
-    if (!MIMO_API_KEY) {
-      return new Response(JSON.stringify({ error: 'MIMO_API_KEY not configured' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-      });
-    }
+    // API key is optional - some providers allow unauthenticated access
+    // if (!MIMO_API_KEY) {
+    //   return new Response(JSON.stringify({ error: 'MIMO_API_KEY not configured' }), {
+    //     status: 500,
+    //     headers: { 'Content-Type': 'application/json', ...corsHeaders },
+    //   });
+    // }
 
     const body = await request.json();
     const { messages, model = env.MIMO_MODEL || 'xiaomi/mimo-v2.5', stream = true, max_tokens = 500 } = body;
@@ -44,12 +45,16 @@ export async function onRequestPost(context) {
 回复要简短有趣，不要超过 200 字。`,
     };
 
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+    if (MIMO_API_KEY) {
+      headers['Authorization'] = 'Bearer ' + MIMO_API_KEY;
+    }
+
     const apiResponse = await fetch(`${MIMO_API_BASE}/chat/completions`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + MIMO_API_KEY,
-      },
+      headers,
       body: JSON.stringify({
         model: model,
         messages: [systemMessage, ...limited],
