@@ -91,7 +91,7 @@
         document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-CN', options);
 
         // 从 API 获取新闻
-        // 加载新闻
+        const mockNews = [
             {
                 title: "OpenAI 发布 GPT-5，多模态能力大幅提升",
                 summary: "新一代模型在代码生成、数学推理和多语言理解方面均有显著进步，支持实时视频理解。",
@@ -219,7 +219,7 @@
                 if (currentCategory === 'all') {
                     renderNews(allNews);
                 } else {
-                    const filtered = allNews.filter(n => n.source === currentCategory);
+                    const filtered = allNews.filter(n => n.category === currentCategory);
                     renderNews(filtered);
                 }
             });
@@ -239,6 +239,7 @@
                     if (data.news && data.news.length > 0) {
                         allNews = data.news;
                         renderNews(allNews);
+                        document.getElementById('loadingSpinner') && (document.getElementById('loadingSpinner').style.display='none');
                     }
                 }
             } catch (e) {

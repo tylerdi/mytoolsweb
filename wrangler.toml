@@ -3,12 +3,12 @@ name = "mytoolsweb"
 compatibility_date = "2024-03-12"
 pages_build_output_dir = "."
 
-# 环境变量
-[vars]
-SUPABASE_URL = "https://twyosmombfrcheyjujvb.supabase.co"
-SUPABASE_ANON_KEY = "eyJhbG…1bwo"
-MIMO_API_BASE = "https://integrate.api.nvidia.com/v1"
-MIMO_MODEL = "stepfun-ai/step-3.7-flash"
+# 环境变量全部在 Cloudflare Dashboard 管理，不在这里
+# Dashboard Settings → Variables and secrets
+# 需要配置的变量：
+#   MIMO_API_BASE  (Plaintext) - 如 https://integrate.api.nvidia.com/v1
+#   MIMO_MODEL     (Plaintext) - 如 stepfun-ai/step-3.7-flash
+#   MIMO_API_KEY   (Secret)    - NVIDIA API Key
 
 # Functions 配置
 [functions]
