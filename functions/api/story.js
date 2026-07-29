@@ -55,7 +55,7 @@ export async function onRequestPost(context) {
         'Authorization': 'Bearer ' + MIMO_API_KEY,
       },
       body: JSON.stringify({
-        model: env.MIMO_MODEL || 'deepseek-v4-flash-free',
+        model: 'deepseek-v4-flash-free',
         messages: [{ role: 'user', content: systemPrompt }],
         max_tokens: 400,
         temperature: 0.9,
