@@ -24,7 +24,7 @@
     {href:'/tools.html', label:'开发者工具', icon:'🛠️', desc:'JSON/加密/转换'},
     {href:'/ai-models', label:'模型排行', icon:'📊', desc:'AI 模型对比'},
     {href:'/ai-cost', label:'成本计算', icon:'💰', desc:'API 费用估算'},
-    {href:'/ai-prompt', label:'Prompt 指南', icon:'📝', desc:'提示词教程'},
+    {href:'/ai-prompt', label:'Prompt 指南', icon:'📝', desc:'提示词教程'},{href:'/agent-map.html', label:'Agent 地图', icon:'🗺️', desc:'架构全景图'},
   ];
 
   // 内容分类 — 下拉菜单

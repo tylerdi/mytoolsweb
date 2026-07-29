@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent 架构地图 - AI Agent 全景图 | Tyler工具箱</title>
+    <meta name="description" content="交互式Agent架构全景图：核心模块、记忆系统、规划引擎、工具使用、多Agent协作。可视化理解AI Agent的工作原理。">
+    <meta name="keywords" content="Agent架构,AI Agent,Agent地图,LLM Agent,多Agent,Agent记忆,Agent规划">
+    <meta property="og:title" content="Agent 架构地图 - AI Agent 全景图">
+    <meta property="og:url" content="https://tylerzhang.xyz/agent-map.html">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://tylerzhang.xyz/agent-map.html">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗺️</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css?v2">
+    <style>
+        .map-hero{text-align:center;padding:2rem 1rem 1rem}
+        .map-hero h1{font-size:2rem;margin-bottom:.3rem}
+        .map-hero p{color:var(--text-dim);font-size:.9rem;max-width:500px;margin:0 auto}
+        .map-container{max-width:900px;margin:0 auto;padding:0 1rem 2rem}
+        /* SVG 地图 */
+        .map-svg{width:100%;margin:1rem auto;display:block}
+        .map-svg text{font-family:'LXGW WenKai',sans-serif;fill:var(--text)}
+        .node{cursor:pointer;transition:transform .2s}
+        .node:hover{transform:scale(1.05)}
+        .node rect{rx:12;ry:12;stroke-width:2;transition:all .2s}
+        .node:hover rect{filter:brightness(1.2)}
+        .node-center rect{fill:var(--accent);stroke:var(--accent)}
+        .node-center text{fill:#fff;font-weight:700}
+        .edge{stroke:var(--border);stroke-width:2;fill:none}
+        /* 详情面板 */
+        .detail-panel{background:var(--card-bg);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:1rem;display:none;animation:fadeIn .3s}
+        .detail-panel.show{display:block}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .detail-header{display:flex;align-items:center;gap:1rem;margin-bottom:1rem}
+        .detail-icon{font-size:2rem}
+        .detail-header h2{font-size:1.3rem;margin:0}
+        .detail-header p{font-size:.85rem;color:var(--text-dim);margin:0}
+        .detail-close{margin-left:auto;background:none;border:none;color:var(--text-dim);font-size:1.5rem;cursor:pointer;padding:4px 8px}
+        .detail-close:hover{color:var(--text)}
+        .detail-content{font-size:.9rem;line-height:1.8}
+        .detail-content h3{font-size:1rem;color:var(--accent);margin:1rem 0 .5rem}
+        .detail-content ul{padding-left:1.2rem}
+        .detail-content li{margin-bottom:.3rem}
+        .detail-content .example{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.8rem;margin:.5rem 0;font-size:.85rem}
+        .detail-content .example::before{content:'💡 示例：';font-weight:600;color:var(--accent)}
+        /* 对比表 */
+        .compare-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+        .compare-table th,.compare-table td{padding:.6rem .8rem;border:1px solid var(--border);text-align:left}
+        .compare-table th{background:var(--bg);color:var(--accent);font-weight:600}
+        .compare-table td:first-child{color:var(--text-dim);width:30%}
+        /* 底部卡片 */
+        .bottom-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:1.5rem}
+        .bottom-card{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center;cursor:pointer;transition:all .2s}
+        .bottom-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+        .bottom-card .icon{font-size:1.5rem;margin-bottom:.3rem}
+        .bottom-card h4{font-size:.9rem;margin:0 0 .2rem}
+        .bottom-card p{font-size:.75rem;color:var(--text-dim);margin:0}
+        @media(max-width:768px){
+            .map-hero h1{font-size:1.5rem}
+            .detail-panel{padding:1rem}
+        }
+    </style>
+</head>
+<body>
+    <section class="map-hero">
+        <div style="font-size:2.5rem;margin-bottom:.3rem">🗺️</div>
+        <h1>Agent 架构地图</h1>
+        <p>点击任意模块，深入了解 AI Agent 的工作原理</p>
+    </section>
+
+    <div class="map-container">
+        <!-- SVG 交互地图 -->
+        <svg class="map-svg" viewBox="0 0 800 520" xmlns="http://www.w3.org/2000/svg">
+            <!-- 连线 -->
+            <path class="edge" d="M400,260 L400,100"/>
+            <path class="edge" d="M400,260 L200,180"/>
+            <path class="edge" d="M400,260 L600,180"/>
+            <path class="edge" d="M400,260 L200,370"/>
+            <path class="edge" d="M400,260 L600,370"/>
+            <path class="edge" d="M200,370 L200,470" stroke-dasharray="5,5"/>
+            <path class="edge" d="M600,370 L600,470" stroke-dasharray="5,5"/>
+
+            <!-- 中心：Agent 核心 -->
+            <g class="node node-center" onclick="showDetail('core')">
+                <rect x="320" y="220" width="160" height="80" fill="#646cff" stroke="#646cff"/>
+                <text x="400" y="255" text-anchor="middle" font-size="18" fill="#fff">🧠 Agent 核心</text>
+                <text x="400" y="278" text-anchor="middle" font-size="11" fill="rgba(255,255,255,.7)">LLM + 推理引擎</text>
+            </g>
+
+            <!-- 记忆系统 -->
+            <g class="node" onclick="showDetail('memory')">
+                <rect x="320" y="50" width="160" height="70" fill="#1a1a2e" stroke="#a855f7"/>
+                <text x="400" y="82" text-anchor="middle" font-size="15" fill="#a855f7">💾 记忆系统</text>
+                <text x="400" y="102" text-anchor="middle" font-size="10" fill="#888">短期 · 长期 · 工作记忆</text>
+            </g>
+
+            <!-- 规划引擎 -->
+            <g class="node" onclick="showDetail('planning')">
+                <rect x="100" y="140" width="160" height="70" fill="#1a1a2e" stroke="#22c55e"/>
+                <text x="180" y="172" text-anchor="middle" font-size="15" fill="#22c55e">📋 规划引擎</text>
+                <text x="180" y="192" text-anchor="middle" font-size="10" fill="#888">任务分解 · 路径规划</text>
+            </g>
+
+            <!-- 工具使用 -->
+            <g class="node" onclick="showDetail('tools')">
+                <rect x="540" y="140" width="160" height="70" fill="#1a1a2e" stroke="#f59e0b"/>
+                <text x="620" y="172" text-anchor="middle" font-size="15" fill="#f59e0b">🔧 工具使用</text>
+                <text x="620" y="192" text-anchor="middle" font-size="10" fill="#888">API · 代码 · 搜索</text>
+            </g>
+
+            <!-- 多Agent协作 -->
+            <g class="node" onclick="showDetail('multi-agent')">
+                <rect x="100" y="330" width="160" height="70" fill="#1a1a2e" stroke="#ec4899"/>
+                <text x="180" y="362" text-anchor="middle" font-size="15" fill="#ec4899">🤝 多Agent协作</text>
+                <text x="180" y="382" text-anchor="middle" font-size="10" fill="#888">分工 · 通信 · 协调</text>
+            </g>
+
+            <!-- 反馈循环 -->
+            <g class="node" onclick="showDetail('feedback')">
+                <rect x="540" y="330" width="160" height="70" fill="#1a1a2e" stroke="#06b6d4"/>
+                <text x="620" y="362" text-anchor="middle" font-size="15" fill="#06b6d4">🔄 反馈循环</text>
+                <text x="620" y="382" text-anchor="middle" font-size="10" fill="#888">评估 · 纠错 · 迭代</text>
+            </g>
+
+            <!-- 感知层 -->
+            <g class="node" onclick="showDetail('perception')">
+                <rect x="110" y="440" width="140" height="55" fill="#1a1a2e" stroke="#666"/>
+                <text x="180" y="465" text-anchor="middle" font-size="13" fill="#aaa">👁️ 感知层</text>
+                <text x="180" y="482" text-anchor="middle" font-size="9" fill="#666">文本·图像·语音·视频</text>
+            </g>
+
+            <!-- 行动层 -->
+            <g class="node" onclick="showDetail('action')">
+                <rect x="550" y="440" width="140" height="55" fill="#1a1a2e" stroke="#666"/>
+                <text x="620" y="465" text-anchor="middle" font-size="13" fill="#aaa">⚡ 行动层</text>
+                <text x="620" y="482" text-anchor="middle" font-size="9" fill="#666">生成·执行·部署</text>
+            </g>
+        </svg>
+
+        <!-- 详情面板 -->
+        <div class="detail-panel" id="detailPanel">
+            <div class="detail-header">
+                <span class="detail-icon" id="detailIcon"></span>
+                <div>
+                    <h2 id="detailTitle"></h2>
+                    <p id="detailDesc"></p>
+                </div>
+                <button class="detail-close" onclick="hideDetail()">✕</button>
+            </div>
+            <div class="detail-content" id="detailContent"></div>
+        </div>
+
+        <!-- 底部：Agent 特征卡片 -->
+        <div class="bottom-cards">
+            <div class="bottom-card" onclick="showDetail('autonomy')">
+                <div class="icon">🎯</div>
+                <h4>自主性</h4>
+                <p>无需人类干预，自主决策</p>
+            </div>
+            <div class="bottom-card" onclick="showDetail('reactivity')">
+                <div class="icon">⚡</div>
+                <h4>反应性</h4>
+                <p>感知环境，实时响应</p>
+            </div>
+            <div class="bottom-card" onclick="showDetail('proactivity')">
+                <div class="icon">🚀</div>
+                <h4>主动性</h4>
+                <p>主动规划，抢占先机</p>
+            </div>
+            <div class="bottom-card" onclick="showDetail('social')">
+                <div class="icon">👥</div>
+                <h4>社交性</h4>
+                <p>与人和其他Agent交互</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">Powered by <a href="https://openclaw.ai">OpenClaw</a> · 🤖 AI 自主维护 · © 2026 Tyler</footer>
+
+    <script src="/nav.js?v2"></script>
+    <script>
+    const DETAILS = {
+      'core': {
+        icon: '🧠', title: 'Agent 核心', desc: 'LLM + 推理引擎，Agent 的大脑',
+        content: `
+          <h3>核心组成</h3>
+          <ul>
+            <li><strong>大语言模型（LLM）</strong>— 理解语言、生成回复的基础能力</li>
+            <li><strong>推理引擎</strong>— Chain-of-Thought、Tree-of-Thought 等推理策略</li>
+            <li><strong>系统提示（System Prompt）</strong>— 定义 Agent 的角色、能力边界、行为规则</li>
+          </ul>
+          <div class="example">Agent 核心就像一个人的大脑：LLM 是基础智力，System Prompt 是性格和价值观，推理策略是思维方式。</div>
+          <h3>常见架构模式</h3>
+          <ul>
+            <li><strong>ReAct</strong>— 推理(Reasoning) + 行动(Acting)交替进行</li>
+            <li><strong>Plan-and-Execute</strong>— 先规划完整方案，再逐步执行</li>
+            <li><strong>Reflexion</strong>— 通过自我反思不断改进</li>
+          </ul>
+        `
+      },
+      'memory': {
+        icon: '💾', title: '记忆系统', desc: '短期记忆 · 长期记忆 · 工作记忆',
+        content: `
+          <h3>三层记忆架构</h3>
+          <table class="compare-table">
+            <tr><th>类型</th><th>容量</th><th>持久性</th><th>类比</th></tr>
+            <tr><td>工作记忆</td><td>最小</td><td>当前任务</td><td>桌面上正在看的文件</td></tr>
+            <tr><td>短期记忆</td><td>中等</td><td>当前对话</td><td>今天的工作笔记</td></tr>
+            <tr><td>长期记忆</td><td>最大</td><td>永久</td><td>档案室的文件柜</td></tr>
+          </table>
+          <h3>实现方式</h3>
+          <ul>
+            <li><strong>上下文窗口</strong>— LLM 原生的短期记忆（Context Window）</li>
+            <li><strong>RAG</strong>— 检索增强生成，按需从知识库调取信息</li>
+            <li><strong>向量数据库</strong>— 存储和检索语义相似的信息</li>
+            <li><strong>摘要压缩</strong>— 定期压缩旧对话，释放上下文空间</li>
+          </ul>
+          <div class="example">就像人的记忆：你不会记住昨天午餐吃了什么（短期），但会记住重要的技能和知识（长期），工作时同时处理手头几件事（工作记忆）。</div>
+        `
+      },
+      'planning': {
+        icon: '📋', title: '规划引擎', desc: '任务分解 · 路径规划 · 策略选择',
+        content: `
+          <h3>规划能力</h3>
+          <ul>
+            <li><strong>任务分解</strong>— 把复杂目标拆成可执行的小步骤</li>
+            <li><strong>路径规划</strong>— 选择最优执行路径</li>
+            <li><strong>资源分配</strong>— 决定用哪些工具、花多少资源</li>
+            <li><strong>风险评估</strong>— 预判可能的失败，准备备选方案</li>
+          </ul>
+          <h3>规划策略</h3>
+          <ul>
+            <li><strong>CoT（Chain-of-Thought）</strong>— 一步步推理</li>
+            <li><strong>ToT（Tree-of-Thought）</strong>— 探索多条路径，选最优</li>
+            <li><strong>GoT（Graph-of-Thought）</strong>— 图结构的复杂推理</li>
+          </ul>
+          <div class="example">像项目经理：接到需求后，先拆任务、排优先级、分配资源、定时间表，然后跟踪执行。</div>
+        `
+      },
+      'tools': {
+        icon: '🔧', title: '工具使用', desc: 'API 调用 · 代码执行 · 外部搜索',
+        content: `
+          <h3>常见工具类型</h3>
+          <ul>
+            <li><strong>搜索工具</strong>— Google、Bing、Perplexity 等联网搜索</li>
+            <li><strong>代码工具</strong>— 执行 Python/JS 代码、操作文件</li>
+            <li><strong>API 工具</strong>— 调用天气、地图、数据库等外部服务</li>
+            <li><strong>浏览器工具</strong>— 打开网页、填写表单、截图</li>
+            <li><strong>文件工具</strong>— 读写文件、生成报告</li>
+          </ul>
+          <h3>Function Calling 机制</h3>
+          <ul>
+            <li>定义函数的 JSON Schema（参数、类型、描述）</li>
+            <li>LLM 决定是否调用、传什么参数</li>
+            <li>执行函数，返回结果给 LLM</li>
+            <li>LLM 基于结果生成最终回复</li>
+          </ul>
+          <div class="example">就像给 AI 装上了手和脚：以前它只能「说」，现在能真正「做」——查天气、发邮件、写代码、操作数据库。</div>
+        `
+      },
+      'multi-agent': {
+        icon: '🤝', title: '多Agent协作', desc: '分工 · 通信 · 协调 · 竞争',
+        content: `
+          <h3>协作模式</h3>
+          <table class="compare-table">
+            <tr><th>模式</th><th>描述</th><th>适用场景</th></tr>
+            <tr><td>层级式</td><td>主 Agent 分配任务给子 Agent</td><td>项目管理、复杂任务</td></tr>
+            <tr><td>对等式</td><td>Agent 平等协作，投票决策</td><td>辩论、集体决策</td></tr>
+            <tr><td>竞争式</td><td>多个 Agent 竞争，选最优方案</td><td>方案比选、创意生成</td></tr>
+            <tr><td>流水线</td><td>前一个 Agent 的输出是后一个的输入</td><td>内容生产、数据处理</td></tr>
+          </table>
+          <div class="example">OpenClaw 的三丰/乔峰/清扬就是多Agent协作：三丰是主力，乔峰管多模态，清扬写代码，各司其职。</div>
+        `
+      },
+      'feedback': {
+        icon: '🔄', title: '反馈循环', desc: '评估 · 纠错 · 迭代优化',
+        content: `
+          <h3>反馈机制</h3>
+          <ul>
+            <li><strong>自我评估</strong>— Agent 检查自己的输出质量</li>
+            <li><strong>环境反馈</strong>— 执行结果（成功/失败）作为下一步的输入</li>
+            <li><strong>人类反馈</strong>— 用户的纠正和指导</li>
+            <li><strong>Agent 互评</strong>— 其他 Agent 审核和提建议</li>
+          </ul>
+          <h3>经典框架</h3>
+          <ul>
+            <li><strong>Reflexion</strong>— 自我反思 + 经验积累</li>
+            <li><strong>LATS</strong>— 结合蒙特卡洛树搜索的反馈规划</li>
+            <li><strong>CRT（Critique-Refine-Think）</strong>— 批评→改进→再思考</li>
+          </ul>
+          <div class="example">就像运动员训练：跑一次→看回放→发现问题→调整姿势→再跑→再看回放……不断逼近最优。</div>
+        `
+      },
+      'perception': {
+        icon: '👁️', title: '感知层', desc: '多模态输入处理',
+        content: `
+          <h3>感知能力</h3>
+          <ul>
+            <li><strong>文本理解</strong>— 自然语言解析、意图识别、情感分析</li>
+            <li><strong>图像理解</strong>— OCR、物体识别、场景理解（Vision LLM）</li>
+            <li><strong>语音识别</strong>— STT，将语音转为文字</li>
+            <li><strong>视频理解</strong>— 多帧分析、动作识别</li>
+            <li><strong>结构化数据</strong>— 读取 JSON、CSV、数据库</li>
+          </ul>
+          <div class="example">感知层是 Agent 的「眼睛和耳朵」：没有它，Agent 就是个只能处理文字的「盲人」。</div>
+        `
+      },
+      'action': {
+        icon: '⚡', title: '行动层', desc: '任务执行与输出',
+        content: `
+          <h3>行动能力</h3>
+          <ul>
+            <li><strong>文本生成</strong>— 写文章、代码、邮件、报告</li>
+            <li><strong>代码执行</strong>— 运行脚本、调试、部署</li>
+            <li><strong>文件操作</strong>— 创建、读取、修改文件</li>
+            <li><strong>API 调用</strong>— 发邮件、发消息、调用服务</li>
+            <li><strong>环境交互</strong>— 操作浏览器、控制设备</li>
+          </ul>
+          <div class="example">行动层是 Agent 的「手和脚」：感知了环境、想好了方案，最终要靠行动来落地。</div>
+        `
+      },
+      'autonomy': {
+        icon: '🎯', title: '自主性', desc: '无需人类干预，自主决策和执行',
+        content: `
+          <p>自主性是 Agent 区别于普通 AI 对话的核心特征。</p>
+          <ul>
+            <li><strong>目标驱动</strong>— 给定目标，自主规划路径</li>
+            <li><strong>自主决策</strong>— 遇到选择时自己判断，不事事问人</li>
+            <li><strong>错误恢复</strong>— 失败后自动尝试其他方案</li>
+            <li><strong>资源管理</strong>— 自己决定用什么工具、花多少资源</li>
+          </ul>
+          <div class="example">自主性的光谱：ChatGPT（0%自主）→ Copilot（30%）→ AutoGPT（70%）→ OpenClaw Agent（80%+）</div>
+        `
+      },
+      'reactivity': {
+        icon: '⚡', title: '反应性', desc: '感知环境变化，实时响应',
+        content: `
+          <p>Agent 能感知环境变化并及时做出反应。</p>
+          <ul>
+            <li><strong>事件驱动</strong>— 收到消息、定时触发、文件变化</li>
+            <li><strong>实时响应</strong>— 几秒内处理并回复</li>
+            <li><strong>优先级判断</strong>— 区分紧急和非紧急</li>
+            <li><strong>降级处理</strong>— 服务不可用时的备选方案</li>
+          </ul>
+          <div class="example">OpenClaw 的 Heartbeat 就是反应性：每30分钟检查邮件、日历、天气，有事主动通知。</div>
+        `
+      },
+      'proactivity': {
+        icon: '🚀', title: '主动性', desc: '不等指令，主动发现问题和机会',
+        content: `
+          <p>最高级的 Agent 不只是被动响应，而是主动出击。</p>
+          <ul>
+            <li><strong>主动监控</strong>— 持续检查关键指标</li>
+            <li><strong>预警通知</strong>— 发现异常主动告警</li>
+            <li><strong>机会发现</strong>— 识别可优化的点，主动建议</li>
+            <li><strong>预防性维护</strong>— 在问题发生前修复</li>
+          </ul>
+          <div class="example">被动 Agent：你说「帮我查天气」→ 查。主动 Agent：看到要下雨→「明天有雨，建议带伞，已加到日历提醒」。</div>
+        `
+      },
+      'social': {
+        icon: '👥', title: '社交性', desc: '与人类和其他 Agent 交互',
+        content: `
+          <p>Agent 不是孤岛，需要与外界交互。</p>
+          <ul>
+            <li><strong>人机交互</strong>— 理解人类意图，用人类能理解的方式回复</li>
+            <li><strong>Agent 间通信</strong>— 标准化的消息协议</li>
+            <li><strong>群体智能</strong>— 多 Agent 协作产生涌现行为</li>
+            <li><strong>社会规范</strong>— 遵守安全、伦理、隐私规则</li>
+          </ul>
+          <div class="example">OpenClaw 的多 Agent 系统：三丰在飞书和你聊天，乔峰在另一个群回答问题，清扬在写代码——它们互相知道对方的存在。</div>
+        `
+      },
+    };
+
+    function showDetail(key) {
+      const d = DETAILS[key];
+      if (!d) return;
+      document.getElementById('detailIcon').textContent = d.icon;
+      document.getElementById('detailTitle').textContent = d.title;
+      document.getElementById('detailDesc').textContent = d.desc;
+      document.getElementById('detailContent').innerHTML = d.content;
+      const panel = document.getElementById('detailPanel');
+      panel.classList.add('show');
+      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function hideDetail() {
+      document.getElementById('detailPanel').classList.remove('show');
+    }
+    </script>
+</body>
+</html>
