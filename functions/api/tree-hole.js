@@ -5,7 +5,7 @@ import { createDb } from './_supabase.js';
 // AI 回复（温暖语气）
 async function getAiReply(content, mood, env) {
   try {
-    const MIMO_API_BASE = (env.MIMO_API_BASE || 'https://openrouter.ai/api/v1').replace(/\/chat\/completions\/?$/, '');
+    const MIMO_API_BASE = (env.MIMO_API_BASE).replace(/\/chat\/completions\/?$/, '');
     const MIMO_API_KEY = env.MIMO_API_KEY;
     if (!MIMO_API_KEY) throw new Error('MIMO_API_KEY not configured');
     const moodHint = mood && mood !== 'unknown' ? `（用户选择的心情：${mood}）` : '';
@@ -16,7 +16,7 @@ async function getAiReply(content, mood, env) {
         'Authorization': 'Bearer ' + MIMO_API_KEY,
       },
       body: JSON.stringify({
-        model: env.MIMO_MODEL || 'deepseek-v4-flash-free',
+        model: env.MIMO_MODEL,
         messages: [
           {
             role: 'system',

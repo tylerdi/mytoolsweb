@@ -73,7 +73,7 @@ export async function onRequestPost(context) {
     const chosen = available[Math.floor(Math.random() * available.length)];
 
     // 调 AI 生成
-    const MIMO_API_BASE = (context.env.MIMO_API_BASE || 'https://openrouter.ai/api/v1').replace(/\/chat\/completions\/?$/, '');
+    const MIMO_API_BASE = (context.env.MIMO_API_BASE).replace(/\/chat\/completions\/?$/, '');
     const MIMO_API_KEY = context.env.MIMO_API_KEY;
     if (!MIMO_API_KEY) {
       return new Response(JSON.stringify({ error: 'MIMO_API_KEY not configured' }), {
@@ -88,7 +88,7 @@ export async function onRequestPost(context) {
         'Authorization': 'Bearer ' + MIMO_API_KEY,
       },
       body: JSON.stringify({
-        model: env.MIMO_MODEL || 'deepseek-v4-flash-free',
+        model: env.MIMO_MODEL,
         messages: [
           { role: 'system', content: '你是一个有趣的内容生成器。严格按要求输出，不要加任何多余的话。' },
           { role: 'user', content: chosen.prompt },

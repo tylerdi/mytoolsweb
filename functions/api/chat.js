@@ -4,7 +4,8 @@
 
 export async function onRequestPost(context) {
   const { request, env } = context;
-  const MIMO_API_BASE = (env.MIMO_API_BASE || 'https://openrouter.ai/api/v1').replace(/\/chat\/completions\/?$/, '');
+  const MIMO_API_BASE = (env.MIMO_API_BASE || '').replace(/\/chat\/completions\/?$/, '');
+  if (!MIMO_API_BASE) return new Response(JSON.stringify({error:'MIMO_API_BASE not configured'}),{status:500,headers:{'Content-Type':'application/json'}});
   const MIMO_API_KEY = env.MIMO_API_KEY;
 
   const corsHeaders = {
@@ -23,7 +24,9 @@ export async function onRequestPost(context) {
     // }
 
     const body = await request.json();
-    const { messages, model = env.MIMO_MODEL || 'deepseek-v4-flash-free', stream = true, max_tokens = 500 } = body;
+    const { messages, model, stream = true, max_tokens = 500 } = body;
+    const useModel = model || env.MIMO_MODEL;
+    if (!useModel) return new Response(JSON.stringify({error:'env MIMO_MODEL not set'}),{status:500,headers:{'Content-Type':'application/json'}});
 
     if (!messages || !Array.isArray(messages)) {
       return new Response(JSON.stringify({ error: 'messages 必须是数组' }), {
@@ -57,7 +60,7 @@ export async function onRequestPost(context) {
       method: 'POST',
       headers,
       body: JSON.stringify({
-        model: model,
+        model: useModel,
         messages: [systemMessage, ...limited],
         stream: stream,
         max_tokens: max_tokens,

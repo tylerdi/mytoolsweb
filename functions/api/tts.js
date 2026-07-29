@@ -3,7 +3,7 @@
 
 export async function onRequestPost(context) {
   const { env } = context;
-  const MIMO_API_BASE = (env.MIMO_API_BASE || 'https://openrouter.ai/api/v1').replace(/\/chat\/completions\/?$/, '');
+  const MIMO_API_BASE = (env.MIMO_API_BASE).replace(/\/chat\/completions\/?$/, '');
   const MIMO_API_KEY = env.MIMO_API_KEY;
 
   try {
@@ -47,7 +47,7 @@ async function generateMimoTTS(baseUrl, apiKey, text, speed) {
         'Authorization': 'Bearer ' + apiKey,
       },
     body: JSON.stringify({
-      model: 'mimo-v2-tts',
+      model: env.MIMO_TTS_MODEL || 'mimo-v2-tts',
       input: text,
       voice: '',
     }),
