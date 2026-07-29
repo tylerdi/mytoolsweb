@@ -3,8 +3,9 @@
 
 export async function onRequestPost(context) {
   const { env } = context;
-  const MIMO_API_BASE = (env.MIMO_API_BASE).replace(/\/chat\/completions\/?$/, '');
+  const MIMO_API_BASE = (env.MIMO_API_BASE || '').replace(/\/chat\/completions\/?$/, '');
   const MIMO_API_KEY = env.MIMO_API_KEY;
+  const MIMO_TTS_MODEL = env.MIMO_TTS_MODEL;
 
   try {
     // API key is optional
@@ -21,7 +22,7 @@ export async function onRequestPost(context) {
     const truncated = text.slice(0, 500);
 
     // 调用小米 MIMO TTS API（不传 voice，用默认）
-    const audioData = await generateMimoTTS(MIMO_API_BASE, MIMO_API_KEY, truncated, speed || 1.0);
+    const audioData = await generateMimoTTS(MIMO_API_BASE, MIMO_API_KEY, MIMO_TTS_MODEL, truncated, speed || 1.0);
 
     return new Response(audioData, {
       headers: {
@@ -39,7 +40,7 @@ export async function onRequestPost(context) {
   }
 }
 
-async function generateMimoTTS(baseUrl, apiKey, text, speed) {
+async function generateMimoTTS(baseUrl, apiKey, ttsModel, text, speed) {
   const res = await fetch(`${baseUrl}/audio/speech`, {
     method: 'POST',
     headers: {
@@ -47,7 +48,7 @@ async function generateMimoTTS(baseUrl, apiKey, text, speed) {
         'Authorization': 'Bearer ' + apiKey,
       },
     body: JSON.stringify({
-      model: env.MIMO_TTS_MODEL || 'mimo-v2-tts',
+      model: ttsModel || 'mimo-v2-tts',
       input: text,
       voice: '',
     }),

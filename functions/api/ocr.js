@@ -23,8 +23,9 @@ export async function onRequestPost(context) {
     }
 
     // 直接透传，不加系统消息
-    const MIMO_API_BASE = (context.env.MIMO_API_BASE).replace(/\/chat\/completions\/?$/, '');
+    const MIMO_API_BASE = (context.env.MIMO_API_BASE || '').replace(/\/chat\/completions\/?$/, '');
     const MIMO_API_KEY = context.env.MIMO_API_KEY;
+    const MIMO_MODEL = context.env.MIMO_MODEL;
     if (!MIMO_API_KEY) {
       return new Response(JSON.stringify({ error: 'MIMO_API_KEY not configured' }), {
         status: 500,
@@ -38,7 +39,7 @@ export async function onRequestPost(context) {
         'Authorization': 'Bearer ' + MIMO_API_KEY,
       },
       body: JSON.stringify({
-        model: reqModel || env.MIMO_MODEL,
+        model: reqModel || MIMO_MODEL,
         messages: messages,
         stream: false,
         max_tokens: max_tokens,

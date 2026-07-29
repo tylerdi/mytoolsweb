@@ -4,8 +4,9 @@
 
 export async function onRequestPost(context) {
   const { request, env } = context;
-  const MIMO_API_BASE = (env.MIMO_API_BASE).replace(/\/chat\/completions\/?$/, '');
+  const MIMO_API_BASE = (env.MIMO_API_BASE || '').replace(/\/chat\/completions\/?$/, '');
   const MIMO_API_KEY = env.MIMO_API_KEY;
+  const MIMO_MODEL = env.MIMO_MODEL;
 
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -73,7 +74,7 @@ export async function onRequestPost(context) {
     const content = data.choices?.[0]?.message?.content || '';
 
     // 为每段生成一个图片 prompt
-    const imagePrompt = await generateImagePrompt(MIMO_API_BASE, MIMO_API_KEY, trimmed, content, paragraph);
+    const imagePrompt = await generateImagePrompt(MIMO_API_BASE, MIMO_API_KEY, MIMO_MODEL, trimmed, content, paragraph);
 
     return new Response(JSON.stringify({
       text: content,
@@ -92,7 +93,7 @@ export async function onRequestPost(context) {
   }
 }
 
-async function generateImagePrompt(apiBase, apiKey, storyStart, currentText, paragraph) {
+async function generateImagePrompt(apiBase, apiKey, model, storyStart, currentText, paragraph) {
   try {
     const prompt = `根据以下故事片段，生成一个简短的英文图片描述（用于 AI 绘图），要求：
 - 20 个词以内
@@ -110,7 +111,7 @@ async function generateImagePrompt(apiBase, apiKey, storyStart, currentText, par
         'Authorization': 'Bearer ' + apiKey,
       },
       body: JSON.stringify({
-        model: env.MIMO_MODEL,
+        model: model,
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 100,
         temperature: 0.7,

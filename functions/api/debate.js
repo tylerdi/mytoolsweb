@@ -4,8 +4,9 @@
 
 export async function onRequestPost(context) {
   const { request, env } = context;
-  const MIMO_API_BASE = (env.MIMO_API_BASE).replace(/\/chat\/completions\/?$/, '');
+  const MIMO_API_BASE = (env.MIMO_API_BASE || '').replace(/\/chat\/completions\/?$/, '');
   const MIMO_API_KEY = env.MIMO_API_KEY;
+  const MIMO_MODEL = env.MIMO_MODEL;
 
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -35,8 +36,8 @@ export async function onRequestPost(context) {
 
     // 并行生成正反双方论据
     const [proResponse, conResponse] = await Promise.all([
-      generateArgument(MIMO_API_BASE, MIMO_API_KEY, trimmedTopic, 'pro', round),
-      generateArgument(MIMO_API_BASE, MIMO_API_KEY, trimmedTopic, 'con', round),
+      generateArgument(MIMO_API_BASE, MIMO_API_KEY, MIMO_MODEL, trimmedTopic, 'pro', round),
+      generateArgument(MIMO_API_BASE, MIMO_API_KEY, MIMO_MODEL, trimmedTopic, 'con', round),
     ]);
 
     return new Response(JSON.stringify({
@@ -56,7 +57,7 @@ export async function onRequestPost(context) {
   }
 }
 
-async function generateArgument(apiBase, apiKey, topic, side, round) {
+async function generateArgument(apiBase, apiKey, model, topic, side, round) {
   const sideLabel = side === 'pro' ? '正方（支持）' : '反方（反对）';
   const sideDesc = side === 'pro'
     ? '你支持这个观点。用有力的论据、数据或类比来论证为什么这是正确的。'
@@ -87,7 +88,7 @@ ${roundContext}
         'Authorization': 'Bearer ' + apiKey,
       },
     body: JSON.stringify({
-      model: env.MIMO_MODEL,
+      model: model,
       messages: [{ role: 'user', content: systemPrompt }],
       max_tokens: 600,
       temperature: 0.8,
