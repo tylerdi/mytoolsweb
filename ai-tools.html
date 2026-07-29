@@ -313,7 +313,7 @@
             document.getElementById('toolResult').style.display = 'none';
 
             try {
-                const response = await fetch('https://fufu.iqach.top/v1/chat/completions', {
+                const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
