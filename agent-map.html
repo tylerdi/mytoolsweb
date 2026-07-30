@@ -142,6 +142,7 @@
           tool_decide:{title:'工具决策',desc:'LLM 判断是否需要调用工具',body:'<h4>决策逻辑</h4><ul><li>LLM 输出工具调用请求（JSON）</li><li>如果没有工具调用 → 直接回复用户</li><li>如果有工具调用 → 执行工具后继续循环</li></ul><div class="analogy">就像你判断"这件事我自己能做"还是"需要查一下/问一下别人"</div>'},
           execute:{title:'执行 Action',desc:'调用工具或生成回复',body:'<h4>执行类型</h4><ul><li><strong>工具执行</strong>— 调用 API、运行代码、操作文件</li><li><strong>文本生成</strong>— 直接回复用户</li><li><strong>子任务派发</strong>— 把任务交给子 Agent</li></ul><div class="example">OpenClaw 的 exec 工具可以运行 shell 命令、read 可以读文件</div>'},
           feedback:{title:'反馈 Feedback',desc:'执行结果回馈给 LLM，决定是否继续',body:'<h4>反馈循环</h4><ul><li>工具返回结果 → 注入上下文 → LLM 再次推理</li><li>如果 LLM 判断"任务完成" → 回复用户</li><li>如果 LLM 判断"还需要做" → 继续循环</li></ul><div class="analogy">就像你做菜：尝一口（反馈）→ 咸了加水淡了加盐（调整）→ 再尝 → 直到满意</div>'}
+        }
       },
       { id:'u02', title:'工具系统', en:'Tool Use', group:'core', icon:'🔧', color:'var(--c-tool)',
         desc:'给 AI 装上手和脚：Function Calling 机制、工具注册、参数校验',
@@ -151,6 +152,7 @@
           tool_registry:{title:'工具注册',desc:'告诉 LLM 有哪些工具可用',body:'<h4>注册方式</h4><ul><li><strong>静态注册</strong>— 在 System Prompt 中定义所有工具</li><li><strong>动态注册</strong>— 根据场景加载相关工具</li><li><strong>MCP 协议</strong>— 标准化的工具发现和调用协议</li></ul><div class="example">OpenClaw 通过 Skills 系统注册工具，每个 Skill 定义自己的工具集</div>'},
           param_schema:{title:'参数校验',desc:'确保 LLM 传入合法参数',body:'<h4>校验层</h4><ul><li><strong>类型检查</strong>— string/number/boolean/array/object</li><li><strong>必填检查</strong>— 哪些参数是必须的</li><li><strong>范围检查</strong>— 数值范围、字符串长度</li><li><strong>自定义校验</strong>— 业务逻辑校验</li></ul>'},
           result_handling:{title:'结果处理',desc:'工具返回结果的标准化和错误处理',body:'<h4>处理策略</h4><ul><li><strong>成功</strong>— 格式化结果注入上下文</li><li><strong>失败</strong>— 错误信息注入，LLM 决定重试或换方案</li><li><strong>超时</strong>— 设置合理超时，避免无限等待</li><li><strong>重试</strong>— 网络错误自动重试</li></ul><div class="example">OpenClaw 的 exec 工具有 yieldMs 参数，长命令自动后台化</div>'}
+        }
       },
       { id:'u03', title:'权限与确认', en:'Permission', group:'core', icon:'🔐', color:'var(--c-perm)',
         desc:'安全边界：哪些操作需要确认，哪些可以自主执行',
@@ -159,6 +161,7 @@
           permission_levels:{title:'权限分级',desc:'不同操作的风险等级',body:'<h4>三级权限</h4><ul><li><strong>绿色（自由执行）</strong>— 读文件、搜索、查日历</li><li><strong>黄色（需要确认）</strong>— 发邮件、发消息、修改配置</li><li><strong>红色（严格限制）</strong>— 删除数据、执行破坏性命令</li></ul><div class="analogy">就像公司的审批流程：日常采购自己定，大额支出要老板批</div>'},
           confirmation_flow:{title:'确认流程',desc:'高风险操作的审批机制',body:'<h4>流程</h4><ul><li>Agent 判断操作风险等级</li><li>高风险 → 暂停，向用户展示操作详情</li><li>用户确认 → 执行；用户拒绝 → 取消或换方案</li><li>allow-once 模式：仅本次授权，下次重新确认</li></ul><div class="example">OpenClaw 的 elevated 权限：sudo 命令需要用户手动 /approve</div>'},
           sandbox:{title:'沙箱隔离',desc:'限制 Agent 的能力边界',body:'<h4>隔离机制</h4><ul><li><strong>文件系统</strong>— 限制可访问的目录</li><li><strong>网络</strong>— 限制可访问的外部地址</li><li><strong>进程</strong>— 限制可执行的命令</li><li><strong>资源</strong>— 限制 CPU/内存/Token 用量</li></ul><div class="analogy">就像儿童安全锁：可以玩，但有些柜子打不开</div>'}
+        }
       },
       { id:'u04', title:'生命周期钩子', en:'Lifecycle', group:'core', icon:'♻️', color:'var(--c-life)',
         desc:'Agent 从启动到结束的完整生命周期管理',
@@ -169,6 +172,7 @@
           run:{title:'运行 Run',desc:'处理请求、执行任务的主循环',body:'<h4>运行模式</h4><ul><li><strong>单次</strong>— 处理一个请求后结束</li><li><strong>持续</strong>— 保持运行，等待新请求</li><li><strong>流式</strong>— 边生成边输出</li></ul>'},
           cleanup:{title:'清理 Cleanup',desc:'释放资源、保存状态、关闭连接',body:'<h4>清理内容</h4><ul><li>关闭数据库连接</li><li>保存会话状态到磁盘</li><li>清理临时文件</li><li>释放 GPU 显存</li></ul>'},
           error:{title:'错误处理 Error',desc:'异常捕获、降级、恢复策略',body:'<h4>错误策略</h4><ul><li><strong>捕获</strong>— try/catch 包裹所有关键操作</li><li><strong>降级</strong>— 主方案失败用备选方案</li><li><strong>重试</strong>— 网络错误自动重试</li><li><strong>上报</strong>— 严重错误通知用户</li></ul><div class="example">OpenClaw 的 fallback 模型：主模型 429 时自动切换备选模型</div>'}
+        }
       },
       { id:'u05', title:'提示词与技能', en:'Prompt & Skills', group:'context', icon:'📝', color:'var(--c-prompt)',
         desc:'System Prompt 设计、Skill 系统、动态指令注入',
@@ -177,6 +181,7 @@
           system_prompt:{title:'System Prompt',desc:'定义 Agent 的身份、能力、行为规则',body:'<h4>设计原则</h4><ul><li><strong>身份定义</strong>— 你是谁、你的角色</li><li><strong>能力边界</strong>— 你能做什么、不能做什么</li><li><strong>行为规则</strong>— 回复风格、安全约束</li><li><strong>输出格式</strong>— JSON/Markdown/纯文本</li></ul><div class="analogy">就像员工手册：新员工入职第一天，先读一遍公司规定</div>'},
           skill_system:{title:'Skill 系统',desc:'模块化的能力扩展',body:'<h4>Skill 架构</h4><ul><li><strong>SKILL.md</strong>— 技能描述和使用指南</li><li><strong>工具定义</strong>— 技能提供的工具集</li><li><strong>示例</strong>— 典型使用场景</li><li><strong>版本控制</strong>— 技能的版本管理</li></ul><div class="example">OpenClaw 的 Skills：weather、slack、notion 等，每个 Skill 封装一个领域能力</div>'},
           dynamic_injection:{title:'动态注入',desc:'根据上下文动态调整 Prompt',body:'<h4>注入内容</h4><ul><li><strong>用户偏好</strong>— MEMORY.md 中的长期记忆</li><li><strong>项目上下文</strong>— AGENTS.md、当前项目文件</li><li><strong>环境信息</strong>— 时间、日期、天气</li><li><strong>工具状态</strong>— 哪些工具可用、哪些故障</li></ul>'}
+        }
       },
       { id:'u06', title:'上下文压缩', en:'Context Compression', group:'context', icon:'🗜️', color:'var(--c-ctx)',
         desc:'在有限的 Context Window 内塞入最多有效信息',
@@ -186,6 +191,7 @@
           summarization:{title:'摘要压缩',desc:'用 LLM 或规则压缩旧对话',body:'<h4>压缩策略</h4><ul><li><strong>滑动窗口</strong>— 只保留最近 N 轮</li><li><strong>LLM 摘要</strong>— 用小模型总结旧对话</li><li><strong>关键信息提取</strong>— 只保留决策和结论</li><li><strong>分层压缩</strong>— 近期详细、远期简略</li></ul>'},
           rag:{title:'RAG 检索增强',desc:'按需从外部知识库检索相关信息',body:'<h4>RAG 流程</h4><ul><li>用户问题 → 向量化 → 在知识库中搜索相似片段</li><li>Top-K 结果注入上下文</li><li>LLM 基于检索结果生成回复</li></ul><div class="analogy">就像开卷考试：不需要记住所有知识，知道去哪查就行</div>'},
           sliding_window:{title:'滑动窗口',desc:'只保留最近的对话，丢弃旧的',body:'<h4>实现方式</h4><ul><li>保留最近 10-20 轮对话</li><li>旧对话用摘要替代</li><li>关键决策单独记录到长期记忆</li></ul><div class="example">ChatGPT 的对话长度限制就是一种滑动窗口</div>'}
+        }
       },
       { id:'u07', title:'记忆系统', en:'Memory', group:'context', icon:'💾', color:'var(--c-mem)',
         desc:'短期记忆 · 长期记忆 · 工作记忆的三层架构',
@@ -195,6 +201,7 @@
           long_term:{title:'长期记忆',desc:'跨会话的持久化信息',body:'<h4>存储方式</h4><ul><li><strong>文件系统</strong>— MEMORY.md、日志文件</li><li><strong>向量数据库</strong>— 语义检索</li><li><strong>关系型数据库</strong>— 结构化数据</li></ul><div class="analogy">就像你的日记本和档案柜：重要的事情写下来，以后翻出来看</div><div class="example">OpenClaw 的 memory/YYYY-MM-DD.md + MEMORY.md 就是典型的短期+长期记忆</div>'},
           working_memory:{title:'工作记忆',desc:'当前任务正在处理的信息',body:'<h4>特点</h4><ul><li>容量：最小，只存当前任务相关信息</li><li>访问：最快，LLM 直接可用</li><li>更新：每一步推理后刷新</li></ul><div class="analogy">就像你桌上正在看的那几份文件：只关注眼前的事</div>'},
           retrieval:{title:'记忆检索',desc:'从长期记忆中找到相关信息',body:'<h4>检索方式</h4><ul><li><strong>关键词匹配</strong>— 简单但不精确</li><li><strong>语义搜索</strong>— 向量相似度，更智能</li><li><strong>混合检索</strong>— 关键词 + 语义结合</li></ul>'}
+        }
       },
       { id:'u08', title:'韧性', en:'Resilience', group:'reliability', icon:'💪', color:'var(--c-resil)',
         desc:'Agent 面对异常情况的自我恢复能力',
@@ -204,6 +211,7 @@
           fallback:{title:'降级方案',desc:'主方案失败时的替代方案',body:'<h4>降级策略</h4><ul><li><strong>模型降级</strong>— 主模型不可用切换备选</li><li><strong>功能降级</strong>— 复杂功能用简单替代</li><li><strong>数据降级</strong>— 实时数据用缓存数据</li></ul><div class="example">OpenClaw 的 fallback 模型列表：mimo-v2.5 → deepseek-v4 → gemini-flash</div>'},
           circuit_breaker:{title:'熔断器',desc:'连续失败时自动停止调用，避免雪崩',body:'<h4>熔断状态</h4><ul><li><strong>关闭</strong>— 正常调用</li><li><strong>打开</strong>— 连续失败 N 次，停止调用</li><li><strong>半开</strong>— 冷却后试探性调用一次</li></ul><div class="analogy">就像保险丝：电流太大时自动断开，保护整个电路</div>'},
           graceful_degradation:{title:'优雅降级',desc:'功能受损但仍能提供基本服务',body:'<h4>降级策略</h4><ul><li>AI 聊天不可用 → 显示"服务维护中"</li><li>搜索失败 → 返回缓存结果</li><li>TTS 失败 → 显示文字版</li></ul>'}
+        }
       },
       { id:'u09', title:'错误恢复', en:'Error Recovery', group:'reliability', icon:'🔄', color:'var(--c-recover)',
         desc:'从错误中学习，避免重复犯错',
@@ -212,6 +220,7 @@
           error_classification:{title:'错误分类',desc:'区分可恢复和不可恢复的错误',body:'<h4>错误类型</h4><ul><li><strong>临时错误</strong>— 网络超时、服务限流 → 可重试</li><li><strong>永久错误</strong>— 参数错误、权限不足 → 需换方案</li><li><strong>逻辑错误</strong>— 输出不符合预期 → 需调整 Prompt</li></ul>'},
           self_reflection:{title:'自我反思',desc:'分析错误原因，调整策略',body:'<h4>反思框架</h4><ul><li><strong>Reflexion</strong>— 失败后自我分析，记录教训</li><li><strong>CRT</strong>— Critique（批评）→ Refine（改进）→ Think（再思考）</li><li><strong>LATS</strong>— 结合蒙特卡洛树搜索的反思规划</li></ul><div class="analogy">就像运动员看比赛录像：哪里做错了、怎么改进、下次怎么做</div>'},
           lesson_learning:{title:'经验积累',desc:'把错误教训记录到长期记忆',body:'<h4>记录方式</h4><ul><li><strong>错误日志</strong>— 记录错误类型和处理方式</li><li><strong>经验库</strong>— 重复出现的问题和解决方案</li><li><strong>Prompt 优化</strong>— 根据错误调整 System Prompt</li></ul><div class="example">OpenClaw 的 self-improvement Skill：自动捕获错误和纠正，持续改进</div>'}
+        }
       },
       { id:'u10', title:'规划与任务', en:'Planning', group:'multi', icon:'📋', color:'var(--c-plan)',
         desc:'任务分解、路径规划、资源分配',
