@@ -41,7 +41,7 @@ async function getAiReply(content, mood, env) {
       }),
     });
     const data = await res.json();
-    return data.choices?.[0]?.message?.content || '谢谢你愿意说出来 🤗';
+    return data.choices?.[0]?.message?.content || data.choices?.[0]?.message?.reasoning || '谢谢你愿意说出来 🤗';
   } catch {
     return '谢谢你愿意说出来 🤗';
   }

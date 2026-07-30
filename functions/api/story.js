@@ -71,7 +71,7 @@ export async function onRequestPost(context) {
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || '';
+    const content = data.choices?.[0]?.message?.content || data.choices?.[0]?.message?.reasoning || '';
 
     // 为每段生成一个图片 prompt
     const imagePrompt = await generateImagePrompt(MIMO_API_BASE, MIMO_API_KEY, MIMO_MODEL, trimmed, content, paragraph);
@@ -120,7 +120,7 @@ async function generateImagePrompt(apiBase, apiKey, model, storyStart, currentTe
 
     if (!response.ok) return null;
     const data = await response.json();
-    return data.choices?.[0]?.message?.content?.trim() || null;
+    return data.choices?.[0]?.message?.content?.trim() || data.choices?.[0]?.message?.reasoning?.trim() || null;
   } catch {
     return null;
   }

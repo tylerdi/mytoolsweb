@@ -99,7 +99,7 @@ export async function onRequestPost(context) {
     }
 
     const data = await res.json();
-    const content = data.choices?.[0]?.message?.content || 'AI 走神了，再试一次？';
+    const content = data.choices?.[0]?.message?.content || data.choices?.[0]?.message?.reasoning || 'AI 走神了，再试一次？';
 
     return new Response(JSON.stringify({ ok: true, content }), {
       headers: corsHeaders,

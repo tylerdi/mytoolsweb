@@ -49,7 +49,7 @@ async function getShopReply(content, mood, env) {
       }),
     });
     const data = await res.json();
-    return data.choices?.[0]?.message?.content || '夜深了，信我已收到。明天再来坐坐吧。';
+    return data.choices?.[0]?.message?.content || data.choices?.[0]?.message?.reasoning || '夜深了，信我已收到。明天再来坐坐吧。';
   } catch {
     return '夜深了，信我已收到。明天再来坐坐吧。';
   }

@@ -100,7 +100,7 @@ ${roundContext}
   }
 
   const data = await response.json();
-  const content = data.choices?.[0]?.message?.content || '（无内容）';
+  const content = data.choices?.[0]?.message?.content || data.choices?.[0]?.message?.reasoning || '（无内容）';
   return { content };
 }
 

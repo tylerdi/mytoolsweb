@@ -110,7 +110,7 @@ export async function onRequestPost(context) {
     }
 
     const data = await res.json();
-    const content = data.choices?.[0]?.message?.content?.trim() || '🎁 盲盒空了…';
+    const content = data.choices?.[0]?.message?.content?.trim() || data.choices?.[0]?.message?.reasoning?.trim() || '🎁 盲盒空了…';
 
     return new Response(JSON.stringify({
       ok: true,
