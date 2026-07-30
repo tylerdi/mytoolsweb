@@ -1,0 +1,16 @@
+# Cloudflare Pages 环境变量 - 需要加回这些！
+
+## Plaintext (明文变量) - Type 选 "Text"
+MIMO_API_BASE = https://integrate.api.nvidia.com/v1
+MIMO_MODEL = stepfun-ai/step-3.7-flash
+SUPABASE_URL = https://twyosmombfrcheyjujvb.supabase.co
+SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...（这个值你得从 Dashboard 原来的复制，或者从代码里找完整版）
+
+## Secret (加密变量) - 已有，不用改
+MIMO_API_KEY = [你原来的 NVIDIA API Key]
+SUPABASE_SECRET = [你原来的 Supabase Service Role Key]
+
+---
+## 代码里的默认值（仅供参考）
+- MIMO_API_BASE 默认：https://openrouter.ai/api/v1
+- SUPABASE_URL 硬编码：https://twyosmombfrcheyjujvb.supabase.co

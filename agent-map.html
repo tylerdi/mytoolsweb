@@ -216,7 +216,7 @@
         desc:'任务分解、路径规划、资源分配',
         nodes:['task_decomposition','path_planning','resource_allocation'],
         detail:{
-          task_decomposition:{title:'任务分解',desc:'把复杂目标拆成可执行的小步骤',body:'<h4>分解策略</h4>          task_decomposition:{title:'任务分解',desc:'把复杂目标拆成可执行的小步骤',body:'<h4>分解策略</h4><ul><li><strong>自顶向下</strong>— 从目标逐层拆解</li><li><strong>自底向上</strong>— 从已知步骤组合</li><li><strong>模板匹配</strong>— 用历史任务模板</li></ul><div class="analogy">就像做菜：先定菜单（目标），再列食材（子任务），最后安排步骤</div>'},
+          task_decomposition:{title:'任务分解',desc:'把复杂目标拆成可执行的小步骤',body:'<h4>分解策略</h4><ul><li><strong>自顶向下</strong>— 从目标逐层拆解</li><li><strong>自底向上</strong>— 从已知步骤组合</li><li><strong>模板匹配</strong>— 用历史任务模板</li></ul><div class="analogy">就像做菜：先定菜单（目标），再列食材（子任务），最后安排步骤</div>'},
           path_planning:{title:'路径规划',desc:'选择最优执行路径',body:'<h4>规划算法</h4><ul><li><strong>CoT</strong>— 一步步推理</li><li><strong>ToT</strong>— 探索多条路径选最优</li><li><strong>GoT</strong>— 图结构的复杂推理</li></ul>'},
           resource_allocation:{title:'资源分配',desc:'决定用哪些工具、花多少资源',body:'<h4>资源类型</h4><ul><li><strong>Token 预算</strong>— 控制 LLM 调用成本</li><li><strong>时间预算</strong>— 设置任务超时</li><li><strong>工具选择</strong>— 选最合适的工具</li></ul>'}
         }
