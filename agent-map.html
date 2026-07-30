@@ -382,10 +382,13 @@
 
       const panel = document.getElementById('detailPanel');
       panel.classList.add('show');
+      // 给主内容区留出空间
+      document.getElementById('mainContent').style.height = 'calc(100vh - var(--nav-h,56px) - var(--toolbar-h) - 45vh)';
     }
 
     function hideDetail() {
       document.getElementById('detailPanel').classList.remove('show');
+      document.getElementById('mainContent').style.height = '';
     }
 
     // ========== 导航 ==========
