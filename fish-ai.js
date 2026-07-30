@@ -420,7 +420,7 @@
             if (!line.startsWith('data: ')) continue;
             const d = line.slice(6).trim();
             if (d === '[DONE]') continue;
-            try { const delta = JSON.parse(d).choices?.[0]?.delta?.content; if (delta) { aiText += delta; aiEl.querySelector('.text').textContent = aiText; this.scrollBottom(); } } catch {}
+            try { const parsed = JSON.parse(d).choices?.[0]?.delta; const delta = parsed?.content || parsed?.reasoning; if (delta) { aiText += delta; aiEl.querySelector('.text').textContent = aiText; this.scrollBottom(); } } catch {}
           }
         }
         if (aiText) this.messages.push({ role: 'assistant', content: aiText });
