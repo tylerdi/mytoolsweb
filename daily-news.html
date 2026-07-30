@@ -90,92 +90,10 @@
         const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
         document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-CN', options);
 
-        // 从 API 获取新闻
-        const mockNews = [
-            {
-                title: "OpenAI 发布 GPT-5，多模态能力大幅提升",
-                summary: "新一代模型在代码生成、数学推理和多语言理解方面均有显著进步，支持实时视频理解。",
-                source: "科技",
-                hot: "9856万",
-                importance: 5,
-                url: "#"
-            },
-            {
-                title: "苹果 WWDC 2026 重磅发布：AI 深度整合 iOS 20",
-                summary: "Siri 全面升级，支持跨应用智能操作；新增 AI 健康助手功能。",
-                source: "科技",
-                hot: "8234万",
-                importance: 5,
-                url: "#"
-            },
-            {
-                title: "比特币突破 15 万美元，创历史新高",
-                summary: "机构资金持续流入，多个国家宣布将比特币纳入战略储备。",
-                source: "财经",
-                hot: "7652万",
-                importance: 4,
-                url: "#"
-            },
-            {
-                title: "国产大模型集体降价，AI 应用成本大幅下降",
-                summary: "多家厂商宣布 API 价格下调 50%-90%，中小企业迎来 AI 普及红利。",
-                source: "科技",
-                hot: "6543万",
-                importance: 4,
-                url: "#"
-            },
-            {
-                title: "2026 高考作文题出炉，AI 写作引发热议",
-                summary: "多地高考作文题涉及 AI 话题，网友纷纷用 AI 生成满分作文。",
-                source: "微博",
-                hot: "5432万",
-                importance: 3,
-                url: "#"
-            },
-            {
-                title: "新能源汽车销量首超燃油车",
-                summary: "5 月新能源车渗透率达 52%，比亚迪、特斯拉领跑市场。",
-                source: "财经",
-                hot: "4321万",
-                importance: 3,
-                url: "#"
-            },
-            {
-                title: "世界杯预选赛：国足 2-1 逆转日本",
-                summary: "武磊梅开二度，国足保留出线希望，球迷沸腾。",
-                source: "微博",
-                hot: "3987万",
-                importance: 3,
-                url: "#"
-            },
-            {
-                title: "豆瓣 9.5 分！年度最佳国产剧《繁花 2》收官",
-                summary: "王家卫执导，胡歌主演，延续第一部的高品质，引发全民追剧热潮。",
-                source: "知乎",
-                hot: "3456万",
-                importance: 2,
-                url: "#"
-            },
-            {
-                title: "全国多地发布高温预警，部分地区超 40℃",
-                summary: "气象部门提醒注意防暑降温，电力负荷创新高。",
-                source: "百度",
-                hot: "2987万",
-                importance: 2,
-                url: "#"
-            },
-            {
-                title: "年轻人流行「City Walk 2.0」：AI 规划路线成新趋势",
-                summary: "结合 AI 导航和社交功能的新型城市探索方式在一二线城市火爆。",
-                source: "知乎",
-                hot: "2345万",
-                importance: 1,
-                url: "#"
-            }
-        ];
-
-        let allNews = mockNews;
+        let allNews = [];
         let currentCategory = 'all';
+        const loadingHtml = '<div class="empty"><div class="emoji">⏳</div><p>正在获取最新新闻...</p></div>';
+        document.getElementById('newsContainer').innerHTML = loadingHtml;
 
         // 渲染新闻列表
         function renderNews(newsList) {
@@ -202,7 +120,7 @@
                     </h3>
                     <div class="summary">${news.summary}</div>
                     <div class="news-meta">
-                        <span class="source-tag">${news.source}</span>
+                        <span class="source-tag">${news.source || news.category}</span>
                         ${news.hot ? `<span class="hot-tag">🔥 ${news.hot}</span>` : ''}
                     </div>
                 </div>
