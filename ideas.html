@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>灵感墙 | Ideas Wall</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 { 
+            color: white; 
+            text-align: center; 
+            font-size: 2.5em; 
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .ideas-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 20px; 
+        }
+        .idea-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .idea-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        .idea-emoji { font-size: 2em; margin-bottom: 12px; }
+        .idea-title { font-size: 1.3em; font-weight: 600; margin-bottom: 8px; color: #333; }
+        .idea-desc { color: #666; line-height: 1.5; margin-bottom: 12px; }
+        .idea-meta { display: flex; justify-content: space-between; align-items: center; }
+        .idea-tag { 
+            background: #f0f0f0; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 0.85em; 
+            color: #555;
+        }
+        .idea-date { color: #999; font-size: 0.85em; }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9em;
+        }
+    </style>
+    <meta property="og:title" content="每日灵感 - AI创意内容 | Tyler工具箱">
+    <meta property="og:url" content="https://tylerzhang.xyz/ideas.html">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://tylerzhang.xyz/ideas.html">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧰</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <h1>💡 灵感墙</h1>
+        <div class="ideas-grid">
+        </div>
+        <p class="footer">✨ 每日灵感，点亮思维</p>
+    </div>
+    
+    <script>
+        const ideas = [
+            { emoji: "📦", title: "灵感压缩包", desc: "一键把任意文章/视频压缩成3句话洞察，自动归档到你的知识库", tag: "效率", date: "2026-07-31" },
+            { emoji: "🧊", title: "知识冰箱贴", desc: "AI把任何领域压缩成5个核心概念，贴在冰箱上每天看一眼", tag: "效率", date: "2026-07-31" },
+            { emoji: "🧬", title: "AI情绪镜子", desc: "用AI实时分析你的语音语调，在你生气时弹出温柔的提示", tag: "AI", date: "2026-07-31" },
+            { emoji: "🧊", title: "冰块闹钟", desc: "用热敏墨水打印的冰块，融化后露出时间提示，适合冥想晨间唤醒", tag: "产品", date: "2026-07-31" },
+            { emoji: "⚡", title: "5 分钟专注挑战", desc: "超短番茄钟：只专注 5 分钟，降低启动门槛", tag: "效率", date: "2026-07-30" },
+            { emoji: "🚀", title: "微 SaaS 聚合器", desc: "一键订阅 10 个垂直小工具，月费.9 解决长尾需求", tag: "创业", date: "2026-07-30" },
+            { emoji: "🤖", title: "AI 数字孪生", desc: "训练 AI 模仿你的沟通风格，自动回复日常消息", tag: "AI", date: "2026-07-30" },
+            { emoji: "🧬", title: "记忆共生体", desc: "让AI学习你的思维模式，用你的口吻替你写日记和邮件", tag: "AI", date: "2026-07-29" },
+            { emoji: "🔮", title: "纸片记忆符", desc: "手写便签拍照后变成数字提醒符，路过相关地点自动弹出", tag: "技术", date: "2026-07-28" },
+            { emoji: "🗺️", title: "品味雷达图", desc: "用AI分析你的消费记录，生成个人品味偏好的可视化雷达", tag: "产品", date: "2026-07-28" },
+            { emoji: "🎙️", title: "笑声回声瓶", desc: "把朋友的笑声录下来做成可循环播放的声音礼物", tag: "AI", date: "2026-07-28" },
+            { emoji: "🧬", title: "AI基因日记", desc: "用AI分析你的习惯DNA，自动生成个性化人生优化建议", tag: "AI", date: "2026-07-27" },
+            { emoji: "🔄", title: "反向记账法", desc: "记录每笔消费如果不花能换什么东西", tag: "效率", date: "2026-07-25" },
+            { emoji: "🎙️", title: "睡前播客生成器", desc: "根据今日心情自动生成5分钟个性化睡前播客", tag: "AI", date: "2026-07-25" },
+            { emoji: "☕", title: "咖啡因追踪器", desc: "根据你的作息和咖啡摄入，AI预测最佳咖啡时间避免失眠", tag: "效率", date: "2026-07-24" },
+            { emoji: "🏗️", title: "最小可行技能", desc: "把复杂技能拆成 5 分钟可学的微模块，像乐高一样拼装成长", tag: "产品", date: "2026-07-24" },
+            { emoji: "🪞", title: "反向学习平台", desc: "AI根据你教别人的视频，找出你的知识盲区并推送学习", tag: "AI", date: "2026-07-23" },
+            { emoji: "☕", title: "咖啡馆盲盒选座", desc: "用算法匹配不同背景的人同桌，促进跨圈社交", tag: "创业", date: "2026-07-23" },
+            { emoji: "🧬", title: "AI情绪日记", desc: "用AI分析每天的文字记录，自动生成情绪曲线和洞察报告", tag: "AI", date: "2026-07-23" },
+            { emoji: "🪞", title: "记忆碎片拼图", desc: "把碎片化的手机截图按时间线重组成人生故事", tag: "产品", date: "2026-07-23" },
+            { emoji: "🧬", title: "反向算法推荐", desc: "让AI故意推你不感兴趣的内容，打破信息茧房", tag: "AI", date: "2026-07-23" },
+            { emoji: "🌊", title: "情绪潮汐表", desc: "用海洋潮汐数据隐喻情绪起伏，帮人预判低潮期", tag: "生活", date: "2026-07-23" },
+            { emoji: "🌍", title: "城市气味图书馆", desc: "用传感器收集全球城市街头气味，建一座线上气味博物馆", tag: "技术", date: "2026-07-22" },
+            { emoji: "🎭", title: "AI人格化妆间", desc: "用AI分析你写的每段文字，生成你的「文学人格画像」", tag: "AI", date: "2026-07-22" },
+            { emoji: "⏳", title: "时间胶囊邮箱", desc: "写信给一年后的自己，到期自动发送到邮箱", tag: "生活", date: "2026-07-22" },
+            { emoji: "🌱", title: "阳台种菜AI", desc: "手机拍照识别植物状态，自动提醒浇水施肥", tag: "产品", date: "2026-07-22" },
+            { emoji: "🎧", title: "AI耳语助手", desc: "用骨传导耳机在开会时让AI悄悄给你建议", tag: "AI", date: "2026-07-22" },
+            { emoji: "🏗️", title: "代码建筑师事务所", desc: "用搭积木的方式可视化系统架构，拖拽生成可运行代码", tag: "效率", date: "2026-07-21" },
+            { emoji: "🪟", title: "碎片时间画廊", desc: "把手机锁屏变成流动艺术展，每次解锁随机展示一幅画", tag: "产品", date: "2026-07-21" },
+            { emoji: "🧬", title: "AI基因编辑顾问", desc: "让AI根据你的基因数据生成个性化营养和运动方案", tag: "AI", date: "2026-07-21" },
+            { emoji: "💡", title: "代码考古工具", desc: "自动找出公司最有价值的legacy代码，避免重复造轮子", tag: "技术", date: "2026-07-20" },
+            { emoji: "🚀", title: "反向会议", desc: "每人写5分钟文档，省去1小时无效讨论，效率翻3倍", tag: "效率", date: "2026-07-20" },
+            { emoji: "🧠", title: "AI情绪日记", desc: "用聊天记录分析你的真实情绪周期，生成可视化报告", tag: "AI", date: "2026-07-20" },
+            { emoji: "🎵", title: "智能音乐情绪调节", desc: "通过脑电波实时调整背景音乐节拍，帮你进入心流状态", tag: "技术", date: "2026-07-19" },
+            { emoji: "🧠", title: "AI记忆宫殿", desc: "用AI构建个人第二大脑，自动关联碎片知识形成直觉网络", tag: "AI", date: "2026-07-18" },
+            { emoji: "🧬", title: "用AI预测基因突变致病性", desc: "训练模型根据DNA序列变异直接输出致病概率评分", tag: "AI", date: "2026-07-18" },
+            { emoji: "🌱", title: "植物社交网络", desc: "给每盆植物配传感器让它们晒生长状态发朋友圈", tag: "生活", date: "2026-07-18" },
+            { emoji: "🧊", title: "冰冻记忆胶囊", desc: "把重要时刻打包成3D打印的物理胶囊保存", tag: "产品", date: "2026-07-18" },
+            { emoji: "🎭", title: "AI情绪翻译器", desc: "把你的情绪实时翻译成对方能理解的语言", tag: "AI", date: "2026-07-18" },
+            { emoji: "🎙️", title: "语音备忘录自动转灵感卡片", desc: "对着手机说想法，AI自动提炼成可收藏的灵感卡片", tag: "AI", date: "2026-07-17" },
+            { emoji: "🧩", title: "反向招聘：让候选人出题面试公司", desc: "求职者给面试官出难题，匹配度双向透明", tag: "创业", date: "2026-07-17" },
+            { emoji: "🎮", title: "反向游戏化：用负反馈让生活更有趣", desc: "故意设置惩罚机制（如捐钱给讨厌的组织）来驱动自律行为", tag: "产品", date: "2026-07-16" },
+            { emoji: "🧬", title: "AI驱动的个人基因组编辑顾问", desc: "用AI解读你的基因报告，推荐生活方式调整而非医疗建议", tag: "AI", date: "2026-07-16" },
+            { emoji: "📱", title: "数字断舍离", desc: "AI分析手机使用习惯，建议删除哪些App", tag: "生活", date: "2026-07-15" },
+            { emoji: "🎵", title: "情绪BGM", desc: "根据你的心情自动生成背景音乐", tag: "AI", date: "2026-07-15" },
+            { emoji: "🧊", title: "时间冰块", desc: "把任务冻结成冰块，融化时提醒你去做", tag: "效率", date: "2026-07-15" },
+            { emoji: "🧬", title: "代码基因图谱", desc: "把项目代码可视化成DNA双螺旋，一眼看出架构健壮度", tag: "AI", date: "2026-07-14" },
+            { emoji: "🧹", title: "懒人整理术", desc: "拍一张乱房间照片，AI生成三步归位指南，按步执行不崩溃", tag: "生活", date: "2026-07-14" },
+            { emoji: "🎧", title: "声音胶囊", desc: "把一段话录成音波胶囊，未来某天随机触发播放给你听", tag: "技术", date: "2026-07-14" },
+            { emoji: "🎨", title: "反向设计工具", desc: "上传照片自动逆向工程出Figma源文件", tag: "设计", date: "2026-07-13" },
+            { emoji: "☕", title: "咖啡续命计算器", desc: "根据你的睡眠数据推荐今天该喝第几杯", tag: "生活", date: "2026-07-13" },
+            { emoji: "🧬", title: "情绪基因组", desc: "用AI分析你的聊天记录生成专属情绪DNA图谱", tag: "AI", date: "2026-07-13" },
+            { emoji: "☕", title: "咖啡地图", desc: "用手机拍每杯咖啡，AI自动识别豆种+烘焙度+产地", tag: "生活", date: "2026-07-12" },
+            { emoji: "🎨", title: "AI调色板共创", desc: "输入心情词→AI生成专属配色方案，设计师可一键导出Figma", tag: "设计", date: "2026-07-12" },
+            { emoji: "🧠", title: "梦境日志App", desc: "每晚记录碎片梦境，AI帮你拼出潜意识的完整故事线", tag: "AI", date: "2026-07-12" },
+            { emoji: "🧩", title: "代码拼图游戏", desc: "把开源项目拆成拼图碎片，每天拼一小块学架构", tag: "技术", date: "2026-07-12" },
+            { emoji: "🔊", title: "声景房间", desc: "根据你的状态自动调整环境声音，专注时屏蔽一切杂音", tag: "产品", date: "2026-07-12" },
+            { emoji: "🌙", title: "梦境画师", desc: "描述昨晚的梦，AI生成画面并分析潜意识情绪主题", tag: "AI", date: "2026-07-12" },
+            { emoji: "🎨", title: "情绪色卡", desc: "每天用颜色记录心情，年终生成一幅专属情绪画卷", tag: "设计,生活", date: "2026-07-11" },
+            { emoji: "🔄", title: "反向日历", desc: "从截止日期倒推，AI自动帮你规划每天该做什么", tag: "效率,产品", date: "2026-07-11" },
+            { emoji: "🧠", title: "AI睡眠教练", desc: "用AI分析你的睡眠数据，像私人教练一样帮你优化作息节奏", tag: "AI,生活", date: "2026-07-11" },
+            { emoji: "🫧", title: "灵感泡泡", desc: "把你散落在各处的便签/笔记/收藏自动聚合成一个灵感云图", tag: "效率", date: "2026-07-10" },
+            { emoji: "🍳", title: "共享冰箱地图", desc: "实时显示周围餐厅食堂的剩余菜品，AI预测还能抢到什么", tag: "创业", date: "2026-07-10" },
+            { emoji: "🔮", title: "代码考古学家", desc: "AI分析你删掉的代码，挖掘被遗忘但仍有价值的设计思路", tag: "技术", date: "2026-07-10" },
+            { emoji: "🪴", title: "植物社交网络", desc: "给每盆植物装传感器，创建社区让邻居互相提醒浇水施肥", tag: "创业", date: "2026-07-09" },
+            { emoji: "🧊", title: "AI冰箱管家", desc: "用摄像头识别食材，自动生成菜谱并提醒快过期的东西", tag: "AI", date: "2026-07-08" },
+            { emoji: "🎨", title: "情绪调色板", desc: "根据你的心情实时生成专属配色方案，可直接用于设计项目", tag: "设计", date: "2026-07-07" },
+            { emoji: "🪞", title: "数字镜像人生", desc: "给每个人建一个数字孪生体，模拟1000种人生选择后的你", tag: "创业", date: "2026-07-06" },
+            { emoji: "🧊", title: "冰块记忆法", desc: "把要记的东西写在冰块上，融化过程就是复习过程", tag: "生活", date: "2026-07-05" },
+            { emoji: "🎵", title: "情绪调频器", desc: "根据你的文字输入，AI自动匹配一首BGM并生成专属氛围页面", tag: "AI", date: "2026-07-04" },
+            { emoji: "🪞", title: "数字镜像人格", desc: "AI分析你的聊天记录生成你的说话风格模型，帮你预览发出前的语气", tag: "AI", date: "2026-07-04" },
+            { emoji: "🌊", title: "反向闹钟", desc: "只在你睡过头时才响，根据你的日程智能判断是否需要叫醒", tag: "产品", date: "2026-07-04" },
+        ];
+        
+        // 渲染灵感卡片
+        function renderIdeas() {
+            const grid = document.querySelector('.ideas-grid');
+            ideas.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            grid.innerHTML = ideas.map(idea => `
+                <div class="idea-card">
+                    <div class="idea-emoji">${idea.emoji}</div>
+                    <div class="idea-title">${idea.title}</div>
+                    <div class="idea-desc">${idea.desc}</div>
+                    <div class="idea-meta">
+                        <span class="idea-tag">${idea.tag}</span>
+                        <span class="idea-date">${idea.date}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        renderIdeas();
+    </script>
+</body>
+</html>
+
+</html>
+</html>
+ml>
+</html>
+/html>
+
+/html>
+l>
+tml>
+
+/html>
+l>
+l>
+/html>
+
+/html>
+l>
+tml>
+
+/html>
+l>
+
+l>
+>
+l>
+
+l>
+
+
+l>
+>
+l>
+
+l>
+l>
+
+l>
+>
+l>
+
+l>
+
+
+l>
+>
+l>
+
+l>
