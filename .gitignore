@@ -60,3 +60,9 @@ coverage/
 
 # Git 本身的忽略（防止递归）
 .gitignore.local
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
