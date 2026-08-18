@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>每日灵感 · Tyler的小工具</title>
+  <meta name="description" content="每日灵感点子墙：AI、创业、产品、技术、生活、设计、效率领域的创意火花。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=LXGW+Wenkai&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111;
+      --border: #1e1e1e;
+      --text: #e8e8e8;
+      --text2: #888;
+      --accent: #646cff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: 'LXGW WenKai', -apple-system, sans-serif; min-height: 100vh; }
+
+    /* Nav */
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; max-width: 1100px; margin: 0 auto; }
+    .nav-brand { font-size: 1.1rem; font-weight: 700; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 6px; }
+    .nav-links { display: flex; gap: 16px; }
+    .nav-links a { color: var(--text2); text-decoration: none; font-size: .85rem; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+    /* Back */
+    .back-link { display: inline-flex; align-items: center; gap: 4px; color: var(--text2); text-decoration: none; font-size: .85rem; margin-bottom: 20px; transition: color .2s; }
+    .back-link:hover { color: var(--accent); }
+
+    /* Section */
+    .section { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+    .section h1 { font-size: 1.8rem; margin-bottom: 8px; }
+    .section .subtitle { color: var(--text2); margin-bottom: 32px; font-size: .9rem; }
+
+    /* Ideas Grid */
+    .ideas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+    .idea-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: transform .2s, border-color .2s;
+    }
+    .idea-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+    .idea-emoji { font-size: 2rem; margin-bottom: 12px; }
+    .idea-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+    .idea-desc { color: var(--text2); font-size: .9rem; line-height: 1.6; margin-bottom: 12px; }
+    .idea-meta { display: flex; justify-content: space-between; align-items: center; }
+    .idea-tag {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 99px;
+      font-size: .75rem;
+      font-weight: 600;
+      background: rgba(100, 108, 255, .15);
+      color: var(--accent);
+    }
+    .idea-date { color: var(--text2); font-size: .75rem; }
+
+    /* Footer */
+    footer { text-align: center; padding: 40px 24px; color: var(--text2); font-size: .75rem; border-top: 1px solid var(--border); margin-top: 40px; }
+
+    @media(max-width:768px) {
+      .nav { padding: 12px 16px; }
+      .nav-links { gap: 10px; }
+      .section { padding: 24px 16px; }
+      .section h1 { font-size: 1.4rem; }
+      .ideas-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a class="nav-brand" href="/">🐟 Tyler的小工具</a>
+    <div class="nav-links">
+      <a href="/">首页</a>
+      <a href="/tools.html">工具</a>
+      <a href="/blog/">博客</a>
+      <a href="/about.html">关于</a>
+    </div>
+  </nav>
+
+  <section class="section">
+    <a class="back-link" href="/">← 返回首页</a>
+    <h1>💡 每日灵感</h1>
+    <p class="subtitle">AI · 创业 · 产品 · 技术 · 生活 · 设计 · 效率</p>
+    <div class="ideas-grid" id="ideas-grid"></div>
+  </section>
+
+  <footer>
+    <p>© 2026 Tyler的小工具 · 用 ❤️ 和 AI 构建</p>
+  </footer>
+
+  <script>
+    const ideas = [
+      // IDEAS_PLACEHOLDER
+            { emoji: "⏳", title: "记忆拍卖行", desc: "AI整理你遗忘的记忆碎片，拍卖给别人当创作灵感", tag: "生活", date: "2026-05-29" },
+            { emoji: "🎭", title: "情绪面具", desc: "根据心情实时生成AR虚拟面具，社交从此不用假装微笑", tag: "设计", date: "2026-05-29" },
+            { emoji: "🧬", title: "数字嗅觉", desc: "用AI分析照片生成气味描述，重新定义香水和咖啡的选购体验", tag: "AI", date: "2026-05-29" },
+            { emoji: "🌳", title: "时间树", desc: "每年同一天同一角度拍一棵树，十年后就是一部生命电影", tag: "生活", date: "2026-05-26" },
+            { emoji: "🎯", title: "游戏化待办", desc: "把任务清单变成RPG地图，完成事项解锁新区域和成就", tag: "效率", date: "2026-05-25" },
+            { emoji: "🪞", title: "后悔按钮", desc: "给每个App加一键撤回，今天所有操作统统还原", tag: "产品", date: "2026-05-25" },
+            { emoji: "🧬", title: "AI读心术", desc: "AI能写代码了，但读懂甲方潜台词才是终极测试", tag: "AI", date: "2026-05-25" },
+            { emoji: "⚡", title: "反向闹钟", desc: "睡前输入明天想几点起，AI根据你的睡眠周期反推最佳入睡时间", tag: "生活", date: "2026-05-24" },
+            { emoji: "🎯", title: "反向时间胶囊", desc: "写一封信给一年后的自己，到期自动推送，过期作废", tag: "生活", date: "2026-05-23" },
+            { emoji: "⏱️", title: "时间感知壁纸", desc: "桌面壁纸随一天时间自动变色，日出到星空无缝过渡", tag: "设计", date: "2026-05-21" },
+    ];
+
+    const grid = document.getElementById('ideas-grid');
+    if (ideas.length === 0) {
+      grid.innerHTML = '<p style="color:var(--text2);grid-column:1/-1;text-align:center;padding:60px 0;">暂无灵感，敬请期待 ✨</p>';
+    } else {
+      ideas.forEach(idea => {
+        const card = document.createElement('div');
+        card.className = 'idea-card';
+        card.innerHTML = `
+          <div class="idea-emoji">${idea.emoji}</div>
+          <div class="idea-title">${idea.title}</div>
+          <div class="idea-desc">${idea.desc}</div>
+          <div class="idea-meta">
+            <span class="idea-tag">${idea.tag}</span>
+            <span class="idea-date">${idea.date}</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+  </script>
+</body>
+</html>
