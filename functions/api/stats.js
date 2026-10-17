@@ -7,10 +7,18 @@ export async function onRequestPost(context) {
   try {
     const db = createDb(context.env);
     const body = await context.request.json();
-    const { visitor_id, page, session_id, referrer, ua, duration, type } = body;
+    const { visitor_id, page, session_id, referrer, ua, duration, type, event } = body;
 
     if (!visitor_id) {
       return new Response(JSON.stringify({ error: 'visitor_id required' }), { status: 400 });
+    }
+
+    if (type === 'event') {
+      if (!page || !/^[a-z][a-z0-9_]{2,48}$/.test(event || '')) {
+        return new Response(JSON.stringify({ error: 'invalid event' }), { status: 400 });
+      }
+      await db.insert('page_views', { visitor_id, page: `${page}::${event}`, type: 'event' });
+      return new Response(JSON.stringify({ ok: true, type: 'event' }));
     }
 
     // 如果是停留时间上报

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+<title>模型 API 预算怎么算：输入、输出与账单差异 | Tyler</title>
+<meta name="description" content="用请求数和 Token 用量计算 API 文本成本，并理解缓存、工具调用和长上下文为什么会让实际账单不同。">
+<link rel="canonical" href="https://tylerzhang.xyz/blog/api-cost-guide"><link rel="icon" type="image/png" href="/resource/easyclaw.png">
+<link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=2">
+</head><body>
+<main class="editorial-shell article-shell"><header class="page-intro"><p class="eyebrow">排错案例 / 成本</p><h1>为什么 API 账单高于简单估算？</h1><p>先核对请求数和输入、输出 Token，再检查你是否漏算了缓存、工具或长上下文费用。</p><p class="article-meta">Tyler · 2026-10-17</p></header>
+<article class="article-body">
+<h2>先做一笔可复算的账</h2><p>假设某应用每月调用 1,000 次，每次平均输入 500 Token、输出 1,000 Token。若按每百万输入 Token `$1.50`、每百万输出 Token `$9.00` 的费率，输入成本是 <code>1,000 × 500 ÷ 1,000,000 × 1.50 = $0.75</code>；输出成本是 <code>1,000 × 1,000 ÷ 1,000,000 × 9 = $9.00</code>，合计 `$9.75`。可以在<a href="/ai-cost">成本预算页</a>输入相同数据复算。</p>
+<h2>账单对不上时，先核对四件事</h2><ol><li><strong>用量口径：</strong>记录每次响应的 usage，而不是用中文字符数粗略乘一个固定比例。系统消息、工具定义和历史上下文也可能计入输入。</li><li><strong>不同计价项目：</strong>缓存写入、缓存命中、批量处理、长上下文、搜索或其他工具调用不一定按同一单价。本站计算器只估算标准文本输入与输出。</li><li><strong>费率版本：</strong>模型名称、处理模式和供应商可能变动。先对照官方价格页及自己的合同价，再用“自定义费率”覆盖预设值。</li><li><strong>统计周期：</strong>应用日志和供应商账单的时区、退款或延迟入账可能不同；比较时请选相同时间段。</li></ol>
+<h2>如何让预算更接近实际</h2><p>从一周真实请求中抽样，分别计算输入与输出 Token 的平均值和高位值，再估算月度请求量。若流量有明显峰值，除了总成本，还要看速率限制与错误重试带来的额外请求。用于预算审批时，保留输入假设、费率来源和核对日期，方便之后追溯。</p>
+<div class="article-note">本站列出的公开费率核对日期是 2026-10-17，供估算，不构成报价。具体计费以供应商实时价格页和你的账单为准。</div>
+<p>来源：<a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">Google Gemini API 价格</a>、<a href="https://platform.claude.com/docs/en/about-claude/pricing" target="_blank" rel="noopener">Anthropic Claude API 价格</a>。</p>
+<nav class="article-nav" aria-label="相关内容"><a href="/ai-cost">打开成本预算</a><a href="/blog/rate-limit-guide">继续看 429 与重试</a><a href="/blog/">返回指南目录</a></nav>
+</article></main><footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=4"></script>
+</body></html>

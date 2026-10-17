@@ -4,8 +4,10 @@
 """
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 import urllib.request
+from urllib.parse import parse_qs, urlsplit
 import json
 import random
+import os
 
 # ===== API 实现 =====
 
@@ -223,15 +225,9 @@ class LocalHandler(SimpleHTTPRequestHandler):
         super().end_headers()
 
     def _parse_params(self):
-        path = self.path
-        params = {}
-        if '?' in path:
-            qs = path.split('?', 1)[1]
-            for pair in qs.split('&'):
-                if '=' in pair:
-                    k, v = pair.split('=', 1)
-                    params[k] = urllib.request.unquote(v)
-        return path.split('?')[0], params
+        parsed = urlsplit(self.path)
+        params = {key: values[-1] for key, values in parse_qs(parsed.query, keep_blank_values=True).items()}
+        return parsed.path, params
 
     def do_GET(self):
         path, params = self._parse_params()
@@ -273,10 +269,22 @@ class LocalHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps({'success': False, 'error': str(e)}).encode())
             return
 
+        if not path.endswith('/') and '.' not in path.rsplit('/', 1)[-1]:
+            original_path = self.path
+            query = '?' + original_path.split('?', 1)[1] if '?' in original_path else ''
+            self.path = path + '.html' + query
+            if os.path.isfile(self.translate_path(self.path)):
+                return super().do_GET()
+            self.path = original_path
+
         super().do_GET()
 
     def do_POST(self):
         path, params = self._parse_params()
+        if path == '/api/stats':
+            self.send_response(204)
+            self.end_headers()
+            return
         handler = API_ROUTES.get(path)
         if handler:
             try:
@@ -302,9 +310,9 @@ class LocalHandler(SimpleHTTPRequestHandler):
 
 
 if __name__ == '__main__':
-    port = 8888
-    server = ThreadingHTTPServer(('0.0.0.0', port), LocalHandler)
-    print(f'🐟 本地开发服务器启动 http://0.0.0.0:{port}')
-    print(f'   局域网: http://192.168.100.4:{port}')
+    port = int(os.environ.get('PORT', '8888'))
+    host = os.environ.get('HOST', '0.0.0.0')
+    server = ThreadingHTTPServer((host, port), LocalHandler)
+    print(f'🐟 本地开发服务器启动 http://{host}:{port}')
     print(f'   API: 本地处理（不依赖远端）')
     server.serve_forever()

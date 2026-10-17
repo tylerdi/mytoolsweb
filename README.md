@@ -1,199 +1,41 @@
-<div align="center">
+# Tyler 工作台
 
-# 🐟 小鱼儿的数字花园
+面向中文 AI 应用开发者的浏览器工具和排错案例。站点使用静态 HTML/CSS/JavaScript，部署在 Cloudflare Pages；少数在线演示和访问统计使用 Pages Functions。
 
-**一个由 AI 驱动的个人网站，每天都有新内容**
+## 核心页面
 
-[![Cloudflare Pages](https://img.shields.io/badge/Deploy-Cloudflare%20Pages-F38020?logo=cloudflare)](https://tylerzhang.xyz)
-[![Supabase](https://img.shields.io/badge/Database-Supabase-3FCF8E?logo=supabase)](https://supabase.com)
-[![License](https://img.shields.io/badge/License-MIT-blue)](#license)
+| 路径 | 用途 |
+| --- | --- |
+| `/`、`/json-output` | 在浏览器中检查模型输出的 JSON 语法 |
+| `/ai-cost` | 用有来源的标准文本费率估算模型 API 费用，也可手动改价 |
+| `/agent-lab`、`/agent-map` | 演示工具调用失败路径，查看 Agent 结构 |
+| `/tools` | JSON、Base64、正则、时间戳等基础开发工具 |
+| `/blog/` | 人工审阅的可复现排错案例 |
+| `/about`、`/privacy`、`/contact` | 站点身份、数据处理和反馈渠道 |
 
-<br/>
-
-一个集博客、小说连载、AI 工具箱、互动游戏于一体的个人网站。
-
-所有组件均为原生 JavaScript 实现，零框架依赖，Cloudflare Pages 全球 CDN 部署。
-
-**🔗 [tylerzhang.xyz](https://tylerzhang.xyz)**
-
-</div>
-
----
-
-## ✨ 特色功能
-
-### 📝 内容
-- **博客系统** — AI 主题文章，支持 TTS 朗读
-- **武侠小说连载** — 目录导航、阅读进度保存、语音朗读
-- **灵感墙** — 随时记录闪现的想法
-- **资源库** — 精选工具与资源合集
-
-### 🤖 AI 工具箱
-- **AI 聊天助手** — 内嵌智能对话
-- **AI 画图** — 文字生成图片
-- **文字转语音** — 多语言 TTS
-- **语音转文字** — 音频转录
-- **AI 翻译** — 多语言互译
-
-### 🎵 娱乐
-- **音乐播放器** — 在线听歌
-- **视频播放器** — 短视频推荐
-- **每日诗词** — 每天一首古诗
-- **冷知识 / 笑话** — 随机趣味内容
-
-### 🎮 互动
-- **每日打卡** — 连续签到记录
-- **心情日记** — 记录每日心情
-- **时光胶囊** — 写给未来的自己
-- **解梦** — 周公解梦查询
-- **访客地图** — 全球访客可视化
-- **留言板** — 公共留言互动
-- **打字测速** — 中文打字练习
-- **小游戏** — 更多趣味等你发现
-
----
-
-## 🏗️ 技术架构
-
-```
-┌─────────────────────────────────────────────┐
-│              前端（纯原生 JS）                │
-│  index.html + 20+ 独立 fish-*.js 组件       │
-│  零框架 · 零构建 · 即改即生效                 │
-└──────────────────┬──────────────────────────┘
-                   │
-┌──────────────────▼──────────────────────────┐
-│         Cloudflare Pages + Functions         │
-│  静态托管 + 25 个 Serverless API 端点         │
-│  全球 CDN · 自动部署 · 免费额度充足           │
-└──────────────────┬──────────────────────────┘
-                   │
-┌──────────────────▼──────────────────────────┐
-│              Supabase (PostgreSQL)           │
-│  用户数据 · 打卡 · 心情 · 胶囊 · 留言等      │
-└─────────────────────────────────────────────┘
-```
-
-### 技术栈
-
-| 层级 | 技术 |
-|------|------|
-| 前端 | 原生 HTML / CSS / JavaScript |
-| 后端 | Cloudflare Functions (Workers) |
-| 数据库 | Supabase (PostgreSQL) |
-| 部署 | Cloudflare Pages（push to main 自动部署） |
-| 域名 | tylerzhang.xyz |
-
-### 项目结构
-
-```
-├── index.html              # 首页（单页应用）
-├── about.html              # 关于页面
-├── blog/                   # 博客系统
-├── novel/                  # 小说连载
-├── games.html              # 小游戏
-├── tools.html              # 工具箱
-├── ideas.html              # 灵感墙
-├── resources.html          # 资源库
-├── changelog.html          # 更新日志
-├── fish-*.js               # 独立功能组件（20+）
-├── functions/api/          # Serverless API 端点
-└── supabase/               # 数据库迁移脚本
-```
-
----
-
-## 🚀 快速开始
-
-### 前置条件
-- [Node.js](https://nodejs.org/) >= 18
-- [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/)（Cloudflare 官方工具）
-- Supabase 账号
-
-### 本地开发
+## 本地预览与验证
 
 ```bash
-# 克隆项目
-git clone https://github.com/tylerdi/mytoolsweb.git
-cd mytoolsweb
-
-# 安装 Wrangler（如果没有）
-npm install -g wrangler
-
-# 本地启动（含 Functions）
-wrangler pages dev . --port 8788
+HOST=127.0.0.1 PORT=8788 python3 local_server.py
+node --test tests/*.test.mjs
 ```
 
-打开 `http://localhost:8788` 即可预览。
+打开 `http://127.0.0.1:8788/`。本地服务器支持 Cloudflare Pages 的无扩展名静态网址。它不是完整的 Pages Functions 环境；需要验证在线 API 时，应使用 Cloudflare 预览部署或线上测试环境。
 
-### 部署
+## 内容发布规则
 
-```bash
-# 推送到 main 分支自动触发 Cloudflare Pages 部署
-git add -A
-git commit -m "your changes"
-git push
-```
+- 公开索引页面应解决一个具体任务，有可复现输入、实际结果、失败边界和相关工具；不要为了数量批量发布泛 AI 文章。
+- `sitemap.xml` 只列希望收录的规范网址，地址与页面 `canonical` 一致。Cloudflare Pages 会把 `.html` 路径跳转到无扩展名路径。
+- `_headers` 将旧的自动日报、重复介绍页及偏离当前主题的实验页标为 `noindex`。这些页面仍可直接访问，但不作为当前搜索入口。
+- 旧日报不再加载 AdSense 脚本。`scripts/ai_daily_news.py` 的新输出进入 `_archive/daily-news/`，不会自动进入博客目录。
+- 只有经过人工检查、具有实际内容价值的页面加载 AdSense 脚本。改动代码不会自动触发 AdSense 复审。
 
-### 环境变量
+## 价格和数据
 
-在 Cloudflare Pages 后台配置以下变量：
+`model-cost.mjs` 中的公开费率于 **2026-10-17** 对照供应商官方价格页核验。模型价格会变：每次更新预设时，先核对官方来源，更新 `PRICE_REVIEWED`、页面核对日期和相关示例，再运行测试。计算器只覆盖标准文本输入和输出，不包含缓存、批量、工具、税费等项目。
 
-| 变量名 | 说明 |
-|--------|------|
-| `SUPABASE_URL` | Supabase 项目 URL |
-| `SUPABASE_ANON_KEY` | Supabase 匿名密钥 |
+`fish-tracker.js` 记录核心页面访问和少量操作事件。操作事件只包含名称，不包含粘贴的 JSON、提示词或计算结果；`functions/api/stats.js` 将其以 `page_views.type = 'event'` 存储，不计入普通 PV 汇总。
 
----
+## 上线
 
-## 📦 组件说明
-
-每个 `fish-*.js` 都是独立的功能组件，可单独使用：
-
-| 组件 | 功能 |
-|------|------|
-| `fish-ai.js` | TTS 朗读 + AI 聊天助手 |
-| `fish-music-player.js` | 音乐播放器 |
-| `fish-video-player.js` | 视频播放器 |
-| `fish-image-gen.js` | AI 画图 |
-| `fish-tts-tool.js` | 文字转语音工具 |
-| `fish-translate.js` | AI 翻译 |
-| `fish-speech-to-text.js` | 语音转文字 |
-| `fish-checkin.js` | 每日打卡 |
-| `fish-mood.js` | 心情日记 |
-| `fish-capsule.js` | 时光胶囊 |
-| `fish-guestbook.js` | 留言板 |
-| `fish-visitor-map.js` | 访客地图 |
-| `fish-daily-poem.js` | 每日诗词 |
-| `fish-funfact.js` | 冷知识 |
-| `fish-joke.js` | 笑话 |
-| `fish-dream.js` | 解梦 |
-| `fish-typing-test.js` | 打字测速 |
-| `fish-stats.js` | 网站统计 |
-| `fish-float-mascot.js` | 浮动吉祥物 |
-| `fish-music.js` | 背景音乐控制 |
-
----
-
-## 🤝 参考项目
-
-本项目受以下网站启发：
-
-- [三万 AI](https://sanwan.ai/) — 傅盛的 AI 独立建站运营
-- [碳基圈](https://ai6666.com/) — AI 与人类互动社区
-
----
-
-## 📄 License
-
-MIT
-
----
-
-<div align="center">
-
-**用 ❤️ 和 🐟 打造**
-
-*如果觉得有趣，点个 ⭐ 吧！*
-
-</div>
+仓库 `main` 分支推送后由 Cloudflare Pages 自动部署。上线后检查首页、`/sitemap.xml`、`/ads.txt`、规范网址、旧页 `X-Robots-Tag` 和关键工具流程。Search Console 的收录与 AdSense 的审核状态由 Google 异步更新，不能用部署成功替代实际审核结果。

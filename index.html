@@ -5,61 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google-adsense-account" content="ca-pub-6426056111301969">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
-    <title>在线开发工具与 AI 工具 | Tyler 工具箱</title>
-    <meta name="description" content="在浏览器中使用 JSON 格式化、Base64 编解码、时间戳转换、正则测试等常用开发工具，也可访问 AI 语音、画图与聊天工具。附实际操作指南。">
+    <title>AI 应用开发工作台：JSON 输出检查与 API 成本预算 | Tyler</title>
+    <meta name="description" content="在浏览器中检查 AI 输出的 JSON，估算模型 API 成本，理解 Agent 工具调用流程。提供可复现的中文排错案例。">
     <link rel="canonical" href="https://tylerzhang.xyz/">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tylerzhang.xyz/">
-    <meta property="og:title" content="在线开发工具与 AI 工具 | Tyler 工具箱">
-    <meta property="og:description" content="常用开发工具、AI 工具和具体的使用指南。">
+    <meta property="og:title" content="AI 应用开发工作台 | Tyler">
+    <meta property="og:description" content="JSON 输出检查、API 成本预算和 Agent 调用排错。">
     <meta property="og:image" content="https://tylerzhang.xyz/resource/easyclaw.png">
     <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"WebSite","name":"Tyler 工具箱","url":"https://tylerzhang.xyz/","description":"浏览器中的开发工具、AI 工具和使用指南"}
+    {"@context":"https://schema.org","@type":"WebSite","name":"Tyler AI 应用开发工作台","url":"https://tylerzhang.xyz/","inLanguage":"zh-CN"}
     </script>
     <link rel="icon" type="image/png" href="/resource/easyclaw.png">
-    <link rel="stylesheet" href="/style.css?v=3">
-    <link rel="stylesheet" href="/editorial.css?v=1">
+    <link rel="stylesheet" href="/style.css?v=4">
+    <link rel="stylesheet" href="/editorial.css?v=2">
 </head>
 <body>
     <main class="editorial-shell home-shell">
-        <header class="page-intro">
-            <p class="eyebrow">TYLER TOOLBOX</p>
-            <h1>把常用工具放在手边</h1>
-            <p>格式化数据、转换编码、测试正则与生成内容。选一个任务，直接开始。</p>
+        <header class="page-intro workbench-intro">
+            <p class="eyebrow">TYLER / AI 应用开发</p>
+            <h1>检查输出，估算成本，定位调用失败</h1>
+            <p>从一段真实的模型响应开始。输入内容只在当前浏览器中解析，不会发送到本站 API。</p>
         </header>
 
-        <section aria-labelledby="dev-title" class="editorial-section">
-            <div class="section-heading"><h2 id="dev-title">开发工具</h2><a href="/tools">查看全部 12 个工具</a></div>
-            <div class="link-grid">
-                <a class="tool-link" href="/tools#json-tool"><span class="tool-symbol">{ }</span><strong>JSON 格式化</strong><small>检查语法、缩进与压缩</small></a>
-                <a class="tool-link" href="/tools#base64-tool"><span class="tool-symbol">64</span><strong>Base64 编解码</strong><small>处理含中文的 UTF-8 文本</small></a>
-                <a class="tool-link" href="/tools#timestamp-tool"><span class="tool-symbol">⏱</span><strong>时间戳转换</strong><small>秒、毫秒与日期互转</small></a>
-                <a class="tool-link" href="/tools#regex-tool"><span class="tool-symbol">.*</span><strong>正则测试</strong><small>检查表达式与匹配位置</small></a>
-                <a class="tool-link" href="/tools#hash-tool"><span class="tool-symbol">#</span><strong>文本哈希</strong><small>计算 SHA-256 等摘要</small></a>
-                <a class="tool-link" href="/tools#password-tool"><span class="tool-symbol">✳</span><strong>密码生成</strong><small>自定义长度和字符类别</small></a>
-            </div>
-        </section>
+        <div class="workspace-grid">
+            <section class="inspector-surface" data-json-inspector aria-labelledby="inspector-title">
+                <div class="surface-heading">
+                    <div><p class="surface-kicker">01 / 结构化输出</p><h2 id="inspector-title">JSON 输出检查</h2></div>
+                    <a href="/json-output">打开完整工作区</a>
+                </div>
+                <div class="inspector-grid">
+                    <div class="inspector-pane">
+                        <label for="home-json-input">模型返回内容</label>
+                        <textarea id="home-json-input" data-json-input maxlength="300000" spellcheck="false" placeholder="粘贴 JSON，或包含一个 ```json 代码块的回答"></textarea>
+                        <div class="command-row">
+                            <button type="button" class="command-primary" data-json-check>检查 JSON</button>
+                            <button type="button" data-json-sample>载入示例</button>
+                            <button type="button" data-json-clear>清空</button>
+                        </div>
+                    </div>
+                    <div class="inspector-pane">
+                        <div class="pane-heading"><label for="home-json-format">检查结果</label><select id="home-json-format" data-json-format aria-label="结果格式"><option value="formatted">格式化</option><option value="compact">压缩</option></select></div>
+                        <pre data-json-output class="inspector-output" aria-live="polite"></pre>
+                        <div class="result-footer"><span data-json-status data-state="idle" role="status">等待输入</span><button type="button" data-json-copy disabled>复制结果</button></div>
+                        <p class="result-hint" data-json-hint></p>
+                    </div>
+                </div>
+            </section>
+            <aside class="workflow-rail" aria-label="相关工作流">
+                <h2>继续处理</h2>
+                <a href="/ai-cost"><span>02 / 预算</span><strong>模型 API 成本估算</strong><small>根据真实用量和可核对的费率计算</small></a>
+                <a href="/agent-lab"><span>03 / 调用</span><strong>Agent 工具调用实验</strong><small>查看参数错误和超时如何影响流程</small></a>
+                <a href="/tools"><span>04 / 日常</span><strong>开发工具箱</strong><small>Base64、正则、时间戳与文本处理</small></a>
+            </aside>
+        </div>
 
-        <section aria-labelledby="ai-title" class="editorial-section">
-            <div class="section-heading"><h2 id="ai-title">AI 工具</h2><span>在线功能依赖服务可用性</span></div>
-            <div class="link-grid compact-grid">
-                <a class="tool-link" href="/ai-tts"><span class="tool-symbol">♫</span><strong>文字转语音</strong><small>输入文本，生成并下载音频</small></a>
-                <a class="tool-link" href="/ai-image"><span class="tool-symbol">▧</span><strong>文字生成图片</strong><small>选择风格与尺寸后生成</small></a>
-                <a class="tool-link" href="/ai-chat"><span class="tool-symbol">◌</span><strong>AI 聊天</strong><small>写作、问答与代码解释</small></a>
-            </div>
-        </section>
-
-        <section aria-labelledby="guide-title" class="editorial-section">
-            <div class="section-heading"><h2 id="guide-title">使用指南</h2><a href="/blog/">查看全部指南</a></div>
+        <section class="editorial-section" aria-labelledby="guides-title">
+            <div class="section-heading"><h2 id="guides-title">排错笔记</h2><a href="/blog/">全部指南</a></div>
             <div class="guide-list">
-                <a href="/blog/json-guide"><strong>JSON 格式化时，错误位置怎么找？</strong><span>从报错、对象结构到敏感数据处理</span></a>
-                <a href="/blog/base64-guide"><strong>Base64 中文乱码与 URL 安全格式</strong><span>理解编码边界，避免把编码当加密</span></a>
-                <a href="/blog/regex-guide"><strong>正则测试：从样例到可用表达式</strong><span>用真实边界案例减少误匹配</span></a>
+                <a href="/blog/llm-json-errors"><strong>模型输出不是合法 JSON 时，先检查哪里？</strong><span>围栏、尾逗号与类型边界</span></a>
+                <a href="/blog/api-cost-guide"><strong>为什么你的 API 账单高于简单估算？</strong><span>输入、输出与未计入的费用</span></a>
+                <a href="/blog/agent-tool-call"><strong>Agent 工具调用失败后，怎么恢复状态？</strong><span>参数校验、超时和重试</span></a>
             </div>
         </section>
     </main>
     <footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer>
     <script src="/fish-tracker.js"></script>
-    <script src="/nav.js?v=3"></script>
+    <script src="/nav.js?v=4"></script>
+    <script type="module" src="/json-output.mjs"></script>
 </body>
 </html>

@@ -7,7 +7,7 @@ from datetime import datetime, timezone, timedelta
 from urllib.parse import urlsplit
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUTPUT_DIR = os.path.join(PROJECT_DIR, "blog", "posts")
+OUTPUT_DIR = os.path.join(PROJECT_DIR, "_archive", "daily-news")
 CST = timezone(timedelta(hours=8))
 TODAY = datetime.now(CST)
 DATE_STR = TODAY.strftime("%Y-%m-%d")
@@ -83,7 +83,7 @@ def build_html(sections):
 <title>AI 每日资讯 {DATE_CN} | 小鱼儿的数字花园</title>
 <meta name="description" content="AI 每日资讯 {DATE_CN}：Hacker News、TechCrunch、Product Hunt 最新 AI 动态。">
 <meta name="keywords" content="AI资讯,AI新闻,AI日报,Hacker News,Product Hunt,{DATE_STR}">
-<link rel="canonical" href="https://tylerzhang.xyz/blog/posts/ai-daily-{DATE_STR}.html">
+<link rel="canonical" href="https://tylerzhang.xyz/_archive/daily-news/ai-daily-{DATE_STR}">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐟</text></svg>">
 <link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" rel="stylesheet">
 <style>
@@ -139,7 +139,7 @@ def main():
     with open(path, "w", encoding="utf-8") as f:
         f.write(build_html(sections))
     print(f"📄 {path}")
-    print(f"🔗 https://tylerzhang.xyz/blog/posts/ai-daily-{DATE_STR}.html")
+    print(f"📦 Draft archive: {path}")
 
 if __name__ == "__main__":
     main()

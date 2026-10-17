@@ -12,6 +12,20 @@
   const SESSION_KEY = 'fish_session_id';
   const LAST_VISIT_KEY = 'fish_last_visit';
 
+  window.trackToolEvent = function (action) {
+    if (!/^[a-z][a-z0-9_]{2,48}$/.test(action)) return;
+    fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        visitor_id: getVisitorId(),
+        page: getPageName(),
+        type: 'event',
+        event: action,
+      }),
+    }).catch(() => {});
+  };
+
   // 生成或读取访客 ID（持久化）
   function getVisitorId() {
     let id = localStorage.getItem(VISITOR_KEY);

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+    <title>AI 输出 JSON 检查与格式化 | Tyler 工作台</title>
+    <meta name="description" content="粘贴模型返回的 JSON 或 Markdown 代码围栏，使用浏览器原生 JSON 解析器检查语法、格式化并定位常见错误。输入不会上传。">
+    <link rel="canonical" href="https://tylerzhang.xyz/json-output">
+    <link rel="icon" type="image/png" href="/resource/easyclaw.png">
+    <link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=2">
+</head>
+<body>
+    <main class="editorial-shell">
+        <header class="page-intro"><p class="eyebrow">结构化输出 / 本地解析</p><h1>AI 输出 JSON 检查</h1><p>排查模型回复中的代码围栏、末尾逗号和字符串引号。这里检查 JSON 语法，不会替你猜测或改写原始数据。</p></header>
+        <section class="inspector-surface standalone-inspector" data-json-inspector aria-label="JSON 输出诊断工具">
+            <div class="inspector-grid">
+                <div class="inspector-pane">
+                    <label for="json-input">原始响应</label>
+                    <textarea id="json-input" data-json-input maxlength="300000" spellcheck="false" placeholder="粘贴 JSON，或包含一个 ```json 代码块的回答"></textarea>
+                    <div class="command-row"><button type="button" class="command-primary" data-json-check>检查 JSON</button><button type="button" data-json-sample>载入示例</button><button type="button" data-json-clear>清空</button></div>
+                </div>
+                <div class="inspector-pane">
+                    <div class="pane-heading"><label for="json-format">解析结果</label><select id="json-format" data-json-format aria-label="结果格式"><option value="formatted">格式化</option><option value="compact">压缩</option></select></div>
+                    <pre data-json-output class="inspector-output" aria-live="polite"></pre>
+                    <div class="result-footer"><span data-json-status data-state="idle" role="status">等待输入</span><button type="button" data-json-copy disabled>复制结果</button></div>
+                    <p class="result-hint" data-json-hint></p>
+                </div>
+            </div>
+        </section>
+        <section class="article-body tool-explanation" aria-labelledby="what-checks">
+            <h2 id="what-checks">这里检查什么</h2>
+            <p>工具先从单个 Markdown 代码围栏中取出内容，再交给浏览器的 <code>JSON.parse</code>。成功后可以复制格式化或压缩后的结果；失败时保留原输入，给出解析器报错和可能的排查方向。它不会自动删除尾逗号，也不会把单引号猜成双引号。</p>
+            <h2>为什么不自动“修复”</h2>
+            <p>模型输出可能包含业务数据。自动替换标点、补括号或丢字段会改变原意，尤其不适合订单、金额和工具调用参数。先确认模型的输出约束，再修正产生错误的环节。<a href="/blog/llm-json-errors">查看完整排错案例</a>。</p>
+            <div class="article-note">敏感数据仍会出现在你的浏览器和剪贴板。分享结果前请脱敏；本站不会把此输入发送到服务器。</div>
+            <nav class="article-nav" aria-label="相关工具"><a href="/ai-cost">估算 API 成本</a><a href="/agent-lab">查看 Agent 调用流程</a><a href="/tools">其他开发工具</a></nav>
+        </section>
+    </main>
+    <footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer>
+    <script src="/fish-tracker.js"></script><script src="/nav.js?v=4"></script><script type="module" src="/json-output.mjs"></script>
+</body>
+</html>

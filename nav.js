@@ -1,9 +1,9 @@
 (function () {
   const links = [
-    { href: '/tools', label: '开发工具', icon: '🛠️' },
-    { href: '/ai-tts', label: 'AI 语音', icon: '🎙️' },
-    { href: '/ai-image', label: 'AI 画图', icon: '🎨' },
-    { href: '/blog/', label: '使用指南', icon: '📖' },
+    { href: '/json-output', label: 'JSON 检查', icon: '{ }' },
+    { href: '/ai-cost', label: '成本预算', icon: '＄' },
+    { href: '/agent-lab', label: 'Agent 实验', icon: '◎' },
+    { href: '/blog/', label: '排错指南', icon: '▤' },
     { href: '/about', label: '关于', icon: '👤' },
   ];
 
@@ -18,7 +18,7 @@
     document.body.insertAdjacentHTML('afterbegin', `
       <nav class="nav" aria-label="主导航">
         <div class="nav-inner">
-          <a href="/" class="nav-logo"><span class="fish">🧰</span> Tyler 工具箱</a>
+          <a href="/" class="nav-logo"><span class="fish">🧰</span> Tyler 工作台</a>
           <div class="nav-links">${links.map(renderLink).join('')}</div>
           <button class="hamburger" type="button" aria-label="打开导航" aria-expanded="false" aria-controls="mobileMenu">☰</button>
         </div>
@@ -29,6 +29,7 @@
         <div style="clear:both;padding-top:12px">
           <a href="/">🏠 首页</a>
           ${links.map(renderLink).join('')}
+          <a href="/tools">🛠️ 开发工具</a>
           <a href="/privacy">🔒 隐私政策</a>
           <a href="/contact">✉️ 联系</a>
         </div>

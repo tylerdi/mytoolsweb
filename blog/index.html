@@ -4,22 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
-    <title>工具使用指南 | Tyler 工具箱</title>
-    <meta name="description" content="围绕 JSON、Base64 和正则表达式的实用操作指南。每篇文章都有可以复现的例子和对应在线工具。">
+    <title>AI 应用开发排错指南 | Tyler</title>
+    <meta name="description" content="围绕结构化输出、模型 API 成本、429 限流、流式响应与 Agent 工具调用的中文排错案例。每篇都有可复现输入和相关工具。">
     <link rel="canonical" href="https://tylerzhang.xyz/blog/">
     <link rel="icon" type="image/png" href="/resource/easyclaw.png">
-    <link rel="stylesheet" href="/style.css?v=3">
-    <link rel="stylesheet" href="/editorial.css?v=1">
+    <link rel="stylesheet" href="/style.css?v=4">
+    <link rel="stylesheet" href="/editorial.css?v=2">
 </head>
 <body>
     <main class="editorial-shell article-shell">
         <header class="page-intro">
-            <p class="eyebrow">使用指南</p>
-            <h1>解决具体问题的工具笔记</h1>
-            <p>从可复现的输入和结果出发，解释工具适合什么、哪里容易出错，以及如何检查输出。</p>
+            <p class="eyebrow">排错指南</p>
+            <h1>把一次失败变成可复现的案例</h1>
+            <p>每篇只解决一个开发问题：保留输入、预期结果与失败边界，再打开对应工具实际检查。</p>
         </header>
-        <section class="editorial-section" aria-labelledby="guides-title">
-            <div class="section-heading"><h2 id="guides-title">开发工具</h2><a href="/tools">打开工具箱</a></div>
+        <section class="editorial-section" aria-labelledby="api-guides-title">
+            <div class="section-heading"><h2 id="api-guides-title">AI API 与 Agent</h2><a href="/agent-lab">打开调用实验</a></div>
+            <div class="guide-list">
+                <a href="/blog/llm-json-errors"><strong>模型输出不是合法 JSON，先检查哪里？</strong><span>围栏、尾逗号与类型边界</span></a>
+                <a href="/blog/api-cost-guide"><strong>为什么 API 账单高于简单估算？</strong><span>用量口径、费率与未计费用</span></a>
+                <a href="/blog/agent-tool-call"><strong>Agent 工具调用失败后，怎么恢复状态？</strong><span>参数校验、超时与重试</span></a>
+                <a href="/blog/tool-arguments"><strong>模型给出了 JSON 参数，还需要检查什么？</strong><span>Schema、权限和副作用</span></a>
+                <a href="/blog/rate-limit-guide"><strong>模型 API 返回 429，为什么越重试越慢？</strong><span>Retry-After、退避与幂等</span></a>
+                <a href="/blog/streaming-guide"><strong>流式输出突然中断，拿到的是完整答案吗？</strong><span>网络分块、事件与完成状态</span></a>
+            </div>
+        </section>
+        <section class="editorial-section" aria-labelledby="tool-guides-title">
+            <div class="section-heading"><h2 id="tool-guides-title">基础数据工具</h2><a href="/tools">打开开发工具</a></div>
             <div class="guide-list">
                 <a href="/blog/json-guide"><strong>JSON 格式化时，错误位置怎么找？</strong><span>语法诊断、结构检查、压缩前的验证</span></a>
                 <a href="/blog/base64-guide"><strong>Base64 中文乱码与 URL 安全格式</strong><span>UTF-8、Base64URL 与安全边界</span></a>
@@ -29,6 +40,6 @@
     </main>
     <footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer>
     <script src="/fish-tracker.js"></script>
-    <script src="/nav.js?v=3"></script>
+    <script src="/nav.js?v=4"></script>
 </body>
 </html>

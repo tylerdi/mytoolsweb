@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://tylerzhang.xyz/</loc></url>
+  <url><loc>https://tylerzhang.xyz/json-output</loc></url>
+  <url><loc>https://tylerzhang.xyz/ai-cost</loc></url>
+  <url><loc>https://tylerzhang.xyz/agent-lab</loc></url>
   <url><loc>https://tylerzhang.xyz/tools</loc></url>
-  <url><loc>https://tylerzhang.xyz/ai-tts</loc></url>
-  <url><loc>https://tylerzhang.xyz/ai-image</loc></url>
-  <url><loc>https://tylerzhang.xyz/ai-chat</loc></url>
-  <url><loc>https://tylerzhang.xyz/ai-learn</loc></url>
   <url><loc>https://tylerzhang.xyz/agent-map</loc></url>
   <url><loc>https://tylerzhang.xyz/blog/</loc></url>
+  <url><loc>https://tylerzhang.xyz/blog/llm-json-errors</loc></url>
+  <url><loc>https://tylerzhang.xyz/blog/api-cost-guide</loc></url>
+  <url><loc>https://tylerzhang.xyz/blog/agent-tool-call</loc></url>
+  <url><loc>https://tylerzhang.xyz/blog/tool-arguments</loc></url>
+  <url><loc>https://tylerzhang.xyz/blog/rate-limit-guide</loc></url>
+  <url><loc>https://tylerzhang.xyz/blog/streaming-guide</loc></url>
   <url><loc>https://tylerzhang.xyz/blog/json-guide</loc></url>
   <url><loc>https://tylerzhang.xyz/blog/base64-guide</loc></url>
   <url><loc>https://tylerzhang.xyz/blog/regex-guide</loc></url>

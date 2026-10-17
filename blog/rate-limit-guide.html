@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+<title>模型 API 返回 429：限流、Retry-After 与安全重试 | Tyler</title>
+<meta name="description" content="排查模型 API 的 HTTP 429，区分限流与参数错误，处理 Retry-After，限制重试次数并避免重复执行有副作用的请求。">
+<link rel="canonical" href="https://tylerzhang.xyz/blog/rate-limit-guide"><link rel="icon" type="image/png" href="/resource/easyclaw.png">
+<link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=2">
+</head><body>
+<main class="editorial-shell article-shell"><header class="page-intro"><p class="eyebrow">排错案例 / HTTP</p><h1>模型 API 返回 429，为什么越重试越慢？</h1><p>429 表示一定时间内请求过多；如果所有客户端立刻同时重试，只会制造新的高峰。</p><p class="article-meta">Tyler · 2026-10-17</p></header>
+<article class="article-body">
+<h2>先保存一条失败证据</h2><pre><code>HTTP/1.1 429 Too Many Requests
+Retry-After: 30
+request_id: req_42</code></pre><p>记录响应状态、服务方请求标识、时间、调用模型和并发数；不要在日志里写入密钥或完整用户输入。429 和 400 的处理方向不同：前者通常需要控制请求节奏，后者更可能是参数问题，盲目重试不会修复。</p>
+<h2>有 Retry-After 时尊重它</h2><p>HTTP 规范允许 429 响应携带 <code>Retry-After</code>，它可能表示等待秒数，也可能是一个 HTTP 日期。以服务方实际文档和响应为准；如果没有该头，使用有限次的指数退避并加入随机抖动，避免所有客户端在同一时刻重试。</p>
+<pre><code>第 1 次限流 → 等待服务方建议的时间
+仍限流 → 退避，再试一次
+达到重试上限 → 返回可恢复错误，不无限循环</code></pre>
+<h2>重试之前判断副作用</h2><p>读取、查询等操作通常比较容易重试；若请求会创建订单、发邮件或扣费，先确认服务是否支持幂等键，或查询上一次请求是否已经成功。一次网络超时不等于服务端没有执行。把限流控制放到共享队列中，比让每个页面各自疯狂重试更稳定。</p>
+<div class="article-note">令牌额度、并发上限与账户余额不足不是同一个问题。阅读响应体和供应商限流说明后，再决定是降低并发、减少输入量还是调整配额。</div>
+<p>参考：<a href="https://www.rfc-editor.org/info/rfc6585" target="_blank" rel="noopener">RFC 6585 的 429 定义</a>、<a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-10.2.3" target="_blank" rel="noopener">HTTP Retry-After 语义</a>。</p>
+<nav class="article-nav" aria-label="相关内容"><a href="/ai-cost">估算重试后的预算</a><a href="/blog/streaming-guide">继续看流式中断</a><a href="/blog/">返回指南目录</a></nav>
+</article></main><footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=4"></script>
+</body></html>
