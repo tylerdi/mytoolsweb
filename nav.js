@@ -3,6 +3,7 @@
     { href: '/json-output', label: 'JSON 检查', icon: '{ }' },
     { href: '/ai-cost', label: '成本预算', icon: '＄' },
     { href: '/agent-lab', label: 'Agent 实验', icon: '◎' },
+    { href: '/api-diagnostics', label: '错误分诊', icon: '!' },
     { href: '/blog/', label: '排错指南', icon: '▤' },
     { href: '/about', label: '关于', icon: '👤' },
   ];

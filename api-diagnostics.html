@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google-adsense-account" content="ca-pub-6426056111301969">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+  <title>AI API 错误分诊：429、超时与安全重试 | Tyler</title>
+  <meta name="description" content="按 HTTP 状态、Retry-After 和操作副作用生成 AI API 故障排查顺序。浏览器本地运行，不需要粘贴密钥或响应体。">
+  <link rel="canonical" href="https://tylerzhang.xyz/api-diagnostics"><link rel="icon" type="image/png" href="/resource/easyclaw.png">
+  <link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=3">
+</head>
+<body>
+<main class="editorial-shell article-shell">
+  <header class="page-intro"><p class="eyebrow">AI API / 故障分诊</p><h1>收到错误响应，先做什么？</h1><p>选择状态和操作类型，获得下一步排查顺序。这里不需要输入 API 密钥、提示词或完整响应。</p></header>
+  <div class="diagnostic-layout">
+    <form class="diagnostic-form" data-diagnostic-form>
+      <div class="form-field"><label for="diagnostic-status">状态或现象</label><select id="diagnostic-status" name="status"><option value="429">429 请求过多</option><option value="timeout">客户端超时 / 断线</option><option value="400">400 请求格式错误</option><option value="401">401 未验证</option><option value="403">403 无权限</option><option value="408">408 请求超时</option><option value="409">409 状态冲突</option><option value="413">413 请求体过大</option><option value="422">422 参数语义错误</option><option value="500">500 服务端错误</option><option value="502">502 网关错误</option><option value="503">503 暂不可用</option><option value="504">504 网关超时</option><option value="other">其他状态</option></select></div>
+      <div class="form-field"><label for="diagnostic-retry-after">Retry-After 响应头（可选）</label><input id="diagnostic-retry-after" name="retryAfter" type="text" maxlength="80" placeholder="例如 30 或 Wed, 21 Oct 2026 07:28:00 GMT"><small>只在服务方实际返回时填写。支持秒数或 GMT 格式 HTTP 日期。</small></div>
+      <label class="diagnostic-toggle"><input type="checkbox" name="sideEffect">这次请求可能创建记录、发消息或扣费</label>
+    </form>
+    <section class="diagnostic-result" aria-live="polite" aria-labelledby="diagnostic-title"><p class="surface-kicker">排查建议</p><h2 id="diagnostic-title" data-diagnostic-title></h2><p data-diagnostic-summary></p><ol data-diagnostic-steps></ol></section>
+  </div>
+  <article class="article-body">
+    <h2>如何使用这份判断</h2><p>状态码是线索，不是最终诊断。先看响应体里的服务方错误代码、请求标识和时间，再对照对应接口文档。本站的判断规则在浏览器里运行，不发送表单内容；勾选“有副作用”只改变重试建议。</p>
+    <h2>为什么副作用会改变答案</h2><p>只读查询通常可以在限制次数和总时限的前提下重试。创建订单、发送通知和扣费操作则可能在客户端超时前已经成功；再次提交前必须核实结果，并确认服务方或业务系统的幂等机制。<code>Retry-After</code> 只告诉你何时可以考虑再次请求，不保证重试安全或一定成功。</p>
+    <div class="article-note">不要在公开工单中分享密钥、个人数据或完整用户提示词。实际生产环境还需设置并发上限、错误预算和告警；本页不替代供应商文档。</div>
+    <p>规范依据：<a href="https://www.rfc-editor.org/rfc/rfc6585#section-4" target="_blank" rel="noopener">RFC 6585 的 429 定义</a>、<a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-10.2.3" target="_blank" rel="noopener">RFC 9110 的 Retry-After</a>。</p>
+    <nav class="article-nav" aria-label="相关内容"><a href="/blog/api-error-triage">查看完整排查案例</a><a href="/blog/rate-limit-guide">429 限流与退避</a><a href="/agent-lab">Agent 调用实验</a></nav>
+  </article>
+</main>
+<footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer>
+<script src="/fish-tracker.js"></script><script src="/nav.js?v=4"></script><script type="module" src="/api-diagnostics.mjs"></script>
+</body></html>

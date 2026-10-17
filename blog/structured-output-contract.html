@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-adsense-account" content="ca-pub-6426056111301969"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+<title>结构化输出上线前验收：JSON 语法、字段契约和副作用 | Tyler</title>
+<meta name="description" content="用可复制的订单示例验证模型结构化输出：JSON.parse 只是第一层，字段类型、未知字段、权限和副作用必须单独检查。">
+<link rel="canonical" href="https://tylerzhang.xyz/blog/structured-output-contract"><link rel="icon" type="image/png" href="/resource/easyclaw.png"><link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=3">
+</head><body>
+<main class="editorial-shell article-shell"><header class="page-intro"><p class="eyebrow">排错案例 / 结构化输出</p><h1>JSON 能解析，为什么仍不能直接执行？</h1><p>模型输出通过语法解析，只代表它是一段 JSON。上线前还要验证字段契约、业务权限和操作副作用。</p><p class="article-meta"><a href="/about">Tyler</a> · 2026-10-17 · 可复制的最小验收样例</p></header>
+<article class="article-body">
+<h2>先把“合法”分成三层</h2><ol><li><strong>语法：</strong><code>JSON.parse</code> 能解析完整文本，没有围栏、尾逗号和多余说明。</li><li><strong>结构：</strong>必填字段存在，类型和值域正确，未知字段按你的契约处理。</li><li><strong>业务：</strong>当前用户是否有权操作该订单？同一请求重复送达会不会扣两次款？这些问题不属于 JSON 解析器。</li></ol>
+<p>例如 <code>{"order_id":42,"action":"refund"}</code> 是合法 JSON，但如果接口要求 <code>order_id</code> 是字符串，结构校验就应拒绝。即使类型正确，也不能仅凭模型建议就执行退款。</p>
+<h2>一个可以直接运行的 Node.js 样例</h2><p>以下代码不依赖第三方包。它演示固定契约的最小手写校验；字段变多时，应使用项目内正式的 Schema 校验器并保留同样的负面测试。</p>
+<pre><code>function parseOrderAction(text) {
+  const value = JSON.parse(text);
+  if (value === null || Array.isArray(value) || typeof value !== 'object') {
+    throw new Error('预期是对象');
+  }
+  const keys = Object.keys(value);
+  if (keys.length !== 2 || !keys.includes('order_id') || !keys.includes('action')) {
+    throw new Error('字段不符合契约');
+  }
+  if (typeof value.order_id !== 'string' || !/^[0-9]+$/.test(value.order_id)) {
+    throw new Error('order_id 必须是数字字符串');
+  }
+  if (!['lookup', 'refund'].includes(value.action)) {
+    throw new Error('不支持的 action');
+  }
+  return value;
+}
+
+for (const text of [
+  '{"order_id":"42","action":"lookup"}',
+  '{"order_id":42,"action":"lookup"}',
+  '{"order_id":"42","action":"refund","admin":true}'
+]) {
+  try { console.log('通过:', parseOrderAction(text)); }
+  catch (error) { console.log('拒绝:', error.message); }
+}</code></pre>
+<p>预期是第一条通过，第二条因 <code>order_id</code> 类型被拒，第三条因额外字段被拒。把这三段先贴进<a href="/json-output">JSON 检查器</a>，会发现三条语法都合法；这正是“语法检查”和“业务契约检查”不能混为一谈的证据。</p>
+<h2>把负面样例加入上线验收</h2><p>至少测试缺字段、<code>null</code>、数字/字符串混用、额外字段、空字符串、超长输入和多段文本。对模型输出要验证整个响应，而不是在混合文字中找到第一对花括号就当作成功。若接口支持供应商提供的结构化输出约束，也应在应用边界再次校验，因为后续业务仍要处理拒绝、截断和版本变更。</p>
+<p>当 <code>action</code> 是 <code>refund</code> 时，上面的函数只完成结构检查。真正执行前，还必须在可信服务端核实当前用户权限、订单状态、金额和幂等键。不能把模型返回的 <code>admin:true</code> 当作授权依据，也不要把退款接口直接暴露给浏览器。</p>
+<div class="article-note">本站的 JSON 检查器不会上传粘贴内容，也不会做 JSON Schema 或权限验证。它适合定位语法问题；生产执行必须在你的服务端完成后两层检查。</div>
+<p>规范参考：<a href="https://www.rfc-editor.org/rfc/rfc8259" target="_blank" rel="noopener">RFC 8259：JSON</a>、<a href="https://json-schema.org/understanding-json-schema/reference/object" target="_blank" rel="noopener">JSON Schema 对象约束</a>。</p>
+<nav class="article-nav" aria-label="相关内容"><a href="/json-output">检查 JSON 语法</a><a href="/blog/tool-arguments">工具参数边界</a><a href="/blog/api-error-triage">API 故障分诊</a><a href="/blog/">全部指南</a></nav>
+</article></main><footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=4"></script>
+</body></html>

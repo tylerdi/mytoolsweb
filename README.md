@@ -9,6 +9,7 @@
 | `/`、`/json-output` | 在浏览器中检查模型输出的 JSON 语法 |
 | `/ai-cost` | 用有来源的标准文本费率估算模型 API 费用，也可手动改价 |
 | `/agent-lab`、`/agent-map` | 演示工具调用失败路径，查看 Agent 结构 |
+| `/api-diagnostics` | 按状态码、Retry-After 和副作用判断 API 错误的排查顺序 |
 | `/tools` | JSON、Base64、正则、时间戳等基础开发工具 |
 | `/blog/` | 人工审阅的可复现排错案例 |
 | `/about`、`/privacy`、`/contact` | 站点身份、数据处理和反馈渠道 |

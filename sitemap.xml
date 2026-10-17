@@ -4,6 +4,7 @@
   <url><loc>https://tylerzhang.xyz/json-output</loc></url>
   <url><loc>https://tylerzhang.xyz/ai-cost</loc></url>
   <url><loc>https://tylerzhang.xyz/agent-lab</loc></url>
+  <url><loc>https://tylerzhang.xyz/api-diagnostics</loc></url>
   <url><loc>https://tylerzhang.xyz/tools</loc></url>
   <url><loc>https://tylerzhang.xyz/agent-map</loc></url>
   <url><loc>https://tylerzhang.xyz/blog/</loc></url>
@@ -13,6 +14,8 @@
   <url><loc>https://tylerzhang.xyz/blog/tool-arguments</loc></url>
   <url><loc>https://tylerzhang.xyz/blog/rate-limit-guide</loc></url>
   <url><loc>https://tylerzhang.xyz/blog/streaming-guide</loc></url>
+  <url><loc>https://tylerzhang.xyz/blog/api-error-triage</loc></url>
+  <url><loc>https://tylerzhang.xyz/blog/structured-output-contract</loc></url>
   <url><loc>https://tylerzhang.xyz/blog/json-guide</loc></url>
   <url><loc>https://tylerzhang.xyz/blog/base64-guide</loc></url>
   <url><loc>https://tylerzhang.xyz/blog/regex-guide</loc></url>
