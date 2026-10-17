@@ -2,8 +2,9 @@
 """AI 每日资讯 - 精简版"""
 import json, os, re, sys, urllib.request
 import xml.etree.ElementTree as ET
-from html import unescape
+from html import escape, unescape
 from datetime import datetime, timezone, timedelta
+from urllib.parse import urlsplit
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUTPUT_DIR = os.path.join(PROJECT_DIR, "blog", "posts")
@@ -69,14 +70,16 @@ def build_html(sections):
         if not items: continue
         cards += f'<h2 class="sec">{name}</h2>\n'
         for it in items:
+            if urlsplit(it.get("url", "")).scheme not in ("http", "https"):
+                continue
             score = f'<span class="score">🔺 {it["score"]}</span>' if it.get("score") else ""
-            desc = f'<p class="desc">{it.get("description","")}</p>' if it.get("description") else ""
-            cards += f'<a href="{it["url"]}" class="card" target="_blank" rel="noopener"><div class="src">{it["source"]}</div><h3>{it["title"]}</h3>{desc}{score}</a>\n'
+            desc = f'<p class="desc">{escape(it.get("description", ""))}</p>' if it.get("description") else ""
+            cards += f'<a href="{escape(it["url"], quote=True)}" class="card" target="_blank" rel="noopener"><div class="src">{escape(it["source"])}</div><h3>{escape(it["title"])}</h3>{desc}{score}</a>\n'
     return f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="robots" content="noindex,follow">
 <title>AI 每日资讯 {DATE_CN} | 小鱼儿的数字花园</title>
 <meta name="description" content="AI 每日资讯 {DATE_CN}：Hacker News、TechCrunch、Product Hunt 最新 AI 动态。">
 <meta name="keywords" content="AI资讯,AI新闻,AI日报,Hacker News,Product Hunt,{DATE_STR}">

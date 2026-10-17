@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+    <title>Base64 中文乱码、URL 安全格式与解码错误 | Tyler 工具箱</title>
+    <meta name="description" content="用中文示例理解 UTF-8 与 Base64 的关系，识别 Base64URL 的差异，并排查常见的解码错误。">
+    <link rel="canonical" href="https://tylerzhang.xyz/blog/base64-guide.html">
+    <link rel="icon" type="image/png" href="/resource/easyclaw.png">
+    <link rel="stylesheet" href="/style.css?v=3"><link rel="stylesheet" href="/editorial.css?v=1">
+</head>
+<body>
+    <main class="editorial-shell article-shell">
+        <header class="page-intro"><p class="eyebrow">编码转换</p><h1>Base64 中文乱码与 URL 安全格式</h1><p>Base64 编码的是字节，不是“文字本身”。中文出现乱码时，先检查编码与解码两端是否使用相同的字符集。</p><p class="article-meta">Tyler 工具箱 · 操作指南</p></header>
+        <article class="article-body">
+            <h2>先做一次往返测试</h2>
+            <p>在<a href="/tools.html#base64-tool">Base64 编解码工具</a>输入 <code>你好，世界</code>，点击“编码”，复制结果；再把结果粘回输入框，点击“解码”。如果恢复到原文，说明这条链路使用了相同的文本编码。本站工具会先把文本转为 UTF-8 字节，再执行 Base64 编码。</p>
+            <p>这也说明为什么直接把中文传给浏览器的旧式 <code>btoa</code> 函数可能报错：它处理的是单字节字符范围，中文字符需先转成字节。相反，解码后的字节也必须用相同编码还原为文本。</p>
+
+            <h2>遇到乱码或“解码失败”时怎么查</h2>
+            <ol>
+                <li>确认输入的是完整 Base64 字符串，而不是带有 <code>data:image/png;base64,</code> 前缀的 Data URL。当前文本工具只接受编码主体。</li>
+                <li>确认它表示的是 UTF-8 文本。图片、压缩文件或其他二进制数据即使能解码，也不能直接作为文字显示。</li>
+                <li>检查复制过程中是否丢失字符、插入空格，或把 <code>+</code> 变成空格。表单和网址中尤其容易出现这种变化。</li>
+                <li>如果来源使用 GBK 等其他字符集，UTF-8 文本解码会产生乱码或错误。需要先确认来源的字符集，再选择对应的解码方式。</li>
+            </ol>
+
+            <h2>普通 Base64 与 Base64URL</h2>
+            <p>普通 Base64 字符串可能包含 <code>+</code>、<code>/</code> 和末尾的 <code>=</code>。Base64URL 通常把前两个字符替换成 <code>-</code>、<code>_</code>，并可能省略末尾填充。它们用途相近，但不能假设两种格式可以直接互换。</p>
+            <p>本站工具处理标准 Base64 文本。如果数据来自 JWT 或网址参数，应先确认上游要求的是哪一种格式；不能把 Base64URL 字符串直接当作普通 Base64 输入。网址中要传递普通 Base64 时，先对参数做 URL 编码。</p>
+
+            <div class="article-note">Base64 不是加密。任何拿到字符串的人都可以解码。不要用它保存密码、令牌或身份证号，也不要把编码后的敏感信息当成安全分享方式。</div>
+            <h2>什么时候适合用？</h2>
+            <p>它适合在只接受文本的通道中携带字节数据，例如某些 API 字段或邮件附件格式。排查接口问题时，先问自己“原始内容是什么字节、使用什么字符集、接收方期待什么变体”，比反复尝试不同在线解码器更有效。</p>
+            <nav class="article-nav" aria-label="相关内容"><a href="/tools.html#base64-tool">打开 Base64 工具</a><a href="/blog/">返回使用指南</a><a href="/blog/regex-guide.html">下一篇：正则测试</a></nav>
+        </article>
+    </main>
+    <footer class="footer">© 2026 Tyler · <a href="/privacy.html">隐私政策</a> · <a href="/contact.html">联系</a></footer>
+    <script src="/fish-tracker.js"></script><script src="/nav.js?v=3"></script>
+</body>
+</html>

@@ -2,6 +2,3 @@ User-agent: *
 Allow: /
 
 Sitemap: https://tylerzhang.xyz/sitemap.xml
-
-# 优化抓取效率
-Crawl-delay: 1

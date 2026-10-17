@@ -5,12 +5,13 @@ Usage: python3 generate_post.py "Title" "Summary" "Tag" "Content in markdown-lik
 
 This script:
 1. Creates an HTML blog post in blog/posts/
-2. Updates blog/index.html with the new post in the manifest
+2. Leaves the draft unindexed until it is reviewed and linked from the guide index
 3. Does NOT auto-commit (that's handled by the cron job)
 """
 
 import sys
 import os
+from html import escape
 from datetime import datetime
 
 def generate_post(title, summary, tag, content):
@@ -30,7 +31,7 @@ def generate_post(title, summary, tag, content):
     # Convert content to HTML paragraphs
     content_html = ""
     for line in content.split("\n"):
-        line = line.strip()
+        line = escape(line.strip())
         if not line:
             continue
         if line.startswith("## "):
@@ -45,11 +46,14 @@ def generate_post(title, summary, tag, content):
             content_html += f'<p>{line}</p>\n'
     
     # Generate post HTML
+    title = escape(title)
+    tag = escape(tag)
     post_html = f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,follow">
     <title>{title} · Tyler's Blog</title>
     <link rel="icon" type="image/png" href="../../resource/easyclaw.png">
     <style>
@@ -150,23 +154,6 @@ def generate_post(title, summary, tag, content):
     with open(post_path, 'w', encoding='utf-8') as f:
         f.write(post_html)
     print(f"✅ Post created: {post_path}")
-
-    # Update blog/index.html manifest
-    index_path = os.path.join(blog_dir, "index.html")
-    with open(index_path, 'r', encoding='utf-8') as f:
-        index_content = f.read()
-
-    new_entry = f'''            {{ date: "{date_display}", title: "{title}", summary: "{summary}", tag: "{tag}", file: "{filename}" }},'''
-
-    # Insert after the placeholder comment
-    index_content = index_content.replace(
-        '// POSTS_PLACEHOLDER',
-        '// POSTS_PLACEHOLDER\n' + new_entry
-    )
-
-    with open(index_path, 'w', encoding='utf-8') as f:
-        f.write(index_content)
-    print(f"✅ Index updated: {index_path}")
 
     return filename
 

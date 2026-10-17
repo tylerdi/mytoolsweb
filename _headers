@@ -6,3 +6,12 @@
 /api/kuwo-proxy*
   Content-Type: audio/mpeg
   Cache-Control: public, max-age=3600
+
+/blog/posts/*
+  X-Robots-Tag: noindex, follow
+
+/blog/blog-*.html
+  X-Robots-Tag: noindex, follow
+
+/tools/ai-*.html
+  X-Robots-Tag: noindex, follow

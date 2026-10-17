@@ -61,28 +61,31 @@
 
       // 显示加载
       const resultArea = this.el.querySelector('.img-result');
-      resultArea.innerHTML = `
-        <div class="img-loading">
-          <div class="img-spinner"></div>
-          <p>🎨 AI 正在创作中...</p>
-          <p class="img-prompt-text">"${prompt}"</p>
-        </div>`;
+      resultArea.innerHTML = '<div class="img-loading"><div class="img-spinner"></div><p>🎨 AI 正在创作中...</p><p class="img-prompt-text"></p></div>';
+      resultArea.querySelector('.img-prompt-text').textContent = `"${prompt}"`;
 
       // 加载图片
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.onload = () => {
         this.generating = false;
-        resultArea.innerHTML = `
-          <div class="img-display">
-            <img src="${url}" alt="${prompt}" />
-            <div class="img-actions">
-              <button class="img-action-btn" onclick="window.__imgGen.download('${url}', '${prompt.replace(/'/g, '')}')">💾 下载</button>
-              <button class="img-action-btn" onclick="window.__imgGen.copyUrl('${url}')">📋 复制链接</button>
-              <button class="img-action-btn" onclick="window.__imgGen.share('${prompt}')">🔗 分享</button>
-            </div>
-            <div class="img-info">"${prompt}" · ${styleObj.name} · ${this.size.id}</div>
-          </div>`;
+        resultArea.innerHTML = '<div class="img-display"><img><div class="img-actions"></div><div class="img-info"></div></div>';
+        const display = resultArea.querySelector('.img-display');
+        const preview = display.querySelector('img');
+        preview.src = url;
+        preview.alt = prompt;
+        const actions = display.querySelector('.img-actions');
+        const addAction = (label, handler) => {
+          const button = document.createElement('button');
+          button.className = 'img-action-btn';
+          button.textContent = label;
+          button.addEventListener('click', handler);
+          actions.appendChild(button);
+        };
+        addAction('💾 下载', () => this.download(url, prompt));
+        addAction('📋 复制链接', () => this.copyUrl(url));
+        addAction('🔗 分享', () => this.share(prompt));
+        display.querySelector('.img-info').textContent = `"${prompt}" · ${styleObj.name} · ${this.size.id}`;
 
         // 保存历史
         const entry = { prompt, url, style: this.style, size: this.size.id, time: Date.now() };
@@ -130,12 +133,24 @@
     renderHistory() {
       const histEl = this.el.querySelector('.img-history-list');
       if (!histEl || !this.history.length) return;
-      histEl.innerHTML = this.history.slice(0, 8).map(h =>
-        `<div class="img-hist-item" onclick="window.__imgGen.el.querySelector('.img-input').value='${h.prompt.replace(/'/g, "\\'")}';window.__imgGen.generate('${h.prompt.replace(/'/g, "\\'")}')">
-          <img src="${h.url}" alt="${h.prompt}" loading="lazy" />
-          <div class="img-hist-prompt">${h.prompt}</div>
-        </div>`
-      ).join('');
+      histEl.replaceChildren(...this.history.slice(0, 8).map(h => {
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.className = 'img-hist-item';
+        const image = document.createElement('img');
+        image.src = h.url;
+        image.alt = h.prompt;
+        image.loading = 'lazy';
+        const caption = document.createElement('span');
+        caption.className = 'img-hist-prompt';
+        caption.textContent = h.prompt;
+        item.append(image, caption);
+        item.addEventListener('click', () => {
+          this.el.querySelector('.img-input').value = h.prompt;
+          this.generate(h.prompt);
+        });
+        return item;
+      }));
     }
 
     render() {
@@ -174,7 +189,7 @@
         .ig-history{margin-top:16px;border-top:1px solid var(--border,#1e1e1e);padding-top:12px}
         .ig-history h4{font-size:.75rem;color:#666;margin-bottom:8px}
         .img-history-list{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-        .img-hist-item{border-radius:8px;overflow:hidden;cursor:pointer;position:relative;aspect-ratio:1}
+        .img-hist-item{border:0;padding:0;border-radius:8px;overflow:hidden;cursor:pointer;position:relative;aspect-ratio:1;background:#111}
         .img-hist-item img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
         .img-hist-item:hover img{transform:scale(1.05)}
         .img-hist-prompt{position:absolute;bottom:0;left:0;right:0;padding:4px 6px;background:linear-gradient(transparent,rgba(0,0,0,.8));font-size:.55rem;color:#ddd;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
