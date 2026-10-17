@@ -15,9 +15,9 @@
         <header class="page-intro"><p class="eyebrow">数据处理</p><h1>JSON 格式化时，错误位置怎么找？</h1><p>先确认它是不是合法 JSON，再看报错附近的分隔符和引号。格式化只改变排版，不会修复无效数据。</p><p class="article-meta">Tyler 工具箱 · 操作指南</p></header>
         <article class="article-body">
             <h2>先用一段小数据验证流程</h2>
-            <p>打开<a href="/tools#json-tool">JSON 格式化工具</a>，粘贴下面这段压缩数据并点击“格式化”。结果会按两空格缩进，便于看清 <code>user</code> 对象和 <code>roles</code> 数组的边界。</p>
+            <p>打开<a href="/json-output">JSON 输出检查器</a>，粘贴下面这段压缩数据并点击“检查 JSON”。结果会按两空格缩进，便于看清 <code>user</code> 对象和 <code>roles</code> 数组的边界。</p>
             <pre><code>{"user":{"name":"Lin","active":true},"roles":["editor","viewer"]}</code></pre>
-            <p>这个工具在浏览器中调用 <code>JSON.parse</code> 验证输入，再用 <code>JSON.stringify</code> 输出。点击“压缩”会移除非必要空白，但保留数据结构。复制结果前，建议检查数字、布尔值和 <code>null</code> 是否仍是你预期的类型。</p>
+            <p>这个工具在浏览器中调用 <code>JSON.parse</code> 验证输入，再用 <code>JSON.stringify</code> 输出。选择结果格式“压缩”会移除非必要空白，但保留数据结构。复制结果前，建议检查数字、布尔值和 <code>null</code> 是否仍是你预期的类型。</p>
 
             <h2>三种最常见的错误</h2>
             <h3>1. 最后一个成员后面多了逗号</h3>
@@ -35,7 +35,7 @@
 
             <h2>什么时候该用压缩？</h2>
             <p>排查问题时保留缩进更容易读；把 JSON 嵌入请求体或配置时，压缩能减少空白。压缩并不是加密，也不会让秘密字段变安全。若业务需要稳定的签名或哈希，还要注意键顺序和序列化规则，不能仅依赖页面上的压缩结果。</p>
-            <nav class="article-nav" aria-label="相关内容"><a href="/tools#json-tool">打开 JSON 工具</a><a href="/blog/">返回使用指南</a><a href="/blog/base64-guide">下一篇：Base64</a></nav>
+            <nav class="article-nav" aria-label="相关内容"><a href="/json-output">打开 JSON 工具</a><a href="/blog/">返回使用指南</a><a href="/blog/base64-guide">下一篇：Base64</a></nav>
         </article>
     </main>
     <footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer>

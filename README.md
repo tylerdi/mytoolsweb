@@ -8,9 +8,9 @@
 | --- | --- |
 | `/`、`/json-output` | 在浏览器中检查模型输出的 JSON 语法 |
 | `/ai-cost` | 用有来源的标准文本费率估算模型 API 费用，也可手动改价 |
-| `/agent-lab`、`/agent-map` | 演示工具调用失败路径，查看 Agent 结构 |
+| `/agent-lab` | 演示工具调用的参数错误、超时和恢复路径 |
 | `/api-diagnostics` | 按状态码、Retry-After 和副作用判断 API 错误的排查顺序 |
-| `/tools` | JSON、Base64、正则、时间戳等基础开发工具 |
+| `/tools` | 精简的 JSON、Base64、URL、正则、时间戳、SHA-256 和 UUID 工具 |
 | `/blog/` | 人工审阅的可复现排错案例 |
 | `/about`、`/privacy`、`/contact` | 站点身份、数据处理和反馈渠道 |
 
@@ -27,8 +27,8 @@ node --test tests/*.test.mjs
 
 - 公开索引页面应解决一个具体任务，有可复现输入、实际结果、失败边界和相关工具；不要为了数量批量发布泛 AI 文章。
 - `sitemap.xml` 只列希望收录的规范网址，地址与页面 `canonical` 一致。Cloudflare Pages 会把 `.html` 路径跳转到无扩展名路径。
-- `_headers` 将旧的自动日报、重复介绍页及偏离当前主题的实验页标为 `noindex`。这些页面仍可直接访问，但不作为当前搜索入口。
-- 旧日报不再加载 AdSense 脚本。`scripts/ai_daily_news.py` 的新输出进入 `_archive/daily-news/`，不会自动进入博客目录。
+- 偏离当前主题的娱乐、聚合新闻、日更图片等旧页面及专用 API 已下线；部分其他历史实验页仍由 `_headers` 标为 `noindex`，不作为当前搜索入口。下线页面对应的数据库记录不会因部署而删除。
+- 旧自动日报已从公开博客目录下线。`scripts/ai_daily_news.py` 的新输出进入 `_archive/daily-news/`，不会自动进入博客目录。
 - 只有经过人工检查、具有实际内容价值的页面加载 AdSense 脚本。改动代码不会自动触发 AdSense 复审。
 
 ## 价格和数据

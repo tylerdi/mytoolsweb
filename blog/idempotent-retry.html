@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-adsense-account" content="ca-pub-6426056111301969"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+<title>Agent 写入工具超时：幂等键与重复请求验收 | Tyler</title>
+<meta name="description" content="一次 Agent 写入操作超时后，如何确认远端是否成功？用创建报告的请求时间线和六项验收用例设计安全重试与幂等键。">
+<link rel="canonical" href="https://tylerzhang.xyz/blog/idempotent-retry"><link rel="icon" type="image/png" href="/resource/easyclaw.png"><link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=3">
+</head><body>
+<main class="editorial-shell article-shell"><header class="page-intro"><p class="eyebrow">排错案例 / Agent 写入</p><h1>工具调用超时后，怎样避免写入两次？</h1><p>客户端没有收到响应，只能说明结果未知。下面用一个创建报告的模拟请求，拆开“查询已执行结果”和“再次提交请求”。</p><p class="article-meta"><a href="/about">Tyler</a> · 2026-10-17 · 教学用模拟接口</p></header>
+<article class="article-body">
+<h2>先画出失败时间线</h2><pre><code>09:00:00  Agent 提议创建报告 report_42
+09:00:01  应用验证参数和权限，发出 POST /reports
+09:00:11  客户端等待超时，没有收到 HTTP 响应
+09:00:12  服务端可能仍在处理，也可能已成功创建报告</code></pre>
+<p>此时把状态标记为“未知”，而不是“失败”。若直接重新发一个没有关联标识的 <code>POST</code>，可能得到两份报告。先在自己或供应商的系统中查找先前请求的结果：客户端业务标识、服务方请求 ID、任务查询接口、审计日志都可能提供线索。具体能查什么取决于所用 API。</p>
+<h2>服务支持幂等键时怎么用</h2><p>在首次提交前生成一个只对应这次业务操作的键，例如<a href="/tools#uuid-tool">UUID v4</a>，并把它与本次操作的固定参数一起保存。连接中断后，按供应商文档用<strong>同一个键、同一份参数</strong>重试，不要每次重试都生成新键。不同供应商对头名称、结果保存范围、有效期和失败响应的处理不同；先查其官方说明。Stripe 的 API 文档提供了一个具体实现示例，但不能推断所有模型或工具 API 都采用相同规则。</p>
+<p>如果你维护自己的写入 API，仅在内存里记住最近的键是不够的：多个实例或服务重启后会失效。应在持久层对“用户/操作范围 + 幂等键”建立唯一约束，并把它与请求参数摘要、处理状态和结果关联。并发到达的相同键只能有一个执行者；另一条请求应得到同一结果或明确的处理中状态。相同键携带不同参数时应拒绝，避免旧键被拿去做新操作。</p>
+<h2>上线前跑六个验收用例</h2><div class="comparison-wrap"><table class="comparison-table"><thead><tr><th>输入或故障</th><th>期望行为</th></tr></thead><tbody>
+<tr><td>首次提交键 A、参数 X</td><td>只创建一份报告，记录业务 ID</td></tr>
+<tr><td>再次提交键 A、参数 X</td><td>不重复创建；返回已有结果或可查询状态</td></tr>
+<tr><td>键 A 携带参数 Y</td><td>明确拒绝参数冲突</td></tr>
+<tr><td>两个并发请求使用键 A</td><td>只有一个请求执行写入</td></tr>
+<tr><td>写入成功但响应丢失</td><td>查询或重试时能找到原结果</td></tr>
+<tr><td>键超出服务方保留期</td><td>不假设仍会去重；先查询业务状态</td></tr>
+</tbody></table></div>
+<p>如果服务方根本不提供查询结果或幂等能力，自动重试写入请求就缺少必要的安全依据。此时应暂停、记录请求标识并让用户或运维确认；不要把“网络重试成功率”放在重复写入风险之前。</p>
+<div class="article-note">HTTP 的“幂等方法”是协议语义；它不自动让任意 <code>POST</code> 安全。即使服务提供 <code>Idempotency-Key</code>，也要按该服务的实际文档核对保留期限和并发行为。</div>
+<p>依据：<a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-9.2.2" target="_blank" rel="noopener">RFC 9110：幂等方法与通信失败后的重试</a>；具体服务示例：<a href="https://docs.stripe.com/api/idempotent_requests" target="_blank" rel="noopener">Stripe 幂等请求文档</a>。</p>
+<nav class="article-nav" aria-label="相关内容"><a href="/agent-lab">运行工具超时实验</a><a href="/api-diagnostics">判断 HTTP 错误</a><a href="/blog/agent-tool-call">工具调用失败后如何恢复</a><a href="/blog/">全部指南</a></nav>
+</article></main><footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=4"></script>
+</body></html>

@@ -13,28 +13,10 @@
 /blog/blog-*
   X-Robots-Tag: noindex, follow
 
-/tools/ai-*
-  X-Robots-Tag: noindex, follow
-
 /_archive/*
   X-Robots-Tag: noindex, follow
 
-/daily-news
-  X-Robots-Tag: noindex, follow
-
-/ai-models
-  X-Robots-Tag: noindex, follow
-
-/ai-prompt
-  X-Robots-Tag: noindex, follow
-
-/ai-learn
-  X-Robots-Tag: noindex, follow
-
 /ai-service
-  X-Robots-Tag: noindex, follow
-
-/ai-tools
   X-Robots-Tag: noindex, follow
 
 /ai-tts
@@ -47,43 +29,4 @@
   X-Robots-Tag: noindex, follow
 
 /ai-voice-to-text
-  X-Robots-Tag: noindex, follow
-
-/ai-fun
-  X-Robots-Tag: noindex, follow
-
-/ai-debate
-  X-Robots-Tag: noindex, follow
-
-/story-radio
-  X-Robots-Tag: noindex, follow
-
-/deep-sea-museum
-  X-Robots-Tag: noindex, follow
-
-/mystery-box
-  X-Robots-Tag: noindex, follow
-
-/tree-hole
-  X-Robots-Tag: noindex, follow
-
-/grocery
-  X-Robots-Tag: noindex, follow
-
-/gallery
-  X-Robots-Tag: noindex, follow
-
-/daily-wallpaper
-  X-Robots-Tag: noindex, follow
-
-/resources
-  X-Robots-Tag: noindex, follow
-
-/ideas
-  X-Robots-Tag: noindex, follow
-
-/changelog
-  X-Robots-Tag: noindex, follow
-
-/tool
   X-Robots-Tag: noindex, follow
