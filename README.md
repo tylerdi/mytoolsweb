@@ -28,6 +28,7 @@ node --test tests/*.test.mjs
 - 公开索引页面应解决一个具体任务，有可复现输入、实际结果、失败边界和相关工具；不要为了数量批量发布泛 AI 文章。
 - `sitemap.xml` 只列希望收录的规范网址，地址与页面 `canonical` 一致。Cloudflare Pages 会把 `.html` 路径跳转到无扩展名路径。
 - 偏离当前主题的娱乐、聚合新闻、日更图片等旧页面及专用 API 已下线；部分其他历史实验页仍由 `_headers` 标为 `noindex`，不作为当前搜索入口。下线页面对应的数据库记录不会因部署而删除。
+- `_routes.json` 只让 `/api/*` 和已下线的旧 URL 进入 Pages Functions。旧页面明确返回 `410 Gone`，避免 Pages 的静态资源缓存短期内继续提供删除前的 HTML。
 - 旧自动日报已从公开博客目录下线。`scripts/ai_daily_news.py` 的新输出进入 `_archive/daily-news/`，不会自动进入博客目录。
 - 只有经过人工检查、具有实际内容价值的页面加载 AdSense 脚本。改动代码不会自动触发 AdSense 复审。
 

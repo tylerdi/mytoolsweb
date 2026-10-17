@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "include": [
+    "/api/*",
+    "/agent-map*",
+    "/ai-debate*",
+    "/ai-fun*",
+    "/ai-learn*",
+    "/ai-models*",
+    "/ai-prompt*",
+    "/ai-tools*",
+    "/changelog*",
+    "/daily-news*",
+    "/daily-wallpaper*",
+    "/deep-sea-museum*",
+    "/gallery*",
+    "/grocery*",
+    "/ideas*",
+    "/mystery-box*",
+    "/resources*",
+    "/story-radio*",
+    "/tool*",
+    "/tree-hole*",
+    "/tools/ai-*",
+    "/blog/posts/ai-daily-*"
+  ],
+  "exclude": []
+}
