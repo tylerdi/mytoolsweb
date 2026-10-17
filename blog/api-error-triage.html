@@ -39,6 +39,6 @@ Content-Type: application/json
 <div class="comparison-wrap"><table class="comparison-table"><thead><tr><th>观察</th><th>先查什么</th><th>能否立即重试</th></tr></thead><tbody><tr><td>400 / 422</td><td>请求字段、类型和限制</td><td>先修正输入</td></tr><tr><td>401 / 403</td><td>凭证、权限和目标项目</td><td>先修正配置</td></tr><tr><td>429</td><td>速率、并发、Retry-After</td><td>等待并控制重试</td></tr><tr><td>5xx</td><td>服务状态、请求标识、响应体</td><td>只在安全边界内重试</td></tr><tr><td>无响应 / 超时</td><td>网络阶段和业务结果</td><td>写入操作先核实结果</td></tr></tbody></table></div>
 <div class="article-note">这张表是分诊起点，不是供应商错误码全集。尤其是余额不足、配额耗尽和模型不可用等原因，可能使用服务方特定的状态或错误代码；最终以响应体和官方文档为准。</div>
 <p>依据：<a href="https://www.rfc-editor.org/rfc/rfc6585#section-4" target="_blank" rel="noopener">RFC 6585：429</a>、<a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-10.2.3" target="_blank" rel="noopener">RFC 9110：Retry-After</a>。本站的副作用处理建议是工程实践判断，不是 HTTP 规范对所有业务的保证。</p>
-<nav class="article-nav" aria-label="相关内容"><a href="/api-diagnostics">打开错误分诊</a><a href="/blog/rate-limit-guide">深入了解 429</a><a href="/blog/structured-output-contract">检查结构化输出</a><a href="/blog/">全部指南</a></nav>
+<nav class="article-nav" aria-label="相关内容"><a href="/http-headers">检查响应头</a><a href="/api-diagnostics">打开错误分诊</a><a href="/blog/rate-limit-guide">深入了解 429</a><a href="/blog/">全部指南</a></nav>
 </article></main><footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=4"></script>
 </body></html>

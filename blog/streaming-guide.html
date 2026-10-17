@@ -18,6 +18,6 @@
 <h2>怎么复现</h2><p>在测试环境让服务端发送两段数据，并故意在第二段之后断开。前端应显示“未完成”，而不是“生成成功”。再测试中文字符恰好跨网络分块、末尾没有空行、收到错误事件这三种边界。记录事件序列与请求标识，别把用户原文写进公开日志。</p>
 <div class="article-note">如果最终结果必须满足 JSON Schema，不要在流式中间就当作完整对象提交给业务系统；等完成信号并通过完整解析和字段校验后再使用。</div>
 <p>参考：<a href="https://html.spec.whatwg.org/multipage/server-sent-events.html" target="_blank" rel="noopener">WHATWG Server-Sent Events 规范</a>、<a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events" target="_blank" rel="noopener">MDN SSE 指南</a>。</p>
-<nav class="article-nav" aria-label="相关内容"><a href="/json-output">检查完整 JSON</a><a href="/blog/llm-json-errors">JSON 语法排错</a><a href="/blog/">返回指南目录</a></nav>
+<nav class="article-nav" aria-label="相关内容"><a href="/sse-inspector">检查 SSE 事件</a><a href="/json-output">检查完整 JSON</a><a href="/blog/llm-json-errors">JSON 语法排错</a><a href="/blog/">返回指南目录</a></nav>
 </article></main><footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=4"></script>
 </body></html>

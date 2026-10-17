@@ -11,17 +11,23 @@
 | `/agent-lab` | 演示工具调用的参数错误、超时和恢复路径 |
 | `/api-diagnostics` | 按状态码、Retry-After 和副作用判断 API 错误的排查顺序 |
 | `/tools` | 精简的 JSON、Base64、URL、正则、时间戳、SHA-256 和 UUID 工具 |
+| `/schema-check`、`/sse-inspector` | 本地验证字段契约和 SSE 事件完整性 |
+| `/http-headers`、`/usage-cost` | 分析 HTTP 响应证据和规范化 CSV 用量费用 |
 | `/blog/` | 人工审阅的可复现排错案例 |
 | `/about`、`/privacy`、`/contact` | 站点身份、数据处理和反馈渠道 |
 
 ## 本地预览与验证
 
 ```bash
+npm ci
+npm run build:labs
+npm test
 HOST=127.0.0.1 PORT=8788 python3 local_server.py
-node --test tests/*.test.mjs
 ```
 
 打开 `http://127.0.0.1:8788/`。本地服务器支持 Cloudflare Pages 的无扩展名静态网址。它不是完整的 Pages Functions 环境；需要验证在线 API 时，应使用 Cloudflare 预览部署或线上测试环境。
+四个 API 调试页使用仓库内的 `assets/labs/` 打包脚本。修改对应的 `.mjs` 源码后，运行 `npm run build:labs` 并把生成的脚本一起提交；浏览器不会从外部 CDN 加载解析库。
+打包脚本会同步生成 `assets/labs/THIRD_PARTY_NOTICES.txt`，保留所用开源解析库的许可声明。
 
 ## 内容发布规则
 

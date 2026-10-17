@@ -5,13 +5,15 @@
     { href: '/agent-lab', label: 'Agent 实验', icon: '◎' },
     { href: '/api-diagnostics', label: '错误分诊', icon: '!' },
     { href: '/blog/', label: '排错指南', icon: '▤' },
-    { href: '/about', label: '关于', icon: '👤' },
+    { href: '/tools', label: '工具集', icon: '▦' },
   ];
+  const labPaths = new Set(['/schema-check', '/sse-inspector', '/http-headers', '/usage-cost']);
 
   const currentPath = location.pathname.replace(/index\.html$/, '').replace(/\.html$/, '') || '/';
   function renderLink(link) {
     const path = link.href.replace(/\.html$/, '');
-    const active = currentPath === path ? ' class="active" aria-current="page"' : '';
+    const active = currentPath === path ? ' class="active" aria-current="page"'
+      : path === '/tools' && labPaths.has(currentPath) ? ' class="active"' : '';
     return `<a href="${link.href}"${active}>${link.icon} ${link.label}</a>`;
   }
 
@@ -30,7 +32,7 @@
         <div style="clear:both;padding-top:12px">
           <a href="/">🏠 首页</a>
           ${links.map(renderLink).join('')}
-          <a href="/tools">🛠️ 开发工具</a>
+          <a href="/about">👤 关于</a>
           <a href="/privacy">🔒 隐私政策</a>
           <a href="/contact">✉️ 联系</a>
         </div>

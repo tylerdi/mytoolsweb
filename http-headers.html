@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-adsense-account" content="ca-pub-6426056111301969"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
+<title>HTTP 响应头诊断：429、Retry-After 与缓存线索 | Tyler</title>
+<meta name="description" content="粘贴 HTTP 状态行和响应头，提取 Retry-After、请求 ID、RateLimit 与缓存线索，按操作副作用判断安全重试步骤。">
+<link rel="canonical" href="https://tylerzhang.xyz/http-headers"><link rel="icon" type="image/png" href="/resource/easyclaw.png"><link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=3"><link rel="stylesheet" href="/labs.css?v=1">
+</head><body>
+<main class="editorial-shell"><header class="page-intro"><p class="eyebrow">HTTP / 响应证据</p><h1>429、超时或旧缓存，先看响应头</h1><p>保留状态、等待时间与请求标识，再决定下一步。这里只解析状态行和响应头；响应体不会被回显或复制。</p></header>
+<nav class="lab-nav" aria-label="API 工具"><a href="/schema-check">Schema 校验</a><a href="/sse-inspector">SSE 检查</a><a href="/http-headers" aria-current="page">响应头诊断</a><a href="/usage-cost">用量成本</a></nav>
+<div class="lab-grid">
+<form class="lab-panel" data-http-form><h2>原始响应</h2><div class="lab-field"><label for="http-input">状态行与响应头</label><textarea id="http-input" name="response" maxlength="30000" spellcheck="false" placeholder="HTTP/1.1 429 Too Many Requests&#10;Retry-After: 30&#10;X-Request-ID: req_42"></textarea><small>可以包含响应体，但本站会在首个空行停止读取。提交前请删掉密钥、Cookie 和个人信息。</small></div><label class="lab-toggle"><input type="checkbox" name="sideEffect">这次请求可能创建记录、发送消息或扣费</label><div class="lab-actions"><button type="submit">分析响应头</button><button type="button" data-http-sample>载入 429 示例</button><button type="reset">清空</button></div></form>
+<section class="lab-panel" aria-live="polite" aria-label="响应头分析结果"><h2>分析结果</h2><p class="lab-status" data-http-status data-state="idle">等待输入</p><dl class="lab-definition" data-http-fields></dl><ol class="lab-steps" data-http-steps></ol><ul class="lab-errors" data-http-notes></ul><div class="lab-actions"><button type="button" data-http-copy disabled>复制诊断摘要</button></div></section>
+</div>
+<section class="article-body lab-explanation"><h2>状态码只是线索</h2><p><code>429</code> 可以提示控制速率，但 <code>Retry-After</code> 只表示何时可以考虑再次请求，并不保证重试安全。若是有副作用的操作，先确认前一次是否成功，再按服务方支持的幂等机制处理。请求 ID 可以帮助服务方定位单次请求；本站只提取常见头名，其他供应商的命名需要你对照文档。</p><h2>缓存线索怎样看</h2><p><code>Age</code> 表示响应在某层缓存中的驻留时间。即使 <code>CF-Cache-Status</code> 不是 <code>HIT</code>，也不能仅凭这一项排除其他缓存层。排查旧内容时，还要对比无查询参数与带临时查询参数的响应、源站状态及缓存规则。</p><div class="article-note">复制按钮只包含状态、等待时间、请求 ID 和排查步骤，不包含完整响应体；复制前仍请检查请求 ID 是否含敏感业务标识。</div><p>规范依据：<a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-10.2.3" target="_blank" rel="noopener">RFC 9110 Retry-After</a>、<a href="https://www.rfc-editor.org/rfc/rfc6585#section-4" target="_blank" rel="noopener">RFC 6585 的 429</a>。详细案例见<a href="/blog/api-error-triage">API 故障排查实战</a>。</p><nav class="article-nav" aria-label="相关内容"><a href="/api-diagnostics">按现象分诊</a><a href="/sse-inspector">检查 SSE</a><a href="/blog/idempotent-retry">写入超时与幂等</a></nav></section>
+</main><footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=4"></script><script type="module" src="/assets/labs/http-headers-lab.js"></script>
+</body></html>
