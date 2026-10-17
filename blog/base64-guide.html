@@ -5,7 +5,7 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
     <title>Base64 中文乱码、URL 安全格式与解码错误 | Tyler 工具箱</title>
     <meta name="description" content="用中文示例理解 UTF-8 与 Base64 的关系，识别 Base64URL 的差异，并排查常见的解码错误。">
-    <link rel="canonical" href="https://tylerzhang.xyz/blog/base64-guide.html">
+    <link rel="canonical" href="https://tylerzhang.xyz/blog/base64-guide">
     <link rel="icon" type="image/png" href="/resource/easyclaw.png">
     <link rel="stylesheet" href="/style.css?v=3"><link rel="stylesheet" href="/editorial.css?v=1">
 </head>
@@ -14,7 +14,7 @@
         <header class="page-intro"><p class="eyebrow">编码转换</p><h1>Base64 中文乱码与 URL 安全格式</h1><p>Base64 编码的是字节，不是“文字本身”。中文出现乱码时，先检查编码与解码两端是否使用相同的字符集。</p><p class="article-meta">Tyler 工具箱 · 操作指南</p></header>
         <article class="article-body">
             <h2>先做一次往返测试</h2>
-            <p>在<a href="/tools.html#base64-tool">Base64 编解码工具</a>输入 <code>你好，世界</code>，点击“编码”，复制结果；再把结果粘回输入框，点击“解码”。如果恢复到原文，说明这条链路使用了相同的文本编码。本站工具会先把文本转为 UTF-8 字节，再执行 Base64 编码。</p>
+            <p>在<a href="/tools#base64-tool">Base64 编解码工具</a>输入 <code>你好，世界</code>，点击“编码”，复制结果；再把结果粘回输入框，点击“解码”。如果恢复到原文，说明这条链路使用了相同的文本编码。本站工具会先把文本转为 UTF-8 字节，再执行 Base64 编码。</p>
             <p>这也说明为什么直接把中文传给浏览器的旧式 <code>btoa</code> 函数可能报错：它处理的是单字节字符范围，中文字符需先转成字节。相反，解码后的字节也必须用相同编码还原为文本。</p>
 
             <h2>遇到乱码或“解码失败”时怎么查</h2>
@@ -32,10 +32,10 @@
             <div class="article-note">Base64 不是加密。任何拿到字符串的人都可以解码。不要用它保存密码、令牌或身份证号，也不要把编码后的敏感信息当成安全分享方式。</div>
             <h2>什么时候适合用？</h2>
             <p>它适合在只接受文本的通道中携带字节数据，例如某些 API 字段或邮件附件格式。排查接口问题时，先问自己“原始内容是什么字节、使用什么字符集、接收方期待什么变体”，比反复尝试不同在线解码器更有效。</p>
-            <nav class="article-nav" aria-label="相关内容"><a href="/tools.html#base64-tool">打开 Base64 工具</a><a href="/blog/">返回使用指南</a><a href="/blog/regex-guide.html">下一篇：正则测试</a></nav>
+            <nav class="article-nav" aria-label="相关内容"><a href="/tools#base64-tool">打开 Base64 工具</a><a href="/blog/">返回使用指南</a><a href="/blog/regex-guide">下一篇：正则测试</a></nav>
         </article>
     </main>
-    <footer class="footer">© 2026 Tyler · <a href="/privacy.html">隐私政策</a> · <a href="/contact.html">联系</a></footer>
+    <footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer>
     <script src="/fish-tracker.js"></script><script src="/nav.js?v=3"></script>
 </body>
 </html>

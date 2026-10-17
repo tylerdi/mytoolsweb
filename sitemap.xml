@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://tylerzhang.xyz/</loc></url>
-  <url><loc>https://tylerzhang.xyz/tools.html</loc></url>
-  <url><loc>https://tylerzhang.xyz/ai-tts.html</loc></url>
-  <url><loc>https://tylerzhang.xyz/ai-image.html</loc></url>
-  <url><loc>https://tylerzhang.xyz/ai-chat.html</loc></url>
-  <url><loc>https://tylerzhang.xyz/ai-learn.html</loc></url>
-  <url><loc>https://tylerzhang.xyz/agent-map.html</loc></url>
+  <url><loc>https://tylerzhang.xyz/tools</loc></url>
+  <url><loc>https://tylerzhang.xyz/ai-tts</loc></url>
+  <url><loc>https://tylerzhang.xyz/ai-image</loc></url>
+  <url><loc>https://tylerzhang.xyz/ai-chat</loc></url>
+  <url><loc>https://tylerzhang.xyz/ai-learn</loc></url>
+  <url><loc>https://tylerzhang.xyz/agent-map</loc></url>
   <url><loc>https://tylerzhang.xyz/blog/</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/json-guide.html</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/base64-guide.html</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/regex-guide.html</loc></url>
-  <url><loc>https://tylerzhang.xyz/about.html</loc></url>
-  <url><loc>https://tylerzhang.xyz/privacy.html</loc></url>
-  <url><loc>https://tylerzhang.xyz/contact.html</loc></url>
+  <url><loc>https://tylerzhang.xyz/blog/json-guide</loc></url>
+  <url><loc>https://tylerzhang.xyz/blog/base64-guide</loc></url>
+  <url><loc>https://tylerzhang.xyz/blog/regex-guide</loc></url>
+  <url><loc>https://tylerzhang.xyz/about</loc></url>
+  <url><loc>https://tylerzhang.xyz/privacy</loc></url>
+  <url><loc>https://tylerzhang.xyz/contact</loc></url>
 </urlset>

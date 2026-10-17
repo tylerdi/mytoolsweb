@@ -1,10 +1,10 @@
 (function () {
   const links = [
-    { href: '/tools.html', label: '开发工具', icon: '🛠️' },
-    { href: '/ai-tts.html', label: 'AI 语音', icon: '🎙️' },
-    { href: '/ai-image.html', label: 'AI 画图', icon: '🎨' },
+    { href: '/tools', label: '开发工具', icon: '🛠️' },
+    { href: '/ai-tts', label: 'AI 语音', icon: '🎙️' },
+    { href: '/ai-image', label: 'AI 画图', icon: '🎨' },
     { href: '/blog/', label: '使用指南', icon: '📖' },
-    { href: '/about.html', label: '关于', icon: '👤' },
+    { href: '/about', label: '关于', icon: '👤' },
   ];
 
   const currentPath = location.pathname.replace(/index\.html$/, '').replace(/\.html$/, '') || '/';
@@ -29,8 +29,8 @@
         <div style="clear:both;padding-top:12px">
           <a href="/">🏠 首页</a>
           ${links.map(renderLink).join('')}
-          <a href="/privacy.html">🔒 隐私政策</a>
-          <a href="/contact.html">✉️ 联系</a>
+          <a href="/privacy">🔒 隐私政策</a>
+          <a href="/contact">✉️ 联系</a>
         </div>
       </div>`);
 
