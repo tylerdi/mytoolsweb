@@ -5,7 +5,7 @@
 <title>模型 API 返回 429：限流、Retry-After 与安全重试 | Tyler</title>
 <meta name="description" content="排查模型 API 的 HTTP 429，区分限流与参数错误，处理 Retry-After，限制重试次数并避免重复执行有副作用的请求。">
 <link rel="canonical" href="https://tylerzhang.xyz/blog/rate-limit-guide"><link rel="icon" type="image/png" href="/resource/easyclaw.png">
-<link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=2">
+<link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=4">
 </head><body>
 <main class="editorial-shell article-shell"><header class="page-intro"><p class="eyebrow">排错案例 / HTTP</p><h1>模型 API 返回 429，为什么越重试越慢？</h1><p>429 表示一定时间内请求过多；如果所有客户端立刻同时重试，只会制造新的高峰。</p><p class="article-meta">Tyler · 2026-10-17</p></header>
 <article class="article-body">
@@ -20,5 +20,5 @@ request_id: req_42</code></pre><p>记录响应状态、服务方请求标识、�
 <div class="article-note">令牌额度、并发上限与账户余额不足不是同一个问题。阅读响应体和供应商限流说明后，再决定是降低并发、减少输入量还是调整配额。</div>
 <p>参考：<a href="https://www.rfc-editor.org/info/rfc6585" target="_blank" rel="noopener">RFC 6585 的 429 定义</a>、<a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-10.2.3" target="_blank" rel="noopener">HTTP Retry-After 语义</a>。</p>
 <nav class="article-nav" aria-label="相关内容"><a href="/ai-cost">估算重试后的预算</a><a href="/blog/streaming-guide">继续看流式中断</a><a href="/blog/">返回指南目录</a></nav>
-</article></main><footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=4"></script>
+</article></main><footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=5"></script>
 </body></html>

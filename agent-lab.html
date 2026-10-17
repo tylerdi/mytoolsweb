@@ -7,7 +7,7 @@
     <meta name="description" content="交互查看一次 Agent 工具调用从用户请求、参数校验、工具返回到最终回答的流程，比较正常返回、参数错误与超时处理。">
     <link rel="canonical" href="https://tylerzhang.xyz/agent-lab">
     <link rel="icon" type="image/png" href="/resource/easyclaw.png">
-    <link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=2">
+    <link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=4">
 </head>
 <body>
     <main class="editorial-shell">
@@ -22,6 +22,6 @@
         <section class="article-body tool-explanation"><h2>三个必须分清的边界</h2><p><strong>模型提出工具调用，并不等于工具已经执行。</strong>应用需要解析参数、校验权限和格式，再决定是否调用真实服务。工具超时也不等于结果为空；尤其对写入或支付操作，不能在不知道前一次是否成功的情况下盲目重试。</p><p>这里是固定示例的交互演示，不连接模型或数据库。实际集成中的失败恢复案例见<a href="/blog/agent-tool-call">工具调用排错笔记</a>，参数契约的可运行样例见<a href="/blog/structured-output-contract">结构化输出验收</a>。</p><nav class="article-nav" aria-label="相关内容"><a href="/json-output">检查 JSON 参数</a><a href="/ai-cost">估算调用成本</a><a href="/blog/">全部指南</a></nav></section>
     </main>
     <footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer>
-    <script src="/fish-tracker.js"></script><script src="/nav.js?v=4"></script><script type="module" src="/agent-lab.mjs"></script>
+    <script src="/fish-tracker.js"></script><script src="/nav.js?v=5"></script><script type="module" src="/agent-lab.mjs"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <title>AI 流式响应中断：区分网络分块、事件与完整结果 | Tyler</title>
 <meta name="description" content="排查 AI API 流式响应被截断：不要把网络分块当作完整 JSON；按服务协议解析事件并处理完成、错误和中断状态。">
 <link rel="canonical" href="https://tylerzhang.xyz/blog/streaming-guide"><link rel="icon" type="image/png" href="/resource/easyclaw.png">
-<link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=2">
+<link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=4">
 </head><body>
 <main class="editorial-shell article-shell"><header class="page-intro"><p class="eyebrow">排错案例 / 流式响应</p><h1>流式输出突然中断，拿到的是完整答案吗？</h1><p>页面已经显示了一些文字，并不代表请求正常结束。需要分别记录网络连接、事件边界和服务方的完成信号。</p><p class="article-meta">Tyler · 2026-10-17</p></header>
 <article class="article-body">
@@ -19,5 +19,5 @@
 <div class="article-note">如果最终结果必须满足 JSON Schema，不要在流式中间就当作完整对象提交给业务系统；等完成信号并通过完整解析和字段校验后再使用。</div>
 <p>参考：<a href="https://html.spec.whatwg.org/multipage/server-sent-events.html" target="_blank" rel="noopener">WHATWG Server-Sent Events 规范</a>、<a href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events" target="_blank" rel="noopener">MDN SSE 指南</a>。</p>
 <nav class="article-nav" aria-label="相关内容"><a href="/sse-inspector">检查 SSE 事件</a><a href="/json-output">检查完整 JSON</a><a href="/blog/llm-json-errors">JSON 语法排错</a><a href="/blog/">返回指南目录</a></nav>
-</article></main><footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=4"></script>
+</article></main><footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=5"></script>
 </body></html>

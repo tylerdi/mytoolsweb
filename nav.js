@@ -1,11 +1,11 @@
 (function () {
   const links = [
-    { href: '/json-output', label: 'JSON 检查', icon: '{ }' },
-    { href: '/ai-cost', label: '成本预算', icon: '＄' },
-    { href: '/agent-lab', label: 'Agent 实验', icon: '◎' },
-    { href: '/api-diagnostics', label: '错误分诊', icon: '!' },
-    { href: '/blog/', label: '排错指南', icon: '▤' },
-    { href: '/tools', label: '工具集', icon: '▦' },
+    { href: '/json-output', label: 'JSON 检查' },
+    { href: '/ai-cost', label: '成本预算' },
+    { href: '/agent-lab', label: 'Agent 实验' },
+    { href: '/api-diagnostics', label: '错误分诊' },
+    { href: '/blog/', label: '排错指南' },
+    { href: '/tools', label: '工具集' },
   ];
   const labPaths = new Set(['/schema-check', '/sse-inspector', '/http-headers', '/usage-cost']);
 
@@ -14,14 +14,14 @@
     const path = link.href.replace(/\.html$/, '');
     const active = currentPath === path ? ' class="active" aria-current="page"'
       : path === '/tools' && labPaths.has(currentPath) ? ' class="active"' : '';
-    return `<a href="${link.href}"${active}>${link.icon} ${link.label}</a>`;
+    return `<a href="${link.href}"${active}>${link.label}</a>`;
   }
 
   document.addEventListener('DOMContentLoaded', () => {
     document.body.insertAdjacentHTML('afterbegin', `
       <nav class="nav" aria-label="主导航">
         <div class="nav-inner">
-          <a href="/" class="nav-logo"><span class="fish">🧰</span> Tyler 工作台</a>
+          <a href="/" class="nav-logo"><span class="brand-mark" aria-hidden="true">T</span><span>Tyler <span class="brand-suffix">工作台</span></span></a>
           <div class="nav-links">${links.map(renderLink).join('')}</div>
           <button class="hamburger" type="button" aria-label="打开导航" aria-expanded="false" aria-controls="mobileMenu">☰</button>
         </div>
@@ -30,11 +30,11 @@
       <div class="mobile-menu" id="mobileMenu" aria-label="移动导航">
         <button class="close-btn" type="button" aria-label="关闭导航">✕</button>
         <div style="clear:both;padding-top:12px">
-          <a href="/">🏠 首页</a>
+          <a href="/">首页</a>
           ${links.map(renderLink).join('')}
-          <a href="/about">👤 关于</a>
-          <a href="/privacy">🔒 隐私政策</a>
-          <a href="/contact">✉️ 联系</a>
+          <a href="/about">关于</a>
+          <a href="/privacy">隐私政策</a>
+          <a href="/contact">联系</a>
         </div>
       </div>`);
 
