@@ -13,6 +13,9 @@ test('retired top-level pages return 410 and do not route through static assets'
     assert.equal(response.headers.get('Cache-Control'), 'no-store');
     assert.equal(response.headers.get('X-Robots-Tag'), 'noindex');
   }
+  const html = await rootRoute({ params: { legacy: 'gallery' }, next }).text();
+  assert.match(html, /<title>内容已下线/);
+  assert.match(html, /resource\/easyclaw\.png/);
 });
 
 test('active top-level tools page still reaches its static asset', () => {
