@@ -4,7 +4,7 @@
 <meta name="google-adsense-account" content="ca-pub-6426056111301969"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
 <title>AI API 故障排查实战：429、400 与超时怎么区分 | Tyler</title>
 <meta name="description" content="用三段可复现的模拟响应，按状态码、Retry-After、请求副作用和请求标识排查 AI API 故障，并生成安全的故障记录。">
-<link rel="canonical" href="https://tylerzhang.xyz/blog/api-error-triage"><link rel="icon" type="image/png" href="/resource/easyclaw.png"><link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=4">
+<link rel="canonical" href="https://tylerzhang.xyz/blog/api-error-triage"><link rel="icon" type="image/png" href="/resource/easyclaw.png"><link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=5">
 </head><body>
 <main class="editorial-shell article-shell"><header class="page-intro"><p class="eyebrow">排错案例 / HTTP</p><h1>AI API 出错时，先看哪三条证据？</h1><p>同一个“调用失败”提示可能对应参数错误、限流或结果未知。下面用构造的最小样例演示如何逐层缩小范围。</p><p class="article-meta"><a href="/about">Tyler</a> · 2026-10-17 · 示例为教学用模拟响应</p></header>
 <article class="article-body">
@@ -40,5 +40,5 @@ Content-Type: application/json
 <div class="article-note">这张表是分诊起点，不是供应商错误码全集。尤其是余额不足、配额耗尽和模型不可用等原因，可能使用服务方特定的状态或错误代码；最终以响应体和官方文档为准。</div>
 <p>依据：<a href="https://www.rfc-editor.org/rfc/rfc6585#section-4" target="_blank" rel="noopener">RFC 6585：429</a>、<a href="https://www.rfc-editor.org/rfc/rfc9110.html#section-10.2.3" target="_blank" rel="noopener">RFC 9110：Retry-After</a>。本站的副作用处理建议是工程实践判断，不是 HTTP 规范对所有业务的保证。</p>
 <nav class="article-nav" aria-label="相关内容"><a href="/http-headers">检查响应头</a><a href="/api-diagnostics">打开错误分诊</a><a href="/blog/rate-limit-guide">深入了解 429</a><a href="/blog/">全部指南</a></nav>
-</article></main><footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=5"></script>
+</article></main><footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=6"></script>
 </body></html>

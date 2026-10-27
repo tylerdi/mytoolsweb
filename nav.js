@@ -1,13 +1,12 @@
 (function () {
   const links = [
     { href: '/json-output', label: 'JSON 检查' },
-    { href: '/ai-cost', label: '成本预算' },
-    { href: '/agent-lab', label: 'Agent 实验' },
     { href: '/api-diagnostics', label: '错误分诊' },
-    { href: '/blog/', label: '排错指南' },
-    { href: '/tools', label: '工具集' },
+    { href: '/incident-report', label: '故障记录' },
+    { href: '/tools', label: '全部工具' },
+    { href: '/blog/', label: '案例指南' },
   ];
-  const labPaths = new Set(['/schema-check', '/sse-inspector', '/http-headers', '/usage-cost']);
+  const labPaths = new Set(['/schema-check', '/sse-inspector', '/http-headers', '/usage-cost', '/ai-cost', '/agent-lab']);
 
   const currentPath = location.pathname.replace(/index\.html$/, '').replace(/\.html$/, '') || '/';
   function renderLink(link) {
@@ -21,7 +20,7 @@
     document.body.insertAdjacentHTML('afterbegin', `
       <nav class="nav" aria-label="主导航">
         <div class="nav-inner">
-          <a href="/" class="nav-logo"><span class="brand-mark" aria-hidden="true">T</span><span>Tyler <span class="brand-suffix">工作台</span></span></a>
+          <a href="/" class="nav-logo"><span class="brand-mark" aria-hidden="true">T</span><span>Tyler <span class="brand-suffix">/ API Lab</span></span></a>
           <div class="nav-links">${links.map(renderLink).join('')}</div>
           <button class="hamburger" type="button" aria-label="打开导航" aria-expanded="false" aria-controls="mobileMenu">☰</button>
         </div>

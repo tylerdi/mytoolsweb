@@ -5,7 +5,7 @@
 <title>工具调用参数校验：模型给出 JSON 后仍要检查什么？ | Tyler</title>
 <meta name="description" content="用订单查询示例区分 JSON 语法、Schema 字段约束和业务权限校验，避免把模型生成的参数直接交给有副作用的工具。">
 <link rel="canonical" href="https://tylerzhang.xyz/blog/tool-arguments"><link rel="icon" type="image/png" href="/resource/easyclaw.png">
-<link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=4">
+<link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=5">
 </head><body>
 <main class="editorial-shell article-shell"><header class="page-intro"><p class="eyebrow">排错案例 / 工具参数</p><h1>模型给出了 JSON 参数，还需要检查什么？</h1><p>“能被 JSON.parse 解析”只是第一关。类型、必填字段、业务权限和副作用仍由应用负责。</p><p class="article-meta">Tyler · 2026-10-17</p></header>
 <article class="article-body">
@@ -23,5 +23,5 @@
 <div class="article-note">先验证再执行，比执行失败后从日志里猜参数问题更便宜，也更容易阻止越权读取和重复写入。</div>
 <p>参考：<a href="https://json-schema.org/understanding-json-schema/reference/object" target="_blank" rel="noopener">JSON Schema 对象与必填字段</a>。<a href="/agent-lab">Agent 调用实验</a>中有相同订单号的失败路径。</p>
 <nav class="article-nav" aria-label="相关内容"><a href="/agent-lab">运行参数错误场景</a><a href="/blog/agent-tool-call">调用失败后的恢复</a><a href="/blog/">返回指南目录</a></nav>
-</article></main><footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=5"></script>
+</article></main><footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=6"></script>
 </body></html>

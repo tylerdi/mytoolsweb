@@ -7,7 +7,7 @@
     <meta name="description" content="输入请求量和平均输入、输出 Token，估算模型 API 每月文本费用。官方费率标注核对日期与来源，也可手动填写自己的价格。">
     <link rel="canonical" href="https://tylerzhang.xyz/ai-cost">
     <link rel="icon" type="image/png" href="/resource/easyclaw.png">
-    <link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=4">
+    <link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=5">
 </head>
 <body>
     <main class="editorial-shell">
@@ -44,6 +44,6 @@
         <section class="article-body tool-explanation" aria-labelledby="formula-title"><h2 id="formula-title">计算公式</h2><p>月度输入成本 = 请求数 × 每次平均输入 Token ÷ 1,000,000 × 输入单价；输出成本同理。比如每月 1,000 次请求、平均输入 500 Token、输出 1,000 Token，按 `$1.50/$9.00` 的输入/输出费率，估算值为 `$0.75 + $9.00 = $9.75`。</p><p>不要用“最便宜”直接决定模型。先验证输出质量与错误率，再把真实 usage 和计费规则带入预算。<a href="/blog/api-cost-guide">阅读成本排查案例</a>。</p><nav class="article-nav" aria-label="相关内容"><a href="/json-output">JSON 输出检查</a><a href="/agent-lab">Agent 调用实验</a><a href="/blog/">全部指南</a></nav></section>
     </main>
     <footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer>
-    <script src="/fish-tracker.js"></script><script src="/nav.js?v=5"></script><script type="module" src="/model-cost.mjs"></script>
+    <script src="/fish-tracker.js"></script><script src="/nav.js?v=6"></script><script type="module" src="/model-cost.mjs"></script>
 </body>
 </html>

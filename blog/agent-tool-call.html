@@ -5,7 +5,7 @@
 <title>Agent 工具调用失败：参数校验、超时与状态恢复 | Tyler</title>
 <meta name="description" content="用订单查询示例理解模型提议调用、服务端校验、工具执行和最终回答之间的边界，以及超时后的安全恢复。">
 <link rel="canonical" href="https://tylerzhang.xyz/blog/agent-tool-call"><link rel="icon" type="image/png" href="/resource/easyclaw.png">
-<link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=4">
+<link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=5">
 </head><body>
 <main class="editorial-shell article-shell"><header class="page-intro"><p class="eyebrow">排错案例 / Agent</p><h1>Agent 工具调用失败后，怎么恢复状态？</h1><p>把“模型想调用工具”和“应用确实执行了工具”分开记录，才能知道失败发生在哪里。</p><p class="article-meta">Tyler · 2026-10-17</p></header>
 <article class="article-body">
@@ -21,5 +21,5 @@ retry_count: 1
 final_status: temporary_error</code></pre><p>这类记录可以保留流程与错误类型，但不应把真实订单内容或密钥写进可公开访问的日志。最终回答应承认“查询暂时失败”，而不是把故障包装成业务结论。</p>
 <p>参考：<a href="https://developers.openai.com/api/docs/guides/function-calling" target="_blank" rel="noopener">OpenAI 工具调用流程说明</a>。不同供应商 API 形态可能不同，但参数校验和副作用控制应由应用负责。</p>
 <nav class="article-nav" aria-label="相关内容"><a href="/agent-lab">运行故障实验</a><a href="/blog/tool-arguments">参数校验细节</a><a href="/blog/">返回指南目录</a></nav>
-</article></main><footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=5"></script>
+</article></main><footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=6"></script>
 </body></html>

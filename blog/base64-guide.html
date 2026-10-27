@@ -4,7 +4,7 @@
 <meta name="google-adsense-account" content="ca-pub-6426056111301969"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
 <title>Base64 中文乱码、Base64URL 与 JWT 解码边界 | Tyler</title>
 <meta name="description" content="用可复核的 UTF-8 示例排查 Base64 中文乱码、URL 安全字母表和填充问题，说明为什么 JWT 仅解码不能证明签名有效。">
-<link rel="canonical" href="https://tylerzhang.xyz/blog/base64-guide"><link rel="icon" type="image/png" href="/resource/easyclaw.png"><link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=4">
+<link rel="canonical" href="https://tylerzhang.xyz/blog/base64-guide"><link rel="icon" type="image/png" href="/resource/easyclaw.png"><link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=5">
 </head><body>
 <main class="editorial-shell article-shell"><header class="page-intro"><p class="eyebrow">排错案例 / 编码</p><h1>Base64 解码后乱码，先检查哪一层？</h1><p>编码格式、字节内容和文本字符集是三件事。先确认 Base64 是否完整，再判断它承载的是 UTF-8 文本还是二进制数据。</p><p class="article-meta"><a href="/about">Tyler</a> · 2026-10-17 · 本页示例可在浏览器工具中复现</p></header>
 <article class="article-body">
@@ -24,5 +24,5 @@
 已脱敏的最小样例：Zg== → f</code></pre>
 <p>规范依据：<a href="https://www.rfc-editor.org/rfc/rfc4648#section-4" target="_blank" rel="noopener">RFC 4648 标准 Base64</a>、<a href="https://www.rfc-editor.org/rfc/rfc4648#section-5" target="_blank" rel="noopener">RFC 4648 Base64URL</a>、<a href="https://www.rfc-editor.org/rfc/rfc7519#section-7.2" target="_blank" rel="noopener">RFC 7519 JWT 验证步骤</a>。</p>
 <nav class="article-nav" aria-label="相关内容"><a href="/tools#base64-tool">打开 Base64 工具</a><a href="/blog/regex-guide">继续看正则测试</a><a href="/blog/">全部指南</a></nav>
-</article></main><footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=5"></script>
+</article></main><footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=6"></script>
 </body></html>

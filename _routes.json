@@ -9,6 +9,11 @@
     "/ai-models*",
     "/ai-prompt*",
     "/ai-tools*",
+    "/ai-chat*",
+    "/ai-image*",
+    "/ai-service*",
+    "/ai-tts*",
+    "/ai-voice-to-text*",
     "/changelog*",
     "/daily-news*",
     "/daily-wallpaper*",
@@ -22,7 +27,8 @@
     "/tool*",
     "/tree-hole*",
     "/tools/ai-*",
-    "/blog/posts/ai-daily-*"
+    "/blog/blog-*",
+    "/blog/posts/*"
   ],
   "exclude": []
 }

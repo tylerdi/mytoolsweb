@@ -5,7 +5,7 @@
 <title>模型输出不是合法 JSON：代码围栏、尾逗号与类型排查 | Tyler</title>
 <meta name="description" content="用一段可复现的模型回复排查 JSON 代码围栏、尾逗号和类型错误，区分语法校验与业务字段校验。">
 <link rel="canonical" href="https://tylerzhang.xyz/blog/llm-json-errors"><link rel="icon" type="image/png" href="/resource/easyclaw.png">
-<link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=4">
+<link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=5">
 </head><body>
 <main class="editorial-shell article-shell"><header class="page-intro"><p class="eyebrow">排错案例 / JSON</p><h1>模型输出不是合法 JSON，先检查哪里？</h1><p>先确认收到的是 JSON 本身，再分别检查语法和业务字段。把两类错误混在一起，会让排查时间翻倍。</p><p class="article-meta">Tyler · 2026-10-17</p></header>
 <article class="article-body">
@@ -21,5 +21,5 @@
 <h2>最短复现步骤</h2><p>在检查器点“载入示例”确认正常路径；再把示例 JSON 中最后一个字段后加逗号，重新检查，记录原始输入、报错和修正结果。这样留下的是可复现证据，而不只是“模型有时输出坏 JSON”的描述。</p>
 <p>参考：<a href="https://www.rfc-editor.org/rfc/rfc8259" target="_blank" rel="noopener">RFC 8259: JSON 数据交换格式</a>。</p>
 <nav class="article-nav" aria-label="相关内容"><a href="/json-output">打开 JSON 检查器</a><a href="/blog/tool-arguments">继续看工具参数校验</a><a href="/blog/">返回指南目录</a></nav>
-</article></main><footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=5"></script>
+</article></main><footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer><script src="/fish-tracker.js"></script><script src="/nav.js?v=6"></script>
 </body></html>

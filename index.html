@@ -5,33 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google-adsense-account" content="ca-pub-6426056111301969">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
-    <title>AI 应用开发工作台：JSON 输出检查与 API 成本预算 | Tyler</title>
-    <meta name="description" content="在浏览器中检查 AI 输出的 JSON，估算模型 API 成本，理解 Agent 工具调用流程。提供可复现的中文排错案例。">
+    <title>Tyler AI API 可靠性工作台：输出、请求与成本排错</title>
+    <meta name="description" content="面向中文 AI 应用开发者的实际工作台：检查 JSON 与字段契约、诊断 HTTP 和 SSE、生成故障记录、核对模型 API 成本。">
     <link rel="canonical" href="https://tylerzhang.xyz/">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tylerzhang.xyz/">
-    <meta property="og:title" content="AI 应用开发工作台 | Tyler">
-    <meta property="og:description" content="JSON 输出检查、API 成本预算和 Agent 调用排错。">
+    <meta property="og:title" content="Tyler AI API 可靠性工作台">
+    <meta property="og:description" content="输出、请求、流式响应和成本排错，附可复现案例。">
     <meta property="og:image" content="https://tylerzhang.xyz/resource/easyclaw.png">
     <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"WebSite","name":"Tyler AI 应用开发工作台","url":"https://tylerzhang.xyz/","inLanguage":"zh-CN"}
+    {"@context":"https://schema.org","@type":"WebSite","name":"Tyler AI API 可靠性工作台","url":"https://tylerzhang.xyz/","inLanguage":"zh-CN"}
     </script>
     <link rel="icon" type="image/png" href="/resource/easyclaw.png">
     <link rel="stylesheet" href="/style.css?v=4">
-    <link rel="stylesheet" href="/editorial.css?v=4">
+    <link rel="stylesheet" href="/editorial.css?v=5">
 </head>
 <body>
     <main class="editorial-shell home-shell">
         <header class="page-intro workbench-intro">
-            <p class="eyebrow">TYLER / AI 应用开发</p>
-            <h1>检查输出，估算成本，定位调用失败</h1>
-            <p>从一段真实的模型响应开始。输入内容只在当前浏览器中解析，不会发送到本站 API。</p>
+            <p class="eyebrow">TYLER / API RELIABILITY DESK</p>
+            <h1>AI API 可靠性工作台</h1>
+            <p>从输出、请求和账单中的一条具体证据开始。工具提供可复核的结果，指南说明判断边界。</p>
+            <div class="intro-links"><a href="/incident-report">整理故障记录</a><a href="/blog/">查看排错案例</a><span>无需登录 · 输入在浏览器本地处理</span></div>
         </header>
 
         <div class="workspace-grid">
             <section class="inspector-surface" data-json-inspector aria-labelledby="inspector-title">
                 <div class="surface-heading">
-                    <div><p class="surface-kicker">01 / 结构化输出</p><h2 id="inspector-title">JSON 输出检查</h2></div>
+                    <div><p class="surface-kicker">立即检查 / 输出与契约</p><h2 id="inspector-title">JSON 输出检查</h2></div>
                     <a href="/json-output">打开完整工作区</a>
                 </div>
                 <div class="inspector-grid">
@@ -52,31 +53,32 @@
                     </div>
                 </div>
             </section>
-            <aside class="workflow-rail" aria-label="相关工作流">
-                <h2>继续处理</h2>
-                <a href="/ai-cost"><span>02 / 预算</span><strong>模型 API 成本估算</strong><small>根据真实用量和可核对的费率计算</small></a>
-                <a href="/agent-lab"><span>03 / 调用</span><strong>Agent 工具调用实验</strong><small>查看参数错误和超时如何影响流程</small></a>
-                <a href="/api-diagnostics"><span>04 / 排错</span><strong>API 错误分诊</strong><small>429、超时和参数错误的下一步</small></a>
-                <a href="/tools"><span>05 / 日常</span><strong>开发工具箱</strong><small>Base64、URL、时间戳与正则</small></a>
-            </aside>
         </div>
 
+        <section class="editorial-section" aria-labelledby="symptoms-title">
+            <div class="section-heading"><h2 id="symptoms-title">从哪一种现象开始？</h2><span>按手头证据选择</span></div>
+            <div class="symptom-grid">
+                <a href="/schema-check"><span>输出与契约</span><strong>能解析，但字段不对</strong><small>校验必填、类型和额外字段</small><b aria-hidden="true">↗</b></a>
+                <a href="/api-diagnostics"><span>请求与重试</span><strong>429、超时或调用失败</strong><small>区分拒绝、未知结果与安全重试</small><b aria-hidden="true">↗</b></a>
+                <a href="/sse-inspector"><span>流式响应</span><strong>连接断了，答案完整吗</strong><small>检查事件边界和完成信号</small><b aria-hidden="true">↗</b></a>
+                <a href="/usage-cost"><span>用量与账单</span><strong>实际费用高于预估</strong><small>从 CSV 用量复算 Token 成本</small><b aria-hidden="true">↗</b></a>
+            </div>
+        </section>
+
         <section class="editorial-section" aria-labelledby="workflows-title">
-            <div class="section-heading"><h2 id="workflows-title">API 调试工作区</h2><a href="/tools">全部工具</a></div>
-            <div class="guide-list">
-                <a href="/schema-check"><strong>JSON Schema 字段校验</strong><span>数据能解析之后，检查字段契约</span></a>
-                <a href="/sse-inspector"><strong>SSE 流式响应检查</strong><span>区分网络分块、事件和完成信号</span></a>
-                <a href="/http-headers"><strong>HTTP 响应头诊断</strong><span>提取重试时间、请求 ID 与缓存线索</span></a>
-                <a href="/usage-cost"><strong>API 用量日志成本分析</strong><span>导入 CSV 复算多模型 Token 费用</span></a>
+            <div class="section-heading"><h2 id="workflows-title">一条完整的排错路径</h2><a href="/tools">打开全部工具</a></div>
+            <div class="workflow-columns">
+                <div><span>01 / 输入</span><h3>确认输出边界</h3><p>先区分语法和字段契约，别把合法 JSON 误当成可执行指令。</p><a href="/json-output">JSON 语法检查</a><a href="/schema-check">Schema 字段校验</a></div>
+                <div><span>02 / 过程</span><h3>保留请求证据</h3><p>记录状态、响应头和完成信号；对写入超时先核实业务结果。</p><a href="/http-headers">HTTP 响应头</a><a href="/incident-report">生成故障记录</a><a href="/agent-lab">Agent 调用实验</a></div>
+                <div><span>03 / 结果</span><h3>复核成本与恢复</h3><p>用真实用量检查费用口径，明确每次失败后的恢复动作。</p><a href="/ai-cost">单次成本预算</a><a href="/usage-cost">CSV 用量分析</a><a href="/blog/idempotent-retry">安全重试案例</a></div>
             </div>
         </section>
 
         <section class="editorial-section" aria-labelledby="guides-title">
-            <div class="section-heading"><h2 id="guides-title">排错笔记</h2><a href="/blog/">全部指南</a></div>
+            <div class="section-heading"><h2 id="guides-title">有输入、有判断的排错案例</h2><a href="/blog/">全部指南</a></div>
             <div class="guide-list">
                 <a href="/blog/llm-json-errors"><strong>模型输出不是合法 JSON 时，先检查哪里？</strong><span>围栏、尾逗号与类型边界</span></a>
                 <a href="/blog/api-cost-guide"><strong>为什么你的 API 账单高于简单估算？</strong><span>输入、输出与未计入的费用</span></a>
-                <a href="/blog/agent-tool-call"><strong>Agent 工具调用失败后，怎么恢复状态？</strong><span>参数校验、超时和重试</span></a>
                 <a href="/blog/api-error-triage"><strong>AI API 出错时，先看哪三条证据？</strong><span>429、400 与超时分诊</span></a>
                 <a href="/blog/idempotent-retry"><strong>工具调用超时后，怎样避免写入两次？</strong><span>幂等键和并发验收</span></a>
             </div>
@@ -84,7 +86,7 @@
     </main>
     <footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer>
     <script src="/fish-tracker.js"></script>
-    <script src="/nav.js?v=5"></script>
+    <script src="/nav.js?v=6"></script>
     <script type="module" src="/json-output.mjs"></script>
 </body>
 </html>

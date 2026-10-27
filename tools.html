@@ -4,10 +4,10 @@
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-adsense-account" content="ca-pub-6426056111301969">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
-  <title>AI API 开发工具集：Schema、SSE、响应头与基础转换 | Tyler</title>
-  <meta name="description" content="用浏览器本地工具检查 JSON Schema、SSE、HTTP 响应与 API 用量 CSV，也可处理 Base64、URL 参数、时间戳、正则表达式和 SHA-256。">
+  <title>AI API 工具目录：输出、请求、流式与费用 | Tyler</title>
+  <meta name="description" content="按实际开发问题查找 JSON、Schema、SSE、HTTP 响应头、故障记录和模型费用工具，另提供浏览器本地 Base64、URL、时间戳与正则处理。">
   <link rel="canonical" href="https://tylerzhang.xyz/tools"><link rel="icon" type="image/png" href="/resource/easyclaw.png">
-  <link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=4">
+  <link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=5">
   <style>
     .utility-index{display:flex;gap:24px;flex-wrap:wrap;padding:21px 0 0;border-bottom:1px solid var(--editorial-line)}
     .utility-index a{padding:0 1px 15px;border-bottom:2px solid transparent;color:var(--editorial-muted);font-size:.87rem;font-weight:580;text-decoration:none}
@@ -19,15 +19,15 @@
     .utility-layout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px;align-items:start}
     .utility-field{min-width:0;display:grid;gap:9px}
     .utility-field label{font-size:.86rem;font-weight:670}
-    .utility-field textarea,.utility-field input,.utility-field select,.utility-output{width:100%;box-sizing:border-box;padding:12px 13px;border:1px solid #54685a;border-radius:5px;background:var(--editorial-input);color:var(--editorial-text);font:.86rem/1.65 ui-monospace,monospace}
+    .utility-field textarea,.utility-field input,.utility-field select,.utility-output{width:100%;box-sizing:border-box;padding:12px 13px;border:1px solid #b7c7c0;border-radius:5px;background:var(--editorial-input);color:var(--editorial-text);font:.86rem/1.65 ui-monospace,monospace}
     .utility-field textarea{min-height:122px;resize:vertical}.utility-field input,.utility-field select{min-height:43px}
-    .utility-field textarea:focus,.utility-field input:focus,.utility-field select:focus{border-color:var(--editorial-green);outline:2px solid rgba(136,220,192,.18);outline-offset:0}
+    .utility-field textarea:focus,.utility-field input:focus,.utility-field select:focus{border-color:var(--editorial-green);outline:2px solid rgba(8,119,105,.15);outline-offset:0}
     .utility-output{min-height:122px;margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
     .utility-output[data-state="error"]{color:var(--editorial-error)}
     .utility-actions{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-top:4px}
-    .utility-actions button{min-height:40px;padding:8px 13px;border:1px solid #68816e;border-radius:5px;background:transparent;color:var(--editorial-text);font:inherit;font-size:.85rem;cursor:pointer}
+    .utility-actions button{min-height:40px;padding:8px 13px;border:1px solid #9cb4aa;border-radius:5px;background:#fff;color:var(--editorial-text);font:inherit;font-size:.85rem;cursor:pointer}
     .utility-actions button:hover,.utility-actions button:focus-visible{border-color:var(--editorial-amber)}
-    .utility-actions button[id]{border-color:var(--editorial-amber);background:var(--editorial-amber);color:#252417;font-weight:730}
+    .utility-actions button[id]{border-color:var(--editorial-green);background:var(--editorial-green);color:#fff;font-weight:730}
     .utility-inline{display:flex;gap:9px}.utility-inline>*{min-width:0}.utility-inline select{max-width:130px}
     .utility-note{margin:34px 0 0;color:var(--editorial-muted);font-size:.85rem;line-height:1.75}
     @media(max-width:650px){.utility-index{flex-wrap:nowrap;gap:20px;overflow-x:auto}.utility-index a{flex:none;white-space:nowrap}.utility-layout{grid-template-columns:1fr;gap:18px}.utility{padding:27px 0}.utility-output{min-height:78px}}
@@ -35,10 +35,14 @@
 </head>
 <body>
 <main class="editorial-shell">
-  <header class="page-intro"><p class="eyebrow">TYLER / 开发者工具</p><h1>把一段输入查清楚</h1><p>保留与 API 排错直接相关的小工具。文本在当前浏览器内处理，不提交到本站 API。</p></header>
-  <nav class="utility-index" aria-label="工具目录"><a href="#json-tool">JSON</a><a href="#base64-tool">Base64</a><a href="#url-tool">URL 参数</a><a href="#timestamp-tool">时间</a><a href="#regex-tool">正则</a><a href="#hash-tool">SHA-256</a><a href="#uuid-tool">UUID</a></nav>
+  <header class="page-intro"><p class="eyebrow">TYLER / 工具目录</p><h1>按证据选择工具</h1><p>输出格式、请求失败、流式响应与费用核算有不同的证据。选择对应工作区，保留可以复核的结果。</p></header>
+  <section class="editorial-section" aria-labelledby="api-workbenches"><div class="section-heading"><h2 id="api-workbenches">AI API 工作区</h2><a href="/blog/">相关案例</a></div><div class="workflow-columns">
+    <div><span>输出与字段</span><h3>先确定输入是否可信</h3><p>语法正确只是第一步；业务字段、类型和额外字段需要单独验收。</p><a href="/json-output">JSON 输出检查</a><a href="/schema-check">JSON Schema 字段校验</a></div>
+    <div><span>请求与恢复</span><h3>找回故障现场</h3><p>状态码、响应头和完整事件流决定下一步是否能安全重试。</p><a href="/api-diagnostics">API 错误分诊</a><a href="/http-headers">HTTP 响应头诊断</a><a href="/sse-inspector">SSE 流式检查</a><a href="/incident-report">故障记录器</a></div>
+    <div><span>成本与调用</span><h3>核对真实消耗</h3><p>预算和账单使用不同口径；保留用量来源才能复算。</p><a href="/ai-cost">模型 API 成本估算</a><a href="/usage-cost">CSV 用量成本分析</a><a href="/agent-lab">Agent 调用实验</a></div>
+  </div></section>
 
-  <section class="editorial-section" aria-labelledby="api-workbenches"><div class="section-heading"><h2 id="api-workbenches">AI API 调试</h2><a href="/blog/">相关案例</a></div><div class="guide-list"><a href="/schema-check"><strong>JSON Schema 字段校验</strong><span>必填、类型、额外字段与格式</span></a><a href="/sse-inspector"><strong>SSE 流式响应检查</strong><span>事件边界、分块与完成标记</span></a><a href="/http-headers"><strong>HTTP 响应头诊断</strong><span>429、请求 ID 与缓存线索</span></a><a href="/usage-cost"><strong>API 用量日志成本分析</strong><span>CSV、模型费率与 Token 汇总</span></a></div></section>
+  <section class="editorial-section" aria-labelledby="utility-title"><div class="section-heading"><h2 id="utility-title">浏览器基础工具</h2><span>文本在当前设备处理</span></div><nav class="utility-index" aria-label="基础工具目录"><a href="#base64-tool">Base64</a><a href="#url-tool">URL 参数</a><a href="#timestamp-tool">时间</a><a href="#regex-tool">正则</a><a href="#hash-tool">SHA-256</a><a href="#uuid-tool">UUID</a></nav></section>
 
   <section class="utility" id="json-tool"><h2>JSON 输出检查</h2><p>检查语法、提取单个代码围栏、格式化或压缩模型回复。它不会验证业务字段或权限。</p><div class="article-nav"><a href="/json-output">打开 JSON 检查器</a><a href="/blog/structured-output-contract">查看字段契约验收</a></div></section>
 
@@ -57,5 +61,5 @@
   <p class="utility-note">需要定位 HTTP 错误时，请使用<a href="/api-diagnostics">API 错误分诊</a>。遇到工具边界或错误结果，可通过<a href="/contact">联系页面</a>反馈复现样例；提交前请删去密钥和个人资料。</p>
 </main>
 <footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer>
-<script src="/fish-tracker.js"></script><script src="/nav.js?v=5"></script><script type="module" src="/tools-core.mjs"></script>
+<script src="/fish-tracker.js"></script><script src="/nav.js?v=6"></script><script type="module" src="/tools-core.mjs"></script>
 </body></html>
