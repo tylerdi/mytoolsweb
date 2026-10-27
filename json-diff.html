@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JSON 结构对比：定位 API 响应字段变化 | Tyler</title>
+  <meta name="description" content="在浏览器本地对比基准与当前 JSON，定位新增、缺失、类型和值变化，复制不含字段值的回归摘要。">
+  <link rel="canonical" href="https://tylerzhang.xyz/json-diff"><link rel="icon" type="image/png" href="/resource/easyclaw.png">
+  <link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=6">
+</head>
+<body>
+<main class="editorial-shell">
+  <header class="page-intro"><p class="eyebrow">输出验收 / 回归对比</p><h1>看清 API 响应改了什么</h1><p>并排对比两份 JSON，定位字段缺失、新增、类型和值变化。对比在浏览器内完成；复制的摘要只含字段路径，不含字段值。</p></header>
+  <form class="evidence-workspace" data-diff-form autocomplete="off">
+    <div class="evidence-toolbar"><span>JSON 结构对比</span><div class="command-row"><button type="button" data-diff-sample>载入示例</button><button type="button" data-diff-clear>清空</button></div></div>
+    <div class="evidence-input-grid">
+      <div class="inspector-pane"><label for="diff-expected">基准响应</label><textarea id="diff-expected" name="expected" maxlength="200000" spellcheck="false" placeholder='{"id":"req_42","usage":{"input_tokens":120}}'></textarea></div>
+      <div class="inspector-pane"><label for="diff-actual">当前响应</label><textarea id="diff-actual" name="actual" maxlength="200000" spellcheck="false" placeholder='{"usage":{"input_tokens":"120"}}'></textarea></div>
+    </div>
+    <div class="evidence-submit"><button type="submit" class="command-primary">比较 JSON</button><span>对象属性顺序忽略 · 数组按索引比较</span></div>
+  </form>
+  <section class="evidence-result" aria-labelledby="diff-result-title"><div class="surface-heading"><h2 id="diff-result-title">变化清单</h2><button type="button" data-diff-copy disabled>复制摘要</button></div><p class="evidence-status" data-diff-status data-state="idle" role="status">等待输入</p><div class="diff-list" data-diff-output aria-live="polite"></div></section>
+  <article class="article-body article-shell evidence-explanation">
+    <h2>什么时候需要做结构对比</h2><p>一次模型或 SDK 升级后，HTTP 请求可能仍返回 200，但字段的类型、名称或完成原因已经改变。仅检查 JSON 语法会漏掉这类回归。先保存一个已通过业务验收的基准响应，再把新响应与它对比，能把排查范围缩小到具体字段路径。</p>
+    <h2>怎样解读结果</h2><p><code>/usage/input_tokens</code> 是字段路径，斜线与波浪号按 JSON Pointer 规则转义。缺失字段意味着基准中有、当前响应没有；新增字段则相反。值变化只说明两个标量不相同，不代表哪一个值业务上正确。</p>
+    <div class="article-note">数组按位置比较。若项目顺序变化，可能显示多处值变化；请根据业务主键人工核对。此工具不做语义判断，也不会上传输入。摘要不含字段值，但字段名本身也可能敏感，分享前请检查。</div>
+    <nav class="article-nav" aria-label="相关内容"><a href="/json-output">JSON 语法检查</a><a href="/schema-check">字段契约校验</a><a href="/blog/structured-output-contract">结构化输出验收案例</a><a href="/log-redactor">日志脱敏预览</a></nav>
+  </article>
+</main>
+<footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer>
+<script src="/nav.js?v=7"></script><script type="module" src="/json-diff.mjs"></script>
+</body></html>

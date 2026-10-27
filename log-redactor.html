@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>API 日志脱敏预览：检查凭据与邮箱 | Tyler</title>
+  <meta name="description" content="在浏览器本地预览 API 故障日志脱敏结果，遮盖常见授权头、密钥参数、令牌和邮箱，分享前仍需人工复核。">
+  <link rel="canonical" href="https://tylerzhang.xyz/log-redactor"><link rel="icon" type="image/png" href="/resource/easyclaw.png">
+  <link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=6">
+</head>
+<body>
+<main class="editorial-shell">
+  <header class="page-intro"><p class="eyebrow">现场记录 / 隐私检查</p><h1>分享故障日志前，先检查敏感信息</h1><p>预览常见凭据、授权请求头和邮箱的遮盖结果。处理仅在当前浏览器内进行，自动规则可能遗漏敏感信息，分享前必须人工复核。</p></header>
+  <form class="evidence-workspace" data-redactor-form autocomplete="off">
+    <div class="evidence-toolbar"><span>日志脱敏预览</span><div class="command-row"><button type="button" data-redactor-sample>载入示例</button><button type="button" data-redactor-clear>清空</button></div></div>
+    <div class="evidence-input-grid">
+      <div class="inspector-pane"><label for="redactor-input">原始片段</label><textarea id="redactor-input" name="evidence" maxlength="100000" spellcheck="false" placeholder="粘贴脱离生产环境的日志片段或 JSON"></textarea></div>
+      <div class="inspector-pane"><label for="redactor-output">遮盖预览</label><pre id="redactor-output" class="inspector-output" data-redactor-output aria-live="polite"></pre></div>
+    </div>
+    <div class="evidence-submit"><button type="submit" class="command-primary">检查并遮盖</button><button type="button" data-redactor-copy disabled>复制预览</button></div>
+    <p class="evidence-status" data-redactor-status data-state="idle" role="status">等待输入</p><p class="evidence-detail" data-redactor-detail></p>
+  </form>
+  <article class="article-body article-shell evidence-explanation">
+    <h2>一条日志里可能暴露什么</h2><p>排查 401、429 或超时时，授权请求头、查询参数、客户邮箱和服务端返回的错误详情常被一起复制。即使只打算发给团队内部，这些片段也可能进入聊天记录、工单或截图。分享时只保留复核故障所需的状态码、请求标识、时间和已脱敏的错误代码。</p>
+    <h2>自动规则覆盖范围</h2><p>预览会识别常见的 <code>Authorization</code>、<code>Cookie</code>、<code>X-API-Key</code> 请求头、JSON 中常见密钥字段、<code>token=</code> 等参数、部分令牌格式和邮箱。有效 JSON 会重新排版；自由文本保留原有结构。</p>
+    <div class="article-note">这不是安全认证或完整的数据脱敏方案。自定义凭据、姓名、手机号、IP、完整提示词、业务数据以及编码后的秘密可能漏检。不要把真实生产密钥粘贴到任何不受信任的页面；复制预览后逐行人工检查，再决定是否分享。</div>
+    <nav class="article-nav" aria-label="相关内容"><a href="/incident-report">故障记录器</a><a href="/api-diagnostics">错误分诊</a><a href="/json-diff">JSON 结构对比</a><a href="/privacy">隐私政策</a></nav>
+  </article>
+</main>
+<footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer>
+<script src="/nav.js?v=7"></script><script type="module" src="/log-redactor.mjs"></script>
+</body></html>

@@ -2,6 +2,8 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://tylerzhang.xyz/</loc></url>
   <url><loc>https://tylerzhang.xyz/json-output</loc></url>
+  <url><loc>https://tylerzhang.xyz/json-diff</loc></url>
+  <url><loc>https://tylerzhang.xyz/log-redactor</loc></url>
   <url><loc>https://tylerzhang.xyz/ai-cost</loc></url>
   <url><loc>https://tylerzhang.xyz/agent-lab</loc></url>
   <url><loc>https://tylerzhang.xyz/api-diagnostics</loc></url>

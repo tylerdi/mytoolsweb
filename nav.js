@@ -6,7 +6,7 @@
     { href: '/tools', label: '全部工具' },
     { href: '/blog/', label: '案例指南' },
   ];
-  const labPaths = new Set(['/schema-check', '/sse-inspector', '/http-headers', '/usage-cost', '/ai-cost', '/agent-lab']);
+  const labPaths = new Set(['/schema-check', '/sse-inspector', '/http-headers', '/usage-cost', '/ai-cost', '/agent-lab', '/json-diff', '/log-redactor']);
 
   const currentPath = location.pathname.replace(/index\.html$/, '').replace(/\.html$/, '') || '/';
   function renderLink(link) {
