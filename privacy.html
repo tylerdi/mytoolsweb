@@ -1,35 +1,7 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>隐私政策 | Tyler API Lab</title>
-    <meta name="description" content="了解 Tyler API Lab 的访问统计、浏览器工具输入、历史数据和广告技术如何处理信息。">
-    <link rel="canonical" href="https://tylerzhang.xyz/privacy">
-    <link rel="icon" type="image/png" href="/resource/easyclaw.png">
-    <link rel="stylesheet" href="/style.css?v=3"><link rel="stylesheet" href="/editorial.css?v=5">
-</head>
-<body>
-    <main class="editorial-shell article-shell">
-        <header class="page-intro"><p class="eyebrow">站点信息</p><h1>隐私政策</h1><p>本页说明访问本站和使用工具时涉及的数据。最后更新：2026 年 10 月 27 日。</p></header>
-        <div class="article-body">
-            <h2>访问统计</h2>
-            <p>本站使用自己的访问统计程序。访问页面时，浏览器会在本地存储中保存一个随机访客标识，并在当前会话中保存会话标识。统计请求可能包含访问页面、来源页面、浏览器 User-Agent 和停留时间。这些信息用于了解哪些页面被访问、诊断网站问题，不用于展示公开的个人资料。</p>
-            <p>核心工作台还会记录“JSON 检查成功或失败”“成本估算完成”等操作名称，用于了解工具是否完成任务；不会记录粘贴的 JSON、请求参数或计算结果。浏览器的本地存储可以由你在浏览器设置中清除；清除后，再次访问可能生成新的标识。托管服务也可能按其常规运行方式处理请求日志和 IP 地址。</p>
-
-            <h2>工具输入</h2>
-            <p>当前公开工具中的 JSON、<a href="/json-diff">JSON 对比</a>、<a href="/log-redactor">日志脱敏预览</a>、Base64、正则、时间戳、Schema、SSE、响应头、用量 CSV 与<a href="/incident-report">故障记录</a>都在浏览器内处理；选择的文件与输入的故障字段不会上传到本站。本站的访问统计程序不会读取这些工具的输入内容；JSON 对比与日志脱敏页面还不加载广告或访问统计脚本。自动脱敏有遗漏风险，请在复制或分享前人工复核。</p>
-            <h2>历史功能的数据</h2>
-            <p>本站早期曾提供 AI 聊天、画图、语音等在线实验及互动页面，这些旧入口已下线。它们此前可能将用户主动提交的内容发送到本站 API、第三方服务或保存在数据库中；下线页面不会自动删除既有记录。有关历史数据的问题可通过<a href="/contact">联系页面</a>反馈，不要在公开 Issue 中粘贴个人资料或密钥。</p>
-
-            <h2>广告与第三方技术</h2>
-            <p>本站接入 Google AdSense 审核代码。网站获准投放广告后，Google 及其合作伙伴可能使用 Cookie 或类似技术展示和衡量广告。你可以在浏览器或 Google 的<a href="https://myadcenter.google.com/" rel="noopener">广告设置</a>中管理相关偏好；更多信息见<a href="https://policies.google.com/technologies/ads" rel="noopener">Google 广告技术说明</a>。本站还可能加载字体等第三方资源，资源提供方会收到相应网络请求。</p>
-            <p>向欧洲经济区、英国或瑞士用户提供需取得同意的广告前，站点维护者需要在 AdSense 中配置符合要求的同意管理方案。是否展示广告及其形式取决于 AdSense 审核、地区和用户设置。</p>
-
-            <h2>联系与更新</h2>
-            <p>有数据相关问题或希望反馈，请通过<a href="/contact">联系页面</a>找到站点维护者。我们可能因功能或服务变化更新本政策，并在本页注明更新日期。</p>
-        </div>
-    </main>
-    <footer class="footer">© 2026 Tyler · <a href="/">首页</a> · <a href="/about">关于</a> · <a href="/contact">联系</a></footer>
-    <script src="/nav.js?v=6"></script>
-</body>
-</html>
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>隐私政策 | Tyler 表格修复台</title><meta name="description" content="了解 CSV 文件在浏览器内的处理方式、网站托管日志、历史功能数据和广告技术。"><link rel="canonical" href="https://tylerzhang.xyz/privacy"><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/sheet.css?v=1"></head>
+<body><header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-mark">T</span><span>Tyler <small>/ 表格修复台</small></span></a><nav class="site-nav" aria-label="主导航"><a href="/">CSV 体检</a><a href="/blog/">处理指南</a><a href="/about">关于</a><a href="/contact">反馈</a></nav></div></header>
+<main class="shell"><header class="intro"><div><p class="eyebrow">PRIVACY / 2026-10-30</p><h1>隐私政策</h1><p>区分你选择的文件内容、访问页面时的网络请求，以及本站旧功能可能留存的历史数据。</p></div></header><article class="article"><h2>当前 CSV 工作台</h2><p>在<a href="/">CSV 体检台</a>选择文件后，浏览器的 JavaScript 读取该文件并在本机解析、预览和生成下载结果。本站没有为这个流程设置文件上传 API；文件内容不提交到本站服务器。选择文件后仍需注意本机浏览器、扩展、剪贴板与下载目录的安全。当前首页不加载广告脚本或站内访问统计脚本。</p>
+<h2>访问网站时的技术信息</h2><p>网页由 Cloudflare Pages 托管。你访问页面、CSS、JavaScript 或样例文件时，托管服务会接收网络请求，可能按其运行方式处理 IP 地址、User-Agent、访问路径和安全日志。本站不能通过“不上传 CSV”承诺完全没有网络请求。案例页面可能接入 Google AdSense 的网站验证或广告代码，Google 及其合作伙伴可能使用 Cookie 或类似技术；广告展示取决于网站审核、地区和你的设置。参见<a href="https://policies.google.com/technologies/ads" rel="noopener">Google 广告技术说明</a>。</p>
+<h2>旧功能的历史数据</h2><p>本站过去曾提供 AI 聊天、图片、语音、互动功能及访问统计。那些旧页面现已退出公开导航，旧网址下线，但历史内容或数据库记录不会自动消失。它们过去可能将用户主动提交的内容发送到本站 API、第三方服务或数据库。旧版所用的部分 API 端点可能仍供历史集成调用；不要把旧版的数据处理方式与当前本地 CSV 工作台混为一谈。有关历史数据的问题可通过<a href="/contact">联系页面</a>反馈，不要在公开 Issue 中粘贴个人资料。</p>
+<h2>选择与更新</h2><p>生成的 CSV 与 Markdown 报告由浏览器下载到你的设备，你可以自行删除。浏览器本地缓存和网站 Cookie 可通过浏览器设置管理。涉及需要同意的广告地区，站点维护者应在启用广告前配置相应的同意管理方案。本政策随功能变化更新，并在页首注明日期。</p><nav class="related" aria-label="相关页面"><a href="/">返回 CSV 体检台</a><a href="/contact">联系维护者</a></nav></article></main><footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/contact">联系</a></footer></body></html>

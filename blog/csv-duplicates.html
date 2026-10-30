@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="google-adsense-account" content="ca-pub-6426056111301969"><title>CSV 按列去重：相同订单号但金额不同怎么办 | Tyler</title><meta name="description" content="用六行订单样例演示 CSV 精确去重、空键处理和同键冲突保留，下载结果与审计记录核对没有误删。"><link rel="canonical" href="https://tylerzhang.xyz/blog/csv-duplicates"><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/sheet.css?v=1"></head>
+<body><header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-mark">T</span><span>Tyler <small>/ 表格修复台</small></span></a><nav class="site-nav" aria-label="主导航"><a href="/">CSV 体检</a><a href="/blog/" aria-current="page">处理指南</a><a href="/about">关于</a><a href="/contact">反馈</a></nav></div></header>
+<main class="shell"><header class="intro"><div><p class="eyebrow">03 / DEDUPLICATION</p><h1>同一个订单号出现三次，哪些能删？</h1><p>“键相同”说明需要调查，并不等于“整行可以删除”。在金额或状态不同的记录上尤其如此。</p></div><div class="intro-aside">Tyler · 2026-10-30<br>测试文件：orders-messy.csv</div></header>
+<article class="article"><h2>六行样例中的三种情况</h2><p><a href="/samples/orders-messy.csv" download>下载订单样例</a>。文件包含 6 行数据：订单 <code>00127</code> 出现三次；另有订单 <code>00128</code>、<code>00129</code> 和一行全空白。三条 <code>00127</code> 中，两条的金额、日期、备注在清理首尾空格后完全相同；第三条的金额是 <code>99.00</code>，与原来的 <code>89.50</code> 不同。</p>
+<pre><code>order_id,customer,amount,order_date,note
+00127,  Ada  ,89.50,2026-10-01,"first, paid"
+00127, Ada ,89.50,2026-10-01,"first, paid"
+00127,Ada,99.00,2026-10-01,amount changed</code></pre>
+<h2>本站的实际处理结果</h2><p>在<a href="/">CSV 体检台</a>载入示例，保持“去掉首尾空格”“移除整行空白”，去重列选择 <code>order_id</code>，再生成结果。输出为 <strong>4 行</strong>：移除 1 行空白、1 行完全相同的重复记录；金额不同的 <code>00127</code> 仍保留，并显示 1 条“重复键冲突”。下载审计记录后可以逐项核对。这一结果由仓库中的同一份样例和自动测试验证。</p>
+<table><thead><tr><th>情况</th><th>本站动作</th><th>理由</th></tr></thead><tbody><tr><td>键与整行均相同</td><td>保留第一条、删除后续完全重复行</td><td>两条在选定清理规则下没有可见差异</td></tr><tr><td>键相同、其他列不同</td><td>都保留，标记冲突</td><td>可能是更正、重试、不同状态或真实数据错误</td></tr><tr><td>键为空</td><td>不凭空键去重</td><td>缺失标识无法证明是同一记录</td></tr></tbody></table>
+<h2>为什么不能一键“删所有重复”</h2><p>Excel 的“删除重复项”会根据你选中的列判定重复，通常保留首次出现的记录。选错列时，其余信息不同的整行也可能被移除。Microsoft 建议在删除前先筛选或标记重复，并保留原始备份。[<a href="https://support.microsoft.com/en-us/excel/get-started/filter-for-unique-values-or-remove-duplicate-values" rel="noopener">Microsoft：筛选与删除重复项</a>]</p>
+<p class="callout">本工具的“完全相同”也依赖你勾选的清理规则：开启去首尾空格时，“ Ada ”和“Ada”会被视为相同。真实业务里，金额变化应对照订单系统、更新时间或流水号核实，不能让清理工具决定哪条正确。</p>
+<h2>导出前的复核</h2><ol><li>先明确唯一键是什么：订单号、用户 ID 还是订单号加日期。</li><li>查看冲突数和原始预览；必要时回到源系统核实。</li><li>确认输出行数与“删除完全重复、删除空行、保留冲突”之和一致，再下载 CSV 与审计记录。</li></ol>
+<nav class="related" aria-label="下一步"><a href="/">运行相同样例</a><a href="/blog/csv-quotes">检查列数和引号</a><a href="/blog/">返回指南目录</a></nav></article></main><footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer></body></html>

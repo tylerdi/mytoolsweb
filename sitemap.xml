@@ -1,31 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://tylerzhang.xyz/</loc></url>
-  <url><loc>https://tylerzhang.xyz/json-output</loc></url>
-  <url><loc>https://tylerzhang.xyz/json-diff</loc></url>
-  <url><loc>https://tylerzhang.xyz/log-redactor</loc></url>
-  <url><loc>https://tylerzhang.xyz/ai-cost</loc></url>
-  <url><loc>https://tylerzhang.xyz/agent-lab</loc></url>
-  <url><loc>https://tylerzhang.xyz/api-diagnostics</loc></url>
-  <url><loc>https://tylerzhang.xyz/incident-report</loc></url>
-  <url><loc>https://tylerzhang.xyz/tools</loc></url>
-  <url><loc>https://tylerzhang.xyz/schema-check</loc></url>
-  <url><loc>https://tylerzhang.xyz/sse-inspector</loc></url>
-  <url><loc>https://tylerzhang.xyz/http-headers</loc></url>
-  <url><loc>https://tylerzhang.xyz/usage-cost</loc></url>
   <url><loc>https://tylerzhang.xyz/blog/</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/llm-json-errors</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/api-cost-guide</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/agent-tool-call</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/tool-arguments</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/rate-limit-guide</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/streaming-guide</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/api-error-triage</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/structured-output-contract</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/idempotent-retry</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/json-guide</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/base64-guide</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/regex-guide</loc></url>
+  <url><loc>https://tylerzhang.xyz/blog/csv-encoding</loc></url>
+  <url><loc>https://tylerzhang.xyz/blog/csv-leading-zeros</loc></url>
+  <url><loc>https://tylerzhang.xyz/blog/csv-duplicates</loc></url>
+  <url><loc>https://tylerzhang.xyz/blog/csv-quotes</loc></url>
   <url><loc>https://tylerzhang.xyz/about</loc></url>
   <url><loc>https://tylerzhang.xyz/privacy</loc></url>
   <url><loc>https://tylerzhang.xyz/contact</loc></url>

@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="google-adsense-account" content="ca-pub-6426056111301969"><title>CSV 引号、字段内逗号与换行：怎样判断列数错误 | Tyler</title><meta name="description" content="用实际 CSV 样例解释字段内逗号、换行和双引号转义；区分合法多行字段与缺列错误，解析失败时不导出。"><link rel="canonical" href="https://tylerzhang.xyz/blog/csv-quotes"><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/sheet.css?v=1"></head>
+<body><header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-mark">T</span><span>Tyler <small>/ 表格修复台</small></span></a><nav class="site-nav" aria-label="主导航"><a href="/">CSV 体检</a><a href="/blog/" aria-current="page">处理指南</a><a href="/about">关于</a><a href="/contact">反馈</a></nav></div></header>
+<main class="shell"><header class="intro"><div><p class="eyebrow">04 / CSV STRUCTURE</p><h1>有逗号和换行，为什么列数没有变？</h1><p>CSV 不能靠“按行切开、再按逗号切开”解析。引号内的逗号和换行属于同一个字段。</p></div><div class="intro-aside">Tyler · 2026-10-30<br>依据：RFC 4180</div></header>
+<article class="article"><h2>先看一条合法记录</h2><p>在<a href="/samples/orders-messy.csv" download>订单样例</a>里，备注 <code>"first, paid"</code> 包含逗号，但仍是第 5 列。最后一条备注跨物理文本行：</p>
+<pre><code>00129,Chen,45,2026-10-03,"line one
+line two"</code></pre>
+<p>把样例载入<a href="/">CSV 体检台</a>，表头有 5 列，最后一条仍是一条数据记录，备注完整显示两行。RFC 4180 说明，包含逗号、双引号或换行的字段应放进双引号；字段内部的双引号要写成两个双引号。本站使用 CSV 解析器处理这些边界，而不是简单字符串拆分。[<a href="https://www.rfc-editor.org/rfc/rfc4180.html" rel="noopener">RFC 4180：CSV 常用格式</a>]</p>
+<h2>再看真正有问题的文件</h2><p>下载<a href="/samples/uneven-columns.csv" download>列数不齐样例</a>。表头是 <code>id,name,amount</code> 三列，第二条数据只有 <code>2,Ben</code> 两列。载入后问题清单会指出该行“应有 3 列，实际 2 列”。这时下载按钮不会提供修复结果：工具不知道缺失的是金额，还是原始系统漏掉了逗号，不能替你猜一个值补上。</p>
+<pre><code>id,name,amount
+1,Ada,89
+2,Ben
+3,Chen,45</code></pre>
+<h2>排查顺序</h2><ol><li>确认分隔符。某些系统导出分号或 Tab；自动识别不确定时手动指定，并核对表头列数。</li><li>检查出错位置附近的开引号与闭引号。缺闭引号可能使后续多行被吞进一个字段。</li><li>不要直接删除引号。字段中本来就有逗号或换行时，删除引号会制造更多列。</li><li>从导出系统重新生成缺列行；只有业务方知道缺失值应该是什么。</li></ol>
+<h2>导出时还要留意公式样式值</h2><p>以 <code>=</code>、<code>+</code>、<code>-</code> 或 <code>@</code> 开头的非可信字段，在部分表格软件里可能被当作公式。本站导出时给这种值加单引号前缀，并在审计记录中计数，这是降低风险的措施，不是对所有软件和导入方式的安全保证。打开来自他人的 CSV 前仍要检查来源。[<a href="https://owasp.github.io/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Injection/21-CSV_Injection" rel="noopener">OWASP：CSV 注入</a>]</p>
+<p class="callout">“解析成功”只说明文件结构可读，不说明每个金额、日期或订单状态都正确。本站对列数不齐和引号解析错误会阻断导出，避免把不确定数据包装成“已修复”。</p>
+<nav class="related" aria-label="下一步"><a href="/">检查 CSV 结构</a><a href="/blog/csv-duplicates">核对重复记录</a><a href="/blog/">返回指南目录</a></nav></article></main><footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer></body></html>

@@ -1,100 +1,42 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="google-adsense-account" content="ca-pub-6426056111301969">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
-    <title>Tyler AI API 可靠性工作台：输出、请求与成本排错</title>
-    <meta name="description" content="面向中文 AI 应用开发者的实际工作台：检查 JSON 与字段契约、诊断 HTTP 和 SSE、生成故障记录、核对模型 API 成本。">
-    <link rel="canonical" href="https://tylerzhang.xyz/">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://tylerzhang.xyz/">
-    <meta property="og:title" content="Tyler AI API 可靠性工作台">
-    <meta property="og:description" content="输出、请求、流式响应和成本排错，附可复现案例。">
-    <meta property="og:image" content="https://tylerzhang.xyz/resource/easyclaw.png">
-    <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"WebSite","name":"Tyler AI API 可靠性工作台","url":"https://tylerzhang.xyz/","inLanguage":"zh-CN"}
-    </script>
-    <link rel="icon" type="image/png" href="/resource/easyclaw.png">
-    <link rel="stylesheet" href="/style.css?v=4">
-    <link rel="stylesheet" href="/editorial.css?v=6">
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google-adsense-account" content="ca-pub-6426056111301969">
+  <title>CSV 表格体检与修复：找出乱码、前导零和重复行 | Tyler</title>
+  <meta name="description" content="在浏览器本地检查 CSV 文件的列数、空行、前导零、长数字、日期和公式风险；预览清理结果，下载 CSV 和审计记录。">
+  <link rel="canonical" href="https://tylerzhang.xyz/"><link rel="icon" href="/favicon.svg">
+  <link rel="stylesheet" href="/sheet.css?v=1">
 </head>
 <body>
-    <main class="editorial-shell home-shell">
-        <header class="page-intro workbench-intro">
-            <p class="eyebrow">TYLER / API RELIABILITY DESK</p>
-            <h1>AI API 可靠性工作台</h1>
-            <p>从输出、请求和账单中的一条具体证据开始。工具提供可复核的结果，指南说明判断边界。</p>
-            <div class="intro-links"><a href="/incident-report">整理故障记录</a><a href="/blog/">查看排错案例</a><span>无需登录 · 输入在浏览器本地处理</span></div>
-        </header>
-
-        <div class="workspace-grid">
-            <section class="inspector-surface" data-json-inspector aria-labelledby="inspector-title">
-                <div class="surface-heading">
-                    <div><p class="surface-kicker">立即检查 / 输出与契约</p><h2 id="inspector-title">JSON 输出检查</h2></div>
-                    <a href="/json-output">打开完整工作区</a>
-                </div>
-                <div class="inspector-grid">
-                    <div class="inspector-pane">
-                        <label for="home-json-input">模型返回内容</label>
-                        <textarea id="home-json-input" data-json-input maxlength="300000" spellcheck="false" placeholder="粘贴 JSON，或包含一个 ```json 代码块的回答"></textarea>
-                        <div class="command-row">
-                            <button type="button" class="command-primary" data-json-check>检查 JSON</button>
-                            <button type="button" data-json-sample>载入示例</button>
-                            <button type="button" data-json-clear>清空</button>
-                        </div>
-                    </div>
-                    <div class="inspector-pane">
-                        <div class="pane-heading"><label for="home-json-format">检查结果</label><select id="home-json-format" data-json-format aria-label="结果格式"><option value="formatted">格式化</option><option value="compact">压缩</option></select></div>
-                        <pre data-json-output class="inspector-output" aria-live="polite"></pre>
-                        <div class="result-footer"><span data-json-status data-state="idle" role="status">等待输入</span><button type="button" data-json-copy disabled>复制结果</button></div>
-                        <p class="result-hint" data-json-hint></p>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <section class="editorial-section" aria-labelledby="new-tasks-title">
-            <div class="section-heading"><h2 id="new-tasks-title">继续处理手头的证据</h2><a href="/tools">全部工具</a></div>
-            <div class="task-grid">
-                <a href="/json-diff"><span>01 / 回归</span><strong>对比两次 API 响应</strong><small>定位缺失字段、类型变化和值变化</small><b aria-hidden="true">↗</b></a>
-                <a href="/log-redactor"><span>02 / 协作</span><strong>分享前检查故障日志</strong><small>预览常见密钥、授权头和邮箱的遮盖结果</small><b aria-hidden="true">↗</b></a>
-            </div>
-        </section>
-
-        <section class="editorial-section" aria-labelledby="symptoms-title">
-            <div class="section-heading"><h2 id="symptoms-title">从哪一种现象开始？</h2><span>按手头证据选择</span></div>
-            <div class="symptom-grid">
-                <a href="/schema-check"><span>输出与契约</span><strong>能解析，但字段不对</strong><small>校验必填、类型和额外字段</small><b aria-hidden="true">↗</b></a>
-                <a href="/api-diagnostics"><span>请求与重试</span><strong>429、超时或调用失败</strong><small>区分拒绝、未知结果与安全重试</small><b aria-hidden="true">↗</b></a>
-                <a href="/sse-inspector"><span>流式响应</span><strong>连接断了，答案完整吗</strong><small>检查事件边界和完成信号</small><b aria-hidden="true">↗</b></a>
-                <a href="/usage-cost"><span>用量与账单</span><strong>实际费用高于预估</strong><small>从 CSV 用量复算 Token 成本</small><b aria-hidden="true">↗</b></a>
-            </div>
-        </section>
-
-        <section class="editorial-section" aria-labelledby="workflows-title">
-            <div class="section-heading"><h2 id="workflows-title">一条完整的排错路径</h2><a href="/tools">打开全部工具</a></div>
-            <div class="workflow-columns">
-                <div><span>01 / 输入</span><h3>确认输出边界</h3><p>先区分语法和字段契约，别把合法 JSON 误当成可执行指令。</p><a href="/json-output">JSON 语法检查</a><a href="/schema-check">Schema 字段校验</a><a href="/json-diff">JSON 回归对比</a></div>
-                <div><span>02 / 过程</span><h3>保留请求证据</h3><p>记录状态、响应头和完成信号；对写入超时先核实业务结果。</p><a href="/http-headers">HTTP 响应头</a><a href="/incident-report">生成故障记录</a><a href="/log-redactor">日志脱敏预览</a></div>
-                <div><span>03 / 结果</span><h3>复核成本与恢复</h3><p>用真实用量检查费用口径，明确每次失败后的恢复动作。</p><a href="/ai-cost">单次成本预算</a><a href="/usage-cost">CSV 用量分析</a><a href="/blog/idempotent-retry">安全重试案例</a></div>
-            </div>
-        </section>
-
-        <section class="editorial-section" aria-labelledby="guides-title">
-            <div class="section-heading"><h2 id="guides-title">有输入、有判断的排错案例</h2><a href="/blog/">全部指南</a></div>
-            <div class="guide-list">
-                <a href="/blog/llm-json-errors"><strong>模型输出不是合法 JSON 时，先检查哪里？</strong><span>围栏、尾逗号与类型边界</span></a>
-                <a href="/blog/api-cost-guide"><strong>为什么你的 API 账单高于简单估算？</strong><span>输入、输出与未计入的费用</span></a>
-                <a href="/blog/api-error-triage"><strong>AI API 出错时，先看哪三条证据？</strong><span>429、400 与超时分诊</span></a>
-                <a href="/blog/idempotent-retry"><strong>工具调用超时后，怎样避免写入两次？</strong><span>幂等键和并发验收</span></a>
-            </div>
-        </section>
-    </main>
-    <footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer>
-    <script src="/fish-tracker.js"></script>
-    <script src="/nav.js?v=7"></script>
-    <script type="module" src="/json-output.mjs"></script>
+  <header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-mark">T</span><span>Tyler <small>/ 表格修复台</small></span></a><nav class="site-nav" aria-label="主导航"><a href="/" aria-current="page">CSV 体检</a><a href="/blog/">处理指南</a><a href="/about">关于</a><a href="/contact">反馈</a></nav></div></header>
+  <main class="shell">
+    <header class="intro"><div><p class="eyebrow">TYLER / DATA REPAIR DESK</p><h1>CSV 表格体检与修复</h1><p>上传文件后先看问题在哪，再决定是否清理。原文件不会被改动；清理结果可预览并导出。</p></div><div class="intro-aside">文件只在当前浏览器中读取。此页面不加载广告或访问统计脚本。</div></header>
+    <section class="workbench" data-csv-workbench aria-labelledby="workbench-title">
+      <div class="workbench-title"><h2 id="workbench-title">文件工作区</h2><span>CSV · 最大 2 MB / 20,000 行</span></div>
+      <div class="upload-row">
+        <div class="field file-field"><label for="csv-file">选择 CSV 文件</label><input id="csv-file" data-csv-file type="file" accept=".csv,text/csv,text/plain"></div>
+        <div class="field"><label for="csv-encoding">文本编码</label><select id="csv-encoding" data-encoding><option value="auto">自动尝试</option><option value="utf-8">UTF-8</option><option value="gb18030">GB18030</option></select></div>
+        <div class="field"><label for="csv-delimiter">分隔符</label><select id="csv-delimiter" data-delimiter><option value="">自动识别</option><option value=",">逗号</option><option value="&#9;">Tab</option><option value=";">分号</option></select></div>
+        <button type="button" class="plain-button" data-sample>载入示例</button>
+      </div>
+      <div class="status-line" data-status data-state="idle" role="status">请选择文件，或载入示例查看完整处理流程。</div>
+      <div class="stats" data-summary aria-label="文件体检统计"><div><strong>—</strong><span>数据行</span></div><div><strong>—</strong><span>问题提示</span></div><div><strong>—</strong><span>列数错误</span></div><div><strong>—</strong><span>前导零</span></div><div><strong>—</strong><span>长数字</span></div></div>
+      <div class="options-row"><label class="option-check"><input type="checkbox" data-trim checked>去掉单元格首尾空格</label><label class="option-check"><input type="checkbox" data-remove-blank checked>移除整行空白</label><div class="field"><label for="csv-key">按哪一列去重</label><select id="csv-key" data-key><option value="-1">不去重</option></select></div></div>
+      <div class="action-row"><button type="button" class="primary-button" data-clean disabled>生成修复结果</button><button type="button" class="secondary-button" data-download-csv disabled>下载 CSV</button><button type="button" class="secondary-button" data-download-report disabled>下载审计记录</button><span class="note">导出 UTF-8 CSV 含 BOM；Excel 打开方式仍需核对</span></div>
+      <div class="result-grid">
+        <div class="result-main"><div class="result-heading"><h3>数据预览</h3><div class="segmented" role="group" aria-label="预览版本"><button type="button" data-view="original" aria-pressed="true">原始</button><button type="button" data-view="cleaned" aria-pressed="false" disabled>修复后</button></div></div><div class="table-wrap"><table class="data-table" data-table aria-label="CSV 前 12 行预览"></table></div><p class="table-note">仅显示前 12 行；统计和处理覆盖整个文件。表格中的值按原始文本显示。</p></div>
+        <aside class="result-side"><div class="result-heading"><h3>问题清单</h3><select data-issue-filter aria-label="筛选问题"><option value="all">全部提示</option><option value="malformed">解析错误</option><option value="width">列数不齐</option><option value="blank">空行</option><option value="leadingZero">前导零</option><option value="longNumber">长数字</option><option value="dateLike">日期疑义</option><option value="formula">公式风险</option><option value="conflict">重复键冲突</option><option value="duplicateHeader">表头问题</option></select></div><ul class="issue-list" data-issues aria-live="polite"><li>载入文件后显示检查结果。</li></ul></aside>
+      </div>
+    </section>
+    <section class="section" aria-labelledby="guide-title"><div class="section-heading"><h2 id="guide-title">常见的导入问题</h2><a href="/blog/">全部处理指南</a></div><div class="guide-list">
+      <a class="guide-row" href="/blog/csv-encoding"><span class="guide-tag">ENCODING</span><span><strong>CSV 中文乱码，问题在文件还是 Excel？</strong><small>UTF-8、BOM、GB18030 与正确的导入方式</small></span><b>查看案例</b></a>
+      <a class="guide-row" href="/blog/csv-leading-zeros"><span class="guide-tag">DATA TYPES</span><span><strong>订单号 00127 为什么变成 127？</strong><small>前导零、长数字与不可逆的数据损失</small></span><b>查看案例</b></a>
+      <a class="guide-row" href="/blog/csv-duplicates"><span class="guide-tag">CLEANING</span><span><strong>按订单号去重，为什么不能删掉所有重复行？</strong><small>选择键、保留首条、空键和审计记录</small></span><b>查看案例</b></a>
+      <a class="guide-row" href="/blog/csv-quotes"><span class="guide-tag">PARSING</span><span><strong>CSV 中有逗号和换行，列数怎么会错？</strong><small>引号转义、真实列数错误与停止导出</small></span><b>查看案例</b></a>
+    </div></section>
+  </main>
+  <footer class="footer">© 2026 Tyler · <a href="/about">关于</a> · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer>
+  <script src="/assets/csv-lab.js?v=1" defer></script>
 </body>
 </html>

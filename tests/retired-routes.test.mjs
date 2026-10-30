@@ -14,13 +14,16 @@ test('retired top-level pages return 410 and do not route through static assets'
     assert.equal(response.headers.get('Cache-Control'), 'no-store');
     assert.equal(response.headers.get('X-Robots-Tag'), 'noindex');
   }
+  for (const name of ['json-output', 'json-diff', 'log-redactor', 'ai-cost', 'schema-check', 'tools']) {
+    assert.equal(rootRoute({ params: { legacy: name }, next }).status, 410, name);
+  }
   const html = await rootRoute({ params: { legacy: 'gallery' }, next }).text();
   assert.match(html, /<title>内容已下线/);
-  assert.match(html, /resource\/easyclaw\.png/);
+  assert.match(html, /favicon\.svg/);
 });
 
-test('active top-level tools page still reaches its static asset', () => {
-  assert.equal(rootRoute({ params: { legacy: 'tools' }, next }).status, 200);
+test('unrelated top-level pages still reach their static asset', () => {
+  assert.equal(rootRoute({ params: { legacy: 'about' }, next }).status, 200);
 });
 
 test('retired experiments and old blog posts return 410', () => {
@@ -29,5 +32,6 @@ test('retired experiments and old blog posts return 410', () => {
   assert.equal(postsRoute({ params: { legacy: 'ai-daily-2026-10-17.html' }, next }).status, 410);
   assert.equal(postsRoute({ params: { legacy: '2026-05-24-AI-Agent.html' }, next }).status, 410);
   assert.equal(blogRoute({ params: { legacy: 'blog-youtube-creators' }, next }).status, 410);
-  assert.equal(blogRoute({ params: { legacy: 'api-cost-guide' }, next }).status, 200);
+  assert.equal(blogRoute({ params: { legacy: 'api-cost-guide' }, next }).status, 410);
+  assert.equal(blogRoute({ params: { legacy: 'csv-encoding' }, next }).status, 200);
 });

@@ -26,9 +26,18 @@
     "/story-radio*",
     "/tool*",
     "/tree-hole*",
-    "/tools/ai-*",
-    "/blog/blog-*",
-    "/blog/posts/*"
+    "/json-output*",
+    "/json-diff*",
+    "/log-redactor*",
+    "/ai-cost*",
+    "/agent-lab*",
+    "/api-diagnostics*",
+    "/incident-report*",
+    "/schema-check*",
+    "/sse-inspector*",
+    "/http-headers*",
+    "/usage-cost*",
+    "/blog/*"
   ],
   "exclude": []
 }

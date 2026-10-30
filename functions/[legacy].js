@@ -5,7 +5,9 @@ const RETIRED = new Set([
   'ai-tools', 'ai-chat', 'ai-image', 'ai-service', 'ai-tts', 'ai-voice-to-text',
   'changelog', 'daily-news', 'daily-wallpaper', 'deep-sea-museum',
   'gallery', 'grocery', 'ideas', 'mystery-box', 'resources', 'story-radio',
-  'tool', 'tree-hole',
+  'tool', 'tree-hole', 'tools', 'json-output', 'json-diff', 'log-redactor',
+  'ai-cost', 'agent-lab', 'api-diagnostics', 'incident-report',
+  'schema-check', 'sse-inspector', 'http-headers', 'usage-cost',
 ]);
 
 export function onRequest(context) {

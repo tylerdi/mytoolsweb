@@ -1,52 +1,40 @@
-# Tyler API Lab
+# Tyler 表格修复台
 
-面向中文 AI 应用开发者的浏览器工具和排错案例。站点使用静态 HTML/CSS/JavaScript，部署在 Cloudflare Pages；少数在线演示和访问统计使用 Pages Functions。
+面向遇到 CSV 导入问题的中文用户。首页是浏览器本地工作台：检查编码、列数、空行、前导零、长数字、日期样式和公式样式值；用户可以选择去首尾空格、移除空行、按列精确去重，并预览、下载 CSV 与审计记录。所有“已修复”结论都要能由样例文件和测试复现。
 
-## 核心页面
+## 公开页面
 
 | 路径 | 用途 |
 | --- | --- |
-| `/`、`/json-output` | 在浏览器中检查模型输出的 JSON 语法 |
-| `/json-diff` | 对比基准与当前 JSON，导出不含字段值的回归摘要 |
-| `/log-redactor` | 预览常见凭据与邮箱的遮盖结果，分享前仍需人工复核 |
-| `/ai-cost` | 用有来源的标准文本费率估算模型 API 费用，也可手动改价 |
-| `/agent-lab` | 演示工具调用的参数错误、超时和恢复路径 |
-| `/api-diagnostics` | 按状态码、Retry-After 和副作用判断 API 错误的排查顺序 |
-| `/incident-report` | 把脱敏证据和排查建议整理成可复制、可下载的故障记录 |
-| `/tools` | 精简的 JSON、Base64、URL、正则、时间戳、SHA-256 和 UUID 工具 |
-| `/schema-check`、`/sse-inspector` | 本地验证字段契约和 SSE 事件完整性 |
-| `/http-headers`、`/usage-cost` | 分析 HTTP 响应证据和规范化 CSV 用量费用 |
-| `/blog/` | 人工审阅的可复现排错案例 |
-| `/about`、`/privacy`、`/contact` | 站点身份、数据处理和反馈渠道 |
+| `/` | CSV 体检、处理与下载 |
+| `/blog/` | 案例目录与可下载样例 |
+| `/blog/csv-encoding` | UTF-8、BOM、GB18030 与 Excel 导入 |
+| `/blog/csv-leading-zeros` | 前导零、长数字与不可逆损失 |
+| `/blog/csv-duplicates` | 完全重复、同键冲突和空键 |
+| `/blog/csv-quotes` | CSV 引号、字段内换行与列数错误 |
+| `/about`、`/privacy`、`/contact` | 维护者、数据处理和反馈 |
 
-## 本地预览与验证
+测试样例位于 `samples/`，与文章和自动测试使用相同数据。旧 AI API 工具和泛主题文章的源文件保留在仓库中，公开网址由 Pages Functions 返回 `410 Gone`。旧数据库记录不会因本次部署自动删除。
+
+## 本地开发
 
 ```bash
 npm ci
-npm run build:labs
+npm run build:csv
 npm test
 HOST=127.0.0.1 PORT=8788 python3 local_server.py
 ```
 
-打开 `http://127.0.0.1:8788/`。本地服务器支持 Cloudflare Pages 的无扩展名静态网址。它不是完整的 Pages Functions 环境；需要验证在线 API 时，应使用 Cloudflare 预览部署或线上测试环境。
-四个 API 调试页使用仓库内的 `assets/labs/` 打包脚本。修改对应的 `.mjs` 源码后，运行 `npm run build:labs` 并把生成的脚本一起提交；浏览器不会从外部 CDN 加载解析库。
-打包脚本会同步生成 `assets/labs/THIRD_PARTY_NOTICES.txt`，保留所用开源解析库的许可声明。
+打开 `http://127.0.0.1:8788/`。`csv-lab.mjs` 是浏览器 UI 源码，`csv-core.mjs` 是可测试的处理规则；修改后执行 `npm run build:csv`，提交生成的 `assets/csv-lab.js`。本地 Python 服务器支持无扩展名静态路由，但不模拟 Cloudflare Pages Functions；旧网址的 410 行为需在 Wrangler 或部署预览环境验证。
 
-## 内容发布规则
+## 数据边界
 
-- 公开索引页面应解决一个具体任务，有可复现输入、实际结果、失败边界和相关工具；不要为了数量批量发布泛 AI 文章。
-- `sitemap.xml` 只列希望收录的规范网址，地址与页面 `canonical` 一致。Cloudflare Pages 会把 `.html` 路径跳转到无扩展名路径。
-- 偏离当前主题的娱乐、聚合新闻、旧 AI 演示及泛主题文章地址返回 `410 Gone`；源文件保留在仓库中用于追溯，数据库记录不会因部署而删除。
-- `_routes.json` 只让 `/api/*` 和已下线的旧 URL 进入 Pages Functions。旧页面明确返回 `410 Gone`，避免 Pages 的静态资源缓存短期内继续提供删除前的 HTML。
-- 旧自动日报已从公开博客目录下线。`scripts/ai_daily_news.py` 的新输出进入 `_archive/daily-news/`，不会自动进入博客目录。
-- 只有经过人工检查、具有实际内容价值的页面加载 AdSense 脚本。改动代码不会自动触发 AdSense 复审。
+- CSV 文件在当前浏览器内读取，首页不加载广告和访问统计脚本；页面资源请求仍会到达托管服务。
+- 自动识别编码不保证正确。UTF-8 失败才尝试 GB18030，用户必须核对预览。
+- 前导零、长数字和日期样式仅提示；CSV 输出保留文本，但 Excel 直接打开仍可能转换。请用“数据 → 从文本/CSV”导入并选择文本列。
+- 只自动删除同键且整行完全一致的记录；同键但内容不同会保留并标记。空键不去重。解析错误或列数不齐时阻断导出。
+- 导出时给公式样式值加单引号前缀以降低公式执行风险；不同表格软件的行为仍需人工核对。
 
-## 价格和数据
+## 发布
 
-`model-cost.mjs` 中的公开费率于 **2026-10-17** 对照供应商官方价格页核验。模型价格会变：每次更新预设时，先核对官方来源，更新 `PRICE_REVIEWED`、页面核对日期和相关示例，再运行测试。计算器只覆盖标准文本输入和输出，不包含缓存、批量、工具、税费等项目。
-
-`fish-tracker.js` 记录核心页面访问和少量操作事件。操作事件只包含名称，不包含粘贴的 JSON、提示词或计算结果；`functions/api/stats.js` 将其以 `page_views.type = 'event'` 存储，不计入普通 PV 汇总。
-
-## 上线
-
-仓库 `main` 分支推送后由 Cloudflare Pages 自动部署。上线后检查首页、`/sitemap.xml`、`/ads.txt`、规范网址、旧页 `X-Robots-Tag` 和关键工具流程。Search Console 的收录与 AdSense 的审核状态由 Google 异步更新，不能用部署成功替代实际审核结果。
+`main` 推送后由 Cloudflare Pages 自动部署。上线后检查首页、四篇案例、样例文件、`sitemap.xml`、`ads.txt`、旧页 410 和关键处理流程。AdSense 审核结果由 Google 决定；改版和工具测试不能替代审核。

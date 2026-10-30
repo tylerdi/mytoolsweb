@@ -1,0 +1,8 @@
+order_id,customer,amount,order_date,note
+00127,  Ada  ,89.50,2026-10-01,"first, paid"
+00128,Ben,120,10/02/2026,ready
+00127, Ada ,89.50,2026-10-01,"first, paid"
+00127,Ada,99.00,2026-10-01,amount changed
+,  , , ,
+00129,Chen,45,2026-10-03,"line one
+line two"

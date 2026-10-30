@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="google-adsense-account" content="ca-pub-6426056111301969"><title>CSV 中文乱码怎么查：UTF-8、BOM 与 GB18030 | Tyler</title><meta name="description" content="下载两行中文 CSV 样例，区分文件编码与 Excel 打开方式；说明 UTF-8 BOM、GB18030 和不能靠改字体修复的情况。"><link rel="canonical" href="https://tylerzhang.xyz/blog/csv-encoding"><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/sheet.css?v=1"></head>
+<body><header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-mark">T</span><span>Tyler <small>/ 表格修复台</small></span></a><nav class="site-nav" aria-label="主导航"><a href="/">CSV 体检</a><a href="/blog/" aria-current="page">处理指南</a><a href="/about">关于</a><a href="/contact">反馈</a></nav></div></header>
+<main class="shell"><header class="intro"><div><p class="eyebrow">01 / ENCODING</p><h1>CSV 中文乱码，先查编码还是 Excel？</h1><p>同一份 CSV 在文本编辑器中正确，在 Excel 中乱码，通常不等于原文件已损坏。先保留原件，再核对读取方式。</p></div><div class="intro-aside">Tyler · 2026-10-30<br>样例文件与步骤均可复现</div></header>
+<article class="article"><h2>先做一个可重复的小实验</h2><p>下载<a href="/samples/chinese-utf8.csv" download>中文 UTF-8 样例</a>。它的表头是“姓名、城市、编号”，两行数据分别是“小张、杭州、00127”和“小李、上海、00128”。把文件载入本站<a href="/">CSV 体检台</a>，自动编码下应看到 2 行、3 列，中文与编号按原始字符显示。这个结果说明浏览器能按 UTF-8 解出该样例；它不证明你手头另一份文件也使用 UTF-8。</p>
+<pre><code>姓名,城市,编号
+小张,杭州,00127
+小李,上海,00128</code></pre>
+<h2>为什么 Excel 里的结果可能不同</h2><p>CSV 是文本文件，并没有自带“这一列是编号”“这列是日期”的列类型。Excel 直接打开时会按自己的导入设置解释内容。Microsoft 说明：带 UTF-8 BOM 的文件通常可以正常打开；没有 BOM 时，可通过“数据 → 从文本/CSV”导入，并在预览时确认编码。本站导出结果会写入 UTF-8 BOM，但仍建议通过导入流程核对内容。[<a href="https://support.microsoft.com/en-us/excel/opening-csv-utf-8-files-correctly-in-excel" rel="noopener">Microsoft：正确打开 UTF-8 CSV</a>]</p>
+<h2>诊断顺序</h2><ol><li>先用文本编辑器或本站预览原始文件，不要在 Excel 中打开再覆盖保存原件。</li><li>若 UTF-8 解码失败，本站会尝试 GB18030；这只是候选编码，必须检查中文是否合理。手动切换编码后重新预览。</li><li>若浏览器中中文正确而 Excel 错误，优先改变 Excel 的导入方式，不要直接把乱码文本“替换”成中文。</li><li>若各处都显示乱码，而且原文件已经被错误编码覆盖保存，需要找原始导出文件；单靠重新设置字体不能恢复丢失的字节。</li></ol>
+<p class="callout">不要把“能解码”当成“编码一定正确”。某些错误编码也能产出看似合法的文字。遇到客户数据时，随机抽查姓名、城市、特殊符号和行数，再决定导出。</p>
+<h2>本站能做与不能做</h2><p>工具支持 UTF-8 与 GB18030 解码、分隔符选择和前 12 行预览，结果留在当前浏览器。它不识别任意历史编码，也不会自动猜出已经被上游系统改坏的文字。导出的 CSV 是 UTF-8 文本；Excel 的实际显示还取决于你如何导入。Microsoft 的<a href="https://support.microsoft.com/en-us/excel/get-started/import-or-export-text-txt-or-csv-files" rel="noopener">文本与 CSV 导入说明</a>列出了更完整的导入步骤。</p>
+<nav class="related" aria-label="下一步"><a href="/">打开 CSV 体检台</a><a href="/blog/csv-leading-zeros">继续检查编号</a><a href="/blog/">返回指南目录</a></nav></article></main><footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer></body></html>
