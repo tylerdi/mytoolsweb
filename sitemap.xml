@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://tylerzhang.xyz/</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/csv-encoding</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/csv-leading-zeros</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/csv-duplicates</loc></url>
-  <url><loc>https://tylerzhang.xyz/blog/csv-quotes</loc></url>
   <url><loc>https://tylerzhang.xyz/about</loc></url>
   <url><loc>https://tylerzhang.xyz/privacy</loc></url>
   <url><loc>https://tylerzhang.xyz/contact</loc></url>

@@ -16,6 +16,12 @@
 /_archive/*
   X-Robots-Tag: noindex, follow
 
+/prototypes/*
+  X-Robots-Tag: noindex, nofollow
+
+/samples/*
+  X-Robots-Tag: noindex, nofollow
+
 /ai-service
   X-Robots-Tag: noindex, follow
 

@@ -4,6 +4,7 @@ import { onRequest as rootRoute } from '../functions/[legacy].js';
 import { onRequest as toolsRoute } from '../functions/tools/[legacy].js';
 import { onRequest as postsRoute } from '../functions/blog/posts/[legacy].js';
 import { onRequest as blogRoute } from '../functions/blog/[legacy].js';
+import { onRequest as blogIndex } from '../functions/blog/index.js';
 
 const next = () => new Response('kept', { status: 200 });
 
@@ -33,5 +34,7 @@ test('retired experiments and old blog posts return 410', () => {
   assert.equal(postsRoute({ params: { legacy: '2026-05-24-AI-Agent.html' }, next }).status, 410);
   assert.equal(blogRoute({ params: { legacy: 'blog-youtube-creators' }, next }).status, 410);
   assert.equal(blogRoute({ params: { legacy: 'api-cost-guide' }, next }).status, 410);
-  assert.equal(blogRoute({ params: { legacy: 'csv-encoding' }, next }).status, 200);
+  assert.equal(blogRoute({ params: { legacy: 'csv-encoding' }, next }).status, 410);
+  assert.equal(blogRoute({ params: { legacy: 'csv-duplicates.html' }, next }).status, 410);
+  assert.equal(blogIndex().status, 410);
 });

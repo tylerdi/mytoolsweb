@@ -37,6 +37,7 @@
     "/sse-inspector*",
     "/http-headers*",
     "/usage-cost*",
+    "/blog",
     "/blog/*"
   ],
   "exclude": []

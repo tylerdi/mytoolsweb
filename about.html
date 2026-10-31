@@ -1,10 +1,9 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>关于 Tyler 表格修复台</title><meta name="description" content="了解 Tyler 表格修复台的工作范围、测试方法、数据处理原则与维护方式。"><link rel="canonical" href="https://tylerzhang.xyz/about"><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/sheet.css?v=1"></head>
-<body><header class="site-header"><div class="header-inner"><a class="brand" href="/"><span class="brand-mark">T</span><span>Tyler <small>/ 表格修复台</small></span></a><nav class="site-nav" aria-label="主导航"><a href="/">CSV 体检</a><a href="/blog/">处理指南</a><a href="/about" aria-current="page">关于</a><a href="/contact">反馈</a></nav></div></header>
-<main class="shell"><header class="intro"><div><p class="eyebrow">ABOUT / TYLER</p><h1>关于表格修复台</h1><p>本站处理 CSV 导入时最容易发生、也最难靠肉眼发现的数据变化。</p></div></header>
-<article class="article"><h2>谁在维护</h2><p>本站由 Tyler 维护，<a href="https://github.com/tylerdi/mytoolsweb" rel="noopener">源代码公开</a>。当前只提供浏览器内的 CSV 体检与修复，以及配套的可复现案例。没有声称具备会计、法律或安全审计资格；对真实业务文件的最终判断应由数据所有者作出。</p>
-<h2>为什么先做 CSV</h2><p>CSV 看起来只是“用逗号分隔的文本”，但导入到表格软件时，编码、列类型、引号、空行和重复键可能改变结果。网站不会替用户猜订单号长度、日期的月日顺序或冲突记录谁对谁错。它把确定的检查与不确定的判断分开，保留原文件，并提供处理前后预览与审计记录。</p>
-<h2>内容如何验证</h2><p><a href="/blog/">处理指南</a>中的主要案例提供可下载的样例文件、预期行数与列数、本站实测结果和所依据的 Microsoft 或 RFC 文档。示例是特意构造的测试数据，不冒充用户事故或真实客户资料。工具使用开源 CSV 解析库；处理规则和自动测试可在代码仓库查看。价格、软件行为或界面可能变化，涉及外部产品的步骤会注明核对日期。</p>
-<h2>本站的边界</h2><p>目前支持 CSV，不宣称支持 Excel 工作簿（.xlsx）。本站可以保留原始字符串、提示风险并执行明确选择的清理，但 CSV 文件本身不保存 Excel 列类型；下载后如何导入仍需核对。单次文件限制为 2 MB、20,000 行。含个人资料的文件应先在本地脱敏或使用自有可信环境。</p>
-<p class="callout">旧版 AI API 工具与泛主题页面已从公开导航退出。旧网页地址返回下线状态；历史用户数据不会因为页面下线而自动删除。详情见<a href="/privacy">隐私政策</a>。</p>
-<nav class="related" aria-label="相关页面"><a href="/">打开 CSV 体检台</a><a href="/blog/">阅读处理指南</a><a href="/contact">反馈问题</a></nav></article></main><footer class="footer">© 2026 Tyler · <a href="/privacy">隐私政策</a> · <a href="/contact">联系</a></footer></body></html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>关于每日航线</title><meta name="description" content="了解每日航线的玩法、关卡生成方式和成绩保存范围。"><link rel="canonical" href="https://tylerzhang.xyz/about"><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/info.css"></head>
+<body><header class="topbar"><div class="topbar-inner"><a class="brand" href="/"><span class="brand-mark" aria-hidden="true">↗</span>每日航线</a><nav class="nav" aria-label="主导航"><a href="/">开始游戏</a><a href="/about" aria-current="page">关于</a><a href="/contact">反馈</a></nav></div></header>
+<main><p class="eyebrow">ABOUT THE GAME</p><h1>关于每日航线</h1><p class="lead">每天一张海图，用有限步数画出经过全部航标的路线，最终抵达灯塔。</p><article>
+<section><h2>游戏目标</h2><p>从码头出发，只能走上下左右相邻的格子。收齐三个航标、避开礁石，经过带箭头的洋流格后沿箭头方向离开；路线不能重复经过格子，也不能超过当局步数预算。第一次玩可从首页的“新手教学”开始。</p></section>
+<section><h2>每日关卡与练习</h2><p>每日关卡按上海时间的日期生成，同一天访问的玩家看到同一张海图。每张海图在发布前由规则测试确认至少存在一条合法路线；这不表示只有唯一解。另有十二张固定练习海图，可反复尝试。每日关卡不按个人水平调整难度，练习序号也不代表由易到难。</p></section>
+<section><h2>成绩与限制</h2><p>完成成绩、连续天数和是否学完教学只保存在当前浏览器。本站不设账号、排行榜或跨设备同步；清除浏览器数据后记录无法恢复。游戏可用键盘方向键、点击或拖动操作，提示每局最多使用三次。</p></section>
+<section><h2>维护与反馈</h2><p>每日航线由 Tyler 维护，<a href="https://github.com/tylerdi/mytoolsweb" rel="noopener">源代码公开</a>。发现无法完成的关卡或操作问题，请提供日期、设备、浏览器和复现步骤，通过<a href="/contact">反馈页面</a>提交。</p></section>
+</article><nav class="related" aria-label="下一步"><a href="/">开始游戏</a><a href="/privacy">隐私政策</a><a href="/contact">反馈问题</a></nav></main><footer class="footer">© 2026 每日航线 · <a href="/privacy">隐私</a> · <a href="/contact">反馈</a></footer></body></html>
