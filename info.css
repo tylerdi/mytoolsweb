@@ -6,7 +6,7 @@ a:focus-visible{outline:3px solid var(--coral);outline-offset:3px}
 .topbar{background:var(--white);border-bottom:1px solid var(--line)}
 .topbar-inner{width:min(100% - 36px,960px);min-height:66px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
 .brand{display:flex;align-items:center;gap:10px;color:var(--ink);font-weight:800;text-decoration:none;white-space:nowrap}
-.brand-mark{width:32px;height:32px;display:grid;place-items:center;border-radius:5px;background:var(--deep);color:#fff;font-size:1.2rem}
+.brand-mark{width:34px;height:34px;display:block;flex:none;border-radius:7px;background:url('/assets/daily-route-logo.svg') center/cover no-repeat;font-size:0}
 .nav{display:flex;flex-wrap:wrap;gap:18px;font-size:.86rem}
 .nav a{text-decoration:none;color:var(--muted)}
 .nav a[aria-current=page],.nav a:hover{color:var(--deep);font-weight:700}

@@ -15,7 +15,7 @@ html = html
   .replace('href="./"', 'href="./daily-route.html"')
   .replace('<a href="./PLAN.md">设计与验证范围</a>', '离线可玩');
 
-for (const name of ['boat', 'dock', 'beacon', 'reef', 'lighthouse']) {
+for (const name of ['boat', 'dock', 'beacon', 'reef', 'lighthouse', 'logo']) {
   const svg = await read(`assets/${name}.svg`);
   const dataUrl = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
   html = html.replaceAll(`./assets/${name}.svg`, dataUrl);
@@ -31,3 +31,4 @@ const home = html
   .replace('独立游戏原型 · 本机保存成绩', '每日一局 · 本机保存成绩')
   .replace('每日航线 · 独立可玩原型 · 无广告与账号 · 离线可玩', '© 2026 每日航线 · <a href="/about">关于</a> · <a href="/privacy">隐私</a> · <a href="/contact">反馈</a>');
 await writeFile(fileURLToPath(new URL('../../index.html', base)), home);
+await writeFile(fileURLToPath(new URL('../../assets/daily-route-logo.svg', base)), await read('assets/logo.svg'));
