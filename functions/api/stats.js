@@ -2,12 +2,28 @@
 // 网站统计 API
 import { createDb } from './_supabase.js';
 
+const GAME_NAMES = new Set(['route', 'twins']);
+const GAME_EVENTS = new Set([
+  'open', 'return_next_day', 'tutorial_start', 'tutorial_complete',
+  'daily_start', 'daily_complete', 'practice_start', 'practice_complete', 'share',
+]);
+
 // 记录页面访问 / 停留时间
 export async function onRequestPost(context) {
   try {
     const db = createDb(context.env);
     const body = await context.request.json();
     const { visitor_id, page, session_id, referrer, ua, duration, type, event } = body;
+
+    if (type === 'game') {
+      if (!GAME_NAMES.has(body.game) || !GAME_EVENTS.has(event)) {
+        return new Response(JSON.stringify({ error: 'invalid game event' }), { status: 400 });
+      }
+      await db.insert('page_views', {
+        visitor_id: 'anonymous-game', page: `game:${body.game}:${event}`, type: 'game',
+      });
+      return new Response(JSON.stringify({ ok: true }), { headers: { 'Cache-Control': 'no-store' } });
+    }
 
     if (!visitor_id) {
       return new Response(JSON.stringify({ error: 'visitor_id required' }), { status: 400 });
@@ -90,6 +106,40 @@ export async function onRequestGet(context) {
     const db = createDb(context.env);
     const url = new URL(context.request.url);
     const type = url.searchParams.get('type') || 'today';
+
+    if (type === 'game') {
+      const days = Number(url.searchParams.get('days') || 14);
+      if (!Number.isInteger(days) || days < 1 || days > 30) {
+        return new Response(JSON.stringify({ error: 'invalid days' }), { status: 400 });
+      }
+      const since = new Date(Date.now() - days * 86400000).toISOString();
+      const counts = {};
+      const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
+      });
+      let offset = 0;
+      let rows = [];
+      do {
+        rows = await db.get('page_views', {
+          filters: { type: 'eq.game', created_at: `gte.${since}` },
+          select: 'page,created_at', order: 'created_at.asc', limit: 1000, offset,
+        });
+        for (const row of rows) {
+          const match = /^game:(route|twins):([a-z_]+)$/.exec(row.page);
+          if (!match || !GAME_EVENTS.has(match[2])) continue;
+          const parts = formatter.formatToParts(new Date(row.created_at));
+          const part = (type) => parts.find((item) => item.type === type).value;
+          const date = `${part('year')}-${part('month')}-${part('day')}`;
+          const key = `${date}:${match[1]}`;
+          counts[key] ??= {};
+          counts[key][match[2]] = (counts[key][match[2]] || 0) + 1;
+        }
+        offset += rows.length;
+      } while (rows.length === 1000 && offset < 10000);
+      return new Response(JSON.stringify({ ok: true, days, counts, truncated: offset >= 10000 }), {
+        headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' },
+      });
+    }
 
     if (type === 'today') {
       const today = new Date().toISOString().slice(0, 10);

@@ -22,6 +22,9 @@
 /samples/*
   X-Robots-Tag: noindex, nofollow
 
+/metrics.html
+  X-Robots-Tag: noindex, nofollow
+
 /ai-service
   X-Robots-Tag: noindex, follow
 

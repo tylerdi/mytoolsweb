@@ -1,4 +1,5 @@
 import { PRACTICE_COUNT, SIZE, advance, dailyBoard, dayKey, findHint, practiceBoard, streak, tutorialBoard, validateRoute } from './game-core.mjs';
+import { createGameTelemetry } from '../../assets/game-analytics.mjs';
 
 const asset = {
   start: './assets/dock.svg', end: './assets/lighthouse.svg', beacon: './assets/beacon.svg',
@@ -7,6 +8,7 @@ const asset = {
 const arrow = { up: '↑', right: '→', down: '↓', left: '←' };
 const storageKey = 'daily-route-results:v1';
 const tutorialKey = 'daily-route-tutorial:v1';
+const track = createGameTelemetry('route');
 const boardElement = document.querySelector('[data-board]');
 const feedback = document.querySelector('[data-feedback]');
 const dialog = document.querySelector('[data-finish-dialog]');
@@ -39,6 +41,7 @@ let won = false;
 let hintTarget = null;
 let pointerDown = false;
 let dragMoved = false;
+let started = false;
 
 function message(text, tone = 'info') {
   feedback.textContent = text;
@@ -114,7 +117,9 @@ function render() {
   document.querySelector('[data-next]').disabled = practiceLevel >= PRACTICE_COUNT;
   document.querySelector('[data-undo]').disabled = path.length <= 1;
   document.querySelector('[data-hint]').disabled = tutorial || hints >= 3 || won;
-  document.querySelector('[data-share]').disabled = tutorial || !won;
+  const shareButton = document.querySelector('[data-share]');
+  shareButton.title = won && !tutorial ? '分享本局成绩' : '分享游戏链接';
+  shareButton.setAttribute('aria-label', shareButton.title);
   document.querySelectorAll('[data-mode]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.mode === mode)));
   boardElement.setAttribute('aria-label', `${SIZE} 乘 ${SIZE} 航线棋盘，${tutorial ? '新手教学，' : ''}${visitedBeacons} 个航标已收集，已走 ${path.length - 1} 步`);
 
@@ -166,6 +171,7 @@ function finish() {
   won = true;
   stopClock();
   storeWin();
+  track(`${mode}_complete`);
   if (mode === 'tutorial') {
     try { localStorage.setItem(tutorialKey, 'done'); } catch { /* Playable without storage. */ }
   }
@@ -173,7 +179,7 @@ function finish() {
   document.querySelector('[data-finish-score]').textContent = `${path.length - 1} / ${board.limit} 步`;
   document.querySelector('[data-finish-description]').textContent = mode === 'tutorial' ? '码头、航标、洋流和灯塔都走过了。' : mode === 'daily' ? `${board.key} 每日挑战完成` : `练习 ${practiceLevel} 完成`;
   document.querySelector('[data-finish-detail]').textContent = `航标 3 / 3 · 提示 ${hints} / 3 · 用时 ${clockText(elapsed)}`;
-  document.querySelector('[data-dialog-share]').hidden = mode === 'tutorial';
+  document.querySelector('[data-dialog-share]').textContent = mode === 'tutorial' ? '分享游戏' : '分享成绩';
   document.querySelector('[data-dialog-practice]').textContent = mode === 'tutorial' ? '开始今日挑战' : mode === 'daily' ? '继续练习' : '下一练习关';
   message(mode === 'tutorial' ? '教学完成，现在可以独立规划今日航线。' : '航线完成，所有航标都已收齐。');
   render();
@@ -199,6 +205,7 @@ function move(target) {
   if (result.status === 'solved' && won) return;
   path = result.path;
   hintTarget = null;
+  if (!started) { track(`${mode}_start`); started = true; }
   if (result.status === 'solved') { finish(); return; }
   startClock();
   message(mode === 'tutorial' ? tutorialInstruction() : board.beacons.includes(target) ? '收集到航标，继续向灯塔前进。' : '航线已延伸。');
@@ -216,6 +223,7 @@ function loadBoard(nextMode = mode, level = practiceLevel) {
   elapsed = 0;
   won = false;
   hintTarget = null;
+  started = false;
   if (mode === 'daily') {
     const saved = records[board.key];
     if (saved && Array.isArray(saved.path) && validateRoute(board, saved.path).status === 'solved') {
@@ -237,6 +245,7 @@ function reset() {
   elapsed = 0;
   won = false;
   hintTarget = null;
+  started = false;
   message(mode === 'tutorial' ? tutorialInstruction() : '本局已重置。每日历史成绩仍保存在本机。');
   render();
 }
@@ -263,15 +272,20 @@ function hint() {
 }
 
 async function share() {
-  if (!won || mode === 'tutorial') return;
-  const title = mode === 'daily' ? `每日航线 ${board.key}` : `每日航线 · 练习 ${practiceLevel}`;
-  const address = location.hostname === 'localhost' || location.hostname === '127.0.0.1' ? '' : `\n${location.href}`;
-  const text = `${title}\n${path.length - 1}/${board.limit} 步 · ${hints} 次提示${address}`;
+  const url = 'https://tylerzhang.xyz/';
+  const title = '每日航线';
+  const text = won && mode !== 'tutorial'
+    ? `${mode === 'daily' ? board.key : `练习 ${practiceLevel}`} · ${path.length - 1}/${board.limit} 步 · ${hints} 次提示`
+    : '每天一张新海图，来规划你的航线。';
   try {
-    await navigator.clipboard.writeText(text);
-    message('成绩已复制，内容不包含地图答案。');
-    if (dialog.open) document.querySelector('[data-finish-detail]').textContent = '成绩已复制，内容不包含地图答案。';
-  } catch { message('复制失败，请检查浏览器的剪贴板权限。', 'warn'); }
+    if (navigator.share) await navigator.share({ title, text, url });
+    else await navigator.clipboard.writeText(`${title}\n${text}\n${url}`);
+    track('share');
+    message(navigator.share ? '分享已完成。' : '链接已复制，可以发给朋友。');
+    if (dialog.open) document.querySelector('[data-finish-detail]').textContent = '分享不包含地图答案。';
+  } catch (error) {
+    if (error?.name !== 'AbortError') message('分享失败，请检查浏览器的分享或剪贴板权限。', 'warn');
+  }
 }
 
 for (let index = 0; index < SIZE * SIZE; index += 1) {
