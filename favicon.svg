@@ -1,1 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="9" fill="#166e6c"/><path d="M10 46h44" fill="none" stroke="#d9ece7" stroke-width="3"/><path d="M12 44c6-4 10-4 16 0s10 4 16 0 8-4 10-3" fill="none" stroke="#a7d7c9" stroke-width="3"/><path d="M32 11v31M32 13l18 22H32z" fill="#fff5df" stroke="#fff5df" stroke-linejoin="round" stroke-width="2"/><path d="M32 15L19 33h13" fill="#e5ae54" stroke="#e5ae54" stroke-linejoin="round" stroke-width="2"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="每日航线图标">
+  <rect x="8" y="8" width="496" height="496" rx="94" fill="#143f49"/>
+  <rect x="72" y="72" width="368" height="368" rx="25" fill="#1b5961" stroke="#5aa19d" stroke-width="3"/>
+  <g fill="none" stroke="#9bd1c9" stroke-width="2" opacity=".22">
+    <path d="M164 74v364M256 74v364M348 74v364M74 164h364M74 256h364M74 348h364"/>
+  </g>
+  <path d="M156 350c30-7 38-61 66-61 26 0 34 28 60 17 25-10 25-64 62-64h30" fill="none" stroke="#f08067" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#f8c874" stroke="#143f49" stroke-width="5">
+    <circle cx="222" cy="289" r="16"/>
+    <circle cx="282" cy="306" r="16"/>
+    <circle cx="344" cy="242" r="16"/>
+  </g>
+  <path d="M84 388h118l-20 25H106z" fill="#f08067" stroke="#143f49" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M142 292v91m0-79 50 69h-50z" fill="#f4f7e9" stroke="#143f49" stroke-width="6" stroke-linejoin="round"/>
+  <path d="m136 323-39 50h39z" fill="#9bd1c9" stroke="#143f49" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M355 226h75l-11-100h-53z" fill="#f4f7e9" stroke="#143f49" stroke-width="7" stroke-linejoin="round"/>
+  <path d="M362 184h61l-4-24h-53z" fill="#f08067"/>
+  <path d="M364 127h57v16h-57z" fill="#143f49"/>
+  <path d="M375 112h36v15h-36z" fill="#f8c874" stroke="#143f49" stroke-width="6" stroke-linejoin="round"/>
+  <path d="m358 103-21-13m99 13 21-13M393 96V76" fill="none" stroke="#f8c874" stroke-width="8" stroke-linecap="round"/>
+  <path d="M88 438c24-14 39-14 63 0 24-14 39-14 63 0 24-14 39-14 63 0 24-14 39-14 63 0 24-14 39-14 63 0" fill="none" stroke="#9bd1c9" stroke-width="10" stroke-linecap="round"/>
+</svg>
