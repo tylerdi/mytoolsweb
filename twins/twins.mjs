@@ -1,13 +1,17 @@
 import { DIRECTIONS, PRACTICE_COUNT, SIZE, dailyBoard, dayKey, hintFor, isWon, moveBoats, practiceBoard, tutorialBoard, validateRoute } from './twins-core.mjs';
 import { createGameTelemetry } from '../assets/game-analytics.mjs';
+import { createVoyage, createSeaMotion } from '../assets/voyage.mjs';
 
 const track = createGameTelemetry('twins');
 const recordsKey = 'tide-twins-results:v1';
 const tutorialKey = 'tide-twins-tutorial:v1';
 const boardElement = document.querySelector('[data-board]');
+boardElement.tabIndex = -1;
 const feedback = document.querySelector('[data-feedback]');
 const dialog = document.querySelector('[data-finish-dialog]');
 const cells = [];
+const motion = createSeaMotion(boardElement, dialog);
+const voyage = createVoyage({ game: 'twins', count: PRACTICE_COUNT, onSelect: (level) => loadBoard('practice', level), titleFor: (level) => practiceBoard(level).title || `双船海图 ${level}`, onMapOpen: () => motion.cancelFinish() });
 const arrow = { up: '↑', right: '→', down: '↓', left: '←' };
 const directionName = { up: '上', right: '右', down: '下', left: '左' };
 
@@ -99,6 +103,7 @@ function image(name) {
   element.src = `./assets/${name}.svg`;
   element.alt = '';
   element.draggable = false;
+  if (name.startsWith('boat-')) element.className = `vessel ${name}`;
   return element;
 }
 
@@ -106,16 +111,16 @@ function render() {
   const state = currentState();
   const docked = Number(state.a === board.goals.a) + Number(state.b === board.goals.b);
   const tutorial = mode === 'tutorial';
-  document.querySelector('[data-board-title]').textContent = tutorial ? '入门海图' : mode === 'daily' ? `${Number(board.key.slice(5, 7))} 月 ${Number(board.key.slice(8, 10))} 日 · 今日海图` : board.title || `练习海图 ${practiceLevel}`;
-  document.querySelector('[data-board-subtitle]').textContent = tutorial ? '跟着航向指令前进' : mode === 'daily' ? `上海时间每日更新 · ${board.reference.length <= 7 ? '入门' : board.reference.length <= 10 ? '标准' : '进阶'}` : `练习 ${practiceLevel} / ${PRACTICE_COUNT} · 最短 ${board.reference.length} 步`;
-  document.querySelector('[data-mode-label]').textContent = tutorial ? '新手教学' : mode === 'daily' ? '每日挑战' : `练习 ${practiceLevel}`;
+  document.querySelector('[data-board-title]').textContent = tutorial ? '入门海图' : mode === 'daily' ? `${Number(board.key.slice(5, 7))} 月 ${Number(board.key.slice(8, 10))} 日 · 今日海图` : `第 ${practiceLevel} 关 · ${board.title || '双船海图'}`;
+  document.querySelector('[data-board-subtitle]').textContent = tutorial ? '跟着航向指令前进' : mode === 'daily' ? `上海时间每日更新 · ${board.reference.length <= 7 ? '入门' : board.reference.length <= 10 ? '标准' : '进阶'}` : `${practiceLevel} / ${PRACTICE_COUNT} · 最短 ${board.reference.length} 步`;
+  document.querySelector('[data-mode-label]').textContent = tutorial ? '新手教学' : mode === 'daily' ? '每日挑战' : `闯关 ${practiceLevel}`;
   document.querySelector('[data-steps]').textContent = `${directions.length} / ${board.limit}`;
   document.querySelector('[data-docked]').textContent = `${docked} / 2`;
   document.querySelector('[data-time]').textContent = timeText(elapsed);
   document.querySelector('[data-streak]').textContent = String(streak());
   document.querySelectorAll('[data-mode]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.mode === mode)));
   document.querySelector('[data-practice-controls]').hidden = mode !== 'practice';
-  document.querySelector('[data-practice-title]').textContent = `练习 ${practiceLevel} / ${PRACTICE_COUNT}`;
+  document.querySelector('[data-practice-title]').textContent = `第 ${practiceLevel} / ${PRACTICE_COUNT} 关`;
   document.querySelector('[data-prev]').disabled = practiceLevel <= 1;
   document.querySelector('[data-next]').disabled = practiceLevel >= PRACTICE_COUNT;
   document.querySelector('[data-undo]').disabled = directions.length === 0;
@@ -149,6 +154,7 @@ function render() {
     if (index === board.goals.b) { cell.classList.add('dock-b'); parts.push('金色港'); }
     if (index === state.a) { cell.append(image('boat-coral')); parts.push('珊瑚船'); }
     if (index === state.b) { cell.append(image('boat-gold')); parts.push('金色船'); }
+    cell.classList.toggle('docked', index === state.a && state.a === board.goals.a || index === state.b && state.b === board.goals.b);
     cell.setAttribute('aria-label', `第 ${Math.floor(index / SIZE) + 1} 行第 ${index % SIZE + 1} 列，${parts.join('，') || '海面'}`);
   }
 }
@@ -165,47 +171,56 @@ function finish() {
   won = true;
   stopClock();
   saveWin();
+  if (mode === 'practice') voyage.win(practiceLevel, { steps: directions.length, hints });
   track(`${mode}_complete`);
   if (mode === 'tutorial') {
     try { localStorage.setItem(tutorialKey, 'done'); } catch { /* Playable without storage. */ }
   }
   document.querySelector('[data-finish-title]').textContent = mode === 'tutorial' ? '已学会双船航行' : '双船顺利靠岸';
-  document.querySelector('[data-finish-description]').textContent = mode === 'tutorial' ? '两艘船都到达了对应的港口。' : mode === 'daily' ? `${board.key} 每日挑战完成` : `练习 ${practiceLevel} 完成`;
+  document.querySelector('[data-finish-description]').textContent = mode === 'tutorial' ? '已经掌握双船协同，开启你的闯关航程吧。' : mode === 'daily' ? `${board.key} 每日挑战完成，还可以继续闯关。` : `第 ${practiceLevel} 关完成${practiceLevel < PRACTICE_COUNT ? '，下一片海等你探索。' : '，这段航程抵达终点！'}`;
   document.querySelector('[data-finish-score]').textContent = `${directions.length} / ${board.limit} 步`;
   document.querySelector('[data-finish-detail]').textContent = `提示 ${hints} / 3 · 用时 ${timeText(elapsed)}`;
   document.querySelector('[data-dialog-share]').textContent = mode === 'tutorial' ? '分享游戏' : '分享成绩';
   const replay = document.querySelector('[data-replay]');
   replay.hidden = mode === 'tutorial';
   if (mode !== 'tutorial') replay.href = mode === 'daily' ? `/replay/?game=twins&date=${board.key}` : `/replay/?game=twins&level=${practiceLevel}`;
-  document.querySelector('[data-dialog-next]').textContent = mode === 'tutorial' ? '开始今日挑战' : mode === 'daily' ? '继续练习' : '下一练习关';
+  document.querySelector('[data-dialog-next]').textContent = mode === 'practice' ? practiceLevel < PRACTICE_COUNT ? `下一关 · 第 ${practiceLevel + 1} 关 →` : '查看关卡地图' : `继续闯关 · 第 ${voyage.next()} 关 →`;
   message('两艘船都已靠岸。');
   render();
-  if (!dialog.open) dialog.showModal();
+  motion.finish();
+}
+
+function animateBoats(before, after) {
+  motion.sail(before.a, after.a, '.boat-coral', after.a === board.goals.a);
+  motion.sail(before.b, after.b, '.boat-gold', after.b === board.goals.b);
 }
 
 function move(direction) {
   if (won || directions.length >= board.limit) return;
   if (mode === 'tutorial' && direction !== board.reference[directions.length]) {
     message(`先点发光的 ${arrow[board.reference[directions.length]]}，跟着教学前进。`, 'warn');
+    motion.invalid();
     return;
   }
   const before = currentState();
   const next = moveBoats(board, before, direction);
-  if (!next) { message('这一步无法移动：两艘船不能重叠，也不能穿过礁石。', 'warn'); return; }
+  if (!next) { message('这一步无法移动：两艘船不能重叠，也不能穿过礁石。', 'warn'); motion.invalid(); return; }
   states.push(next);
   directions.push(direction);
   hintDirection = null;
   if (!started) { track(`${mode}_start`); started = true; }
-  if (isWon(board, next)) { finish(); return; }
+  if (isWon(board, next)) { finish(); animateBoats(before, next); return; }
   startClock();
   if (directions.length >= board.limit) message('步数已用完，可以撤回或重置再试。', 'warn');
   else if (mode === 'tutorial') message(tutorialInstruction());
   else if ((before.a === next.a) !== (before.b === next.b)) message('一艘船被挡住，另一艘仍在前进。');
   else message('两艘船一起向前移动。');
   render();
+  animateBoats(before, next);
 }
 
 function loadBoard(nextMode = mode, level = practiceLevel) {
+  motion.cancelFinish();
   stopClock();
   if (dialog.open) dialog.close();
   mode = nextMode;
@@ -226,13 +241,17 @@ function loadBoard(nextMode = mode, level = practiceLevel) {
       hints = saved.hints || 0;
       elapsed = saved.elapsed || 0;
       won = true;
-      message('今日双船已靠岸，可以分享成绩或重置再玩。');
+      message('今日双船已靠岸。点击上方“开始闯关”，还有 16 张海图可玩。');
     } else message('点下方方向箭头，同时指挥两艘船前进。');
-  } else message(mode === 'tutorial' ? tutorialInstruction() : '练习海图已载入，开始双船协同。');
+  } else message(mode === 'tutorial' ? tutorialInstruction() : `第 ${practiceLevel} 关已载入。通关后可直接前往下一关。`);
+  voyage.update(mode === 'practice' ? practiceLevel : null);
   render();
+  motion.enter();
+  if (arguments.length) boardElement.focus({ preventScroll: true });
 }
 
 function reset() {
+  motion.cancelFinish();
   stopClock();
   if (dialog.open) dialog.close();
   states = [{ ...board.start }];
@@ -248,13 +267,16 @@ function reset() {
 
 function undo() {
   if (!directions.length) return;
+  motion.cancelFinish();
   if (dialog.open) dialog.close();
+  const previous = currentState();
   directions.pop();
   states.pop();
   won = false;
   hintDirection = null;
   message(mode === 'tutorial' ? tutorialInstruction() : '已撤回一步。');
   render();
+  animateBoats(previous, currentState());
 }
 
 function hint() {
@@ -267,11 +289,11 @@ function hint() {
 }
 
 async function share() {
-  const url = 'https://tylerzhang.xyz/twins/';
+  const url = `https://tylerzhang.xyz/twins/${mode === 'practice' ? `?practice=${practiceLevel}` : ''}`;
   const title = '潮汐双船';
   const text = won && mode !== 'tutorial'
     ? `${mode === 'daily' ? board.key : `练习 ${practiceLevel}`} · ${directions.length}/${board.limit} 步 · ${hints} 次提示`
-    : '一条指令同时移动两艘船，来试试今天的海图。';
+    : '一条指令同时移动两艘船，每日海图与连续闯关都能玩。';
   try {
     if (navigator.share) await navigator.share({ title, text, url });
     else await navigator.clipboard.writeText(`${title}\n${text}\n${url}`);
@@ -293,7 +315,7 @@ for (let index = 0; index < SIZE * SIZE; index += 1) {
 
 document.querySelectorAll('[data-direction]').forEach((button) => button.addEventListener('click', () => move(button.dataset.direction)));
 document.addEventListener('keydown', (event) => {
-  if (dialog.open || event.altKey || event.ctrlKey || event.metaKey) return;
+  if (document.querySelector('dialog[open]') || event.altKey || event.ctrlKey || event.metaKey) return;
   if (event.target instanceof HTMLElement && event.target.closest('button') && !event.target.closest('.direction-controls')) return;
   const selected = { ArrowUp: 'up', ArrowRight: 'right', ArrowDown: 'down', ArrowLeft: 'left' }[event.key];
   if (!selected) return;
@@ -304,7 +326,7 @@ document.querySelectorAll('[data-mode]').forEach((button) => button.addEventList
   if (mode === 'tutorial' && button.dataset.mode !== 'tutorial') {
     try { localStorage.setItem(tutorialKey, 'done'); } catch { /* Playable without storage. */ }
   }
-  loadBoard(button.dataset.mode);
+  loadBoard(button.dataset.mode, button.dataset.mode === 'practice' ? voyage.next() : practiceLevel);
 }));
 document.querySelector('[data-prev]').addEventListener('click', () => loadBoard('practice', practiceLevel - 1));
 document.querySelector('[data-next]').addEventListener('click', () => loadBoard('practice', practiceLevel + 1));
@@ -314,6 +336,9 @@ document.querySelector('[data-hint]').addEventListener('click', hint);
 document.querySelector('[data-share]').addEventListener('click', share);
 document.querySelector('[data-dialog-share]').addEventListener('click', share);
 document.querySelector('[data-dialog-close]').addEventListener('click', () => dialog.close());
-document.querySelector('[data-dialog-next]').addEventListener('click', () => mode === 'tutorial' ? loadBoard('daily') : loadBoard('practice', mode === 'practice' ? Math.min(PRACTICE_COUNT, practiceLevel + 1) : 1));
+document.querySelector('[data-dialog-next]').addEventListener('click', () => {
+  if (mode === 'practice' && practiceLevel === PRACTICE_COUNT) { dialog.close(); voyage.showMap(); }
+  else loadBoard('practice', mode === 'practice' ? practiceLevel + 1 : voyage.next());
+});
 setInterval(() => { if (mode === 'daily' && board.key !== dayKey()) loadBoard('daily'); }, 60000);
 loadBoard();

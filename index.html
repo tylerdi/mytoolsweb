@@ -4,8 +4,8 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="google-adsense-account" content="ca-pub-6426056111301969">
   <link rel="canonical" href="https://tylerzhang.xyz/"><link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
-  <title>每日航线 · 每天一局海图谜题</title>
-  <meta name="description" content="在海图上规划航线，收齐航标、避开礁石并遵守洋流方向。每日一局，也可自由练习。">
+  <title>每日航线 · 每日海图与连续闯关</title>
+  <meta name="description" content="在海图上规划航线，收齐航标、避开礁石并遵守洋流方向。每日新图与 12 关连续闯关，包含教学、选关与解法回放。">
   <meta property="og:type" content="website"><meta property="og:title" content="每日航线 · 每天一张新海图"><meta property="og:description" content="收齐航标，顺着洋流，在步数用尽前靠岸。"><meta property="og:url" content="https://tylerzhang.xyz/"><meta property="og:image" content="https://tylerzhang.xyz/assets/daily-route-logo.png">
   <style>
 :root{--paper:#f3f6f3;--white:#fff;--ink:#1c3038;--muted:#586c71;--line:#c9d9d5;--sea:#d9ece7;--deep:#166e6c;--coral:#cf704f;--gold:#e5ae54;--warn:#a44839}
@@ -102,11 +102,66 @@ h1{margin:0;font-size:1.85rem;line-height:1.25;font-weight:780}
 @media(prefers-reduced-motion:reduce){.tile,.tile.hint,.tile.tutorial-target{transition:none;animation:none}}
 
 </style>
+  <style>
+/* Ocean adventure skin, shared only by the two game pages. */
+body{background:radial-gradient(ellipse at 10% 0,#d5eae5,transparent 50%),radial-gradient(ellipse at 95% 50%,#e0e8ef,transparent 50%),#f1f5f3}
+.topbar{background:#ffffffd9;backdrop-filter:blur(16px)}
+.game-intro,.intro{position:relative;overflow:hidden;padding:25px 28px;border:1px solid #244e5b;border-radius:20px;background:radial-gradient(ellipse at 75% 150%,#277f82 0,transparent 60%),#153d4c;color:#fff;box-shadow:0 12px 35px #153d4c12}
+.game-intro .eyebrow,.intro .eyebrow{color:#91d7c6;letter-spacing:.16em;font-size:.66rem}
+.game-intro p:last-child,.intro p:last-child{color:#d1e3e6}
+.mode-switch{border-color:#ffffff40;border-radius:9px;background:#102e3d6b}
+.mode-switch button{color:#dfebeb;border-color:#ffffff24;transition:background .2s}
+.mode-switch button[aria-pressed=true]{background:#e4f3ed;color:#164e50}
+.voyage-entry{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:16px;padding:18px 22px;border:1px solid #c4d9d2;border-radius:14px;background:#ffffffd9;box-shadow:0 6px 24px #1a534908}
+.voyage-copy{min-width:0;flex:1}.voyage-copy h2{margin:0;font-size:.95rem}.voyage-copy p{margin:3px 0 0;font-size:.78rem;color:var(--muted)}
+.voyage-copy strong{color:var(--deep);font-weight:650}.voyage-meter{width:min(100%,290px);height:4px;margin-top:10px;border-radius:6px;background:#e2ece8;overflow:hidden}.voyage-meter i{display:block;width:0;height:100%;background:linear-gradient(90deg,#288f8a,#9dcc94);transition:width .35s}
+.voyage-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.voyage-actions button,.motion-toggle{min-height:40px;padding:8px 13px;border:1px solid #b3cbc4;border-radius:8px;background:#fff;color:var(--deep);font-size:.8rem;font-weight:650;cursor:pointer}
+.voyage-actions .voyage-start{background:#1c6d6e;border-color:#1c6d6e;color:#fff;box-shadow:0 4px 12px #1c6d6e20}.voyage-actions button:hover{filter:brightness(.96)}
+.motion-toggle{display:block;min-height:32px;padding:5px 9px;margin:10px 0 0 auto;color:var(--muted);background:transparent;font-size:.72rem}
+.play-column,.play{padding:20px;border:1px solid #c9dcd6;border-radius:18px;background:#ffffffa3;box-shadow:0 12px 36px #163c4408}
+.game-layout,.layout{gap:28px;padding-top:20px}
+.board{position:relative;isolation:isolate;overflow:hidden;border:1px solid #316b73;border-radius:13px;background:linear-gradient(145deg,#366c78,#184554);box-shadow:0 12px 24px #1d515422,inset 0 1px 0 #ffffff50}
+.board::after{content:"";position:absolute;inset:-100%;z-index:0;pointer-events:none;background:repeating-linear-gradient(125deg,transparent 0 56px,#9ff4df16 58px 60px,transparent 62px 118px);animation:sea-glimmer 16s linear infinite}
+.tile{z-index:1;border-radius:5px;background:linear-gradient(145deg,#e9f6f0,#d7ede7);box-shadow:inset 0 1px 0 #ffffff80}
+.tile.path{background:linear-gradient(145deg,#acdccc,#83c5b6)}.tile.head{background:linear-gradient(145deg,#80cdb9,#4eae9e);box-shadow:inset 0 0 0 2px #e9fff4,0 0 12px #78dfc755;z-index:3}
+.tile.current{background:linear-gradient(145deg,#deedf8,#bedeea)}.tile.reef,.tile.rock{background:linear-gradient(145deg,#aec4c5,#91acae)}
+.tile.beacon:not(.path){background:linear-gradient(145deg,#fff6df,#f5e4bb)}.tile.beacon.path:not(.head) img{opacity:.4;filter:grayscale(.5)}
+.tile .vessel{z-index:4;will-change:transform;animation:boat-float 4s ease-in-out infinite}.tile.docked{box-shadow:inset 0 0 0 2px #e5bd6b,0 0 15px #e5bd6b45}
+.tile.beacon:not(.path) img{animation:beacon-float 3.8s ease-in-out infinite}.tile.beacon:nth-child(odd) img{animation-delay:-1.9s}
+.tile.dock-a::before,.tile.dock-b::before{animation:harbor-glow 3.5s ease-in-out infinite}
+.tile.current .flow{animation:current-drift 2.6s ease-in-out infinite}
+.sea-ripple{position:absolute;inset:8%;border:2px solid #f4ffff;border-radius:50%;z-index:5;pointer-events:none}.sea-ripple.golden{border-color:#efb03c;border-width:3px}
+.command-row button,.commands button,.direction-controls button,.practice-row button{border-radius:9px;box-shadow:0 2px 0 #d2dfda;transition:transform .12s,background .15s}
+.command-row button:active:not(:disabled),.commands button:active:not(:disabled),.direction-controls button:active:not(:disabled){transform:translateY(2px);box-shadow:none}
+.metrics{border-radius:10px;overflow:hidden;background:#ffffff8c}.feedback{border-radius:0 8px 8px 0}
+.finish-dialog,.voyage-map{border-radius:20px;border:1px solid #a8c7c1;box-shadow:0 25px 100px #102f4450;background:linear-gradient(160deg,#fff,#f0f8f3);color:var(--ink)}
+.finish-dialog{overflow:auto;max-height:90dvh}.finish-dialog::backdrop,.voyage-map::backdrop{background:#0b2d3ec2;backdrop-filter:blur(5px)}
+.finish-dialog .finish-score{background:#deefe7;border:0;border-radius:12px;text-align:center;padding:22px}.finish-dialog .modal-actions{display:grid;grid-template-columns:1fr 1fr}.finish-dialog .modal-actions>*{text-align:center;justify-content:center;border-radius:8px}.finish-dialog .modal-actions .primary{grid-column:1/-1;min-height:48px}
+.harbor-spark{position:absolute;left:50%;top:38%;width:7px;height:12px;border-radius:2px;background:var(--spark-color);pointer-events:none}
+.voyage-map{width:min(700px,calc(100% - 28px));max-height:85dvh;padding:24px}.map-heading{display:flex;align-items:start;justify-content:space-between;gap:12px}.map-heading h2{font-size:1.25rem;margin:2px 0}.map-heading button{min-width:36px;min-height:36px;border:1px solid var(--line);border-radius:50%;color:var(--deep);background:white;font-size:1.3rem}.map-note{font-size:.78rem;color:var(--muted);margin:10px 0 20px}
+.level-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.level-grid button{min-height:110px;padding:13px 10px;display:flex;flex-direction:column;align-items:start;gap:5px;text-align:left;background:#fff;border:1px solid #ccddd7;border-radius:12px;color:var(--ink)}.level-grid strong{font:750 1.25rem ui-monospace,monospace;color:#668283}.level-grid span{font-size:.78rem;font-weight:650}.level-grid small{font-size:.66rem;color:var(--muted)}.level-grid button.completed{background:#e2f2e9;border-color:#a4cdbb}.level-grid button.completed strong{color:#1a7969}.level-grid button[aria-current=step]{outline:2px solid #237c7d;outline-offset:2px}.level-grid button:hover{border-color:var(--deep);transform:translateY(-2px)}
+@keyframes sea-glimmer{to{transform:translate(80px,100px)}}
+@keyframes current-drift{50%{transform:translateY(-3px);opacity:.65}}
+@keyframes harbor-glow{50%{opacity:.45;transform:scale(.92)}}
+@keyframes boat-float{50%{transform:translateY(-2px) rotate(2deg)}}
+@keyframes beacon-float{50%{transform:translateY(-2px) scale(1.05)}}
+@media(max-width:900px){.side-panel,.aside{max-width:none}.game-layout,.layout{gap:20px}}
+@media(max-width:560px){.game-intro,.intro{padding:20px 18px;border-radius:16px}.voyage-entry{align-items:stretch;flex-direction:column;padding:15px;gap:12px}.voyage-actions{display:grid;grid-template-columns:1fr 1fr}.voyage-actions button{padding:9px 6px;font-size:.76rem}.voyage-copy p{font-size:.73rem}.play-column,.play{padding:12px 9px;border-radius:14px}.board-topline,.board-heading{gap:8px}.board-topline h2,.board-heading h2{font-size:.88rem}.board-topline span,.board-heading span{font-size:.67rem}.level-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.voyage-map{padding:18px 14px}.level-grid button{min-height:105px;padding:10px 7px}.level-grid span{font-size:.72rem}.map-heading h2{font-size:1.1rem}.finish-dialog{padding:22px}.finish-dialog .modal-actions>*{font-size:.75rem;padding:8px}}
+html[data-motion=off] *,html[data-motion=off] *::before,html[data-motion=off] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media(max-width:560px){.game-intro,.intro{padding:16px;gap:10px}.game-intro .eyebrow,.intro .eyebrow{display:none}.game-intro p:last-child,.intro p:last-child{font-size:.78rem;line-height:1.5;margin-top:5px}.voyage-copy p{display:none}.voyage-entry{padding:13px 15px}.motion-toggle{margin-bottom:-8px}}
+
+</style>
 </head>
 <body>
   <header class="topbar"><div class="topbar-inner"><a class="brand" href="/"><img class="brand-logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9Iuavj+aXpeiIque6v+WbvuaghyI+CiAgPHJlY3QgeD0iOCIgeT0iOCIgd2lkdGg9IjQ5NiIgaGVpZ2h0PSI0OTYiIHJ4PSI5NCIgZmlsbD0iIzE0M2Y0OSIvPgogIDxyZWN0IHg9IjcyIiB5PSI3MiIgd2lkdGg9IjM2OCIgaGVpZ2h0PSIzNjgiIHJ4PSIyNSIgZmlsbD0iIzFiNTk2MSIgc3Ryb2tlPSIjNWFhMTlkIiBzdHJva2Utd2lkdGg9IjMiLz4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiM5YmQxYzkiIHN0cm9rZS13aWR0aD0iMiIgb3BhY2l0eT0iLjIyIj4KICAgIDxwYXRoIGQ9Ik0xNjQgNzR2MzY0TTI1NiA3NHYzNjRNMzQ4IDc0djM2NE03NCAxNjRoMzY0TTc0IDI1NmgzNjRNNzQgMzQ4aDM2NCIvPgogIDwvZz4KICA8cGF0aCBkPSJNMTU2IDM1MGMzMC03IDM4LTYxIDY2LTYxIDI2IDAgMzQgMjggNjAgMTcgMjUtMTAgMjUtNjQgNjItNjRoMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2YwODA2NyIgc3Ryb2tlLXdpZHRoPSIxOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPGcgZmlsbD0iI2Y4Yzg3NCIgc3Ryb2tlPSIjMTQzZjQ5IiBzdHJva2Utd2lkdGg9IjUiPgogICAgPGNpcmNsZSBjeD0iMjIyIiBjeT0iMjg5IiByPSIxNiIvPgogICAgPGNpcmNsZSBjeD0iMjgyIiBjeT0iMzA2IiByPSIxNiIvPgogICAgPGNpcmNsZSBjeD0iMzQ0IiBjeT0iMjQyIiByPSIxNiIvPgogIDwvZz4KICA8cGF0aCBkPSJNODQgMzg4aDExOGwtMjAgMjVIMTA2eiIgZmlsbD0iI2YwODA2NyIgc3Ryb2tlPSIjMTQzZjQ5IiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNMTQyIDI5MnY5MW0wLTc5IDUwIDY5aC01MHoiIGZpbGw9IiNmNGY3ZTkiIHN0cm9rZT0iIzE0M2Y0OSIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0ibTEzNiAzMjMtMzkgNTBoMzl6IiBmaWxsPSIjOWJkMWM5IiBzdHJva2U9IiMxNDNmNDkiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0zNTUgMjI2aDc1bC0xMS0xMDBoLTUzeiIgZmlsbD0iI2Y0ZjdlOSIgc3Ryb2tlPSIjMTQzZjQ5IiBzdHJva2Utd2lkdGg9IjciIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNMzYyIDE4NGg2MWwtNC0yNGgtNTN6IiBmaWxsPSIjZjA4MDY3Ii8+CiAgPHBhdGggZD0iTTM2NCAxMjdoNTd2MTZoLTU3eiIgZmlsbD0iIzE0M2Y0OSIvPgogIDxwYXRoIGQ9Ik0zNzUgMTEyaDM2djE1aC0zNnoiIGZpbGw9IiNmOGM4NzQiIHN0cm9rZT0iIzE0M2Y0OSIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0ibTM1OCAxMDMtMjEtMTNtOTkgMTMgMjEtMTNNMzkzIDk2Vjc2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmOGM4NzQiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTg4IDQzOGMyNC0xNCAzOS0xNCA2MyAwIDI0LTE0IDM5LTE0IDYzIDAgMjQtMTQgMzktMTQgNjMgMCAyNC0xNCAzOS0xNCA2MyAwIDI0LTE0IDM5LTE0IDYzIDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzliZDFjOSIgc3Ryb2tlLXdpZHRoPSIxMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo=" alt=""><span>每日航线</span></a><nav class="game-nav" aria-label="游戏导航"><a href="./" aria-current="page">每日航线</a><a href="/twins/">潮汐双船</a><a href="/about">关于</a></nav></div></header>
   <main class="game-shell">
-    <header class="game-intro"><div><p class="eyebrow">A NEW ROUTE EACH DAY</p><h1>每日航线</h1><p>收齐航标，顺着洋流，在步数用尽前靠岸。</p></div><div class="mode-switch" role="group" aria-label="游戏模式"><button type="button" data-mode="tutorial" aria-pressed="true">新手教学</button><button type="button" data-mode="daily" aria-pressed="false">每日挑战</button><button type="button" data-mode="practice" aria-pressed="false">自由练习</button></div></header>
+    <header class="game-intro"><div><p class="eyebrow">A NEW ROUTE EACH DAY</p><h1>每日航线</h1><p>收齐航标，顺着洋流，在步数用尽前靠岸。</p></div><div class="mode-switch" role="group" aria-label="游戏模式"><button type="button" data-mode="tutorial" aria-pressed="true">新手教学</button><button type="button" data-mode="daily" aria-pressed="false">每日挑战</button><button type="button" data-mode="practice" aria-pressed="false">航海闯关</button></div></header>
+    <section class="voyage-entry" data-voyage-entry aria-label="连续闯关">
+      <div class="voyage-copy"><h2>航海闯关 <strong data-voyage-progress>0 / 12 已通关</strong></h2><p>收集航标，穿过洋流，一关接一关探索海图。</p><div class="voyage-meter" aria-hidden="true"><i data-voyage-fill></i></div></div>
+      <div class="voyage-actions"><button type="button" class="voyage-start" data-voyage-start>开始第 1 关 →</button><button type="button" data-voyage-map>查看关卡地图</button></div>
+    </section>
+    <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">◉ 动效 开</button>
     <div class="game-layout">
       <section class="play-column" aria-labelledby="board-title">
         <div class="board-topline"><h2 id="board-title" data-board-title>今日海图</h2><span data-board-subtitle>上海时间每日更新</span></div>
@@ -119,14 +174,14 @@ h1{margin:0;font-size:1.85rem;line-height:1.25;font-weight:780}
       <aside class="side-panel" aria-label="本局状态与规则">
         <div class="side-heading"><h2>本局记录</h2><small data-mode-label>每日挑战</small></div>
         <div class="metrics"><div><strong data-steps>0 / 0</strong><span>已走 / 步数预算</span></div><div><strong data-beacons>0 / 3</strong><span>已收航标</span></div><div><strong data-time>00:00</strong><span>用时</span></div><div><strong data-streak>0</strong><span>连续完成天数</span></div></div>
-        <div class="practice-row" data-practice-controls hidden><button type="button" data-prev title="上一练习关" aria-label="上一练习关">←</button><strong data-practice-title>练习 1 / 12</strong><button type="button" data-next title="下一练习关" aria-label="下一练习关">→</button></div>
+        <div class="practice-row" data-practice-controls hidden><button type="button" data-prev title="上一关" aria-label="上一关">←</button><strong data-practice-title>练习 1 / 12</strong><button type="button" data-next title="下一关" aria-label="下一关">→</button></div>
         <section class="rules"><h3>航行规则</h3><ol><li>只走相邻格，不可重复经过或穿过礁石。</li><li>收齐 3 个航标，再进入灯塔。</li><li>从箭头格离开时，必须沿箭头方向前进。</li><li>总步数不能超过当前预算；点击上一格可撤回。</li></ol></section><nav class="related-actions" aria-label="更多玩法"><a href="/guides/">精选关卡</a><a href="/twins/create/">创作关卡</a></nav>
         <p class="side-note">每日关卡在上海时间 00:00 更新。成绩只保存在此浏览器；清除浏览器数据会丢失本地记录。</p>
       </aside>
     </div>
   </main>
   <footer class="footer">© 2026 每日航线 · <a href="/about">关于</a> · <a href="/privacy">隐私</a> · <a href="/contact">反馈</a></footer>
-  <dialog class="finish-dialog" data-finish-dialog aria-labelledby="finish-title"><p class="eyebrow">ROUTE COMPLETE</p><h2 id="finish-title" data-finish-title>顺利靠岸</h2><p data-finish-description>所有航标已收齐。</p><div class="finish-score" data-finish-score>0 / 0 步</div><p data-finish-detail></p><div class="modal-actions"><button type="button" class="primary" data-dialog-share>分享成绩</button><a data-replay href="/replay/" target="_blank" rel="noopener" hidden>观看一种解法</a><button type="button" data-dialog-practice>继续练习</button><button type="button" data-dialog-close>返回海图</button></div></dialog>
+  <dialog class="finish-dialog" data-finish-dialog aria-labelledby="finish-title"><p class="eyebrow">ROUTE COMPLETE</p><h2 id="finish-title" data-finish-title>顺利靠岸</h2><p data-finish-description>所有航标已收齐。</p><div class="finish-score" data-finish-score>0 / 0 步</div><p data-finish-detail></p><div class="modal-actions"><button type="button" class="primary" data-dialog-practice>继续练习</button><button type="button" data-dialog-share>分享成绩</button><a data-replay href="/replay/" target="_blank" rel="noopener" hidden>观看一种解法</a><button type="button" data-dialog-close>返回海图</button></div></dialog>
   <script>
 const SIZE = 7;
 const PRACTICE_COUNT = 12;
@@ -370,6 +425,173 @@ function createGameTelemetry(game) {
   return track;
 }
 
+// Progress stays on this device. Existing daily scores use their own storage.
+function cleanVoyageProgress(value, count) {
+  const clean = {};
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return clean;
+  for (let level = 1; level <= count; level += 1) {
+    const result = value[level];
+    if (result && Number.isInteger(result.steps) && result.steps > 0 && result.steps <= 100
+      && Number.isInteger(result.hints) && result.hints >= 0 && result.hints <= 3) {
+      clean[level] = { steps: result.steps, hints: result.hints };
+    }
+  }
+  return clean;
+}
+
+function nextVoyageLevel(progress, count) {
+  for (let level = 1; level <= count; level += 1) if (!progress[level]) return level;
+  return 1;
+}
+
+function saveVoyageResult(progress, level, result) {
+  const previous = progress[level];
+  if (!previous || result.steps < previous.steps || result.steps === previous.steps && result.hints < previous.hints) {
+    progress[level] = { steps: result.steps, hints: result.hints };
+  }
+}
+
+function createVoyage({ game, count, onSelect, titleFor, onMapOpen = () => {} }) {
+  const key = `daily-games:voyage:${game}:v1`;
+  let progress = {};
+  try { progress = cleanVoyageProgress(JSON.parse(localStorage.getItem(key)), count); } catch { /* Local storage is optional. */ }
+  const entry = document.querySelector('[data-voyage-entry]');
+  const map = document.createElement('dialog');
+  map.className = 'voyage-map';
+  map.setAttribute('aria-labelledby', 'voyage-map-title');
+  map.innerHTML = '<div class="map-heading"><div><p class="eyebrow">YOUR NEXT HORIZON</p><h2 id="voyage-map-title">选择你的下一片海</h2></div><button type="button" data-map-close aria-label="关闭关卡地图">×</button></div><p class="map-note">所有关卡都可直接挑战。✓ 表示已通关；记录仅保存在此浏览器。</p><div class="level-grid"></div>';
+  document.body.append(map);
+  const grid = map.querySelector('.level-grid');
+  let current = null;
+  const buttons = [];
+  for (let level = 1; level <= count; level += 1) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.dataset.level = String(level);
+    button.addEventListener('click', () => { map.close(); onSelect(level); });
+    grid.append(button);
+    buttons.push(button);
+  }
+  map.querySelector('[data-map-close]').addEventListener('click', () => map.close());
+  function update(level = current) {
+    current = level;
+    const completed = Object.keys(progress).length;
+    entry.querySelector('[data-voyage-progress]').textContent = `${completed} / ${count} 已通关`;
+    entry.querySelector('[data-voyage-fill]').style.width = `${completed / count * 100}%`;
+    entry.querySelector('[data-voyage-start]').textContent = completed === count ? '再航行一次' : completed ? `继续第 ${nextVoyageLevel(progress, count)} 关 →` : '开始第 1 关 →';
+    for (const button of buttons) {
+      const number = Number(button.dataset.level);
+      const result = progress[number];
+      button.replaceChildren();
+      const label = document.createElement('strong');
+      label.textContent = `${result ? '✓ ' : ''}${String(number).padStart(2, '0')}`;
+      const title = document.createElement('span');
+      title.textContent = titleFor(number);
+      const detail = document.createElement('small');
+      detail.textContent = result ? `${result.steps} 步 · ${result.hints} 次提示` : '等待启航';
+      button.append(label, title, detail);
+      button.classList.toggle('completed', Boolean(result));
+      if (number === current) button.setAttribute('aria-current', 'step');
+      else button.removeAttribute('aria-current');
+    }
+  }
+  const showMap = () => {
+    onMapOpen();
+    update();
+    if (!map.open) map.showModal();
+    (buttons.find((button) => Number(button.dataset.level) === (current || nextVoyageLevel(progress, count))) || buttons[0]).focus();
+  };
+  entry.querySelector('[data-voyage-start]').addEventListener('click', () => onSelect(nextVoyageLevel(progress, count)));
+  entry.querySelector('[data-voyage-map]').addEventListener('click', showMap);
+  update();
+  return {
+    update, showMap,
+    next: () => nextVoyageLevel(progress, count),
+    win(level, result) {
+      saveVoyageResult(progress, level, result);
+      try { localStorage.setItem(key, JSON.stringify(progress)); } catch { /* Progress remains available for this visit. */ }
+      update(level);
+    },
+  };
+}
+
+function createSeaMotion(board, dialog) {
+  const media = matchMedia('(prefers-reduced-motion: reduce)');
+  const toggle = document.querySelector('[data-motion-toggle]');
+  let enabled = true;
+  try { enabled = localStorage.getItem('daily-games:motion') !== 'off'; } catch { /* Defaults to system preference. */ }
+  const activeAnimations = new Set();
+  let finishTimer;
+  const active = () => enabled && !media.matches;
+  function animate(element, frames, options) {
+    if (!active() || !element) return;
+    const animation = element.animate(frames, options);
+    activeAnimations.add(animation);
+    animation.finished.then(() => activeAnimations.delete(animation), () => activeAnimations.delete(animation));
+    return animation;
+  }
+  function sync() {
+    document.documentElement.dataset.motion = active() ? 'on' : 'off';
+    toggle.textContent = active() ? '◉ 动效 开' : '○ 动效 关';
+    toggle.setAttribute('aria-pressed', String(active()));
+    toggle.title = media.matches ? '系统已启用减少动态效果' : '开关航行动画';
+    toggle.disabled = media.matches;
+    if (!active()) for (const animation of activeAnimations) animation.cancel();
+  }
+  toggle.addEventListener('click', () => {
+    enabled = !active();
+    try { localStorage.setItem('daily-games:motion', enabled ? 'on' : 'off'); } catch { /* Optional preference. */ }
+    sync();
+  });
+  media.addEventListener('change', sync);
+  sync();
+  function pulse(cell, gold = false) {
+    if (!active() || !cell) return;
+    const ripple = document.createElement('i');
+    ripple.className = `sea-ripple${gold ? ' golden' : ''}`;
+    cell.append(ripple);
+    const animation = animate(ripple, [{ transform: 'scale(.25)', opacity: .9 }, { transform: 'scale(1.5)', opacity: 0 }], { duration: gold ? 650 : 480, easing: 'ease-out' });
+    animation?.finished.then(() => ripple.remove(), () => ripple.remove());
+  }
+  return {
+    sail(from, to, selector = '.vessel', celebrate = false) {
+      if (!active() || from === to) return;
+      const origin = board.querySelector(`[data-index="${from}"]`);
+      const destination = board.querySelector(`[data-index="${to}"]`);
+      const vessel = destination?.querySelector(selector);
+      if (!origin || !destination || !vessel) return;
+      const a = origin.getBoundingClientRect();
+      const b = destination.getBoundingClientRect();
+      animate(vessel, [
+        { transform: `translate(${a.x - b.x}px, ${a.y - b.y}px) scale(.94)` },
+        { transform: 'translate(0,0) scale(1)' },
+      ], { duration: 230, easing: 'cubic-bezier(.2,.8,.3,1)' });
+      pulse(origin);
+      if (celebrate) pulse(destination, true);
+    },
+    invalid() { animate(board, [{ transform: 'translateX(0)' }, { transform: 'translateX(-4px)' }, { transform: 'translateX(4px)' }, { transform: 'translateX(0)' }], { duration: 190 }); },
+    enter() { animate(board, [{ opacity: .4, transform: 'translateY(10px) scale(.98)' }, { opacity: 1, transform: 'translateY(0) scale(1)' }], { duration: 380, easing: 'ease-out' }); },
+    cancelFinish() { clearTimeout(finishTimer); },
+    finish() {
+      clearTimeout(finishTimer);
+      finishTimer = setTimeout(() => {
+        if (!dialog.open) dialog.showModal();
+        animate(dialog, [{ opacity: 0, transform: 'translateY(16px) scale(.96)' }, { opacity: 1, transform: 'translateY(0) scale(1)' }], { duration: 320, easing: 'ease-out' });
+        if (!active()) return;
+        for (let i = 0; i < 20; i += 1) {
+          const spark = document.createElement('i');
+          spark.className = 'harbor-spark';
+          spark.style.setProperty('--spark-color', ['#eead4f', '#5fc8b7', '#eb8169'][i % 3]);
+          dialog.append(spark);
+          const angle = i * Math.PI * 2 / 20;
+          const animation = animate(spark, [{ transform: 'translate(0,0) rotate(0deg)', opacity: 1 }, { transform: `translate(${Math.cos(angle) * 170}px, ${Math.sin(angle) * 140 + 30}px) rotate(${i * 57}deg)`, opacity: 0 }], { duration: 900, delay: i % 4 * 30, easing: 'ease-out', fill: 'both' });
+          animation?.finished.then(() => spark.remove(), () => spark.remove());
+        }
+      }, active() ? 300 : 0);
+    },
+  };
+}
+
 
 const asset = {
   start: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZD0iTTkgMzBoNDZ2OUg5ek0xNSAzOXYxNW0zNC0xNXYxNSIgZmlsbD0iI2Q1OTg2MyIgc3Ryb2tlPSIjNjk1MTNmIiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNOCA1N2M1LTMgOS0zIDE0IDAgNS0zIDktMyAxNCAwIDUtMyA5LTMgMTQgMCAzLTIgNi0zIDktMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjN2ZjOWMyIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yOSAxN2g2djEzaC02eiIgZmlsbD0iI2Q1OTg2MyIgc3Ryb2tlPSIjNjk1MTNmIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMzIgN3YxMCIgc3Ryb2tlPSIjNjk1MTNmIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4K', end: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZD0iTTIyIDU1IDI3IDE3aDEwbDUgMzh6IiBmaWxsPSIjZmZmYWYxIiBzdHJva2U9IiMzNDU0NjMiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik0yNSAzNWgxNGwxIDdIMjR6IiBmaWxsPSIjZWY5NDcxIi8+PHBhdGggZD0iTTI3IDE5aDEwbDEgN0gyNnoiIGZpbGw9IiNlZjk0NzEiLz48cGF0aCBkPSJNMjUgMTVoMTR2NUgyNXoiIGZpbGw9IiMzNDU0NjMiLz48cGF0aCBkPSJNMjkgN2g2djhoLTZ6IiBmaWxsPSIjZmZkOTc5IiBzdHJva2U9IiMzNDU0NjMiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Im0xOCAxMi04LTRtMzYgNCA4LTRNMzIgM1YxIiBzdHJva2U9IiNmNWM4NjUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTE1IDU1aDM0IiBzdHJva2U9IiMzNDU0NjMiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+Cg==', beacon: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGNpcmNsZSBjeD0iMzIiIGN5PSIzMSIgcj0iMjMiIGZpbGw9IiNmZmY1ZGUiIHN0cm9rZT0iI2QxN2M0ZCIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTMyIDEzIDM3IDI2IDUxIDI2IDQwIDM1IDQ0IDQ5IDMyIDQxIDIwIDQ5IDI0IDM1IDEzIDI2IDI3IDI2eiIgZmlsbD0iI2YzYTc1YiIgc3Ryb2tlPSIjYWU2MjNkIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4K',
@@ -380,9 +602,12 @@ const storageKey = 'daily-route-results:v1';
 const tutorialKey = 'daily-route-tutorial:v1';
 const track = createGameTelemetry('route');
 const boardElement = document.querySelector('[data-board]');
+boardElement.tabIndex = -1;
 const feedback = document.querySelector('[data-feedback]');
 const dialog = document.querySelector('[data-finish-dialog]');
 const cells = [];
+const motion = createSeaMotion(boardElement, dialog);
+const voyage = createVoyage({ game: 'route', count: PRACTICE_COUNT, onSelect: (level) => loadBoard('practice', level), titleFor: (level) => `航线海图 ${level}`, onMapOpen: () => motion.cancelFinish() });
 
 function loadRecords() {
   try {
@@ -457,6 +682,7 @@ function icon(name) {
   image.src = asset[name];
   image.alt = '';
   image.draggable = false;
+  if (name === 'boat') image.className = 'vessel';
   return image;
 }
 
@@ -478,9 +704,9 @@ function render() {
   document.querySelector('[data-beacons]').textContent = `${visitedBeacons} / 3`;
   document.querySelector('[data-time]').textContent = clockText(elapsed);
   document.querySelector('[data-streak]').textContent = String(streak(records, dayKey()));
-  document.querySelector('[data-mode-label]').textContent = tutorial ? '新手教学' : mode === 'daily' ? '每日挑战' : `练习 ${practiceLevel}`;
-  document.querySelector('[data-board-title]').textContent = tutorial ? '入门海图' : mode === 'daily' ? `${Number(board.key.slice(5, 7))} 月 ${Number(board.key.slice(8, 10))} 日 · 今日海图` : `练习海图 ${practiceLevel}`;
-  document.querySelector('[data-board-subtitle]').textContent = tutorial ? '跟着发光的格子前进' : mode === 'daily' ? '上海时间每日更新' : '练习成绩不影响每日记录';
+  document.querySelector('[data-mode-label]').textContent = tutorial ? '新手教学' : mode === 'daily' ? '每日挑战' : `闯关 ${practiceLevel}`;
+  document.querySelector('[data-board-title]').textContent = tutorial ? '入门海图' : mode === 'daily' ? `${Number(board.key.slice(5, 7))} 月 ${Number(board.key.slice(8, 10))} 日 · 今日海图` : `第 ${practiceLevel} 关 · 航线海图`;
+  document.querySelector('[data-board-subtitle]').textContent = tutorial ? '跟着发光的格子前进' : mode === 'daily' ? '今日完成后还能继续闯关' : `航程 ${practiceLevel} / ${PRACTICE_COUNT} · 随时选关`;
   const guide = document.querySelector('[data-tutorial-guide]');
   guide.hidden = !tutorial;
   if (tutorial) {
@@ -488,7 +714,7 @@ function render() {
     document.querySelector('[data-tutorial-text]').textContent = tutorialInstruction();
   }
   document.querySelector('[data-practice-controls]').hidden = mode !== 'practice';
-  document.querySelector('[data-practice-title]').textContent = `练习 ${practiceLevel} / ${PRACTICE_COUNT}`;
+  document.querySelector('[data-practice-title]').textContent = `第 ${practiceLevel} / ${PRACTICE_COUNT} 关`;
   document.querySelector('[data-prev]').disabled = practiceLevel <= 1;
   document.querySelector('[data-next]').disabled = practiceLevel >= PRACTICE_COUNT;
   document.querySelector('[data-undo]').disabled = path.length <= 1;
@@ -547,51 +773,59 @@ function finish() {
   won = true;
   stopClock();
   storeWin();
+  if (mode === 'practice') voyage.win(practiceLevel, { steps: path.length - 1, hints });
   track(`${mode}_complete`);
   if (mode === 'tutorial') {
     try { localStorage.setItem(tutorialKey, 'done'); } catch { /* Playable without storage. */ }
   }
   document.querySelector('[data-finish-title]').textContent = mode === 'tutorial' ? '已学会航行' : '顺利靠岸';
   document.querySelector('[data-finish-score]').textContent = `${path.length - 1} / ${board.limit} 步`;
-  document.querySelector('[data-finish-description]').textContent = mode === 'tutorial' ? '码头、航标、洋流和灯塔都走过了。' : mode === 'daily' ? `${board.key} 每日挑战完成` : `练习 ${practiceLevel} 完成`;
+  document.querySelector('[data-finish-description]').textContent = mode === 'tutorial' ? '已经掌握航行规则，开启你的闯关航程吧。' : mode === 'daily' ? `${board.key} 每日挑战完成，还可以继续闯关。` : `第 ${practiceLevel} 关完成${practiceLevel < PRACTICE_COUNT ? '，下一片海等你探索。' : '，这段航程抵达终点！'}`;
   document.querySelector('[data-finish-detail]').textContent = `航标 3 / 3 · 提示 ${hints} / 3 · 用时 ${clockText(elapsed)}`;
   document.querySelector('[data-dialog-share]').textContent = mode === 'tutorial' ? '分享游戏' : '分享成绩';
   const replay = document.querySelector('[data-replay]');
   replay.hidden = mode === 'tutorial';
   if (mode !== 'tutorial') replay.href = mode === 'daily' ? `/replay/?game=route&date=${board.key}` : `/replay/?game=route&level=${practiceLevel}`;
-  document.querySelector('[data-dialog-practice]').textContent = mode === 'tutorial' ? '开始今日挑战' : mode === 'daily' ? '继续练习' : '下一练习关';
+  document.querySelector('[data-dialog-practice]').textContent = mode === 'practice' ? practiceLevel < PRACTICE_COUNT ? `下一关 · 第 ${practiceLevel + 1} 关 →` : '查看关卡地图' : `继续闯关 · 第 ${voyage.next()} 关 →`;
   message(mode === 'tutorial' ? '教学完成，现在可以独立规划今日航线。' : '航线完成，所有航标都已收齐。');
   render();
-  if (!dialog.open) dialog.showModal();
+  motion.finish();
 }
 
 function move(target) {
+  if (won) return;
   if (target === path.at(-1)) return;
   if (mode === 'tutorial' && target !== path.at(-2) && target !== board.reference[path.length]) {
     message(board.currents[path.at(-1)] ? '船在洋流格，必须沿蓝色箭头方向离开。' : board.obstacles.includes(target) ? '灰色礁石不能走，先点发光的格子。' : '先点发光的相邻格；也可以点上一格撤回。', 'warn');
+    motion.invalid();
     return;
   }
   const result = advance(board, path, target);
-  if (result.status === 'invalid') { message(result.message, 'warn'); return; }
+  if (result.status === 'invalid') { message(result.message, 'warn'); motion.invalid(); return; }
   if (result.status === 'backtrack') {
+    const previous = path.at(-1);
     path = result.path;
     won = false;
     hintTarget = null;
     message(mode === 'tutorial' ? tutorialInstruction() : '已撤回一步。');
     render();
+    motion.sail(previous, path.at(-1));
     return;
   }
   if (result.status === 'solved' && won) return;
+  const previous = path.at(-1);
   path = result.path;
   hintTarget = null;
   if (!started) { track(`${mode}_start`); started = true; }
-  if (result.status === 'solved') { finish(); return; }
+  if (result.status === 'solved') { finish(); motion.sail(previous, target, '.vessel', true); return; }
   startClock();
   message(mode === 'tutorial' ? tutorialInstruction() : board.beacons.includes(target) ? '收集到航标，继续向灯塔前进。' : '航线已延伸。');
   render();
+  motion.sail(previous, target, '.vessel', board.beacons.includes(target));
 }
 
 function loadBoard(nextMode = mode, level = practiceLevel) {
+  motion.cancelFinish();
   stopClock();
   if (dialog.open) dialog.close();
   mode = nextMode;
@@ -610,13 +844,17 @@ function loadBoard(nextMode = mode, level = practiceLevel) {
       hints = saved.hints;
       elapsed = saved.elapsed;
       won = true;
-      message('今日航线已完成。可以分享成绩或重置再玩。');
+      message('今日航线已完成。点击上方“开始闯关”，还有 12 张海图可玩。');
     } else message('从左侧码头出发，点击相邻格开始画线。');
-  } else message(mode === 'tutorial' ? tutorialInstruction() : '练习关已载入，开始规划航线。');
+  } else message(mode === 'tutorial' ? tutorialInstruction() : `第 ${practiceLevel} 关已载入。通关后可直接前往下一关。`);
+  voyage.update(mode === 'practice' ? practiceLevel : null);
   render();
+  motion.enter();
+  if (arguments.length) boardElement.focus({ preventScroll: true });
 }
 
 function reset() {
+  motion.cancelFinish();
   stopClock();
   if (dialog.open) dialog.close();
   path = [board.start];
@@ -631,13 +869,16 @@ function reset() {
 
 function undo() {
   if (path.length <= 1) return;
+  motion.cancelFinish();
   if (dialog.open) dialog.close();
+  const previous = path.at(-1);
   const result = advance(board, path, path[path.length - 2]);
   path = result.path;
   won = false;
   hintTarget = null;
   message(mode === 'tutorial' ? tutorialInstruction() : '已撤回一步。');
   render();
+  motion.sail(previous, path.at(-1));
 }
 
 function hint() {
@@ -651,11 +892,11 @@ function hint() {
 }
 
 async function share() {
-  const url = 'https://tylerzhang.xyz/';
+  const url = `https://tylerzhang.xyz/${mode === 'practice' ? `?practice=${practiceLevel}` : ''}`;
   const title = '每日航线';
   const text = won && mode !== 'tutorial'
     ? `${mode === 'daily' ? board.key : `练习 ${practiceLevel}`} · ${path.length - 1}/${board.limit} 步 · ${hints} 次提示`
-    : '每天一张新海图，来规划你的航线。';
+    : '每天一张新海图，也可以连续闯关。来规划你的航线。';
   try {
     if (navigator.share) await navigator.share({ title, text, url });
     else await navigator.clipboard.writeText(`${title}\n${text}\n${url}`);
@@ -695,7 +936,7 @@ document.addEventListener('pointerup', () => {
 document.addEventListener('pointercancel', () => { pointerDown = false; dragMoved = false; });
 
 document.addEventListener('keydown', (event) => {
-  if (dialog.open || event.altKey || event.ctrlKey || event.metaKey) return;
+  if (document.querySelector('dialog[open]') || event.altKey || event.ctrlKey || event.metaKey) return;
   if (event.target instanceof HTMLElement && event.target.closest('button') && !boardElement.contains(event.target)) return;
   const offsets = { ArrowUp: -SIZE, ArrowRight: 1, ArrowDown: SIZE, ArrowLeft: -1 };
   if (!(event.key in offsets)) return;
@@ -709,7 +950,7 @@ document.querySelectorAll('[data-mode]').forEach((button) => button.addEventList
   if (mode === 'tutorial' && button.dataset.mode !== 'tutorial') {
     try { localStorage.setItem(tutorialKey, 'done'); } catch { /* Playable without storage. */ }
   }
-  loadBoard(button.dataset.mode);
+  loadBoard(button.dataset.mode, button.dataset.mode === 'practice' ? voyage.next() : practiceLevel);
 }));
 document.querySelector('[data-prev]').addEventListener('click', () => loadBoard('practice', practiceLevel - 1));
 document.querySelector('[data-next]').addEventListener('click', () => loadBoard('practice', practiceLevel + 1));
@@ -719,7 +960,10 @@ document.querySelector('[data-hint]').addEventListener('click', hint);
 document.querySelector('[data-share]').addEventListener('click', share);
 document.querySelector('[data-dialog-share]').addEventListener('click', share);
 document.querySelector('[data-dialog-close]').addEventListener('click', () => dialog.close());
-document.querySelector('[data-dialog-practice]').addEventListener('click', () => mode === 'tutorial' ? loadBoard('daily') : loadBoard('practice', mode === 'practice' ? Math.min(PRACTICE_COUNT, practiceLevel + 1) : 1));
+document.querySelector('[data-dialog-practice]').addEventListener('click', () => {
+  if (mode === 'practice' && practiceLevel === PRACTICE_COUNT) { dialog.close(); voyage.showMap(); }
+  else loadBoard('practice', mode === 'practice' ? practiceLevel + 1 : voyage.next());
+});
 setInterval(() => { if (mode === 'daily' && board.key !== dayKey()) loadBoard('daily'); }, 60000);
 loadBoard();
 

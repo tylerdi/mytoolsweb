@@ -6,15 +6,19 @@ const read = async (name) => readFile(new URL(name, base), 'utf8');
 
 let html = await read('index.html');
 const css = await read('game.css');
+const voyageCss = await read('../../assets/voyage.css');
+const voyageCode = (await read('../../assets/voyage.mjs')).replace(/^export /gm, '');
 const core = (await read('game-core.mjs')).replace(/^export /gm, '');
 const analytics = (await read('../../assets/game-analytics.mjs')).replace(/^export /gm, '');
 const game = (await read('game.mjs'))
   .replace(/^import .* from '\.\/game-core\.mjs';\n/, '')
-  .replace(/^import .* from '\.\.\/\.\.\/assets\/game-analytics\.mjs';\n/, '');
+  .replace(/^import .* from '\.\.\/\.\.\/assets\/game-analytics\.mjs';\n/, '')
+  .replace(/^import .* from '\.\.\/\.\.\/assets\/voyage\.mjs';\n/, '');
 
 html = html
   .replace('<link rel="stylesheet" href="./game.css">', `<style>\n${css}\n</style>`)
-  .replace('<script type="module" src="./game.mjs"></script>', `<script>\n${core}\n${analytics}\n${game}\n</script>`)
+  .replace('<link rel="stylesheet" href="../../assets/voyage.css">', `<style>\n${voyageCss}\n</style>`)
+  .replace('<script type="module" src="./game.mjs"></script>', `<script>\n${core}\n${analytics}\n${voyageCode}\n${game}\n</script>`)
   .replace('href="./"', 'href="./daily-route.html"')
   .replace('<a href="./PLAN.md">设计与验证范围</a>', '离线可玩');
 

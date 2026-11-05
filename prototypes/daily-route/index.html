@@ -3,15 +3,21 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>每日航线 · 每天一局海图谜题</title>
-  <meta name="description" content="在海图上规划航线，收齐航标、避开礁石并遵守洋流方向。每日一局，也可自由练习。">
+  <title>每日航线 · 每日海图与连续闯关</title>
+  <meta name="description" content="在海图上规划航线，收齐航标、避开礁石并遵守洋流方向。每日新图与 12 关连续闯关，包含教学、选关与解法回放。">
   <meta property="og:type" content="website"><meta property="og:title" content="每日航线 · 每天一张新海图"><meta property="og:description" content="收齐航标，顺着洋流，在步数用尽前靠岸。"><meta property="og:url" content="https://tylerzhang.xyz/"><meta property="og:image" content="https://tylerzhang.xyz/assets/daily-route-logo.png">
   <link rel="stylesheet" href="./game.css">
+  <link rel="stylesheet" href="../../assets/voyage.css">
 </head>
 <body>
   <header class="topbar"><div class="topbar-inner"><a class="brand" href="./"><img class="brand-logo" src="./assets/logo.svg" alt=""><span>每日航线</span></a><nav class="game-nav" aria-label="游戏导航"><a href="./" aria-current="page">每日航线</a><a href="/twins/">潮汐双船</a><a href="/about">关于</a></nav></div></header>
   <main class="game-shell">
-    <header class="game-intro"><div><p class="eyebrow">A NEW ROUTE EACH DAY</p><h1>每日航线</h1><p>收齐航标，顺着洋流，在步数用尽前靠岸。</p></div><div class="mode-switch" role="group" aria-label="游戏模式"><button type="button" data-mode="tutorial" aria-pressed="true">新手教学</button><button type="button" data-mode="daily" aria-pressed="false">每日挑战</button><button type="button" data-mode="practice" aria-pressed="false">自由练习</button></div></header>
+    <header class="game-intro"><div><p class="eyebrow">A NEW ROUTE EACH DAY</p><h1>每日航线</h1><p>收齐航标，顺着洋流，在步数用尽前靠岸。</p></div><div class="mode-switch" role="group" aria-label="游戏模式"><button type="button" data-mode="tutorial" aria-pressed="true">新手教学</button><button type="button" data-mode="daily" aria-pressed="false">每日挑战</button><button type="button" data-mode="practice" aria-pressed="false">航海闯关</button></div></header>
+    <section class="voyage-entry" data-voyage-entry aria-label="连续闯关">
+      <div class="voyage-copy"><h2>航海闯关 <strong data-voyage-progress>0 / 12 已通关</strong></h2><p>收集航标，穿过洋流，一关接一关探索海图。</p><div class="voyage-meter" aria-hidden="true"><i data-voyage-fill></i></div></div>
+      <div class="voyage-actions"><button type="button" class="voyage-start" data-voyage-start>开始第 1 关 →</button><button type="button" data-voyage-map>查看关卡地图</button></div>
+    </section>
+    <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">◉ 动效 开</button>
     <div class="game-layout">
       <section class="play-column" aria-labelledby="board-title">
         <div class="board-topline"><h2 id="board-title" data-board-title>今日海图</h2><span data-board-subtitle>上海时间每日更新</span></div>
@@ -24,14 +30,14 @@
       <aside class="side-panel" aria-label="本局状态与规则">
         <div class="side-heading"><h2>本局记录</h2><small data-mode-label>每日挑战</small></div>
         <div class="metrics"><div><strong data-steps>0 / 0</strong><span>已走 / 步数预算</span></div><div><strong data-beacons>0 / 3</strong><span>已收航标</span></div><div><strong data-time>00:00</strong><span>用时</span></div><div><strong data-streak>0</strong><span>连续完成天数</span></div></div>
-        <div class="practice-row" data-practice-controls hidden><button type="button" data-prev title="上一练习关" aria-label="上一练习关">←</button><strong data-practice-title>练习 1 / 12</strong><button type="button" data-next title="下一练习关" aria-label="下一练习关">→</button></div>
+        <div class="practice-row" data-practice-controls hidden><button type="button" data-prev title="上一关" aria-label="上一关">←</button><strong data-practice-title>练习 1 / 12</strong><button type="button" data-next title="下一关" aria-label="下一关">→</button></div>
         <section class="rules"><h3>航行规则</h3><ol><li>只走相邻格，不可重复经过或穿过礁石。</li><li>收齐 3 个航标，再进入灯塔。</li><li>从箭头格离开时，必须沿箭头方向前进。</li><li>总步数不能超过当前预算；点击上一格可撤回。</li></ol></section><nav class="related-actions" aria-label="更多玩法"><a href="/guides/">精选关卡</a><a href="/twins/create/">创作关卡</a></nav>
         <p class="side-note">每日关卡在上海时间 00:00 更新。成绩只保存在此浏览器；清除浏览器数据会丢失本地记录。</p>
       </aside>
     </div>
   </main>
   <footer class="footer">每日航线 · 独立可玩原型 · 无广告与账号 · <a href="./PLAN.md">设计与验证范围</a></footer>
-  <dialog class="finish-dialog" data-finish-dialog aria-labelledby="finish-title"><p class="eyebrow">ROUTE COMPLETE</p><h2 id="finish-title" data-finish-title>顺利靠岸</h2><p data-finish-description>所有航标已收齐。</p><div class="finish-score" data-finish-score>0 / 0 步</div><p data-finish-detail></p><div class="modal-actions"><button type="button" class="primary" data-dialog-share>分享成绩</button><a data-replay href="/replay/" target="_blank" rel="noopener" hidden>观看一种解法</a><button type="button" data-dialog-practice>继续练习</button><button type="button" data-dialog-close>返回海图</button></div></dialog>
+  <dialog class="finish-dialog" data-finish-dialog aria-labelledby="finish-title"><p class="eyebrow">ROUTE COMPLETE</p><h2 id="finish-title" data-finish-title>顺利靠岸</h2><p data-finish-description>所有航标已收齐。</p><div class="finish-score" data-finish-score>0 / 0 步</div><p data-finish-detail></p><div class="modal-actions"><button type="button" class="primary" data-dialog-practice>继续练习</button><button type="button" data-dialog-share>分享成绩</button><a data-replay href="/replay/" target="_blank" rel="noopener" hidden>观看一种解法</a><button type="button" data-dialog-close>返回海图</button></div></dialog>
   <script type="module" src="./game.mjs"></script>
 </body>
 </html>
