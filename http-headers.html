@@ -4,7 +4,7 @@
 <meta name="google-adsense-account" content="ca-pub-6426056111301969"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
 <title>HTTP 响应头诊断：429、Retry-After 与缓存线索 | Tyler</title>
 <meta name="description" content="粘贴 HTTP 状态行和响应头，提取 Retry-After、请求 ID、RateLimit 与缓存线索，按操作副作用判断安全重试步骤。">
-<link rel="canonical" href="https://tylerzhang.xyz/http-headers"><link rel="icon" type="image/png" href="/resource/easyclaw.png"><link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=5"><link rel="stylesheet" href="/labs.css?v=3">
+<link rel="canonical" href="https://tylerzhang.xyz/http-headers"><link rel="icon" type="image/png" href="/favicon-32.png?v=3"><link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=5"><link rel="stylesheet" href="/labs.css?v=3">
 </head><body>
 <main class="editorial-shell"><header class="page-intro"><p class="eyebrow">HTTP / 响应证据</p><h1>429、超时或旧缓存，先看响应头</h1><p>保留状态、等待时间与请求标识，再决定下一步。这里只解析状态行和响应头；响应体不会被回显或复制。</p></header>
 <nav class="lab-nav" aria-label="API 工具"><a href="/schema-check">Schema 校验</a><a href="/sse-inspector">SSE 检查</a><a href="/http-headers" aria-current="page">响应头诊断</a><a href="/usage-cost">用量成本</a></nav>

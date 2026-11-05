@@ -4,7 +4,7 @@
 <meta name="google-adsense-account" content="ca-pub-6426056111301969"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
 <title>Agent 写入工具超时：幂等键与重复请求验收 | Tyler</title>
 <meta name="description" content="一次 Agent 写入操作超时后，如何确认远端是否成功？用创建报告的请求时间线和六项验收用例设计安全重试与幂等键。">
-<link rel="canonical" href="https://tylerzhang.xyz/blog/idempotent-retry"><link rel="icon" type="image/png" href="/resource/easyclaw.png"><link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=5">
+<link rel="canonical" href="https://tylerzhang.xyz/blog/idempotent-retry"><link rel="icon" type="image/png" href="/favicon-32.png?v=3"><link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=5">
 </head><body>
 <main class="editorial-shell article-shell"><header class="page-intro"><p class="eyebrow">排错案例 / Agent 写入</p><h1>工具调用超时后，怎样避免写入两次？</h1><p>客户端没有收到响应，只能说明结果未知。下面用一个创建报告的模拟请求，拆开“查询已执行结果”和“再次提交请求”。</p><p class="article-meta"><a href="/about">Tyler</a> · 2026-10-17 · 教学用模拟接口</p></header>
 <article class="article-body">

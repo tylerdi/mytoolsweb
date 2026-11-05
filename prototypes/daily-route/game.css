@@ -54,7 +54,7 @@ h1{margin:0;font-size:1.85rem;line-height:1.25;font-weight:780}
 .legend .arrow{font-size:1rem;color:#3271a0;font-weight:800}
 .command-row{width:min(100%,560px,max(270px,calc(100dvh - 300px)));display:flex;flex-wrap:wrap;gap:8px;margin:18px auto 0}
 .command-row button,.practice-row button,.modal-actions button,.modal-actions a{min-height:42px;padding:9px 13px;border:1px solid #9eb5ae;border-radius:5px;background:var(--white);color:var(--ink);font-size:.82rem;font-weight:680}
-.command-row button:hover,.practice-row button:hover,.modal-actions button:hover{border-color:var(--deep);color:var(--deep)}
+.command-row button:hover,.practice-row button:hover,.modal-actions button:not(.primary):hover{border-color:var(--deep);color:var(--deep)}
 .command-row button span{margin-right:5px;font-size:1rem;vertical-align:-1px}
 .command-row button:last-child{margin-left:auto}
 .feedback{width:min(100%,560px,max(270px,calc(100dvh - 300px)));min-height:45px;margin:10px auto 0;padding:9px 12px;border-left:3px solid var(--deep);background:#eaf3ef;color:#30504e;font-size:.82rem}

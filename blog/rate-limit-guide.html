@@ -4,7 +4,7 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
 <title>模型 API 返回 429：限流、Retry-After 与安全重试 | Tyler</title>
 <meta name="description" content="排查模型 API 的 HTTP 429，区分限流与参数错误，处理 Retry-After，限制重试次数并避免重复执行有副作用的请求。">
-<link rel="canonical" href="https://tylerzhang.xyz/blog/rate-limit-guide"><link rel="icon" type="image/png" href="/resource/easyclaw.png">
+<link rel="canonical" href="https://tylerzhang.xyz/blog/rate-limit-guide"><link rel="icon" type="image/png" href="/favicon-32.png?v=3">
 <link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=5">
 </head><body>
 <main class="editorial-shell article-shell"><header class="page-intro"><p class="eyebrow">排错案例 / HTTP</p><h1>模型 API 返回 429，为什么越重试越慢？</h1><p>429 表示一定时间内请求过多；如果所有客户端立刻同时重试，只会制造新的高峰。</p><p class="article-meta">Tyler · 2026-10-17</p></header>

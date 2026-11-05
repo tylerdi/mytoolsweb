@@ -3,6 +3,15 @@
   Access-Control-Allow-Methods: GET, POST, OPTIONS
   Access-Control-Allow-Headers: Content-Type, Range
 
+/favicon*
+  Cache-Control: public, max-age=0, must-revalidate
+
+/apple-touch-icon.png
+  Cache-Control: public, max-age=0, must-revalidate
+
+/resource/easyclaw.png
+  Cache-Control: public, max-age=0, must-revalidate
+
 /api/kuwo-proxy*
   Content-Type: audio/mpeg
   Cache-Control: public, max-age=3600

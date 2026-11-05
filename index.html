@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="google-adsense-account" content="ca-pub-6426056111301969">
-  <link rel="canonical" href="https://tylerzhang.xyz/"><link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+  <link rel="canonical" href="https://tylerzhang.xyz/"><link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=3"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3">
   <title>每日航线 · 每日海图与连续闯关</title>
   <meta name="description" content="在海图上规划航线，收齐航标、避开礁石并遵守洋流方向。每日新图与 12 关连续闯关，包含教学、选关与解法回放。">
   <meta property="og:type" content="website"><meta property="og:title" content="每日航线 · 每天一张新海图"><meta property="og:description" content="收齐航标，顺着洋流，在步数用尽前靠岸。"><meta property="og:url" content="https://tylerzhang.xyz/"><meta property="og:image" content="https://tylerzhang.xyz/assets/daily-route-logo.png">
@@ -64,7 +64,7 @@ h1{margin:0;font-size:1.85rem;line-height:1.25;font-weight:780}
 .legend .arrow{font-size:1rem;color:#3271a0;font-weight:800}
 .command-row{width:min(100%,560px,max(270px,calc(100dvh - 300px)));display:flex;flex-wrap:wrap;gap:8px;margin:18px auto 0}
 .command-row button,.practice-row button,.modal-actions button,.modal-actions a{min-height:42px;padding:9px 13px;border:1px solid #9eb5ae;border-radius:5px;background:var(--white);color:var(--ink);font-size:.82rem;font-weight:680}
-.command-row button:hover,.practice-row button:hover,.modal-actions button:hover{border-color:var(--deep);color:var(--deep)}
+.command-row button:hover,.practice-row button:hover,.modal-actions button:not(.primary):hover{border-color:var(--deep);color:var(--deep)}
 .command-row button span{margin-right:5px;font-size:1rem;vertical-align:-1px}
 .command-row button:last-child{margin-left:auto}
 .feedback{width:min(100%,560px,max(270px,calc(100dvh - 300px)));min-height:45px;margin:10px auto 0;padding:9px 12px;border-left:3px solid var(--deep);background:#eaf3ef;color:#30504e;font-size:.82rem}
@@ -137,6 +137,8 @@ body{background:radial-gradient(ellipse at 10% 0,#d5eae5,transparent 50%),radial
 .finish-dialog,.voyage-map{border-radius:20px;border:1px solid #a8c7c1;box-shadow:0 25px 100px #102f4450;background:linear-gradient(160deg,#fff,#f0f8f3);color:var(--ink)}
 .finish-dialog{overflow:auto;max-height:90dvh}.finish-dialog::backdrop,.voyage-map::backdrop{background:#0b2d3ec2;backdrop-filter:blur(5px)}
 .finish-dialog .finish-score{background:#deefe7;border:0;border-radius:12px;text-align:center;padding:22px}.finish-dialog .modal-actions{display:grid;grid-template-columns:1fr 1fr}.finish-dialog .modal-actions>*{text-align:center;justify-content:center;border-radius:8px}.finish-dialog .modal-actions .primary{grid-column:1/-1;min-height:48px}
+.finish-dialog .modal-actions .primary:is(:hover,:focus-visible,:active){background:#12585b;border-color:#12585b;color:#fff}
+.finish-dialog .modal-actions :is(button,a):not(.primary):is(:hover,:focus-visible){background:#e5f1ec;border-color:#478b81;color:#164e50}
 .harbor-spark{position:absolute;left:50%;top:38%;width:7px;height:12px;border-radius:2px;background:var(--spark-color);pointer-events:none}
 .voyage-map{width:min(700px,calc(100% - 28px));max-height:85dvh;padding:24px}.map-heading{display:flex;align-items:start;justify-content:space-between;gap:12px}.map-heading h2{font-size:1.25rem;margin:2px 0}.map-heading button{min-width:36px;min-height:36px;border:1px solid var(--line);border-radius:50%;color:var(--deep);background:white;font-size:1.3rem}.map-note{font-size:.78rem;color:var(--muted);margin:10px 0 20px}
 .level-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.level-grid button{min-height:110px;padding:13px 10px;display:flex;flex-direction:column;align-items:start;gap:5px;text-align:left;background:#fff;border:1px solid #ccddd7;border-radius:12px;color:var(--ink)}.level-grid strong{font:750 1.25rem ui-monospace,monospace;color:#668283}.level-grid span{font-size:.78rem;font-weight:650}.level-grid small{font-size:.66rem;color:var(--muted)}.level-grid button.completed{background:#e2f2e9;border-color:#a4cdbb}.level-grid button.completed strong{color:#1a7969}.level-grid button[aria-current=step]{outline:2px solid #237c7d;outline-offset:2px}.level-grid button:hover{border-color:var(--deep);transform:translateY(-2px)}
@@ -150,6 +152,21 @@ body{background:radial-gradient(ellipse at 10% 0,#d5eae5,transparent 50%),radial
 html[data-motion=off] *,html[data-motion=off] *::before,html[data-motion=off] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 @media(max-width:560px){.game-intro,.intro{padding:16px;gap:10px}.game-intro .eyebrow,.intro .eyebrow{display:none}.game-intro p:last-child,.intro p:last-child{font-size:.78rem;line-height:1.5;margin-top:5px}.voyage-copy p{display:none}.voyage-entry{padding:13px 15px}.motion-toggle{margin-bottom:-8px}}
+/* The overlay keeps boats above adjacent tiles throughout a move. */
+.sea-effects{position:absolute;inset:0;z-index:8;pointer-events:none;overflow:hidden;border-radius:inherit}
+.sailing-boat{position:absolute;z-index:3;will-change:transform;filter:drop-shadow(0 5px 3px #173f4855)}
+.sailing-boat img{display:block;width:100%;height:100%;object-fit:contain}
+.sailing-wake{position:absolute;z-index:1;height:24px;transform-origin:0 50%;filter:drop-shadow(0 1px 2px #4daca544)}
+.sailing-wake svg{width:100%;height:100%;overflow:visible}
+.sailing-wake path{fill:none;stroke:#e6ffff;stroke-width:1.7;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.sailing-wake .wake-foam{stroke-width:4;stroke:#f7fffebf;stroke-dasharray:1 7}
+.sea-effects .sea-ripple{inset:auto;z-index:2;border-color:#eaffffb3;border-width:1.5px;box-shadow:0 0 7px #f1ffff55}
+.sea-effects .sea-ripple.golden{border-color:#f1c365;border-width:2px;box-shadow:0 0 12px #f1c36565}
+.beacon-spark{position:absolute;width:10px;height:10px;background:#ffdd83;clip-path:polygon(50% 0,63% 37%,100% 50%,63% 63%,50% 100%,37% 63%,0 50%,37% 37%);filter:drop-shadow(0 0 5px #ffdc7d);z-index:4}
+.board::before{content:"";position:absolute;inset:-30%;z-index:2;pointer-events:none;background:radial-gradient(ellipse at 30% 50%,transparent 38%,#f5ffff18 40%,transparent 43%),radial-gradient(ellipse at 75% 25%,transparent 30%,#f5ffff14 33%,transparent 36%);animation:sea-caustics 9s ease-in-out infinite alternate}
+.board.harbor-arrival{border-color:#d6ae55;box-shadow:0 0 0 3px #edd18c66,0 12px 35px #386a6544}
+.arrival-medal{display:grid;place-items:center;width:52px;height:52px;margin:0 0 16px;border:1px solid #e0bb70;border-radius:50%;background:radial-gradient(circle at 35% 25%,#fff8d9,#e9ba64);box-shadow:0 4px 14px #bc8a2e25,inset 0 0 0 5px #fffae577;color:#65512c;font-size:1.8rem;font-weight:700}
+@keyframes sea-caustics{to{transform:translate(5%,-4%) rotate(9deg);opacity:.5}}
 
 </style>
 </head>
@@ -521,6 +538,16 @@ function createSeaMotion(board, dialog) {
   let enabled = true;
   try { enabled = localStorage.getItem('daily-games:motion') !== 'off'; } catch { /* Defaults to system preference. */ }
   const activeAnimations = new Set();
+  const sailings = new Map();
+  const effects = document.createElement('div');
+  effects.className = 'sea-effects';
+  effects.setAttribute('aria-hidden', 'true');
+  board.append(effects);
+  const medal = document.createElement('div');
+  medal.className = 'arrival-medal';
+  medal.setAttribute('aria-hidden', 'true');
+  medal.textContent = '✓';
+  dialog.prepend(medal);
   let finishTimer;
   const active = () => enabled && !media.matches;
   function animate(element, frames, options) {
@@ -536,7 +563,11 @@ function createSeaMotion(board, dialog) {
     toggle.setAttribute('aria-pressed', String(active()));
     toggle.title = media.matches ? '系统已启用减少动态效果' : '开关航行动画';
     toggle.disabled = media.matches;
-    if (!active()) for (const animation of activeAnimations) animation.cancel();
+    if (!active()) {
+      for (const animation of activeAnimations) animation.cancel();
+      for (const sailing of sailings.values()) sailing.cleanup();
+      effects.replaceChildren();
+    }
   }
   toggle.addEventListener('click', () => {
     enabled = !active();
@@ -545,38 +576,112 @@ function createSeaMotion(board, dialog) {
   });
   media.addEventListener('change', sync);
   sync();
+  function transient(element, frames, options) {
+    effects.append(element);
+    const animation = animate(element, frames, options);
+    const remove = () => element.remove();
+    if (animation) animation.finished.then(remove, remove);
+    else remove();
+  }
+  function center(cell) {
+    const frame = board.getBoundingClientRect();
+    const rect = cell.getBoundingClientRect();
+    return { x: rect.x + rect.width / 2 - frame.x - board.clientLeft, y: rect.y + rect.height / 2 - frame.y - board.clientTop, size: rect.width };
+  }
   function pulse(cell, gold = false) {
     if (!active() || !cell) return;
-    const ripple = document.createElement('i');
-    ripple.className = `sea-ripple${gold ? ' golden' : ''}`;
-    cell.append(ripple);
-    const animation = animate(ripple, [{ transform: 'scale(.25)', opacity: .9 }, { transform: 'scale(1.5)', opacity: 0 }], { duration: gold ? 650 : 480, easing: 'ease-out' });
-    animation?.finished.then(() => ripple.remove(), () => ripple.remove());
+    const point = center(cell);
+    for (let ring = 0; ring < 2; ring += 1) {
+      const ripple = document.createElement('i');
+      ripple.className = `sea-ripple${gold ? ' golden' : ''}`;
+      Object.assign(ripple.style, { left: `${point.x}px`, top: `${point.y}px`, width: `${point.size * .7}px`, height: `${point.size * .5}px` });
+      transient(ripple, [{ transform: 'translate(-50%,-50%) scale(.3)', opacity: .8 }, { transform: 'translate(-50%,-50%) scale(1.65)', opacity: 0 }], { duration: gold ? 750 : 600, delay: ring * 100, easing: 'ease-out', fill: 'both' });
+    }
+    if (gold) for (let i = 0; i < 8; i += 1) {
+      const spark = document.createElement('i');
+      spark.className = 'beacon-spark';
+      Object.assign(spark.style, { left: `${point.x}px`, top: `${point.y}px` });
+      const angle = i * Math.PI / 4;
+      transient(spark, [{ transform: 'translate(-50%,-50%) scale(.3)', opacity: 1 }, { transform: `translate(calc(-50% + ${Math.cos(angle) * point.size * .65}px),calc(-50% + ${Math.sin(angle) * point.size * .65}px)) scale(.1)`, opacity: 0 }], { duration: 650, easing: 'ease-out' });
+    }
+  }
+  function wake(origin, destination) {
+    const a = center(origin);
+    const b = center(destination);
+    const distance = Math.hypot(b.x - a.x, b.y - a.y);
+    const angle = Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
+    const trail = document.createElement('div');
+    trail.className = 'sailing-wake';
+    Object.assign(trail.style, { left: `${a.x}px`, top: `${a.y - 12}px`, width: `${distance}px` });
+    trail.innerHTML = '<svg viewBox="0 0 100 24" preserveAspectRatio="none"><path d="M0 12Q24 0 50 6T100 10M0 12Q24 24 50 18T100 14"/><path class="wake-foam" d="M10 12H85"/></svg>';
+    transient(trail, [
+      { transform: `rotate(${angle}deg) scaleX(.1)`, opacity: .8 },
+      { transform: `rotate(${angle}deg) scaleX(1)`, opacity: .65, offset: .45 },
+      { transform: `rotate(${angle}deg) scaleX(1.1) scaleY(1.6)`, opacity: 0 },
+    ], { duration: 850, easing: 'ease-out' });
+  }
+  function clearSailings() {
+    for (const sailing of sailings.values()) { sailing.animation.cancel(); sailing.cleanup(); }
+    effects.replaceChildren();
   }
   return {
     sail(from, to, selector = '.vessel', celebrate = false) {
-      if (!active() || from === to) return;
+      if (!active()) return;
+      if (from === to) {
+        const previous = sailings.get(selector);
+        if (previous) { previous.animation.cancel(); previous.cleanup(); }
+        return;
+      }
+      for (const animation of board.getAnimations()) animation.cancel();
       const origin = board.querySelector(`[data-index="${from}"]`);
       const destination = board.querySelector(`[data-index="${to}"]`);
       const vessel = destination?.querySelector(selector);
       if (!origin || !destination || !vessel) return;
       const a = origin.getBoundingClientRect();
       const b = destination.getBoundingClientRect();
-      animate(vessel, [
-        { transform: `translate(${a.x - b.x}px, ${a.y - b.y}px) scale(.94)` },
-        { transform: 'translate(0,0) scale(1)' },
-      ], { duration: 230, easing: 'cubic-bezier(.2,.8,.3,1)' });
+      const frame = board.getBoundingClientRect();
+      const target = vessel.getBoundingClientRect();
+      const previous = sailings.get(selector);
+      const start = previous?.ghost.getBoundingClientRect();
+      if (previous) { previous.animation.cancel(); previous.cleanup(); }
+      const ghost = document.createElement('div');
+      ghost.className = 'sailing-boat';
+      Object.assign(ghost.style, { left: `${target.x - frame.x - board.clientLeft}px`, top: `${target.y - frame.y - board.clientTop}px`, width: `${target.width}px`, height: `${target.height}px` });
+      const hull = vessel.cloneNode(true);
+      hull.className = '';
+      ghost.append(hull);
+      effects.append(ghost);
+      vessel.style.visibility = 'hidden';
+      const dx = start ? start.x - target.x : a.x - b.x;
+      const dy = start ? start.y - target.y : a.y - b.y;
+      const bank = Math.abs(dx) > Math.abs(dy) ? Math.sign(dx) * -7 : Math.sign(dy) * 3;
+      const animation = animate(ghost, [
+        { transform: `translate(${dx}px,${dy}px) rotate(${bank}deg)` },
+        { transform: 'translate(0,0) rotate(-1deg)', offset: .85 },
+        { transform: 'translate(0,0) rotate(0deg)' },
+      ], { duration: 390, easing: 'cubic-bezier(.22,.65,.32,1)', fill: 'both' });
+      const sailing = { ghost, animation, cleanup() {
+        ghost.remove();
+        vessel.style.visibility = '';
+        if (sailings.get(selector) === sailing) sailings.delete(selector);
+      } };
+      sailings.set(selector, sailing);
+      animation.finished.then(sailing.cleanup, sailing.cleanup);
+      wake(origin, destination);
       pulse(origin);
       if (celebrate) pulse(destination, true);
     },
     invalid() { animate(board, [{ transform: 'translateX(0)' }, { transform: 'translateX(-4px)' }, { transform: 'translateX(4px)' }, { transform: 'translateX(0)' }], { duration: 190 }); },
-    enter() { animate(board, [{ opacity: .4, transform: 'translateY(10px) scale(.98)' }, { opacity: 1, transform: 'translateY(0) scale(1)' }], { duration: 380, easing: 'ease-out' }); },
-    cancelFinish() { clearTimeout(finishTimer); },
+    enter() { clearSailings(); animate(board, [{ opacity: .4, transform: 'translateY(10px) scale(.98)' }, { opacity: 1, transform: 'translateY(0) scale(1)' }], { duration: 380, easing: 'ease-out' }); },
+    clear: clearSailings,
+    cancelFinish() { clearTimeout(finishTimer); board.classList.remove('harbor-arrival'); },
     finish() {
       clearTimeout(finishTimer);
+      board.classList.add('harbor-arrival');
       finishTimer = setTimeout(() => {
         if (!dialog.open) dialog.showModal();
         animate(dialog, [{ opacity: 0, transform: 'translateY(16px) scale(.96)' }, { opacity: 1, transform: 'translateY(0) scale(1)' }], { duration: 320, easing: 'ease-out' });
+        animate(medal, [{ transform: 'scale(.35) rotate(-25deg)', opacity: 0 }, { transform: 'scale(1.12) rotate(5deg)', opacity: 1, offset: .7 }, { transform: 'scale(1) rotate(0deg)', opacity: 1 }], { duration: 600, easing: 'ease-out' });
         if (!active()) return;
         for (let i = 0; i < 20; i += 1) {
           const spark = document.createElement('i');
@@ -587,7 +692,7 @@ function createSeaMotion(board, dialog) {
           const animation = animate(spark, [{ transform: 'translate(0,0) rotate(0deg)', opacity: 1 }, { transform: `translate(${Math.cos(angle) * 170}px, ${Math.sin(angle) * 140 + 30}px) rotate(${i * 57}deg)`, opacity: 0 }], { duration: 900, delay: i % 4 * 30, easing: 'ease-out', fill: 'both' });
           animation?.finished.then(() => spark.remove(), () => spark.remove());
         }
-      }, active() ? 300 : 0);
+      }, active() ? 520 : 0);
     },
   };
 }
@@ -855,6 +960,7 @@ function loadBoard(nextMode = mode, level = practiceLevel) {
 
 function reset() {
   motion.cancelFinish();
+  motion.clear();
   stopClock();
   if (dialog.open) dialog.close();
   path = [board.start];

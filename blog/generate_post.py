@@ -55,7 +55,7 @@ def generate_post(title, summary, tag, content):
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex,follow">
     <title>{title} · Tyler's Blog</title>
-    <link rel="icon" type="image/png" href="../../resource/easyclaw.png">
+    <link rel="icon" type="image/png" href="/favicon-32.png?v=3">
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         :root {{

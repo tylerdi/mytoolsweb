@@ -4,7 +4,7 @@
 <meta name="google-adsense-account" content="ca-pub-6426056111301969"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
 <title>Base64 中文乱码、Base64URL 与 JWT 解码边界 | Tyler</title>
 <meta name="description" content="用可复核的 UTF-8 示例排查 Base64 中文乱码、URL 安全字母表和填充问题，说明为什么 JWT 仅解码不能证明签名有效。">
-<link rel="canonical" href="https://tylerzhang.xyz/blog/base64-guide"><link rel="icon" type="image/png" href="/resource/easyclaw.png"><link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=5">
+<link rel="canonical" href="https://tylerzhang.xyz/blog/base64-guide"><link rel="icon" type="image/png" href="/favicon-32.png?v=3"><link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=5">
 </head><body>
 <main class="editorial-shell article-shell"><header class="page-intro"><p class="eyebrow">排错案例 / 编码</p><h1>Base64 解码后乱码，先检查哪一层？</h1><p>编码格式、字节内容和文本字符集是三件事。先确认 Base64 是否完整，再判断它承载的是 UTF-8 文本还是二进制数据。</p><p class="article-meta"><a href="/about">Tyler</a> · 2026-10-17 · 本页示例可在浏览器工具中复现</p></header>
 <article class="article-body">

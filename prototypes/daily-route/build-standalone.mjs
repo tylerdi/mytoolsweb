@@ -33,7 +33,7 @@ await writeFile(output, html);
 console.log(output);
 
 const home = html
-  .replace('<meta name="robots" content="noindex,nofollow">', '<meta name="google-adsense-account" content="ca-pub-6426056111301969">\n  <link rel="canonical" href="https://tylerzhang.xyz/"><link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">')
+  .replace('<meta name="robots" content="noindex,nofollow">', '<meta name="google-adsense-account" content="ca-pub-6426056111301969">\n  <link rel="canonical" href="https://tylerzhang.xyz/"><link rel="icon" type="image/svg+xml" href="/favicon.svg?v=3"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=3"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3">')
   .replace('href="./daily-route.html"', 'href="/"')
   .replace('每日航线 · 独立可玩原型 · 无广告与账号 · 离线可玩', '© 2026 每日航线 · <a href="/about">关于</a> · <a href="/privacy">隐私</a> · <a href="/contact">反馈</a>');
 await writeFile(fileURLToPath(new URL('../../index.html', base)), home);

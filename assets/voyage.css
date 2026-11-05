@@ -32,6 +32,8 @@ body{background:radial-gradient(ellipse at 10% 0,#d5eae5,transparent 50%),radial
 .finish-dialog,.voyage-map{border-radius:20px;border:1px solid #a8c7c1;box-shadow:0 25px 100px #102f4450;background:linear-gradient(160deg,#fff,#f0f8f3);color:var(--ink)}
 .finish-dialog{overflow:auto;max-height:90dvh}.finish-dialog::backdrop,.voyage-map::backdrop{background:#0b2d3ec2;backdrop-filter:blur(5px)}
 .finish-dialog .finish-score{background:#deefe7;border:0;border-radius:12px;text-align:center;padding:22px}.finish-dialog .modal-actions{display:grid;grid-template-columns:1fr 1fr}.finish-dialog .modal-actions>*{text-align:center;justify-content:center;border-radius:8px}.finish-dialog .modal-actions .primary{grid-column:1/-1;min-height:48px}
+.finish-dialog .modal-actions .primary:is(:hover,:focus-visible,:active){background:#12585b;border-color:#12585b;color:#fff}
+.finish-dialog .modal-actions :is(button,a):not(.primary):is(:hover,:focus-visible){background:#e5f1ec;border-color:#478b81;color:#164e50}
 .harbor-spark{position:absolute;left:50%;top:38%;width:7px;height:12px;border-radius:2px;background:var(--spark-color);pointer-events:none}
 .voyage-map{width:min(700px,calc(100% - 28px));max-height:85dvh;padding:24px}.map-heading{display:flex;align-items:start;justify-content:space-between;gap:12px}.map-heading h2{font-size:1.25rem;margin:2px 0}.map-heading button{min-width:36px;min-height:36px;border:1px solid var(--line);border-radius:50%;color:var(--deep);background:white;font-size:1.3rem}.map-note{font-size:.78rem;color:var(--muted);margin:10px 0 20px}
 .level-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.level-grid button{min-height:110px;padding:13px 10px;display:flex;flex-direction:column;align-items:start;gap:5px;text-align:left;background:#fff;border:1px solid #ccddd7;border-radius:12px;color:var(--ink)}.level-grid strong{font:750 1.25rem ui-monospace,monospace;color:#668283}.level-grid span{font-size:.78rem;font-weight:650}.level-grid small{font-size:.66rem;color:var(--muted)}.level-grid button.completed{background:#e2f2e9;border-color:#a4cdbb}.level-grid button.completed strong{color:#1a7969}.level-grid button[aria-current=step]{outline:2px solid #237c7d;outline-offset:2px}.level-grid button:hover{border-color:var(--deep);transform:translateY(-2px)}
@@ -45,3 +47,18 @@ body{background:radial-gradient(ellipse at 10% 0,#d5eae5,transparent 50%),radial
 html[data-motion=off] *,html[data-motion=off] *::before,html[data-motion=off] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 @media(max-width:560px){.game-intro,.intro{padding:16px;gap:10px}.game-intro .eyebrow,.intro .eyebrow{display:none}.game-intro p:last-child,.intro p:last-child{font-size:.78rem;line-height:1.5;margin-top:5px}.voyage-copy p{display:none}.voyage-entry{padding:13px 15px}.motion-toggle{margin-bottom:-8px}}
+/* The overlay keeps boats above adjacent tiles throughout a move. */
+.sea-effects{position:absolute;inset:0;z-index:8;pointer-events:none;overflow:hidden;border-radius:inherit}
+.sailing-boat{position:absolute;z-index:3;will-change:transform;filter:drop-shadow(0 5px 3px #173f4855)}
+.sailing-boat img{display:block;width:100%;height:100%;object-fit:contain}
+.sailing-wake{position:absolute;z-index:1;height:24px;transform-origin:0 50%;filter:drop-shadow(0 1px 2px #4daca544)}
+.sailing-wake svg{width:100%;height:100%;overflow:visible}
+.sailing-wake path{fill:none;stroke:#e6ffff;stroke-width:1.7;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.sailing-wake .wake-foam{stroke-width:4;stroke:#f7fffebf;stroke-dasharray:1 7}
+.sea-effects .sea-ripple{inset:auto;z-index:2;border-color:#eaffffb3;border-width:1.5px;box-shadow:0 0 7px #f1ffff55}
+.sea-effects .sea-ripple.golden{border-color:#f1c365;border-width:2px;box-shadow:0 0 12px #f1c36565}
+.beacon-spark{position:absolute;width:10px;height:10px;background:#ffdd83;clip-path:polygon(50% 0,63% 37%,100% 50%,63% 63%,50% 100%,37% 63%,0 50%,37% 37%);filter:drop-shadow(0 0 5px #ffdc7d);z-index:4}
+.board::before{content:"";position:absolute;inset:-30%;z-index:2;pointer-events:none;background:radial-gradient(ellipse at 30% 50%,transparent 38%,#f5ffff18 40%,transparent 43%),radial-gradient(ellipse at 75% 25%,transparent 30%,#f5ffff14 33%,transparent 36%);animation:sea-caustics 9s ease-in-out infinite alternate}
+.board.harbor-arrival{border-color:#d6ae55;box-shadow:0 0 0 3px #edd18c66,0 12px 35px #386a6544}
+.arrival-medal{display:grid;place-items:center;width:52px;height:52px;margin:0 0 16px;border:1px solid #e0bb70;border-radius:50%;background:radial-gradient(circle at 35% 25%,#fff8d9,#e9ba64);box-shadow:0 4px 14px #bc8a2e25,inset 0 0 0 5px #fffae577;color:#65512c;font-size:1.8rem;font-weight:700}
+@keyframes sea-caustics{to{transform:translate(5%,-4%) rotate(9deg);opacity:.5}}

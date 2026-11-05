@@ -4,7 +4,7 @@
 <meta name="google-adsense-account" content="ca-pub-6426056111301969"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6426056111301969" crossorigin="anonymous"></script>
 <title>AI API 故障排查实战：429、400 与超时怎么区分 | Tyler</title>
 <meta name="description" content="用三段可复现的模拟响应，按状态码、Retry-After、请求副作用和请求标识排查 AI API 故障，并生成安全的故障记录。">
-<link rel="canonical" href="https://tylerzhang.xyz/blog/api-error-triage"><link rel="icon" type="image/png" href="/resource/easyclaw.png"><link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=5">
+<link rel="canonical" href="https://tylerzhang.xyz/blog/api-error-triage"><link rel="icon" type="image/png" href="/favicon-32.png?v=3"><link rel="stylesheet" href="/style.css?v=4"><link rel="stylesheet" href="/editorial.css?v=5">
 </head><body>
 <main class="editorial-shell article-shell"><header class="page-intro"><p class="eyebrow">排错案例 / HTTP</p><h1>AI API 出错时，先看哪三条证据？</h1><p>同一个“调用失败”提示可能对应参数错误、限流或结果未知。下面用构造的最小样例演示如何逐层缩小范围。</p><p class="article-meta"><a href="/about">Tyler</a> · 2026-10-17 · 示例为教学用模拟响应</p></header>
 <article class="article-body">

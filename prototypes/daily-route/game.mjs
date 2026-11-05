@@ -264,6 +264,7 @@ function loadBoard(nextMode = mode, level = practiceLevel) {
 
 function reset() {
   motion.cancelFinish();
+  motion.clear();
   stopClock();
   if (dialog.open) dialog.close();
   path = [board.start];
