@@ -22,13 +22,19 @@ const records = loadRecords();
 let mode = 'tutorial';
 try { if (localStorage.getItem(tutorialKey) === 'done') mode = 'daily'; } catch { /* Playable without storage. */ }
 const requestedUrl = new URL(location.href);
+let practiceLevel = 1;
+const requestedPractice = Number(requestedUrl.searchParams.get('practice'));
+if (Number.isInteger(requestedPractice) && requestedPractice >= 1 && requestedPractice <= PRACTICE_COUNT) {
+  mode = 'practice';
+  practiceLevel = requestedPractice;
+  requestedUrl.searchParams.delete('practice');
+}
 if (requestedUrl.searchParams.get('tutorial') === '1') {
   mode = 'tutorial';
   requestedUrl.searchParams.delete('tutorial');
-  history.replaceState(null, '', requestedUrl.pathname + requestedUrl.search + requestedUrl.hash);
 }
-let practiceLevel = 1;
-let board = mode === 'tutorial' ? tutorialBoard() : dailyBoard();
+if (requestedUrl.href !== location.href) history.replaceState(null, '', requestedUrl.pathname + requestedUrl.search + requestedUrl.hash);
+let board = mode === 'tutorial' ? tutorialBoard() : mode === 'practice' ? practiceBoard(practiceLevel) : dailyBoard();
 let states = [{ ...board.start }];
 let directions = [];
 let hints = 0;
@@ -100,8 +106,8 @@ function render() {
   const state = currentState();
   const docked = Number(state.a === board.goals.a) + Number(state.b === board.goals.b);
   const tutorial = mode === 'tutorial';
-  document.querySelector('[data-board-title]').textContent = tutorial ? '入门海图' : mode === 'daily' ? `${Number(board.key.slice(5, 7))} 月 ${Number(board.key.slice(8, 10))} 日 · 今日海图` : `练习海图 ${practiceLevel}`;
-  document.querySelector('[data-board-subtitle]').textContent = tutorial ? '跟着航向指令前进' : mode === 'daily' ? '上海时间每日更新' : '练习关按最短解步数递进';
+  document.querySelector('[data-board-title]').textContent = tutorial ? '入门海图' : mode === 'daily' ? `${Number(board.key.slice(5, 7))} 月 ${Number(board.key.slice(8, 10))} 日 · 今日海图` : board.title || `练习海图 ${practiceLevel}`;
+  document.querySelector('[data-board-subtitle]').textContent = tutorial ? '跟着航向指令前进' : mode === 'daily' ? `上海时间每日更新 · ${board.reference.length <= 7 ? '入门' : board.reference.length <= 10 ? '标准' : '进阶'}` : `练习 ${practiceLevel} / ${PRACTICE_COUNT} · 最短 ${board.reference.length} 步`;
   document.querySelector('[data-mode-label]').textContent = tutorial ? '新手教学' : mode === 'daily' ? '每日挑战' : `练习 ${practiceLevel}`;
   document.querySelector('[data-steps]').textContent = `${directions.length} / ${board.limit}`;
   document.querySelector('[data-docked]').textContent = `${docked} / 2`;
@@ -168,6 +174,9 @@ function finish() {
   document.querySelector('[data-finish-score]').textContent = `${directions.length} / ${board.limit} 步`;
   document.querySelector('[data-finish-detail]').textContent = `提示 ${hints} / 3 · 用时 ${timeText(elapsed)}`;
   document.querySelector('[data-dialog-share]').textContent = mode === 'tutorial' ? '分享游戏' : '分享成绩';
+  const replay = document.querySelector('[data-replay]');
+  replay.hidden = mode === 'tutorial';
+  if (mode !== 'tutorial') replay.href = mode === 'daily' ? `/replay/?game=twins&date=${board.key}` : `/replay/?game=twins&level=${practiceLevel}`;
   document.querySelector('[data-dialog-next]').textContent = mode === 'tutorial' ? '开始今日挑战' : mode === 'daily' ? '继续练习' : '下一练习关';
   message('两艘船都已靠岸。');
   render();

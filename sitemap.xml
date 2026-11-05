@@ -2,6 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://tylerzhang.xyz/</loc></url>
   <url><loc>https://tylerzhang.xyz/twins/</loc></url>
+  <url><loc>https://tylerzhang.xyz/twins/create/</loc></url>
+  <url><loc>https://tylerzhang.xyz/guides/</loc></url>
+  <url><loc>https://tylerzhang.xyz/guides/route-currents</loc></url>
+  <url><loc>https://tylerzhang.xyz/guides/route-beacons</loc></url>
+  <url><loc>https://tylerzhang.xyz/guides/twins-boundary</loc></url>
+  <url><loc>https://tylerzhang.xyz/guides/twins-one-solution</loc></url>
   <url><loc>https://tylerzhang.xyz/about</loc></url>
   <url><loc>https://tylerzhang.xyz/privacy</loc></url>
   <url><loc>https://tylerzhang.xyz/contact</loc></url>

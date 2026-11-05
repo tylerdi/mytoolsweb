@@ -53,7 +53,7 @@ h1{margin:0;font-size:1.85rem;line-height:1.25;font-weight:780}
 .legend img{width:19px;height:19px;object-fit:contain}
 .legend .arrow{font-size:1rem;color:#3271a0;font-weight:800}
 .command-row{width:min(100%,560px,max(270px,calc(100dvh - 300px)));display:flex;flex-wrap:wrap;gap:8px;margin:18px auto 0}
-.command-row button,.practice-row button,.modal-actions button{min-height:42px;padding:9px 13px;border:1px solid #9eb5ae;border-radius:5px;background:var(--white);color:var(--ink);font-size:.82rem;font-weight:680}
+.command-row button,.practice-row button,.modal-actions button,.modal-actions a{min-height:42px;padding:9px 13px;border:1px solid #9eb5ae;border-radius:5px;background:var(--white);color:var(--ink);font-size:.82rem;font-weight:680}
 .command-row button:hover,.practice-row button:hover,.modal-actions button:hover{border-color:var(--deep);color:var(--deep)}
 .command-row button span{margin-right:5px;font-size:1rem;vertical-align:-1px}
 .command-row button:last-child{margin-left:auto}
@@ -74,6 +74,8 @@ h1{margin:0;font-size:1.85rem;line-height:1.25;font-weight:780}
 .rules h3{margin:0 0 10px;font-size:.9rem}
 .rules ol{margin:0;padding-left:19px;color:var(--muted);font-size:.8rem;line-height:1.75}
 .rules li{margin-bottom:8px}
+.related-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:19px}
+.related-actions a{padding:8px 10px;border:1px solid #9eb5ae;border-radius:5px;background:var(--white);color:var(--deep);text-decoration:none;font-size:.79rem;font-weight:680}
 .side-note{margin:20px 0 0;color:var(--muted);font-size:.72rem;line-height:1.65}
 .footer{width:min(100% - 36px,1180px);margin:0 auto;padding:20px 0 30px;border-top:1px solid var(--line);color:var(--muted);font-size:.74rem}
 .footer a{color:var(--deep)}
@@ -84,6 +86,7 @@ h1{margin:0;font-size:1.85rem;line-height:1.25;font-weight:780}
 .finish-dialog .finish-score{margin:18px 0;padding:17px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);color:var(--deep);font:780 1.65rem ui-monospace,monospace}
 .modal-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
 .modal-actions .primary{border-color:var(--deep);background:var(--deep);color:white}
+.modal-actions a{display:inline-flex;align-items:center;text-decoration:none}
 @media(max-width:900px){.game-layout{grid-template-columns:1fr;gap:23px}.side-panel{max-width:620px;width:100%;margin:auto;padding:21px 0 0;border-left:0;border-top:1px solid var(--line)}}
 @media(max-width:560px){.topbar-inner{width:min(100% - 24px,1180px);height:58px}.brand{font-size:.86rem}.brand-logo{width:30px;height:30px}.game-nav{gap:10px}.game-nav a{font-size:.73rem}.game-nav a:last-child{display:none}.game-shell{width:min(100% - 24px,1180px);padding-top:19px}.game-intro{align-items:start;flex-direction:column;gap:14px}.game-intro h1{font-size:1.5rem}.mode-switch{width:100%}.mode-switch button{flex:1;min-width:0;padding:7px 5px;font-size:.77rem}.game-layout{padding-top:16px}.tutorial-guide{display:block}.tutorial-guide strong{display:block;margin-bottom:2px}.board{gap:3px;padding:5px}.board-topline{align-items:start}.board-topline span{font-size:.71rem;text-align:right}.tile .flow{font-size:1.1rem}.tile .step{font-size:.55rem;right:2px;bottom:0}.legend{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px}.legend span{gap:1px;font-size:.66rem;white-space:nowrap}.legend img{width:16px;height:16px}.legend .arrow{font-size:.85rem}.command-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.command-row button{white-space:nowrap}.command-row button:last-child{margin-left:0}.feedback{font-size:.78rem}.side-panel{padding-top:17px}}
 @media(prefers-reduced-motion:reduce){.tile,.tile.hint,.tile.tutorial-target{transition:none;animation:none}}

@@ -25,13 +25,13 @@
         <div class="side-heading"><h2>本局记录</h2><small data-mode-label>每日挑战</small></div>
         <div class="metrics"><div><strong data-steps>0 / 0</strong><span>已走 / 步数预算</span></div><div><strong data-beacons>0 / 3</strong><span>已收航标</span></div><div><strong data-time>00:00</strong><span>用时</span></div><div><strong data-streak>0</strong><span>连续完成天数</span></div></div>
         <div class="practice-row" data-practice-controls hidden><button type="button" data-prev title="上一练习关" aria-label="上一练习关">←</button><strong data-practice-title>练习 1 / 12</strong><button type="button" data-next title="下一练习关" aria-label="下一练习关">→</button></div>
-        <section class="rules"><h3>航行规则</h3><ol><li>只走相邻格，不可重复经过或穿过礁石。</li><li>收齐 3 个航标，再进入灯塔。</li><li>从箭头格离开时，必须沿箭头方向前进。</li><li>总步数不能超过当前预算；点击上一格可撤回。</li></ol></section>
+        <section class="rules"><h3>航行规则</h3><ol><li>只走相邻格，不可重复经过或穿过礁石。</li><li>收齐 3 个航标，再进入灯塔。</li><li>从箭头格离开时，必须沿箭头方向前进。</li><li>总步数不能超过当前预算；点击上一格可撤回。</li></ol></section><nav class="related-actions" aria-label="更多玩法"><a href="/guides/">精选关卡</a><a href="/twins/create/">创作关卡</a></nav>
         <p class="side-note">每日关卡在上海时间 00:00 更新。成绩只保存在此浏览器；清除浏览器数据会丢失本地记录。</p>
       </aside>
     </div>
   </main>
   <footer class="footer">每日航线 · 独立可玩原型 · 无广告与账号 · <a href="./PLAN.md">设计与验证范围</a></footer>
-  <dialog class="finish-dialog" data-finish-dialog aria-labelledby="finish-title"><p class="eyebrow">ROUTE COMPLETE</p><h2 id="finish-title" data-finish-title>顺利靠岸</h2><p data-finish-description>所有航标已收齐。</p><div class="finish-score" data-finish-score>0 / 0 步</div><p data-finish-detail></p><div class="modal-actions"><button type="button" class="primary" data-dialog-share>分享成绩</button><button type="button" data-dialog-practice>继续练习</button><button type="button" data-dialog-close>返回海图</button></div></dialog>
+  <dialog class="finish-dialog" data-finish-dialog aria-labelledby="finish-title"><p class="eyebrow">ROUTE COMPLETE</p><h2 id="finish-title" data-finish-title>顺利靠岸</h2><p data-finish-description>所有航标已收齐。</p><div class="finish-score" data-finish-score>0 / 0 步</div><p data-finish-detail></p><div class="modal-actions"><button type="button" class="primary" data-dialog-share>分享成绩</button><a data-replay href="/replay/" target="_blank" rel="noopener" hidden>观看一种解法</a><button type="button" data-dialog-practice>继续练习</button><button type="button" data-dialog-close>返回海图</button></div></dialog>
   <script type="module" src="./game.mjs"></script>
 </body>
 </html>

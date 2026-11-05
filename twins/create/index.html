@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="google-adsense-account" content="ca-pub-6426056111301969">
+  <title>创作双船海图 | 每日航线</title>
+  <meta name="description" content="在五乘五海图上摆放两艘船、港口与礁石。求解器检查可解性和解法数量，生成可直接试玩的分享链接。">
+  <link rel="canonical" href="https://tylerzhang.xyz/twins/create/">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2"><link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png?v=2"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2">
+  <link rel="stylesheet" href="../twins.css"><link rel="stylesheet" href="./editor.css">
+</head>
+<body>
+  <header class="topbar"><div class="topbar-inner"><a class="brand" href="/"><img src="/assets/daily-route-logo.svg" alt="">每日航线</a><nav class="site-nav" aria-label="游戏导航"><a href="/">每日航线</a><a href="/twins/">潮汐双船</a><a href="/guides/">精选关卡</a></nav></div></header>
+  <main class="shell">
+    <header class="intro"><div><p class="eyebrow">BUILD A CHALLENGE</p><h1>创作双船海图</h1></div><div class="mode-switch" role="group" aria-label="编辑器视图"><button type="button" data-view="edit" aria-pressed="true">设计</button><button type="button" data-view="play" aria-pressed="false">试玩</button></div></header>
+    <div class="editor-layout">
+      <section class="editor-board-column" aria-labelledby="map-title"><div class="board-heading"><h2 id="map-title">海图</h2><span data-board-caption>示例关卡</span></div><div class="board edit-board" data-editor-board role="grid" aria-label="五乘五可编辑双船海图"></div><div class="legend" aria-label="图例"><span><img src="../assets/boat-coral.svg" alt="">珊瑚船</span><span><img src="../assets/boat-gold.svg" alt="">金色船</span><span><i class="dock coral" aria-hidden="true"></i>珊瑚港</span><span><i class="dock gold" aria-hidden="true"></i>金色港</span><span><img src="../assets/reef.svg" alt="">礁石</span></div></section>
+      <aside class="editor-panel" aria-label="关卡工具与求解结果"><section data-design-tools><h2>摆放</h2><div class="tool-grid" role="group" aria-label="选择摆放工具"><button type="button" data-tool="boat-a" aria-pressed="false"><img src="../assets/boat-coral.svg" alt="">珊瑚船</button><button type="button" data-tool="boat-b" aria-pressed="false"><img src="../assets/boat-gold.svg" alt="">金色船</button><button type="button" data-tool="dock-a" aria-pressed="false"><i class="dock coral" aria-hidden="true"></i>珊瑚港</button><button type="button" data-tool="dock-b" aria-pressed="false"><i class="dock gold" aria-hidden="true"></i>金色港</button><button type="button" data-tool="rock" aria-pressed="true"><img src="../assets/reef.svg" alt="">礁石</button><button type="button" data-tool="erase" aria-pressed="false"><span aria-hidden="true">×</span>擦除礁石</button></div><div class="limit-row"><label for="move-limit">步数预算</label><input id="move-limit" data-limit type="number" min="4" max="20" step="1" value="11"></div><div class="edit-actions"><button type="button" data-edit-undo title="撤回上一次编辑">↶ 撤回编辑</button><button type="button" data-example>恢复示例</button></div></section>
+        <section data-play-tools hidden><h2>指挥双船</h2><div class="direction-controls" role="group" aria-label="航向指令"><button type="button" data-direction="up" aria-label="向上移动两艘船" title="向上">↑</button><button type="button" data-direction="left" aria-label="向左移动两艘船" title="向左">←</button><button type="button" data-direction="down" aria-label="向下移动两艘船" title="向下">↓</button><button type="button" data-direction="right" aria-label="向右移动两艘船" title="向右">→</button></div><div class="edit-actions"><button type="button" data-play-undo>↶ 撤回</button><button type="button" data-play-reset>↺ 重玩</button><button type="button" data-play-hint>提示</button></div><p class="step-count" data-play-steps>0 / 0 步</p></section>
+        <section class="analysis" aria-labelledby="analysis-title"><h2 id="analysis-title">求解结果</h2><p class="analysis-status" data-analysis-status role="status">正在分析海图...</p><dl class="analysis-metrics"><div><dt>最短解</dt><dd data-shortest>—</dd></div><div><dt>最短解数量</dt><dd data-solutions>—</dd></div><div><dt title="沿示例最短解，在预算内仍可完成的其他方向选择">可行岔路</dt><dd data-branches>—</dd></div><div><dt>分船动作</dt><dd data-splits>—</dd></div></dl><button type="button" class="share-button" data-share disabled>分享关卡</button><a class="solution-link" data-solution href="/replay/" target="_blank" rel="noopener" hidden>观看一种解法</a><p class="editor-note">关卡仅写入分享链接；设计草稿留在当前浏览器。</p></section>
+      </aside>
+    </div><p class="feedback editor-feedback" data-feedback role="status" aria-live="polite">选择工具后点海图格子，或切到“试玩”。</p>
+  </main>
+  <footer class="footer">© 2026 每日航线 · <a href="/twins/">潮汐双船</a> · <a href="/guides/">精选关卡</a> · <a href="/privacy">隐私</a></footer>
+  <script type="module" src="./editor.mjs"></script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 {
   "scripts": {
     "build:game": "node prototypes/daily-route/build-standalone.mjs",
+    "build:guide-maps": "node guides/build-maps.mjs",
     "build:labs": "node scripts/build_labs.mjs",
     "build:csv": "node scripts/build_csv.mjs",
     "test": "node --test tests/*.test.mjs prototypes/daily-route/game-core.test.mjs twins/twins-core.test.mjs"

@@ -25,13 +25,19 @@ const records = loadRecords();
 let mode = 'tutorial';
 try { if (localStorage.getItem(tutorialKey) === 'done') mode = 'daily'; } catch { /* Playable without storage. */ }
 const requestedUrl = new URL(location.href);
+let practiceLevel = 1;
+const requestedPractice = Number(requestedUrl.searchParams.get('practice'));
+if (Number.isInteger(requestedPractice) && requestedPractice >= 1 && requestedPractice <= PRACTICE_COUNT) {
+  mode = 'practice';
+  practiceLevel = requestedPractice;
+  requestedUrl.searchParams.delete('practice');
+}
 if (requestedUrl.searchParams.get('tutorial') === '1') {
   mode = 'tutorial';
   requestedUrl.searchParams.delete('tutorial');
-  history.replaceState(null, '', requestedUrl.pathname + requestedUrl.search + requestedUrl.hash);
 }
-let practiceLevel = 1;
-let board = mode === 'tutorial' ? tutorialBoard() : dailyBoard();
+if (requestedUrl.href !== location.href) history.replaceState(null, '', requestedUrl.pathname + requestedUrl.search + requestedUrl.hash);
+let board = mode === 'tutorial' ? tutorialBoard() : mode === 'practice' ? practiceBoard(practiceLevel) : dailyBoard();
 let path = [board.start];
 let hints = 0;
 let elapsed = 0;
@@ -180,6 +186,9 @@ function finish() {
   document.querySelector('[data-finish-description]').textContent = mode === 'tutorial' ? '码头、航标、洋流和灯塔都走过了。' : mode === 'daily' ? `${board.key} 每日挑战完成` : `练习 ${practiceLevel} 完成`;
   document.querySelector('[data-finish-detail]').textContent = `航标 3 / 3 · 提示 ${hints} / 3 · 用时 ${clockText(elapsed)}`;
   document.querySelector('[data-dialog-share]').textContent = mode === 'tutorial' ? '分享游戏' : '分享成绩';
+  const replay = document.querySelector('[data-replay]');
+  replay.hidden = mode === 'tutorial';
+  if (mode !== 'tutorial') replay.href = mode === 'daily' ? `/replay/?game=route&date=${board.key}` : `/replay/?game=route&level=${practiceLevel}`;
   document.querySelector('[data-dialog-practice]').textContent = mode === 'tutorial' ? '开始今日挑战' : mode === 'daily' ? '继续练习' : '下一练习关';
   message(mode === 'tutorial' ? '教学完成，现在可以独立规划今日航线。' : '航线完成，所有航标都已收齐。');
   render();
