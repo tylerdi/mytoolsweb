@@ -16,7 +16,7 @@ const feedback = document.querySelector('[data-feedback]');
 const dialog = document.querySelector('[data-finish-dialog]');
 const cells = [];
 const motion = createSeaMotion(boardElement, dialog);
-const voyage = createVoyage({ game: 'route', count: PRACTICE_COUNT, onSelect: (level) => loadBoard('practice', level), titleFor: (level) => `航线海图 ${level}`, onMapOpen: () => motion.cancelFinish() });
+const voyage = createVoyage({ game: 'route', count: PRACTICE_COUNT, version: 'v2', onSelect: (level) => loadBoard('practice', level), titleFor: (level) => practiceBoard(level).title, detailFor: (level) => practiceBoard(level).difficulty, onMapOpen: () => motion.cancelFinish() });
 
 function loadRecords() {
   try {
@@ -114,8 +114,14 @@ function render() {
   document.querySelector('[data-time]').textContent = clockText(elapsed);
   document.querySelector('[data-streak]').textContent = String(streak(records, dayKey()));
   document.querySelector('[data-mode-label]').textContent = tutorial ? '新手教学' : mode === 'daily' ? '每日挑战' : `闯关 ${practiceLevel}`;
-  document.querySelector('[data-board-title]').textContent = tutorial ? '入门海图' : mode === 'daily' ? `${Number(board.key.slice(5, 7))} 月 ${Number(board.key.slice(8, 10))} 日 · 今日海图` : `第 ${practiceLevel} 关 · 航线海图`;
-  document.querySelector('[data-board-subtitle]').textContent = tutorial ? '跟着发光的格子前进' : mode === 'daily' ? '今日完成后还能继续闯关' : `航程 ${practiceLevel} / ${PRACTICE_COUNT} · 随时选关`;
+  document.querySelector('[data-board-title]').textContent = tutorial ? '入门海图' : mode === 'daily' ? `${Number(board.key.slice(5, 7))} 月 ${Number(board.key.slice(8, 10))} 日 · 今日海图` : `第 ${practiceLevel} 关 · ${board.title}`;
+  document.querySelector('[data-board-subtitle]').textContent = tutorial ? '跟着发光的格子前进' : mode === 'daily' ? '今日完成后还能继续闯关' : `${board.difficulty} · ${board.chapter}`;
+  const brief = document.querySelector('[data-level-brief]');
+  brief.hidden = mode !== 'practice';
+  if (mode === 'practice') {
+    brief.querySelector('strong').textContent = board.limit > board.analysis.shortest ? `预算余量 ${board.limit - board.analysis.shortest} 步` : '预算无余量';
+    brief.querySelector('span').textContent = board.focus;
+  }
   const guide = document.querySelector('[data-tutorial-guide]');
   guide.hidden = !tutorial;
   if (tutorial) {
@@ -190,7 +196,7 @@ function finish() {
   document.querySelector('[data-finish-title]').textContent = mode === 'tutorial' ? '已学会航行' : '顺利靠岸';
   document.querySelector('[data-finish-score]').textContent = `${path.length - 1} / ${board.limit} 步`;
   document.querySelector('[data-finish-description]').textContent = mode === 'tutorial' ? '已经掌握航行规则，开启你的闯关航程吧。' : mode === 'daily' ? `${board.key} 每日挑战完成，还可以继续闯关。` : `第 ${practiceLevel} 关完成${practiceLevel < PRACTICE_COUNT ? '，下一片海等你探索。' : '，这段航程抵达终点！'}`;
-  document.querySelector('[data-finish-detail]').textContent = `航标 3 / 3 · 提示 ${hints} / 3 · 用时 ${clockText(elapsed)}`;
+  document.querySelector('[data-finish-detail]').textContent = `航标 3 / 3 · 提示 ${hints} / 3 · 用时 ${clockText(elapsed)}${mode === 'practice' ? `。本关最短 ${board.analysis.shortest} 步，预算内共 ${board.analysis.solutionCount} 条可行航线。` : ''}`;
   document.querySelector('[data-dialog-share]').textContent = mode === 'tutorial' ? '分享游戏' : '分享成绩';
   const replay = document.querySelector('[data-replay]');
   replay.hidden = mode === 'tutorial';

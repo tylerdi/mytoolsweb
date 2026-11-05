@@ -62,3 +62,7 @@ html[data-motion=off] *,html[data-motion=off] *::before,html[data-motion=off] *:
 .board.harbor-arrival{border-color:#d6ae55;box-shadow:0 0 0 3px #edd18c66,0 12px 35px #386a6544}
 .arrival-medal{display:grid;place-items:center;width:52px;height:52px;margin:0 0 16px;border:1px solid #e0bb70;border-radius:50%;background:radial-gradient(circle at 35% 25%,#fff8d9,#e9ba64);box-shadow:0 4px 14px #bc8a2e25,inset 0 0 0 5px #fffae577;color:#65512c;font-size:1.8rem;font-weight:700}
 @keyframes sea-caustics{to{transform:translate(5%,-4%) rotate(9deg);opacity:.5}}
+.level-badge{display:inline-block;padding:2px 7px;border-radius:5px;background:#e1f1e9;color:#266855;font-size:.68rem;font-weight:700;font-style:normal}
+.level-badge[data-difficulty=标准]{background:#e3edf6;color:#345e80}.level-badge[data-difficulty=困难]{background:#f8e7df;color:#9a4f38}
+.level-brief{width:min(100%,560px,max(270px,calc(100dvh - 300px)));margin:0 auto 12px;padding:9px 12px;border:1px solid #cbded7;border-radius:8px;background:#f0f7f3;font-size:.76rem;color:var(--muted)}
+.level-brief strong{display:block;margin-bottom:2px;color:var(--deep);font-size:.73rem}.level-grid button:has(.level-badge){min-height:136px}

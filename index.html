@@ -167,6 +167,10 @@ html[data-motion=off] *,html[data-motion=off] *::before,html[data-motion=off] *:
 .board.harbor-arrival{border-color:#d6ae55;box-shadow:0 0 0 3px #edd18c66,0 12px 35px #386a6544}
 .arrival-medal{display:grid;place-items:center;width:52px;height:52px;margin:0 0 16px;border:1px solid #e0bb70;border-radius:50%;background:radial-gradient(circle at 35% 25%,#fff8d9,#e9ba64);box-shadow:0 4px 14px #bc8a2e25,inset 0 0 0 5px #fffae577;color:#65512c;font-size:1.8rem;font-weight:700}
 @keyframes sea-caustics{to{transform:translate(5%,-4%) rotate(9deg);opacity:.5}}
+.level-badge{display:inline-block;padding:2px 7px;border-radius:5px;background:#e1f1e9;color:#266855;font-size:.68rem;font-weight:700;font-style:normal}
+.level-badge[data-difficulty=标准]{background:#e3edf6;color:#345e80}.level-badge[data-difficulty=困难]{background:#f8e7df;color:#9a4f38}
+.level-brief{width:min(100%,560px,max(270px,calc(100dvh - 300px)));margin:0 auto 12px;padding:9px 12px;border:1px solid #cbded7;border-radius:8px;background:#f0f7f3;font-size:.76rem;color:var(--muted)}
+.level-brief strong{display:block;margin-bottom:2px;color:var(--deep);font-size:.73rem}.level-grid button:has(.level-badge){min-height:136px}
 
 </style>
 </head>
@@ -175,7 +179,7 @@ html[data-motion=off] *,html[data-motion=off] *::before,html[data-motion=off] *:
   <main class="game-shell">
     <header class="game-intro"><div><p class="eyebrow">A NEW ROUTE EACH DAY</p><h1>每日航线</h1><p>收齐航标，顺着洋流，在步数用尽前靠岸。</p></div><div class="mode-switch" role="group" aria-label="游戏模式"><button type="button" data-mode="tutorial" aria-pressed="true">新手教学</button><button type="button" data-mode="daily" aria-pressed="false">每日挑战</button><button type="button" data-mode="practice" aria-pressed="false">航海闯关</button></div></header>
     <section class="voyage-entry" data-voyage-entry aria-label="连续闯关">
-      <div class="voyage-copy"><h2>航海闯关 <strong data-voyage-progress>0 / 12 已通关</strong></h2><p>收集航标，穿过洋流，一关接一关探索海图。</p><div class="voyage-meter" aria-hidden="true"><i data-voyage-fill></i></div></div>
+      <div class="voyage-copy"><h2>航海闯关 <strong data-voyage-progress>0 / 12 已通关</strong></h2><p>1–4 关简单 · 5–8 关标准 · 9–12 关困难，逐步挑战更严密的航线。</p><div class="voyage-meter" aria-hidden="true"><i data-voyage-fill></i></div></div>
       <div class="voyage-actions"><button type="button" class="voyage-start" data-voyage-start>开始第 1 关 →</button><button type="button" data-voyage-map>查看关卡地图</button></div>
     </section>
     <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">◉ 动效 开</button>
@@ -183,6 +187,7 @@ html[data-motion=off] *,html[data-motion=off] *::before,html[data-motion=off] *:
       <section class="play-column" aria-labelledby="board-title">
         <div class="board-topline"><h2 id="board-title" data-board-title>今日海图</h2><span data-board-subtitle>上海时间每日更新</span></div>
         <div class="tutorial-guide" data-tutorial-guide hidden><strong data-tutorial-step>教学 · 第 1 步</strong><span data-tutorial-text>点船旁发光的相邻格，让船前进。</span></div>
+        <div class="level-brief" data-level-brief hidden><strong></strong><span></span></div>
         <div class="board" data-board role="grid" aria-label="7乘7航线棋盘"></div>
         <div class="legend" aria-label="地图图例"><span><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZD0iTTkgMzBoNDZ2OUg5ek0xNSAzOXYxNW0zNC0xNXYxNSIgZmlsbD0iI2Q1OTg2MyIgc3Ryb2tlPSIjNjk1MTNmIiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNOCA1N2M1LTMgOS0zIDE0IDAgNS0zIDktMyAxNCAwIDUtMyA5LTMgMTQgMCAzLTIgNi0zIDktMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjN2ZjOWMyIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yOSAxN2g2djEzaC02eiIgZmlsbD0iI2Q1OTg2MyIgc3Ryb2tlPSIjNjk1MTNmIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMzIgN3YxMCIgc3Ryb2tlPSIjNjk1MTNmIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4K" alt="">码头</span><span><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGNpcmNsZSBjeD0iMzIiIGN5PSIzMSIgcj0iMjMiIGZpbGw9IiNmZmY1ZGUiIHN0cm9rZT0iI2QxN2M0ZCIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTMyIDEzIDM3IDI2IDUxIDI2IDQwIDM1IDQ0IDQ5IDMyIDQxIDIwIDQ5IDI0IDM1IDEzIDI2IDI3IDI2eiIgZmlsbD0iI2YzYTc1YiIgc3Ryb2tlPSIjYWU2MjNkIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4K" alt="">航标</span><span><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZD0iTTUgNTEgMTcgMzMgMjUgMzcgMzIgMTggNDMgMjkgNTAgMjUgNjAgNTF6IiBmaWxsPSIjNTM2NDZiIiBzdHJva2U9IiMyYzQ1NGYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0zMiAxOCAyNyAzNSAzNyAzOSA0MyAyOU0xNyAzM2w5IDEyIiBmaWxsPSJub25lIiBzdHJva2U9IiM4MTkxOTciIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0zIDU3YzctNCAxMi00IDE4IDAgNi00IDEyLTQgMTggMCA3LTQgMTMtNCAyMCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2YmI1YjUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+Cg==" alt="">礁石</span><span><span class="arrow" aria-hidden="true">→</span>洋流</span><span><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZD0iTTIyIDU1IDI3IDE3aDEwbDUgMzh6IiBmaWxsPSIjZmZmYWYxIiBzdHJva2U9IiMzNDU0NjMiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik0yNSAzNWgxNGwxIDdIMjR6IiBmaWxsPSIjZWY5NDcxIi8+PHBhdGggZD0iTTI3IDE5aDEwbDEgN0gyNnoiIGZpbGw9IiNlZjk0NzEiLz48cGF0aCBkPSJNMjUgMTVoMTR2NUgyNXoiIGZpbGw9IiMzNDU0NjMiLz48cGF0aCBkPSJNMjkgN2g2djhoLTZ6IiBmaWxsPSIjZmZkOTc5IiBzdHJva2U9IiMzNDU0NjMiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Im0xOCAxMi04LTRtMzYgNCA4LTRNMzIgM1YxIiBzdHJva2U9IiNmNWM4NjUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTE1IDU1aDM0IiBzdHJva2U9IiMzNDU0NjMiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+Cg==" alt="">灯塔</span></div>
         <div class="command-row"><button type="button" data-undo title="撤回上一步" aria-label="撤回上一步"><span aria-hidden="true">↶</span>撤回</button><button type="button" data-reset title="重新开始本局" aria-label="重新开始本局"><span aria-hidden="true">↺</span>重置</button><button type="button" data-hint title="标记下一步可行位置" aria-label="显示下一步提示"><span aria-hidden="true">?</span>提示</button><button type="button" data-share title="分享游戏链接" aria-label="分享游戏链接"><span aria-hidden="true">↗</span>分享</button></div>
@@ -200,6 +205,179 @@ html[data-motion=off] *,html[data-motion=off] *::before,html[data-motion=off] *:
   <footer class="footer">© 2026 每日航线 · <a href="/about">关于</a> · <a href="/privacy">隐私</a> · <a href="/contact">反馈</a></footer>
   <dialog class="finish-dialog" data-finish-dialog aria-labelledby="finish-title"><p class="eyebrow">ROUTE COMPLETE</p><h2 id="finish-title" data-finish-title>顺利靠岸</h2><p data-finish-description>所有航标已收齐。</p><div class="finish-score" data-finish-score>0 / 0 步</div><p data-finish-detail></p><div class="modal-actions"><button type="button" class="primary" data-dialog-practice>继续练习</button><button type="button" data-dialog-share>分享成绩</button><a data-replay href="/replay/" target="_blank" rel="noopener" hidden>观看一种解法</a><button type="button" data-dialog-close>返回海图</button></div></dialog>
   <script>
+// Fixed campaign v2. Counts include every simple route within the stated budget.
+const ROUTE_LEVELS = [
+  {
+    title: "灯塔初航",
+    difficulty: "简单",
+    chapter: "近岸启航",
+    focus: "先串起三个航标；这一关留有绕路余量。",
+    start: 21,
+    end: 27,
+    beacons: [22,24,26],
+    obstacles: [0,1,2,3,4,5,6,7,8,12,13,35,36,37,38,39,40,41,42,43,44,45,46,47,48],
+    currents: {},
+    limit: 10,
+    reference: [21,22,23,24,25,26,27],
+    analysis: {"shortest":6,"solutionCount":97,"misleadingBranches":0},
+  },
+  {
+    title: "顺流转向",
+    difficulty: "简单",
+    chapter: "近岸启航",
+    focus: "进入洋流前，先看清箭头规定的出口。",
+    start: 21,
+    end: 27,
+    beacons: [16,17,33],
+    obstacles: [28,5,30,40,3,10,1,12,36,31,38],
+    currents: {"18":"down","23":"up"},
+    limit: 14,
+    reference: [21,22,23,16,17,18,25,32,33,34,27],
+    analysis: {"shortest":10,"solutionCount":76,"misleadingBranches":5},
+  },
+  {
+    title: "岛间折返",
+    difficulty: "简单",
+    chapter: "近岸启航",
+    focus: "在靠近灯塔之前，确认所有航标都能顺路收齐。",
+    start: 21,
+    end: 27,
+    beacons: [36,31,18],
+    obstacles: [44,5,19,47,46,34,9,40,45,2,43,6,33,7,42,10,1,4],
+    currents: {"29":"down"},
+    limit: 14,
+    reference: [21,22,29,36,37,30,31,24,17,18,25,26,27],
+    analysis: {"shortest":12,"solutionCount":42,"misleadingBranches":6},
+  },
+  {
+    title: "第一处分岔",
+    difficulty: "简单",
+    chapter: "近岸启航",
+    focus: "分岔会把航线带向不同区域，先看回程能否连上。",
+    start: 21,
+    end: 27,
+    beacons: [36,46,24],
+    obstacles: [2,10,14,0,47,20,13,15,9,42,16,32,34,5,8,40,4],
+    currents: {"31":"up","35":"right"},
+    limit: 16,
+    reference: [21,22,29,36,37,44,45,46,39,38,31,24,25,26,27],
+    analysis: {"shortest":14,"solutionCount":38,"misleadingBranches":5},
+  },
+  {
+    title: "航标次序",
+    difficulty: "标准",
+    chapter: "群岛探索",
+    focus: "别只追最近的航标；先决定三个目标的收集顺序。",
+    start: 21,
+    end: 27,
+    beacons: [1,15,31],
+    obstacles: [6,20,41,46,0,29,42,43,47,39,34,19,5,36,17,37],
+    currents: {"9":"down","16":"left"},
+    limit: 18,
+    reference: [21,14,7,8,1,2,9,16,15,22,23,24,31,32,25,26,27],
+    analysis: {"shortest":16,"solutionCount":23,"misleadingBranches":7},
+  },
+  {
+    title: "洋流接力",
+    difficulty: "标准",
+    chapter: "群岛探索",
+    focus: "把洋流的入口和出口一起考虑，避免断开后面的航线。",
+    start: 21,
+    end: 27,
+    beacons: [31,8,11],
+    obstacles: [0,33,23,41,32,36,43,1,22,25,13,47,45,48],
+    currents: {"9":"up","16":"left","19":"right"},
+    limit: 20,
+    reference: [21,28,29,30,31,24,17,16,15,8,9,2,3,4,11,12,19,20,27],
+    analysis: {"shortest":18,"solutionCount":14,"misleadingBranches":7},
+  },
+  {
+    title: "远岸迂回",
+    difficulty: "标准",
+    chapter: "群岛探索",
+    focus: "绕远不一定是错路，先把整条航程规划完整。",
+    start: 21,
+    end: 27,
+    beacons: [10,13,31],
+    obstacles: [16,7,36,38,0,12,45,1,46,47,11,30,41],
+    currents: {"18":"down","20":"left","32":"right"},
+    limit: 20,
+    reference: [21,14,15,8,9,10,3,4,5,6,13,20,19,26,25,24,31,32,33,34,27],
+    analysis: {"shortest":20,"solutionCount":6,"misleadingBranches":9},
+  },
+  {
+    title: "回程留门",
+    difficulty: "标准",
+    chapter: "群岛探索",
+    focus: "走向远处目标时，要给回程留下一条未走过的通道。",
+    start: 21,
+    end: 27,
+    beacons: [2,13,31],
+    obstacles: [5,43,46,28,17,36,6,35,18,15,42,22],
+    currents: {"0":"right","3":"right","20":"left","24":"down"},
+    limit: 20,
+    reference: [21,14,7,0,1,2,3,4,11,12,13,20,19,26,25,24,31,32,33,34,27],
+    analysis: {"shortest":20,"solutionCount":5,"misleadingBranches":10},
+  },
+  {
+    title: "潮口抉择",
+    difficulty: "困难",
+    chapter: "深海试炼",
+    focus: "预算没有多余步数，先在心里排除看似顺路的岔路。",
+    start: 21,
+    end: 27,
+    beacons: [2,26,38],
+    obstacles: [6,17,23,8,5,35,48,18,40,7,1],
+    currents: {"11":"right","15":"right","30":"down","31":"left"},
+    limit: 22,
+    reference: [21,14,15,16,9,2,3,4,11,12,19,26,25,24,31,30,37,38,39,32,33,34,27],
+    analysis: {"shortest":22,"solutionCount":4,"misleadingBranches":10},
+  },
+  {
+    title: "六流迷航",
+    difficulty: "困难",
+    chapter: "深海试炼",
+    focus: "多股洋流限制出口；从目标附近倒推怎样进入。",
+    start: 21,
+    end: 27,
+    beacons: [25,41,4],
+    obstacles: [8,1,37,2,3,32,43,9,28,0,35,42,29,22],
+    currents: {"6":"down","11":"up","12":"left","18":"down","34":"left","38":"right"},
+    limit: 24,
+    reference: [21,14,15,16,17,10,11,4,5,6,13,20,19,18,25,24,31,38,39,40,41,34,33,26,27],
+    analysis: {"shortest":24,"solutionCount":3,"misleadingBranches":9},
+  },
+  {
+    title: "狭海穿行",
+    difficulty: "困难",
+    chapter: "深海试炼",
+    focus: "可行航线更少，经过窄口之前先确认后半段能连通。",
+    start: 21,
+    end: 27,
+    beacons: [17,20,45],
+    obstacles: [43,31,32,3,35,23,30,15,16,24,36,25,28],
+    currents: {"6":"down","8":"right","11":"up","26":"down","39":"left","41":"up","48":"up"},
+    limit: 26,
+    reference: [21,14,7,8,9,10,17,18,11,4,5,6,13,20,19,26,33,40,39,38,45,46,47,48,41,34,27],
+    analysis: {"shortest":26,"solutionCount":2,"misleadingBranches":11},
+  },
+  {
+    title: "终航试炼",
+    difficulty: "困难",
+    chapter: "深海试炼",
+    focus: "本关预算内只有一条可行航线；综合检查航标、洋流和回程。",
+    start: 21,
+    end: 27,
+    beacons: [37,3,39],
+    obstacles: [5,31,7,12,8,19,32,2,9,44,1,45,20,24,23,0],
+    currents: {"4":"down","10":"up","11":"down","15":"right","16":"right","29":"up","35":"down","41":"up","47":"right"},
+    limit: 28,
+    reference: [21,28,35,42,43,36,37,30,29,22,15,16,17,10,3,4,11,18,25,26,33,40,39,46,47,48,41,34,27],
+    analysis: {"shortest":28,"solutionCount":1,"misleadingBranches":9},
+  },
+];
+
+
 const SIZE = 7;
 const PRACTICE_COUNT = 12;
 
@@ -317,7 +495,94 @@ function dailyBoard(date = new Date()) {
 
 function practiceBoard(level) {
   if (!Number.isInteger(level) || level < 1 || level > PRACTICE_COUNT) throw new Error('练习关卡不存在。');
-  return { ...makeBoard(hash(`practice-route:${level}`)), key: String(level), mode: 'practice' };
+  const entry = ROUTE_LEVELS[level - 1];
+  return {
+    ...entry, size: SIZE, key: String(level), mode: 'practice', revision: 'route-v2',
+    beacons: [...entry.beacons], obstacles: [...entry.obstacles], currents: { ...entry.currents },
+    reference: [...entry.reference], analysis: { ...entry.analysis },
+  };
+}
+
+// Enumerate simple routes, respecting arrows, beacon collection and the move budget.
+// The Manhattan lower bound prunes routes that cannot possibly reach every target.
+// A truncated search never claims an exact solution count or a unique solution.
+function analyzeRouteBoard(board, { maxNodes = 250000 } = {}) {
+  const blocked = new Set(board.obstacles);
+  const marks = new Map(board.beacons.map((cell, index) => [cell, 1 << index]));
+  const all = (1 << board.beacons.length) - 1;
+  const seen = new Uint8Array(SIZE * SIZE);
+  seen[board.start] = 1;
+  const route = [board.start];
+  const solutions = [];
+  let nodes = 0;
+  let truncated = false;
+  let shortest = Infinity;
+  let shortestCount = 0;
+  let count = 0;
+  let reference = [];
+  const distance = (a, b) => Math.abs(a % SIZE - b % SIZE) + Math.abs(Math.floor(a / SIZE) - Math.floor(b / SIZE));
+  const bounds = new Map();
+  function lowerBound(current, mask) {
+    const key = current * 8 + mask;
+    if (bounds.has(key)) return bounds.get(key);
+    let best = Infinity;
+    function visit(at, remaining, total) {
+      if (!remaining.length) { best = Math.min(best, total + distance(at, board.end)); return; }
+      for (let i = 0; i < remaining.length; i += 1) visit(remaining[i], remaining.filter((_, j) => j !== i), total + distance(at, remaining[i]));
+    }
+    visit(current, board.beacons.filter((_, index) => !(mask & (1 << index))), 0);
+    bounds.set(key, best);
+    return best;
+  }
+  function choices(current, visited) {
+    return neighbors(current).filter((cell) => !visited(cell) && !blocked.has(cell)
+      && (!board.currents[current] || direction(current, cell) === board.currents[current]));
+  }
+  function search(current, mask) {
+    if (nodes >= maxNodes) { truncated = true; return; }
+    nodes += 1;
+    const steps = route.length - 1;
+    if (current === board.end) {
+      if (mask === all) {
+        count += 1;
+        if (steps < shortest) { shortest = steps; shortestCount = 0; reference = [...route]; }
+        if (steps === shortest) shortestCount += 1;
+        solutions.push([...route]);
+      }
+      return;
+    }
+    if (steps + lowerBound(current, mask) > board.limit) return;
+    for (const cell of choices(current, (cell) => seen[cell])) {
+      const nextMask = mask | (marks.get(cell) || 0);
+      if (cell === board.end && nextMask !== all) continue;
+      seen[cell] = 1;
+      route.push(cell);
+      search(cell, nextMask);
+      route.pop();
+      seen[cell] = 0;
+      if (truncated) return;
+    }
+  }
+  search(board.start, marks.get(board.start) || 0);
+  let misleadingBranches = 0;
+  for (let index = 0; index < reference.length - 1; index += 1) {
+    const prefix = reference.slice(0, index + 1);
+    const visited = new Set(prefix);
+    const alternatives = choices(reference[index], (cell) => visited.has(cell));
+    for (const cell of alternatives) {
+      if (cell === board.end) continue;
+      if (solutions.some((solution) => prefix.every((value, position) => solution[position] === value) && solution[index + 1] === cell)) continue;
+      // Count a wrong turn only when it lets the player continue beyond that turn.
+      if (choices(cell, (next) => visited.has(next) || next === cell).length) misleadingBranches += 1;
+    }
+  }
+  return {
+    shortest: truncated || !count ? null : shortest,
+    shortestCount: truncated ? null : shortestCount,
+    solutionCount: truncated ? null : count,
+    misleadingBranches: truncated ? null : misleadingBranches,
+    nodes, truncated, reference,
+  };
 }
 
 function tutorialBoard() {
@@ -468,8 +733,8 @@ function saveVoyageResult(progress, level, result) {
   }
 }
 
-function createVoyage({ game, count, onSelect, titleFor, onMapOpen = () => {} }) {
-  const key = `daily-games:voyage:${game}:v1`;
+function createVoyage({ game, count, onSelect, titleFor, detailFor = () => null, version = 'v1', onMapOpen = () => {} }) {
+  const key = `daily-games:voyage:${game}:${version}`;
   let progress = {};
   try { progress = cleanVoyageProgress(JSON.parse(localStorage.getItem(key)), count); } catch { /* Local storage is optional. */ }
   const entry = document.querySelector('[data-voyage-entry]');
@@ -506,7 +771,16 @@ function createVoyage({ game, count, onSelect, titleFor, onMapOpen = () => {} })
       title.textContent = titleFor(number);
       const detail = document.createElement('small');
       detail.textContent = result ? `${result.steps} 步 · ${result.hints} 次提示` : '等待启航';
-      button.append(label, title, detail);
+      const description = detailFor(number);
+      button.append(label, title);
+      if (description) {
+        const badge = document.createElement('em');
+        badge.className = 'level-badge';
+        badge.textContent = description;
+        badge.dataset.difficulty = description;
+        button.append(badge);
+      }
+      button.append(detail);
       button.classList.toggle('completed', Boolean(result));
       if (number === current) button.setAttribute('aria-current', 'step');
       else button.removeAttribute('aria-current');
@@ -712,7 +986,7 @@ const feedback = document.querySelector('[data-feedback]');
 const dialog = document.querySelector('[data-finish-dialog]');
 const cells = [];
 const motion = createSeaMotion(boardElement, dialog);
-const voyage = createVoyage({ game: 'route', count: PRACTICE_COUNT, onSelect: (level) => loadBoard('practice', level), titleFor: (level) => `航线海图 ${level}`, onMapOpen: () => motion.cancelFinish() });
+const voyage = createVoyage({ game: 'route', count: PRACTICE_COUNT, version: 'v2', onSelect: (level) => loadBoard('practice', level), titleFor: (level) => practiceBoard(level).title, detailFor: (level) => practiceBoard(level).difficulty, onMapOpen: () => motion.cancelFinish() });
 
 function loadRecords() {
   try {
@@ -810,8 +1084,14 @@ function render() {
   document.querySelector('[data-time]').textContent = clockText(elapsed);
   document.querySelector('[data-streak]').textContent = String(streak(records, dayKey()));
   document.querySelector('[data-mode-label]').textContent = tutorial ? '新手教学' : mode === 'daily' ? '每日挑战' : `闯关 ${practiceLevel}`;
-  document.querySelector('[data-board-title]').textContent = tutorial ? '入门海图' : mode === 'daily' ? `${Number(board.key.slice(5, 7))} 月 ${Number(board.key.slice(8, 10))} 日 · 今日海图` : `第 ${practiceLevel} 关 · 航线海图`;
-  document.querySelector('[data-board-subtitle]').textContent = tutorial ? '跟着发光的格子前进' : mode === 'daily' ? '今日完成后还能继续闯关' : `航程 ${practiceLevel} / ${PRACTICE_COUNT} · 随时选关`;
+  document.querySelector('[data-board-title]').textContent = tutorial ? '入门海图' : mode === 'daily' ? `${Number(board.key.slice(5, 7))} 月 ${Number(board.key.slice(8, 10))} 日 · 今日海图` : `第 ${practiceLevel} 关 · ${board.title}`;
+  document.querySelector('[data-board-subtitle]').textContent = tutorial ? '跟着发光的格子前进' : mode === 'daily' ? '今日完成后还能继续闯关' : `${board.difficulty} · ${board.chapter}`;
+  const brief = document.querySelector('[data-level-brief]');
+  brief.hidden = mode !== 'practice';
+  if (mode === 'practice') {
+    brief.querySelector('strong').textContent = board.limit > board.analysis.shortest ? `预算余量 ${board.limit - board.analysis.shortest} 步` : '预算无余量';
+    brief.querySelector('span').textContent = board.focus;
+  }
   const guide = document.querySelector('[data-tutorial-guide]');
   guide.hidden = !tutorial;
   if (tutorial) {
@@ -886,7 +1166,7 @@ function finish() {
   document.querySelector('[data-finish-title]').textContent = mode === 'tutorial' ? '已学会航行' : '顺利靠岸';
   document.querySelector('[data-finish-score]').textContent = `${path.length - 1} / ${board.limit} 步`;
   document.querySelector('[data-finish-description]').textContent = mode === 'tutorial' ? '已经掌握航行规则，开启你的闯关航程吧。' : mode === 'daily' ? `${board.key} 每日挑战完成，还可以继续闯关。` : `第 ${practiceLevel} 关完成${practiceLevel < PRACTICE_COUNT ? '，下一片海等你探索。' : '，这段航程抵达终点！'}`;
-  document.querySelector('[data-finish-detail]').textContent = `航标 3 / 3 · 提示 ${hints} / 3 · 用时 ${clockText(elapsed)}`;
+  document.querySelector('[data-finish-detail]').textContent = `航标 3 / 3 · 提示 ${hints} / 3 · 用时 ${clockText(elapsed)}${mode === 'practice' ? `。本关最短 ${board.analysis.shortest} 步，预算内共 ${board.analysis.solutionCount} 条可行航线。` : ''}`;
   document.querySelector('[data-dialog-share]').textContent = mode === 'tutorial' ? '分享游戏' : '分享成绩';
   const replay = document.querySelector('[data-replay]');
   replay.hidden = mode === 'tutorial';

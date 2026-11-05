@@ -24,8 +24,8 @@ export function saveVoyageResult(progress, level, result) {
   }
 }
 
-export function createVoyage({ game, count, onSelect, titleFor, onMapOpen = () => {} }) {
-  const key = `daily-games:voyage:${game}:v1`;
+export function createVoyage({ game, count, onSelect, titleFor, detailFor = () => null, version = 'v1', onMapOpen = () => {} }) {
+  const key = `daily-games:voyage:${game}:${version}`;
   let progress = {};
   try { progress = cleanVoyageProgress(JSON.parse(localStorage.getItem(key)), count); } catch { /* Local storage is optional. */ }
   const entry = document.querySelector('[data-voyage-entry]');
@@ -62,7 +62,16 @@ export function createVoyage({ game, count, onSelect, titleFor, onMapOpen = () =
       title.textContent = titleFor(number);
       const detail = document.createElement('small');
       detail.textContent = result ? `${result.steps} 步 · ${result.hints} 次提示` : '等待启航';
-      button.append(label, title, detail);
+      const description = detailFor(number);
+      button.append(label, title);
+      if (description) {
+        const badge = document.createElement('em');
+        badge.className = 'level-badge';
+        badge.textContent = description;
+        badge.dataset.difficulty = description;
+        button.append(badge);
+      }
+      button.append(detail);
       button.classList.toggle('completed', Boolean(result));
       if (number === current) button.setAttribute('aria-current', 'step');
       else button.removeAttribute('aria-current');

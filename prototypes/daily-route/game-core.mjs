@@ -1,3 +1,5 @@
+import { ROUTE_LEVELS } from './route-levels.mjs';
+
 export const SIZE = 7;
 export const PRACTICE_COUNT = 12;
 
@@ -115,7 +117,94 @@ export function dailyBoard(date = new Date()) {
 
 export function practiceBoard(level) {
   if (!Number.isInteger(level) || level < 1 || level > PRACTICE_COUNT) throw new Error('练习关卡不存在。');
-  return { ...makeBoard(hash(`practice-route:${level}`)), key: String(level), mode: 'practice' };
+  const entry = ROUTE_LEVELS[level - 1];
+  return {
+    ...entry, size: SIZE, key: String(level), mode: 'practice', revision: 'route-v2',
+    beacons: [...entry.beacons], obstacles: [...entry.obstacles], currents: { ...entry.currents },
+    reference: [...entry.reference], analysis: { ...entry.analysis },
+  };
+}
+
+// Enumerate simple routes, respecting arrows, beacon collection and the move budget.
+// The Manhattan lower bound prunes routes that cannot possibly reach every target.
+// A truncated search never claims an exact solution count or a unique solution.
+export function analyzeRouteBoard(board, { maxNodes = 250000 } = {}) {
+  const blocked = new Set(board.obstacles);
+  const marks = new Map(board.beacons.map((cell, index) => [cell, 1 << index]));
+  const all = (1 << board.beacons.length) - 1;
+  const seen = new Uint8Array(SIZE * SIZE);
+  seen[board.start] = 1;
+  const route = [board.start];
+  const solutions = [];
+  let nodes = 0;
+  let truncated = false;
+  let shortest = Infinity;
+  let shortestCount = 0;
+  let count = 0;
+  let reference = [];
+  const distance = (a, b) => Math.abs(a % SIZE - b % SIZE) + Math.abs(Math.floor(a / SIZE) - Math.floor(b / SIZE));
+  const bounds = new Map();
+  function lowerBound(current, mask) {
+    const key = current * 8 + mask;
+    if (bounds.has(key)) return bounds.get(key);
+    let best = Infinity;
+    function visit(at, remaining, total) {
+      if (!remaining.length) { best = Math.min(best, total + distance(at, board.end)); return; }
+      for (let i = 0; i < remaining.length; i += 1) visit(remaining[i], remaining.filter((_, j) => j !== i), total + distance(at, remaining[i]));
+    }
+    visit(current, board.beacons.filter((_, index) => !(mask & (1 << index))), 0);
+    bounds.set(key, best);
+    return best;
+  }
+  function choices(current, visited) {
+    return neighbors(current).filter((cell) => !visited(cell) && !blocked.has(cell)
+      && (!board.currents[current] || direction(current, cell) === board.currents[current]));
+  }
+  function search(current, mask) {
+    if (nodes >= maxNodes) { truncated = true; return; }
+    nodes += 1;
+    const steps = route.length - 1;
+    if (current === board.end) {
+      if (mask === all) {
+        count += 1;
+        if (steps < shortest) { shortest = steps; shortestCount = 0; reference = [...route]; }
+        if (steps === shortest) shortestCount += 1;
+        solutions.push([...route]);
+      }
+      return;
+    }
+    if (steps + lowerBound(current, mask) > board.limit) return;
+    for (const cell of choices(current, (cell) => seen[cell])) {
+      const nextMask = mask | (marks.get(cell) || 0);
+      if (cell === board.end && nextMask !== all) continue;
+      seen[cell] = 1;
+      route.push(cell);
+      search(cell, nextMask);
+      route.pop();
+      seen[cell] = 0;
+      if (truncated) return;
+    }
+  }
+  search(board.start, marks.get(board.start) || 0);
+  let misleadingBranches = 0;
+  for (let index = 0; index < reference.length - 1; index += 1) {
+    const prefix = reference.slice(0, index + 1);
+    const visited = new Set(prefix);
+    const alternatives = choices(reference[index], (cell) => visited.has(cell));
+    for (const cell of alternatives) {
+      if (cell === board.end) continue;
+      if (solutions.some((solution) => prefix.every((value, position) => solution[position] === value) && solution[index + 1] === cell)) continue;
+      // Count a wrong turn only when it lets the player continue beyond that turn.
+      if (choices(cell, (next) => visited.has(next) || next === cell).length) misleadingBranches += 1;
+    }
+  }
+  return {
+    shortest: truncated || !count ? null : shortest,
+    shortestCount: truncated ? null : shortestCount,
+    solutionCount: truncated ? null : count,
+    misleadingBranches: truncated ? null : misleadingBranches,
+    nodes, truncated, reference,
+  };
 }
 
 export function tutorialBoard() {

@@ -1,4 +1,4 @@
-import { SIZE as ROUTE_SIZE, dailyBoard as routeDaily, dayKey as routeDayKey, practiceBoard as routePractice } from '../prototypes/daily-route/game-core.mjs';
+import { SIZE as ROUTE_SIZE, dailyBoard as routeDaily, dayKey as routeDayKey, practiceBoard as routePractice } from '../prototypes/daily-route/game-core.mjs?rev=route-v2';
 import { SIZE as TWIN_SIZE, analyzeBoard, dailyBoard as twinDaily, dayKey as twinDayKey, decodeCustomBoard, moveBoats, practiceBoard as twinPractice } from '../twins/twins-core.mjs';
 
 const params = new URL(location.href).searchParams;

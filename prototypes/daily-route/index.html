@@ -14,7 +14,7 @@
   <main class="game-shell">
     <header class="game-intro"><div><p class="eyebrow">A NEW ROUTE EACH DAY</p><h1>每日航线</h1><p>收齐航标，顺着洋流，在步数用尽前靠岸。</p></div><div class="mode-switch" role="group" aria-label="游戏模式"><button type="button" data-mode="tutorial" aria-pressed="true">新手教学</button><button type="button" data-mode="daily" aria-pressed="false">每日挑战</button><button type="button" data-mode="practice" aria-pressed="false">航海闯关</button></div></header>
     <section class="voyage-entry" data-voyage-entry aria-label="连续闯关">
-      <div class="voyage-copy"><h2>航海闯关 <strong data-voyage-progress>0 / 12 已通关</strong></h2><p>收集航标，穿过洋流，一关接一关探索海图。</p><div class="voyage-meter" aria-hidden="true"><i data-voyage-fill></i></div></div>
+      <div class="voyage-copy"><h2>航海闯关 <strong data-voyage-progress>0 / 12 已通关</strong></h2><p>1–4 关简单 · 5–8 关标准 · 9–12 关困难，逐步挑战更严密的航线。</p><div class="voyage-meter" aria-hidden="true"><i data-voyage-fill></i></div></div>
       <div class="voyage-actions"><button type="button" class="voyage-start" data-voyage-start>开始第 1 关 →</button><button type="button" data-voyage-map>查看关卡地图</button></div>
     </section>
     <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">◉ 动效 开</button>
@@ -22,6 +22,7 @@
       <section class="play-column" aria-labelledby="board-title">
         <div class="board-topline"><h2 id="board-title" data-board-title>今日海图</h2><span data-board-subtitle>上海时间每日更新</span></div>
         <div class="tutorial-guide" data-tutorial-guide hidden><strong data-tutorial-step>教学 · 第 1 步</strong><span data-tutorial-text>点船旁发光的相邻格，让船前进。</span></div>
+        <div class="level-brief" data-level-brief hidden><strong></strong><span></span></div>
         <div class="board" data-board role="grid" aria-label="7乘7航线棋盘"></div>
         <div class="legend" aria-label="地图图例"><span><img src="./assets/dock.svg" alt="">码头</span><span><img src="./assets/beacon.svg" alt="">航标</span><span><img src="./assets/reef.svg" alt="">礁石</span><span><span class="arrow" aria-hidden="true">→</span>洋流</span><span><img src="./assets/lighthouse.svg" alt="">灯塔</span></div>
         <div class="command-row"><button type="button" data-undo title="撤回上一步" aria-label="撤回上一步"><span aria-hidden="true">↶</span>撤回</button><button type="button" data-reset title="重新开始本局" aria-label="重新开始本局"><span aria-hidden="true">↺</span>重置</button><button type="button" data-hint title="标记下一步可行位置" aria-label="显示下一步提示"><span aria-hidden="true">?</span>提示</button><button type="button" data-share title="分享游戏链接" aria-label="分享游戏链接"><span aria-hidden="true">↗</span>分享</button></div>
