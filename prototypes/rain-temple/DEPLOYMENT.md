@@ -28,3 +28,13 @@ npx wrangler pages deploy dist --project-name rain-temple-tyler
 在新 Pages 项目里添加自定义域名 `temple.tylerzhang.xyz`，由 Cloudflare 创建对应 CNAME。保留现有根域名、www 和其他 API/Tunnel 记录。部署后验证 HTTPS、四语入口、六个互动、关于/隐私/反馈、robots.txt、sitemap.xml、ads.txt，以及原每日航线仍正常。
 
 普通子域名由 AdSense 按根域名管理；这不是一个独立注册域名，也不是另开 AdSense 账号的理由。页面只放所有权标记和 ads.txt，当前没有广告展示脚本。
+
+## 已完成的上线验证（2026-11-11）
+
+Cloudflare 已接收并发布 28 个静态文件，自定义域名显示 Active / SSL enabled。DNS 新增 `CNAME temple → rain-temple-tyler.pages.dev`（Proxied），记录总数由 21 变为 22；根域名与 www 继续指向 mytoolsweb.pages.dev。
+
+已在用户 Chrome 与独立浏览器中打开正式子域名，验证中文/韩文路径、3D 初始化、念珠按钮与计数、正式 canonical、index/follow、独立隐私入口。公开 ads.txt 和 robots.txt 已通过浏览器读取；每日航线原网址仍显示原游戏与教学。主域名 main 分支仍为 91b63a7，山寺源码提交为 0a9fb82。
+
+独立源码分支已推送。本次使用控制台 Direct Upload 部署；后续命令行发布需先恢复有效的 Cloudflare 登录。刚新增域名时，个别网络可能需要等待本地 DNS 缓存更新。
+
+首发 ZIP SHA-256：`1610a3eea41c348570d7db92176ede65cd110e3f0cf7e48d409d652ea7ddef65`。
