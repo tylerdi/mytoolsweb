@@ -1,5 +1,5 @@
 import { DIRECTIONS, PRACTICE_COUNT, SIZE, dailyBoard, dayKey, hintFor, isWon, moveBoats, practiceBoard, tutorialBoard, validateRoute } from './twins-core.mjs';
-import { createGameTelemetry } from '../assets/game-analytics.mjs';
+import { createGameTelemetry, shareURL } from '../assets/game-analytics.mjs';
 import { createVoyage, createSeaMotion } from '../assets/voyage.mjs';
 
 const track = createGameTelemetry('twins');
@@ -208,6 +208,7 @@ function move(direction) {
   states.push(next);
   directions.push(direction);
   hintDirection = null;
+  track('move');
   if (!started) { track(`${mode}_start`); started = true; }
   if (isWon(board, next)) { finish(); animateBoats(before, next); return; }
   startClock();
@@ -290,7 +291,7 @@ function hint() {
 }
 
 async function share() {
-  const url = `https://tylerzhang.xyz/twins/${mode === 'practice' ? `?practice=${practiceLevel}` : ''}`;
+  const url = shareURL(`https://tylerzhang.xyz/twins/${mode === 'practice' ? `?practice=${practiceLevel}` : ''}`);
   const title = '潮汐双船';
   const text = won && mode !== 'tutorial'
     ? `${mode === 'daily' ? board.key : `练习 ${practiceLevel}`} · ${directions.length}/${board.limit} 步 · ${hints} 次提示`

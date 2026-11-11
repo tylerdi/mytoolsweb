@@ -1,3 +1,4 @@
+import {privacyCopy} from '../../assets/insights/privacy-copy.mjs';
 export const content={
  zh:{brand:'几猫：港区突围',tag:'免费浏览器战术射击游戏',home:'首页',play:'进入港区',guide:'操作指南',map:'任务地图',about:'关于',privacy:'隐私',contact:'反馈',updates:'更新记录',back:'开始行动',
  hero:'雨落港区。<br>你的任务，是突围。',lead:'失控的机械守卫封锁了四号泊位。穿过堆场、仓库与码头，切断三处中继，抵达撤离艇。打开浏览器，即刻进入单人行动。',training:'先练一下',pick:'选择你的行动强度',single:'一张手工布置的港区 · 三档真实难度 · 无需注册',
@@ -39,3 +40,5 @@ export const content={
  updates:{title:'Release notes',lead:'11 November 2026 · First website release',sections:[['Retained foundation','Harbor scene, rifle, aerial drones and ground hounds, three relays and extraction from the supplied prototype.'],['New in this release','Chinese and English site and game entries, three-step enemy-free training, three difficulties that change combat pressure, game and result sharing, local best results per difficulty, and minimal aggregate events with opt-out.'],['Current scope','One fixed map. Touch and gamepad controls exist; hardware performance and input differences need continued feedback. No multiplayer, accounts or leaderboard.']]}
  }}
 };
+
+for(const lang of ["zh","en"]){content[lang].pages.privacy.sections[1]=[privacyCopy[lang].title,privacyCopy[lang].text];}

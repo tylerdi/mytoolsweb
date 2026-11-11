@@ -662,51 +662,183 @@ function streak(records, today) {
   return days;
 }
 
-const events = new Set([
-  'open', 'return_next_day', 'tutorial_start', 'tutorial_complete',
-  'daily_start', 'daily_complete', 'practice_start', 'practice_complete', 'share',
-]);
+var routeTelemetry = (() => {
+  var __defProp = Object.defineProperty;
+  var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __export = (target, all) => {
+    for (var name in all)
+      __defProp(target, name, { get: all[name], enumerable: true });
+  };
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+    }
+    return to;
+  };
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-function analyticsDayKey(date = new Date()) {
-  const parts = new Intl.DateTimeFormat('en-US', {
-    timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
-  }).formatToParts(date);
-  const part = (type) => parts.find((item) => item.type === type).value;
-  return `${part('year')}-${part('month')}-${part('day')}`;
-}
+  // assets/game-analytics.mjs
+  var game_analytics_exports = {};
+  __export(game_analytics_exports, {
+    createGameTelemetry: () => createGameTelemetry,
+    shareURL: () => shareURL
+  });
 
-function createGameTelemetry(game) {
-  const live = ['tylerzhang.xyz', 'www.tylerzhang.xyz'].includes(location.hostname)
-    && !location.pathname.startsWith('/prototypes/')
-    && navigator.globalPrivacyControl !== true && !['1', 'yes'].includes(navigator.doNotTrack);
-  const today = analyticsDayKey();
-
-  function track(event) {
-    if (!live || !events.has(event)) return;
-    const key = `daily-games:event:${game}:${today}:${event}`;
+  // assets/insights/core.mjs
+  var ENDPOINT = "https://jimao.tylerzhang.xyz/api/insights";
+  var PRODUCTS = { route: "\u6BCF\u65E5\u822A\u7EBF", temple: "\u542C\u96E8\u5C71\u5BFA", jimao: "\u51E0\u732B\uFF1A\u6E2F\u533A\u7A81\u56F4" };
+  var SOURCES = { ai6666: "\u706B\u4E86\u6CA1", share: "\u670B\u53CB\u5206\u4EAB", search: "\u641C\u7D22", direct: "\u76F4\u63A5 / \u672A\u77E5", other: "\u5176\u4ED6\u5916\u90E8", qa: "\u6D4B\u8BD5" };
+  var EVENTS = { visit: "\u8BBF\u95EE", start: "\u5F00\u59CB\u4F53\u9A8C", interact: "\u5173\u952E\u4E92\u52A8", complete: "\u5B8C\u6210", share: "\u5206\u4EAB" };
+  var DETAILS = {
+    route: { start: ["route_daily", "route_practice", "route_tutorial", "twins_daily", "twins_practice", "twins_tutorial", "editor"], interact: ["route_move", "twins_move", "editor_move", "route_tutorial", "twins_tutorial"], complete: ["route_daily", "route_practice", "route_tutorial", "twins_daily", "twins_practice", "twins_tutorial", "editor"], share: ["route_link", "twins_link", "editor_link"] },
+    temple: { start: ["enter"], interact: ["bell", "wood", "fish", "beads", "greet", "sit"], complete: ["sit_1min", "sit_3min", "sit_5min"], share: ["copy", "native", "postcard"] },
+    jimao: { start: ["mission", "training"], interact: ["fire", "relay", "training"], complete: ["escape"], share: ["copy", "native"] }
+  };
+  function validEvent(data) {
+    return !!data && Object.keys(data).sort().join(",") === "detail,event,product,source" && Object.hasOwn(PRODUCTS, data.product) && Object.hasOwn(SOURCES, data.source) && Object.hasOwn(EVENTS, data.event) && (data.detail === "" || (DETAILS[data.product][data.event] || []).includes(data.detail));
+  }
+  function classifySource(href, referrer = "") {
+    const url = new URL(href), tag = url.searchParams.get("utm_source");
+    if (tag) return Object.hasOwn(SOURCES, tag) ? tag : "other";
+    if (!referrer) return "direct";
     try {
-      if (sessionStorage.getItem(key)) return;
-      sessionStorage.setItem(key, '1');
-    } catch { /* Games remain playable if storage is unavailable. */ }
-    fetch('/api/stats', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'game', game, event }), keepalive: true,
-    }).catch(() => {});
+      const host = new URL(referrer).hostname;
+      if (host === "ai6666.com" || host.endsWith(".ai6666.com")) return "ai6666";
+      if (/(^|\.)(google\.[a-z.]+|bing.com|baidu.com|duckduckgo.com)$/.test(host)) return "search";
+      if (host === url.hostname) return null;
+      return "other";
+    } catch {
+      return "direct";
+    }
   }
 
-  track('open');
-  if (live) {
-    const key = `daily-games:last-visit:${game}`;
-    try {
-      const previous = localStorage.getItem(key);
-      const yesterday = new Date(Date.parse(`${today}T00:00:00Z`) - 86400000).toISOString().slice(0, 10);
-      if (previous === yesterday) track('return_next_day');
-      localStorage.setItem(key, today);
-    } catch { /* No cross-day count without local storage. */ }
+  // assets/insights/client.mjs
+  function createInsights(product, env = globalThis) {
+    const { location: location2, navigator: navigator2 } = env, key = `insights:v1:${product}`;
+    let fallback;
+    const get = () => {
+      try {
+        return JSON.parse(env.sessionStorage.getItem(key)) || fallback;
+      } catch {
+        return fallback;
+      }
+    };
+    const put = (value) => {
+      fallback = value;
+      try {
+        env.sessionStorage.setItem(key, JSON.stringify(value));
+      } catch {
+      }
+    };
+    const disabled = () => {
+      try {
+        return JSON.parse(env.localStorage.getItem("insights:off")) === true || JSON.parse(env.localStorage.getItem("jimao:metrics-off")) === true;
+      } catch {
+        return false;
+      }
+    };
+    function track(event, detail = "") {
+      if (location2.protocol !== "https:" || !["tylerzhang.xyz", "www.tylerzhang.xyz", "temple.tylerzhang.xyz", "jimao.tylerzhang.xyz"].includes(location2.hostname) || location2.pathname.startsWith("/prototypes/") || disabled() || ["1", "yes"].includes(navigator2.doNotTrack) || navigator2.globalPrivacyControl === true || new URL(location2.href).searchParams.get("analytics") === "off") return;
+      const now = Date.now(), day = new Date(now).toISOString().slice(0, 10);
+      let state = get();
+      if (!state || state.day !== day || now - state.updated > 18e5) {
+        state = { day, source: classifySource(location2.href, env.document.referrer) || "direct", updated: now, seen: [] };
+      }
+      state.updated = now;
+      const send = (type, value) => {
+        const data = { product, source: state.source, event: type, detail: value }, id = type + ":" + value;
+        if (!validEvent(data) || state.seen.includes(id)) return;
+        state.seen.push(id);
+        put(state);
+        env.fetch(ENDPOINT + "/event", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data), credentials: "omit", referrerPolicy: "no-referrer", keepalive: true }).catch(() => {
+        });
+      };
+      send("visit", "");
+      if (["interact", "complete"].includes(event)) send("start", "");
+      if (event !== "visit") send(event, "");
+      if (detail) send(event, detail);
+      put(state);
+    }
+    return track;
   }
-  return track;
-}
+  function shareURL(value) {
+    const url = new URL(value);
+    url.searchParams.set("utm_source", "share");
+    return url.href;
+  }
 
+  // assets/game-analytics.mjs
+  var events = /* @__PURE__ */ new Set([
+    "open",
+    "return_next_day",
+    "tutorial_start",
+    "tutorial_complete",
+    "daily_start",
+    "daily_complete",
+    "practice_start",
+    "practice_complete",
+    "share"
+  ]);
+  function analyticsDayKey(date = /* @__PURE__ */ new Date()) {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Asia/Shanghai",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).formatToParts(date);
+    const part = (type) => parts.find((item) => item.type === type).value;
+    return `${part("year")}-${part("month")}-${part("day")}`;
+  }
+  function createGameTelemetry(game) {
+    const insights = createInsights("route");
+    insights("visit");
+    const live = ["tylerzhang.xyz", "www.tylerzhang.xyz"].includes(location.hostname) && !location.pathname.startsWith("/prototypes/") && navigator.globalPrivacyControl !== true && !["1", "yes"].includes(navigator.doNotTrack);
+    const today = analyticsDayKey();
+    function track(event) {
+      if (event.endsWith("_start")) insights("start", `${game}_${event.replace("_start", "")}`);
+      else if (event.endsWith("_complete")) insights(event === "tutorial_complete" ? "interact" : "complete", `${game}_${event.replace("_complete", "")}`);
+      else if (event === "share") insights("share", `${game}_link`);
+      else if (event === "move") insights("interact", `${game}_move`);
+      try {
+        if (JSON.parse(localStorage.getItem("insights:off")) === true) return;
+      } catch {
+      }
+      if (!live || !events.has(event)) return;
+      const key = `daily-games:event:${game}:${today}:${event}`;
+      try {
+        if (sessionStorage.getItem(key)) return;
+        sessionStorage.setItem(key, "1");
+      } catch {
+      }
+      fetch("/api/stats", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "game", game, event }),
+        keepalive: true
+      }).catch(() => {
+      });
+    }
+    track("open");
+    if (live) {
+      const key = `daily-games:last-visit:${game}`;
+      try {
+        const previous = localStorage.getItem(key);
+        const yesterday = new Date(Date.parse(`${today}T00:00:00Z`) - 864e5).toISOString().slice(0, 10);
+        if (previous === yesterday) track("return_next_day");
+        localStorage.setItem(key, today);
+      } catch {
+      }
+    }
+    return track;
+  }
+  return __toCommonJS(game_analytics_exports);
+})();
+
+const {createGameTelemetry,shareURL}=routeTelemetry;
 // Progress stays on this device. Existing daily scores use their own storage.
 function cleanVoyageProgress(value, count) {
   const clean = {};
@@ -1201,6 +1333,7 @@ function move(target) {
   const previous = path.at(-1);
   path = result.path;
   hintTarget = null;
+  track('move');
   if (!started) { track(`${mode}_start`); started = true; }
   if (result.status === 'solved') { finish(); motion.sail(previous, target, '.vessel', true); return; }
   startClock();
@@ -1278,7 +1411,7 @@ function hint() {
 }
 
 async function share() {
-  const url = `https://tylerzhang.xyz/${mode === 'practice' ? `?practice=${practiceLevel}` : ''}`;
+  const url = shareURL(`https://tylerzhang.xyz/${mode === 'practice' ? `?practice=${practiceLevel}` : ''}`);
   const title = '每日航线';
   const text = won && mode !== 'tutorial'
     ? `${mode === 'daily' ? board.key : `练习 ${practiceLevel}`} · ${path.length - 1}/${board.limit} 步 · ${hints} 次提示`

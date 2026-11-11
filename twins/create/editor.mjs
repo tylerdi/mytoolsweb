@@ -1,3 +1,5 @@
+import {createInsights} from '../../assets/insights/client.mjs';
+const insights=createInsights('route');insights('visit');
 import { DIRECTIONS, SIZE, analyzeBoard, decodeCustomBoard, encodeCustomBoard, hintFor, isWon, moveBoats, practiceBoard, validateCustomBoard } from '../twins-core.mjs';
 
 const draftKey = 'tide-twins-editor:v1';
@@ -136,6 +138,7 @@ function edit(index) {
     if (target[side] === index) return;
     target[side] = index;
   }
+  insights('start','editor');insights('interact','editor_move');
   editHistory.push(before);
   if (editHistory.length > 30) editHistory.shift();
   playStates = [{ ...board.start }];
@@ -163,6 +166,7 @@ function playMove(direction) {
   if (view !== 'play' || !DIRECTIONS.includes(direction) || playDirections.length >= board.limit || isWon(board, playStates.at(-1))) return;
   const next = moveBoats(board, playStates.at(-1), direction);
   if (!next) { message('这一步两艘船都无法合法移动。', 'warn'); return; }
+  insights('start','editor');insights('interact','editor_move');if(isWon(board,next))insights('complete','editor');
   playStates.push(next);
   playDirections.push(direction);
   hintDirection = null;
@@ -176,10 +180,11 @@ async function share() {
   const result = analyzeBoard(board);
   if (!result.solved || result.shortest < 3 || result.splitMoves < 1) return;
   const url = new URL('/twins/create/', 'https://tylerzhang.xyz');
-  url.searchParams.set('p', encodeCustomBoard(board));
+  url.searchParams.set('p', encodeCustomBoard(board));url.searchParams.set('utm_source','share');
   try {
     if (navigator.share) await navigator.share({ title: '潮汐双船 · 自制海图', url: url.href });
     else await navigator.clipboard.writeText(url.href);
+    insights('share','editor_link');
     message(navigator.share ? '分享已完成。' : '关卡链接已复制。');
   } catch (error) {
     if (error?.name !== 'AbortError') message('分享失败，请检查浏览器权限。', 'warn');

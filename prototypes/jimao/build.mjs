@@ -1,4 +1,4 @@
-import {readFile,writeFile,mkdir,rm,copyFile} from 'node:fs/promises';
+import {readFile,writeFile,mkdir,rm,copyFile,cp} from 'node:fs/promises';
 import {build,transform} from 'esbuild';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
@@ -10,6 +10,7 @@ const hash=data=>createHash('sha256').update(data).digest('hex').slice(0,12);
 const replaceOnce=(source,from,to)=>{if(source.split(from).length!==2)throw new Error(`Engine integration anchor changed: ${from.slice(0,70)}`);return source.replace(from,to)};
 export async function buildSite(){
  await rm(out,{recursive:true,force:true});await mkdir(out,{recursive:true});
+ await cp(new URL('../../assets/insights/',base),new URL('assets/insights/',out),{recursive:true});await mkdir(new URL('metrics/',out),{recursive:true});await copyFile(new URL('../../metrics.html',base),new URL('metrics/index.html',out));
  const source=await read('source.html'),style=source.match(/<style>([\s\S]*?)<\/style>/)[1],raw=source.match(/<script>([\s\S]*?)<\/script>/)[1];
  let engine=(await transform(raw,{charset:'utf8',minify:false})).code;
  engine=replaceOnce(engine,'t.game = mM(t);','t.game = mM(t); window.Jimao.bind(t);');
@@ -50,7 +51,7 @@ export async function buildSite(){
   await mkdir(new URL(`${lang}/play/`,out),{recursive:true});
   await write(`${lang}/play/index.html`,head(lang,'play/',`${c.brand} | ${en?'Play':'开始游戏'}`,c.lead).replace('</head>',`<link rel="stylesheet" href="/${gameCSSName}"></head>`)+`<body>${body}<nav class="game-site-nav" aria-label="${en?'Website and language':'网站与语言'}"><a href="/${lang}/">← ${c.home}</a><a href="/${en?'zh':'en'}/play/" data-language>${en?'中文':'English'}</a><a href="/${lang}/guide/" target="_blank" rel="noopener">${c.guide}</a></nav><noscript><p>${en?'JavaScript is required for the game.':'游戏需要启用 JavaScript。'}<a href="/${lang}/guide/">${c.guide}</a></p></noscript><script src="/${engineName}" defer></script></body></html>`);urls.push(`${ORIGIN}/${lang}/play/`);
  }
- const home=await readFile(new URL('zh/index.html',out),'utf8');await write('index.html',home.replace('</head>',`<script>try{const saved=JSON.parse(localStorage.getItem('jimao:language'));const lang=saved==='en'||saved!=='zh'&&navigator.language.toLowerCase().startsWith('en')?'en':'zh';location.replace('/'+lang+'/')}catch{location.replace('/zh/')}</script></head>`));
+ const home=await readFile(new URL('zh/index.html',out),'utf8');await write('index.html',home.replace('</head>',`<script>try{const saved=JSON.parse(localStorage.getItem('jimao:language'));const lang=saved==='en'||saved!=='zh'&&navigator.language.toLowerCase().startsWith('en')?'en':'zh';location.replace('/'+lang+'/'+location.search+location.hash)}catch{location.replace('/zh/'+location.search+location.hash)}</script></head>`));
  await write('ads.txt','google.com, pub-6426056111301969, DIRECT, f08c47fec0942fa0\n');
  await write('robots.txt',`User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${ORIGIN}/sitemap.xml\n`);
  await write('sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(u=>`<url><loc>${u}</loc></url>`).join('')}</urlset>`);

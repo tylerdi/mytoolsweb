@@ -1,3 +1,5 @@
+import {createInsights,shareURL} from '../../assets/insights/client.mjs';
+const insights=createInsights('temple');insights('visit');
 import { createBeadView } from './beads.mjs';
 import { createBeadMotion } from './beads-core.mjs';
 import { createTemple } from './scene.mjs';
@@ -79,10 +81,11 @@ function chooseActivity(kind){
 }
 function performGreeting(){
  if(performance.now()<greetingUntil)return;
- greetingUntil=performance.now()+3000;world.effect('greet');renderActivity();
+ insights('interact','greet');greetingUntil=performance.now()+3000;world.effect('greet');renderActivity();
  greetingTimer=setTimeout(()=>{if(active==='greet'){renderActivity();toast('greetDone');}},3050);
 }
 function beadsChanged(count,angle){
+ if(count>0)insights('interact','beads');
  const text=t('beadsCount',{n:count});if($('#bead-count').textContent!==text)$('#bead-count').textContent=text;
  world?.setBeadPhase(angle);
 }
@@ -95,7 +98,7 @@ try{
  },onArrival:()=>{},onError:()=>fail('errorContext')});
  world.setLanguage(i18n.language);$('#enter').disabled=false;$('#enter').textContent=t('enter');
 }catch(e){console.error('Temple initialization failed',e);fail('errorWebGL');}
-$('#enter').addEventListener('click',()=>{if($('#welcome-sound').checked)enableSound(true);toast('entered');setTimeout(()=>$('#world').focus({preventScroll:true}),0);});
+$('#enter').addEventListener('click',()=>{insights('start','enter');if($('#welcome-sound').checked)enableSound(true);toast('entered');setTimeout(()=>$('#world').focus({preventScroll:true}),0);});
 $('#sound').addEventListener('click',()=>enableSound(!audio.enabled));
 $('#audio-setting').addEventListener('change',e=>enableSound(e.target.checked));
 $('#settings').addEventListener('click',()=>$('#settings-dialog').showModal());
@@ -114,19 +117,19 @@ $('#do-action').addEventListener('click',()=>{
  if(active==='beads'){if(beadsView)beadsView.step();else{beadMotion.step();beadsChanged(beadMotion.count,beadMotion.angle);audio.bead();}return;}
  if(active==='sit'){
   if(phase==='meditating'){phase='stopped';world.setStance('idle');document.body.classList.remove('quiet');renderActivity();return;}
-  remaining=duration*60;lastTick=performance.now();phase='meditating';world.setStance('sit');document.body.classList.add('quiet');
+  insights('interact','sit');remaining=duration*60;lastTick=performance.now();phase='meditating';world.setStance('sit');document.body.classList.add('quiet');
  }else if(active==='bell'){
-  if(performance.now()<bellCooldown)return;world.effect('bell');audio.bell();bellCooldown=performance.now()+2000;
+  if(performance.now()<bellCooldown)return;insights('interact','bell');world.effect('bell');audio.bell();bellCooldown=performance.now()+2000;
   setTimeout(()=>{if(active==='bell')renderActivity();},2050);if(!audio.enabled)toast('bellMuted');
- }else if(active==='wood'){world.effect('wood');audio.wood();woodCount++;}
- else if(active==='fish'){world.effect('fish');audio.water();feedCount++;}
+ }else if(active==='wood'){insights('interact','wood');world.effect('wood');audio.wood();woodCount++;}
+ else if(active==='fish'){insights('interact','fish');world.effect('fish');audio.water();feedCount++;}
  renderActivity();
 });
 setInterval(()=>{
  const now=performance.now(),dt=Math.min((now-lastTick)/1000,1);lastTick=now;
  if(phase!=='meditating'||document.hidden||$$('dialog[open]').length)return;
  remaining=Math.max(0,remaining-dt);$('#sit-timer').textContent=formatTime(remaining);
- if(remaining===0){phase='complete';document.body.classList.remove('quiet');world.setStance('idle');renderActivity();audio.bell();toast('sitToast');}
+ if(remaining===0){insights('complete',`sit_${duration}min`);phase='complete';document.body.classList.remove('quiet');world.setStance('idle');renderActivity();audio.bell();toast('sitToast');}
 },250);
 document.addEventListener('visibilitychange',()=>{lastTick=performance.now();});
 $('#world').addEventListener('keydown',e=>{if(active&&['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','W','A','S','D'].includes(e.key)){beadsView?.setActive(false);beadMotion.halt();document.body.classList.remove('has-activity');active=null;phase='ready';document.body.classList.remove('quiet');$('#action-panel').hidden=true;$$('[data-action]').forEach(b=>b.setAttribute('aria-pressed','false'));}});
@@ -136,9 +139,9 @@ async function postcard(){
 }
 let cardRequest=0;
 async function updatePostcard(){const request=++cardRequest;const image=await postcard();if(request!==cardRequest)return;postcardURL=image;$('#postcard').src=image;}
-function shareLink(){const url=new URL(location.href);url.search='';url.hash='';if(document.body.dataset.siteRoot)url.pathname='/'+i18n.language+'/';else url.searchParams.set('lang',i18n.language);return url.href;}
+function shareLink(){const url=new URL(location.href);url.search='';url.hash='';if(document.body.dataset.siteRoot)url.pathname='/'+i18n.language+'/';else url.searchParams.set('lang',i18n.language);return shareURL(url.href);}
 $('#share').addEventListener('click',async()=>{try{await updatePostcard();shareState='private';renderShareNote();$('#native-share').hidden=!navigator.share;$('#share-dialog').showModal();}catch{toast('cardFailed');}});
-$('#download').addEventListener('click',()=>{if(!postcardURL)return;const a=document.createElement('a');a.download=LOCALES[i18n.language].filename;a.href=postcardURL;a.click();toast('downloaded');});
-$('#copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(shareLink());shareState='copied';}catch{shareState='manual';}renderShareNote();});
-$('#native-share').addEventListener('click',async()=>{try{await navigator.share({title:t('title'),text:t('shareText'),url:shareLink()});}catch(e){if(e.name!=='AbortError'){shareState='failed';renderShareNote();}}});
+$('#download').addEventListener('click',()=>{if(!postcardURL)return;const a=document.createElement('a');a.download=LOCALES[i18n.language].filename;a.href=postcardURL;a.click();insights('share','postcard');toast('downloaded');});
+$('#copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(shareLink());shareState='copied';insights('share','copy');}catch{shareState='manual';}renderShareNote();});
+$('#native-share').addEventListener('click',async()=>{try{await navigator.share({title:t('title'),text:t('shareText'),url:shareLink()});insights('share','native');}catch(e){if(e.name!=='AbortError'){shareState='failed';renderShareNote();}}});
 window.addEventListener('error',()=>{if(!world)fail('errorScript');});

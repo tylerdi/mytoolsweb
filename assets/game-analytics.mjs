@@ -1,3 +1,5 @@
+import {createInsights,shareURL} from './insights/client.mjs';
+export {shareURL};
 const events = new Set([
   'open', 'return_next_day', 'tutorial_start', 'tutorial_complete',
   'daily_start', 'daily_complete', 'practice_start', 'practice_complete', 'share',
@@ -12,12 +14,18 @@ function analyticsDayKey(date = new Date()) {
 }
 
 export function createGameTelemetry(game) {
+  const insights=createInsights('route');insights('visit');
   const live = ['tylerzhang.xyz', 'www.tylerzhang.xyz'].includes(location.hostname)
     && !location.pathname.startsWith('/prototypes/')
     && navigator.globalPrivacyControl !== true && !['1', 'yes'].includes(navigator.doNotTrack);
   const today = analyticsDayKey();
 
   function track(event) {
+    if(event.endsWith('_start'))insights('start',`${game}_${event.replace('_start','')}`);
+    else if(event.endsWith('_complete'))insights(event==='tutorial_complete'?'interact':'complete',`${game}_${event.replace('_complete','')}`);
+    else if(event==='share')insights('share',`${game}_link`);
+    else if(event==='move')insights('interact',`${game}_move`);
+    try{if(JSON.parse(localStorage.getItem('insights:off'))===true)return}catch{}
     if (!live || !events.has(event)) return;
     const key = `daily-games:event:${game}:${today}:${event}`;
     try {

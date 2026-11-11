@@ -1,5 +1,5 @@
 import { PRACTICE_COUNT, SIZE, advance, dailyBoard, dayKey, findHint, practiceBoard, streak, tutorialBoard, validateRoute } from './game-core.mjs';
-import { createGameTelemetry } from '../../assets/game-analytics.mjs';
+import { createGameTelemetry, shareURL } from '../../assets/game-analytics.mjs';
 import { createVoyage, createSeaMotion } from '../../assets/voyage.mjs';
 
 const asset = {
@@ -231,6 +231,7 @@ function move(target) {
   const previous = path.at(-1);
   path = result.path;
   hintTarget = null;
+  track('move');
   if (!started) { track(`${mode}_start`); started = true; }
   if (result.status === 'solved') { finish(); motion.sail(previous, target, '.vessel', true); return; }
   startClock();
@@ -308,7 +309,7 @@ function hint() {
 }
 
 async function share() {
-  const url = `https://tylerzhang.xyz/${mode === 'practice' ? `?practice=${practiceLevel}` : ''}`;
+  const url = shareURL(`https://tylerzhang.xyz/${mode === 'practice' ? `?practice=${practiceLevel}` : ''}`);
   const title = '每日航线';
   const text = won && mode !== 'tutorial'
     ? `${mode === 'daily' ? board.key : `练习 ${practiceLevel}`} · ${path.length - 1}/${board.limit} 步 · ${hints} 次提示`

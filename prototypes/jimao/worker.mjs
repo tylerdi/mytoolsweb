@@ -1,8 +1,10 @@
+import {insights} from '../../assets/insights/worker.mjs';
 import {validMetric} from './core.mjs';
 const json=(v,status=200,headers={})=>Response.json(v,{status,headers:{'Cache-Control':'no-store',...headers}});
 const schema='CREATE TABLE IF NOT EXISTS counts (day TEXT NOT NULL,event TEXT NOT NULL,difficulty TEXT NOT NULL,n INTEGER NOT NULL DEFAULT 0,PRIMARY KEY(day,event,difficulty))';
 export default {async fetch(request,env){
  const url=new URL(request.url);
+ if(url.pathname.startsWith('/api/insights/'))return insights(request,env);
  if(!url.pathname.startsWith('/api/'))return env.ASSETS.fetch(request);
  if(!env.DB)return json({error:'Metrics unavailable'},503);
  if(url.pathname==='/api/event'){
