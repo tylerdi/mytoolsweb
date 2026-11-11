@@ -34,8 +34,10 @@ AdSense 发布商为 pub-6426056111301969。ads.txt 是授权文件，不代表�
 
 Cloudflare 已接收 35 个文件并成功发布，完成第二次部署以应用 DB 绑定。自定义域名状态为 Active / SSL enabled，新增 CNAME jimao → jimao-tyler.pages.dev。原有两个网站与 API 域名未改动。
 
-正式域名的中英文首页与 ads.txt 已通过浏览器读取，/api/stats 已返回 D1 中的 load/start 汇总事件；这些数据包含上线检查，不能当作真实独立访客。发布包 SHA-256 为 3be4c2f29bdf010b4e367820f1d2d9e8e6089dbf0bc7073215b8e98b96d447d2。
+正式域名的中英文首页与 ads.txt 已通过浏览器读取，/api/stats 已返回 D1 中的 load/start 汇总事件；这些数据包含上线检查，不能当作真实独立访客。发布包 SHA-256 为 4b088aaaa9e08419acdaaa15b8f5db56eb62a7fe6df8b0b4419a641052dd7ef2。
 
 当前本机 Node 22.22.3；计数测试用 node:sqlite（Node 22+）运行真实 SQLite 语句。较旧的本地 Workers 二进制测试时使用 --compatibility-date 2026-05-01，Cloudflare 正式项目使用控制台兼容日期 2026-11-11。
 
 上线检查中发现系统分享反馈不稳定，改为先展示可复制文案的站内分享框，系统分享为可选按钮。最终覆盖部署使用上述更新后的发布包。
+
+事件发送前实时读取当前浏览器的统计关闭选择；已打开的游戏也尊重其他同站标签页中的退出设置。

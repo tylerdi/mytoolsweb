@@ -4,8 +4,8 @@ const query=new URLSearchParams(location.search);let selected=difficulty(query.g
 const save=(key,v)=>{try{localStorage.setItem(key,JSON.stringify(v))}catch{}};
 const read=key=>{try{return JSON.parse(localStorage.getItem(key))}catch{return null}};
 save('jimao:language',lang);
-let optedOut=!!read('jimao:metrics-off');const automaticOptOut=navigator.doNotTrack==='1'||navigator.globalPrivacyControl===true;
-function metric(event){if(optedOut||automaticOptOut||!/^https:$/.test(location.protocol))return;fetch('/api/event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event,difficulty:selected}),credentials:'omit',keepalive:true}).catch(()=>{})}
+
+function metric(event){if(!!read('jimao:metrics-off')||navigator.doNotTrack==='1'||navigator.globalPrivacyControl===true||!/^https:$/.test(location.protocol))return;fetch('/api/event',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event,difficulty:selected}),credentials:'omit',keepalive:true}).catch(()=>{})}
 function applyDifficulty(){const p=DIFFICULTIES[selected];Object.assign(game.game.flow,structuredClone(p.flow));Object.assign(game.player.tuning,{regenDelay:p.regenDelay,regenRate:p.regenRate});document.body.dataset.difficulty=selected;const badge=document.querySelector('[data-difficulty-badge]');if(badge)badge.textContent=DIFFICULTIES[selected][lang];if(training){game.game.flow.patrol={gull:0,hound:0};game.game.flow.waves=[{gull:0,hound:0}];game.game.flow.pursuitExtra=0}}
 async function share(){
  const text=lastResult?resultText(lastResult,lang):txt(`来玩《几猫：港区突围》：切断三处中继，突破机械守卫，登船撤离。\n${ORIGIN}/zh/`,`Try Jimao: Harbor Breakout. Cut three relays, evade the machines and escape.\n${ORIGIN}/en/`);
