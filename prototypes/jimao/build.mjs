@@ -1,0 +1,62 @@
+import {readFile,writeFile,mkdir,rm,copyFile} from 'node:fs/promises';
+import {build,transform} from 'esbuild';
+import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
+import {content} from './content.mjs';
+import {DIFFICULTIES,ORIGIN} from './core.mjs';
+const base=new URL('./',import.meta.url),out=new URL('./dist/',base),read=name=>readFile(new URL(name,base),'utf8');
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const hash=data=>createHash('sha256').update(data).digest('hex').slice(0,12);
+const replaceOnce=(source,from,to)=>{if(source.split(from).length!==2)throw new Error(`Engine integration anchor changed: ${from.slice(0,70)}`);return source.replace(from,to)};
+export async function buildSite(){
+ await rm(out,{recursive:true,force:true});await mkdir(out,{recursive:true});
+ const source=await read('source.html'),style=source.match(/<style>([\s\S]*?)<\/style>/)[1],raw=source.match(/<script>([\s\S]*?)<\/script>/)[1];
+ let engine=(await transform(raw,{charset:'utf8',minify:false})).code;
+ engine=replaceOnce(engine,'t.game = mM(t);','t.game = mM(t); window.Jimao.bind(t);');
+ engine=replaceOnce(engine,'let i = Object.fromEntries(new URLSearchParams(location.search))','let i = {q: ["low","medium","high","ultra"].includes(new URLSearchParams(location.search).get("q")) ? new URLSearchParams(location.search).get("q") : ""}');
+ // Use a documented, less ambitious name; replace the prototype's promotional panel.
+ engine=engine.replaceAll('3A大作','港区突围').replaceAll('使用 Fable5.2 自主研发 · 国产第一人称射击游戏 · 开发体验版','免费浏览器战术射击游戏 · 单人体验版');
+ engine=engine.replace(/(<div class="panel-b about-copy" data-pane="about" hidden>)[\s\S]*?(<div class="panel-b" data-pane="settings">)/,`$1<h3>几猫：港区突围</h3><p>切断三处中继，突破机械守卫，登船撤离。当前是一张固定地图的单人体验，有三档难度与独立教学。</p><p><a href="/zh/about/" target="_blank" rel="noopener">项目详情</a> · <a href="/zh/privacy/" target="_blank" rel="noopener">隐私说明</a></p></div>$2`);
+ engine=engine.replaceAll('saltline.settings.v1','jimao:settings.v1');
+ // A hidden tab must stop GPU work as well as pausing gameplay. Resume resets the clock.
+ engine=replaceOnce(engine,'let h = performance.now(), f = (h - l) / 1e3;','if(document.hidden){ l=performance.now(); return; } let h = performance.now(), f = (h - l) / 1e3;');
+ const runtime=(await build({entryPoints:[fileURLToPath(new URL('runtime.mjs',base))],bundle:true,format:'iife',write:false,target:'es2022',minify:true})).outputFiles[0].text;
+ const translations=JSON.parse(await read('en.json'));Object.assign(translations,{'几猫：港区突围':'Jimao: Harbor Breakout','切断三处中继，突破机械守卫，登船撤离。当前是一张固定地图的单人体验，有三档难度与独立教学。':'Disable three relays, evade the machines and escape. One fixed solo map, three difficulties and separate training.','项目详情':'Project details','隐私说明':'Privacy notice'});
+ const write=(name,data)=>writeFile(new URL(name,out),data);
+ const cssName=`site.${hash(await read('site.css'))}.css`,gameCSS=style+'\n'+await read('game-extra.css'),gameCSSName=`game.${hash(gameCSS)}.css`;
+ await write(cssName,await read('site.css'));await write(gameCSSName,gameCSS);await write('site.js',await read('site.mjs'));
+ await copyFile(new URL('hero.jpg',base),new URL('hero.jpg',out));await copyFile(new URL('mark.svg',base),new URL('mark.svg',out));await copyFile(new URL('LICENSE-THREE.txt',base),new URL('LICENSE-THREE.txt',out));
+ const worker=(await build({entryPoints:[fileURLToPath(new URL('worker.mjs',base))],bundle:true,format:'esm',target:'es2022',write:false,minify:true})).outputFiles[0].text;await write('_worker.js',worker);await write('_routes.json',JSON.stringify({version:1,include:['/api/*'],exclude:[]}));
+ const urls=[];
+ const menu=(lang,page='')=>{const c=content[lang],other=lang==='zh'?'en':'zh';return `<header><a class="brand" href="/${lang}/"><img src="/mark.svg" alt="">${esc(c.brand)}</a><nav><a href="/${lang}/guide/">${c.guide}</a><a href="/${lang}/map/">${c.map}</a><a class="lang" href="/${other}/${page?`${page}/`:''}" lang="${other}">${other==='en'?'English':'中文'}</a></nav></header>`};
+ const footer=lang=>{const c=content[lang];return `<footer><span>© 2026 JIMAO · ${c.tag}</span><nav>${['about','privacy','contact','updates'].map(p=>`<a href="/${lang}/${p}/">${c[p]}</a>`).join('')}</nav></footer>`};
+ const head=(lang,path,title,description)=>`<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><meta name="description" content="${esc(description)}"><meta name="robots" content="index,follow"><meta name="theme-color" content="#0d1113"><meta name="google-adsense-account" content="ca-pub-6426056111301969"><link rel="icon" href="/mark.svg" type="image/svg+xml"><link rel="canonical" href="${ORIGIN}/${lang}/${path}">${['zh','en'].map(l=>`<link rel="alternate" hreflang="${l==='zh'?'zh-CN':'en'}" href="${ORIGIN}/${l}/${path}">`).join('')}<meta property="og:type" content="website"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${ORIGIN}/${lang}/${path}"><meta property="og:image" content="${ORIGIN}/hero.jpg"><link rel="stylesheet" href="/${cssName}"></head>`;
+ const page=(lang,path,title,description,body)=>head(lang,path,title,description)+`<body>${menu(lang,path.replace(/\/$/,''))}${body}${footer(lang)}<script type="module" src="/site.js"></script></body></html>`;
+ for(const lang of ['zh','en']){
+  const c=content[lang],en=lang==='en';await mkdir(new URL(`${lang}/`,out),{recursive:true});
+  const home=page(lang,'',`${c.brand} · ${c.tag}`,c.lead,`<main><section class="hero"><div><span class="eyebrow">BERTH 4 / SOLO OPERATION</span><h1>${c.hero}</h1><p>${c.lead}</p><div class="actions"><a class="button primary" href="/${lang}/play/">${c.play} ↗</a><a class="button" href="/${lang}/play/?tutorial=1">${c.training}</a></div><span class="caption">${c.single}</span></div><div class="hero-visual"><img src="/hero.jpg" width="1280" height="720" alt="${en?'Rifle view through a rain-soaked container harbor':'雨中集装箱港区的第一人称游戏画面'}"></div></section><section class="section"><span class="eyebrow">THE OBJECTIVE</span><div class="grid">${c.cards.map(([title,text])=>`<article class="card"><h3>${title}</h3><p>${text}</p></article>`).join('')}</div></section><section class="section"><h2>${c.pick}</h2><div class="grid">${Object.entries(DIFFICULTIES).map(([id,p],i)=>`<article class="card"><small>0${i+1} / ${id.toUpperCase()}</small><h3>${p[lang]}</h3><p>${c.difficulty[i]}</p><a class="button" href="/${lang}/play/?difficulty=${id}">${c.back} ↗</a></article>`).join('')}</div><p class="device">${c.device}</p><a href="/${lang}/guide/">${c.guide} →</a></section></main>`);
+  await write(`${lang}/index.html`,home);urls.push(`${ORIGIN}/${lang}/`);
+  for(const [id,p] of Object.entries(c.pages)){
+   await mkdir(new URL(`${lang}/${id}/`,out),{recursive:true});
+   const extra=id==='map'?`<img class="mission-map" src="/map-${lang}.svg" alt="${en?'Schematic: west entrance, central yard A, north warehouse B, east quay C, southeast boat':'区域示意：西侧入口、中央堆场 A、北侧仓库 B、东侧码头 C、东南侧撤离艇'}">`:id==='privacy'?`<div class="privacy-controls"><p id="metrics-status"></p><button id="metrics-toggle">${en?'Disable aggregate metrics':'关闭汇总统计'}</button></div>`:'';
+   await write(`${lang}/${id}/index.html`,page(lang,`${id}/`,`${p.title} | ${c.brand}`,p.lead,`<main class="editorial"><p class="eyebrow">JIMAO / ${id.toUpperCase()}</p><h1>${p.title}</h1><p class="lead">${p.lead}</p>${extra}<article>${p.sections.map(([h,t])=>`<section><h2>${h}</h2><p>${t}</p></section>`).join('')}</article><div class="actions"><a class="button primary" href="/${lang}/play/">${c.back} ↗</a><a class="button" href="https://github.com/tylerdi/mytoolsweb/issues" target="_blank" rel="noopener">${c.contact}</a>${id==='about'?'<a href="/LICENSE-THREE.txt">Three.js MIT license</a>':''}</div></main>`));urls.push(`${ORIGIN}/${lang}/${id}/`);
+  }
+  await write(`map-${lang}.svg`,`<svg xmlns="http://www.w3.org/2000/svg" width="800" height="580" viewBox="0 0 800 580"><rect width="800" height="580" fill="#131c21"/><g stroke="#44565d" fill="#233139"><rect x="55" y="55" width="115" height="450"/><rect x="185" y="55" width="390" height="160"/><rect x="185" y="230" width="390" height="275"/><rect x="590" y="55" width="140" height="450"/></g><g fill="#a8b6bc" font-family="system-ui,sans-serif" font-size="20"><text x="70" y="90">${en?'WEST':'西侧入口'}</text><text x="210" y="90">${en?'WAREHOUSE':'维修仓库'}</text><text x="210" y="270">${en?'CONTAINER YARD':'集装箱堆场'}</text><text x="610" y="90">${en?'QUAY':'码头'}</text></g><g fill="#ffb347" font-family="system-ui,sans-serif" font-size="23" font-weight="bold"><circle cx="112" cy="330" r="7"/><text x="75" y="370">${en?'START':'起点'}</text><circle cx="400" cy="345" r="10"/><text x="420" y="350">A</text><circle cx="380" cy="145" r="10"/><text x="400" y="150">B</text><circle cx="657" cy="290" r="10"/><text x="677" y="295">C</text><circle cx="700" cy="455" r="10"/><text x="570" y="540">${en?'EXTRACTION':'撤离艇'}</text></g><text x="55" y="552" fill="#8d9a9f" font-family="system-ui,sans-serif" font-size="13">${en?'SCHEMATIC / NOT A NAVIGATION PATH':'区域示意 / 不代表可直接通行路线'}</text></svg>`);
+  let localized=engine;
+  if(en){for(const [zh,eng] of Object.entries(translations).sort((a,b)=>b[0].length-a[0].length))localized=localized.replaceAll(zh,eng);localized=localized.replaceAll('/zh/about/','/en/about/').replaceAll('/zh/privacy/','/en/privacy/');}
+  if(en){const left=localized.match(/[\u3400-\u9fff]{2,}/g);if(left?.length)throw new Error('Untranslated engine labels: '+[...new Set(left)].join(', '))}
+  const engineBuilt=(await transform(runtime+'\n'+localized,{minify:true,target:'es2022',legalComments:'eof',charset:'utf8'})).code,engineName=`game-${lang}.${hash(engineBuilt)}.js`;await write(engineName,engineBuilt);
+  let body=source.match(/<body[^>]*>([\s\S]*?)<script>/)[1];body=body.replace(/正在载入几猫港区/g,en?'Loading Jimao harbor':'正在载入几猫港区').replace(/几猫/g,en?'JIMAO':'几猫');
+  await mkdir(new URL(`${lang}/play/`,out),{recursive:true});
+  await write(`${lang}/play/index.html`,head(lang,'play/',`${c.brand} | ${en?'Play':'开始游戏'}`,c.lead).replace('</head>',`<link rel="stylesheet" href="/${gameCSSName}"></head>`)+`<body>${body}<nav class="game-site-nav" aria-label="${en?'Website and language':'网站与语言'}"><a href="/${lang}/">← ${c.home}</a><a href="/${en?'zh':'en'}/play/" data-language>${en?'中文':'English'}</a><a href="/${lang}/guide/" target="_blank" rel="noopener">${c.guide}</a></nav><noscript><p>${en?'JavaScript is required for the game.':'游戏需要启用 JavaScript。'}<a href="/${lang}/guide/">${c.guide}</a></p></noscript><script src="/${engineName}" defer></script></body></html>`);urls.push(`${ORIGIN}/${lang}/play/`);
+ }
+ const home=await readFile(new URL('zh/index.html',out),'utf8');await write('index.html',home.replace('</head>',`<script>try{const saved=JSON.parse(localStorage.getItem('jimao:language'));const lang=saved==='en'||saved!=='zh'&&navigator.language.toLowerCase().startsWith('en')?'en':'zh';location.replace('/'+lang+'/')}catch{location.replace('/zh/')}</script></head>`));
+ await write('ads.txt','google.com, pub-6426056111301969, DIRECT, f08c47fec0942fa0\n');
+ await write('robots.txt',`User-agent: *\nAllow: /\nDisallow: /api/\n\nSitemap: ${ORIGIN}/sitemap.xml\n`);
+ await write('sitemap.xml',`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map(u=>`<url><loc>${u}</loc></url>`).join('')}</urlset>`);
+ await write('_headers','/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n  Cache-Control: public, max-age=0, must-revalidate\n/game-*.js\n  Cache-Control: public, max-age=31536000, immutable\n');
+ await write('_redirects','/play /zh/play/ 302\n/about /zh/about/ 302\n/privacy /zh/privacy/ 302\n');
+ await write('404.html',page('en','404','Page not found | Jimao','This page is not available.','<main class="editorial"><h1>Page not found</h1><a href="/">Return to Jimao / 返回几猫</a></main>').replace('index,follow','noindex,follow'));
+ console.log(`Jimao: ${urls.length} bilingual pages + root, isolated deployment at ${ORIGIN}`);return fileURLToPath(out);
+}
+if(process.argv[1]===fileURLToPath(import.meta.url))await buildSite();

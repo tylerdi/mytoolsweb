@@ -6,7 +6,8 @@
     "build:csv": "node scripts/build_csv.mjs",
     "test": "node --test tests/*.test.mjs prototypes/daily-route/game-core.test.mjs twins/twins-core.test.mjs",
     "build:temple": "node prototypes/rain-temple/build.mjs",
-    "build:temple:site": "node prototypes/rain-temple/build-site.mjs"
+    "build:temple:site": "node prototypes/rain-temple/build-site.mjs",
+    "build:jimao": "node prototypes/jimao/build.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.25.12",
