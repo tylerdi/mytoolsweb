@@ -685,7 +685,8 @@ var routeTelemetry = (() => {
   var game_analytics_exports = {};
   __export(game_analytics_exports, {
     createGameTelemetry: () => createGameTelemetry,
-    shareURL: () => shareURL
+    shareURL: () => shareURL,
+    showGameShare: () => showGameShare
   });
 
   // assets/insights/core.mjs
@@ -835,10 +836,64 @@ var routeTelemetry = (() => {
     }
     return track;
   }
+  function showGameShare({ title, text, url, onShared }) {
+    const sheet = document.createElement("dialog");
+    sheet.className = "finish-dialog";
+    sheet.setAttribute("aria-label", "\u5206\u4EAB" + title);
+    const heading = document.createElement("h2");
+    heading.textContent = "\u5206\u4EAB" + title;
+    const note = document.createElement("p");
+    note.setAttribute("role", "status");
+    note.textContent = "\u590D\u5236\u6587\u6848\u53D1\u7ED9\u670B\u53CB\u3002\u94FE\u63A5\u4FDD\u7559\u5F53\u524D\u73A9\u6CD5\uFF0C\u4E0D\u5305\u542B\u5730\u56FE\u7B54\u6848\u3002";
+    const area = document.createElement("textarea");
+    area.readOnly = true;
+    area.value = `${title}
+${text}
+${url}`;
+    area.setAttribute("aria-label", "\u5206\u4EAB\u6587\u6848");
+    area.style.cssText = "display:block;width:100%;min-height:140px;padding:12px;margin:15px 0;border:1px solid #9bb6ad;border-radius:8px;background:white;color:#24463f;font:14px/1.7 sans-serif";
+    const actions = document.createElement("div");
+    actions.className = "modal-actions";
+    const button = (label, callback) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = label;
+      b.addEventListener("click", callback);
+      actions.append(b);
+      return b;
+    };
+    button("\u590D\u5236\u6587\u6848", async () => {
+      area.select();
+      try {
+        await Promise.race([navigator.clipboard.writeText(area.value), new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 1200))]);
+        note.textContent = "\u5DF2\u590D\u5236\uFF0C\u53EF\u4EE5\u7C98\u8D34\u7ED9\u670B\u53CB\u3002";
+        onShared();
+      } catch {
+        note.textContent = "\u6587\u6848\u5DF2\u9009\u4E2D\uFF0C\u8BF7\u6309 Ctrl/Cmd+C \u6216\u957F\u6309\u590D\u5236\u3002";
+      }
+    }).className = "primary";
+    if (navigator.share) button("\u7CFB\u7EDF\u5206\u4EAB", async () => {
+      try {
+        await navigator.share({ title, text, url });
+        note.textContent = "\u7CFB\u7EDF\u5206\u4EAB\u5DF2\u5B8C\u6210\u3002";
+        onShared();
+      } catch (error) {
+        if (error?.name !== "AbortError") note.textContent = "\u7CFB\u7EDF\u5206\u4EAB\u4E0D\u53EF\u7528\uFF0C\u8BF7\u590D\u5236\u6587\u6848\u3002";
+      }
+    });
+    button("\u5173\u95ED", () => sheet.close());
+    sheet.append(heading, note, area, actions);
+    document.body.append(sheet);
+    sheet.addEventListener("close", () => sheet.remove());
+    sheet.addEventListener("keydown", (event) => event.stopPropagation());
+    sheet.showModal();
+    area.focus();
+    area.select();
+  }
   return __toCommonJS(game_analytics_exports);
 })();
 
-const {createGameTelemetry,shareURL}=routeTelemetry;
+const {createGameTelemetry,shareURL,showGameShare}=routeTelemetry;
 // Progress stays on this device. Existing daily scores use their own storage.
 function cleanVoyageProgress(value, count) {
   const clean = {};
@@ -1416,15 +1471,7 @@ async function share() {
   const text = won && mode !== 'tutorial'
     ? `${mode === 'daily' ? board.key : `练习 ${practiceLevel}`} · ${path.length - 1}/${board.limit} 步 · ${hints} 次提示`
     : '每天一张新海图，也可以连续闯关。来规划你的航线。';
-  try {
-    if (navigator.share) await navigator.share({ title, text, url });
-    else await navigator.clipboard.writeText(`${title}\n${text}\n${url}`);
-    track('share');
-    message(navigator.share ? '分享已完成。' : '链接已复制，可以发给朋友。');
-    if (dialog.open) document.querySelector('[data-finish-detail]').textContent = '分享不包含地图答案。';
-  } catch (error) {
-    if (error?.name !== 'AbortError') message('分享失败，请检查浏览器的分享或剪贴板权限。', 'warn');
-  }
+  showGameShare({title,text,url,onShared:()=>track('share')});
 }
 
 for (let index = 0; index < SIZE * SIZE; index += 1) {

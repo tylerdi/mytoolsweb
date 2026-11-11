@@ -1,5 +1,5 @@
 import { DIRECTIONS, PRACTICE_COUNT, SIZE, dailyBoard, dayKey, hintFor, isWon, moveBoats, practiceBoard, tutorialBoard, validateRoute } from './twins-core.mjs';
-import { createGameTelemetry, shareURL } from '../assets/game-analytics.mjs';
+import { createGameTelemetry, shareURL, showGameShare } from '../assets/game-analytics.mjs';
 import { createVoyage, createSeaMotion } from '../assets/voyage.mjs';
 
 const track = createGameTelemetry('twins');
@@ -296,14 +296,7 @@ async function share() {
   const text = won && mode !== 'tutorial'
     ? `${mode === 'daily' ? board.key : `练习 ${practiceLevel}`} · ${directions.length}/${board.limit} 步 · ${hints} 次提示`
     : '一条指令同时移动两艘船，每日海图与连续闯关都能玩。';
-  try {
-    if (navigator.share) await navigator.share({ title, text, url });
-    else await navigator.clipboard.writeText(`${title}\n${text}\n${url}`);
-    track('share');
-    message(navigator.share ? '分享已完成。' : '链接已复制，可以发给朋友。');
-  } catch (error) {
-    if (error?.name !== 'AbortError') message('分享失败，请检查浏览器的分享或剪贴板权限。', 'warn');
-  }
+  showGameShare({title,text,url,onShared:()=>track('share')});
 }
 
 for (let index = 0; index < SIZE * SIZE; index += 1) {

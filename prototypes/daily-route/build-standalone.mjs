@@ -11,7 +11,7 @@ const voyageCss = await read('../../assets/voyage.css');
 const voyageCode = (await read('../../assets/voyage.mjs')).replace(/^export /gm, '');
 const levels = (await read('route-levels.mjs')).replace(/^export /gm, '');
 const core = (await read('game-core.mjs')).replace(/^import .* from '\.\/route-levels\.mjs';\n/, '').replace(/^export /gm, '');
-const analytics = (await build({entryPoints:[fileURLToPath(new URL('../../assets/game-analytics.mjs',base))],bundle:true,format:'iife',globalName:'routeTelemetry',write:false,target:'es2022'})).outputFiles[0].text+'\nconst {createGameTelemetry,shareURL}=routeTelemetry;';
+const analytics = (await build({entryPoints:[fileURLToPath(new URL('../../assets/game-analytics.mjs',base))],bundle:true,format:'iife',globalName:'routeTelemetry',write:false,target:'es2022'})).outputFiles[0].text+'\nconst {createGameTelemetry,shareURL,showGameShare}=routeTelemetry;';
 const game = (await read('game.mjs'))
   .replace(/^import .* from '\.\/game-core\.mjs';\n/, '')
   .replace(/^import .* from '\.\.\/\.\.\/assets\/game-analytics\.mjs';\n/, '')
