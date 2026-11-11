@@ -43,3 +43,13 @@ HOST=127.0.0.1 PORT=8788 python3 local_server.py
 ## 发布
 
 推送 `main` 后由 Cloudflare Pages 自动部署。上线后检查两款游戏、匿名统计、关于/隐私/反馈、`sitemap.xml`、`ads.txt` 和旧 CSV 页面 `410`。游戏上线供试玩与收集反馈，不等于已准备好重新申请 AdSense 审核。
+
+## 听雨山寺独立试玩
+
+`/prototypes/rain-temple/` 是一处原创的单人 3D 庭院，提供石径寻路、敲钟、木鱼、看鱼、1/3/5 分钟静坐、合掌致意、可拖动念珠、雨景和本地合成音效。合掌在当前位置完成，念珠支持鼠标/触摸拖动、惯性、按钮及键盘逐颗拨动，次数仅保留在当前页面。点击地面行走，拖动画面环顾，滚轮或双指缩放；方向键 / WASD 也能行走。左上方可切换中文 / English / 日本語 / 한국어；首次按浏览器语言选择，之后只在本地保存语言偏好。分享链接携带语言。右上方可设置声音、雨势和减少动态效果。隐藏页面暂停场景更新、音频与静坐计时。
+
+运行 `npm run build:temple` 后启动本地服务器访问该路径。Three.js 随本地脚本打包，无运行时 CDN；建筑、植被、角色和声音均由本站代码生成，无参考站素材。无登录、访客统计、多人在线或广告。明信片在本地生成并保存；本地地址只供本机预览。产品范围见 `prototypes/rain-temple/PLAN.md`。当前原型沿用 noindex 策略，不替换每日航线首页。
+
+## 山寺的独立正式站
+
+听雨山寺使用 `temple.tylerzhang.xyz` 和独立 Cloudflare Pages 项目 `rain-temple-tyler`。源码在 `codex/rain-temple-launch` 分支；每日航线的 `main` 与 `mytoolsweb` 项目继续负责原站。`npm run build:temple:site` 只生成山寺的静态正式包，不发布旧 API。首次采用控制台 Direct Upload；推送源码本身不会更新山寺。完整发布步骤见 `prototypes/rain-temple/DEPLOYMENT.md`。

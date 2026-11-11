@@ -1,0 +1,9 @@
+{
+  "name": "rain-temple-site",
+  "private": true,
+  "type": "module",
+  "scripts": {"build": "node build-site.mjs"},
+  "dependencies": {"three": "0.187.0"},
+  "devDependencies": {"esbuild": "0.25.12"},
+  "engines": {"node": ">=20"}
+}

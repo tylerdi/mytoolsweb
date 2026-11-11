@@ -61,3 +61,6 @@ coverage/
 
 # Git 本身的忽略（防止递归）
 .gitignore.local
+
+# Generated Rain Temple preview bundle (production assets are built into dist/)
+prototypes/rain-temple/temple.js

@@ -4,7 +4,9 @@
     "build:guide-maps": "node guides/build-maps.mjs",
     "build:labs": "node scripts/build_labs.mjs",
     "build:csv": "node scripts/build_csv.mjs",
-    "test": "node --test tests/*.test.mjs prototypes/daily-route/game-core.test.mjs twins/twins-core.test.mjs"
+    "test": "node --test tests/*.test.mjs prototypes/daily-route/game-core.test.mjs twins/twins-core.test.mjs",
+    "build:temple": "node prototypes/rain-temple/build.mjs",
+    "build:temple:site": "node prototypes/rain-temple/build-site.mjs"
   },
   "devDependencies": {
     "esbuild": "^0.25.12",
@@ -14,6 +16,7 @@
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
     "eventsource-parser": "^3.1.1",
-    "papaparse": "^5.7.0"
+    "papaparse": "^5.7.0",
+    "three": "0.187.0"
   }
 }
