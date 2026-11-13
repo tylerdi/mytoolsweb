@@ -2,6 +2,7 @@
   "version": 1,
   "include": [
     "/api/*",
+    "/prototypes/*",
     "/agent-map*",
     "/ai-debate*",
     "/ai-fun*",

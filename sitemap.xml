@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://tylerzhang.xyz/</loc></url>
-  <url><loc>https://tylerzhang.xyz/twins/</loc></url>
-  <url><loc>https://tylerzhang.xyz/twins/create/</loc></url>
-  <url><loc>https://tylerzhang.xyz/guides/</loc></url>
-  <url><loc>https://tylerzhang.xyz/guides/route-currents</loc></url>
-  <url><loc>https://tylerzhang.xyz/guides/route-beacons</loc></url>
-  <url><loc>https://tylerzhang.xyz/guides/twins-boundary</loc></url>
-  <url><loc>https://tylerzhang.xyz/guides/twins-one-solution</loc></url>
-  <url><loc>https://tylerzhang.xyz/about</loc></url>
-  <url><loc>https://tylerzhang.xyz/privacy</loc></url>
-  <url><loc>https://tylerzhang.xyz/contact</loc></url>
+  <url><loc>https://tylerzhang.xyz/</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://tylerzhang.xyz/twins/</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://tylerzhang.xyz/twins/create/</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://tylerzhang.xyz/guides/</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://tylerzhang.xyz/guides/route-currents</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://tylerzhang.xyz/guides/route-beacons</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://tylerzhang.xyz/guides/twins-boundary</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://tylerzhang.xyz/guides/twins-one-solution</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://tylerzhang.xyz/about</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://tylerzhang.xyz/privacy</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://tylerzhang.xyz/contact</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://tylerzhang.xyz/rules/</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://tylerzhang.xyz/rules/route</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://tylerzhang.xyz/rules/twins</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://tylerzhang.xyz/guides/design-notes</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://tylerzhang.xyz/updates</loc><lastmod>2026-11-13</lastmod></url>
+  <url><loc>https://tylerzhang.xyz/guides/signals</loc><lastmod>2026-11-13</lastmod></url>
 </urlset>

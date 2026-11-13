@@ -5,6 +5,7 @@ import { onRequest as toolsRoute } from '../functions/tools/[legacy].js';
 import { onRequest as postsRoute } from '../functions/blog/posts/[legacy].js';
 import { onRequest as blogRoute } from '../functions/blog/[legacy].js';
 import { onRequest as blogIndex } from '../functions/blog/index.js';
+import {onRequest as prototypeRoute} from '../functions/prototypes/[[path]].js';
 
 const next = () => new Response('kept', { status: 200 });
 
@@ -37,4 +38,13 @@ test('retired experiments and old blog posts return 410', () => {
   assert.equal(blogRoute({ params: { legacy: 'csv-encoding' }, next }).status, 410);
   assert.equal(blogRoute({ params: { legacy: 'csv-duplicates.html' }, next }).status, 410);
   assert.equal(blogIndex().status, 410);
+});
+
+test('development pages retire without breaking live game modules or guide images',()=>{
+  for(const path of ['/prototypes/daily-route/','/prototypes/jimao/source.html','/prototypes/rain-temple/PLAN.md']){
+    assert.equal(prototypeRoute({request:new Request('https://tylerzhang.xyz'+path),next}).status,410);
+  }
+  for(const path of ['/prototypes/daily-route/game-core.mjs','/prototypes/daily-route/assets/boat.svg']){
+    assert.equal(prototypeRoute({request:new Request('https://tylerzhang.xyz'+path),next}).status,200);
+  }
 });

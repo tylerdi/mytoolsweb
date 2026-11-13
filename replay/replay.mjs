@@ -1,4 +1,4 @@
-import { SIZE as ROUTE_SIZE, dailyBoard as routeDaily, dayKey as routeDayKey, practiceBoard as routePractice } from '../prototypes/daily-route/game-core.mjs?rev=route-v2';
+import { SIZE as ROUTE_SIZE, dailyBoard as routeDaily, dayKey as routeDayKey, practiceBoard as routePractice, signalState } from '../prototypes/daily-route/game-core.mjs?rev=route-v3';
 import { SIZE as TWIN_SIZE, analyzeBoard, dailyBoard as twinDaily, dayKey as twinDayKey, decodeCustomBoard, moveBoats, practiceBoard as twinPractice } from '../twins/twins-core.mjs';
 
 const params = new URL(location.href).searchParams;
@@ -62,7 +62,11 @@ function routeStepText() {
   const current = board.reference[step];
   const previous = board.reference[step - 1];
   if (current === board.end) return '三个航标已经收齐，最后一步抵达灯塔。';
-  if (board.beacons.includes(current)) return `第 ${step} 步收集航标；已获得 ${board.beacons.filter((cell) => board.reference.slice(0, step + 1).includes(cell)).length} / 3。`;
+  if (board.beacons.includes(current)) {
+    const mark=board.beacons.indexOf(current),signals=Object.values(board.signals||{}).filter(signal=>signal.beacon===mark);
+    const effects=signals.map(signal=>`${mark+1} 号${signal.type==='gate'?'航闸开启':'潮桥关闭'}`).join('，');
+    return `第 ${step} 步收集${Object.keys(board.signals||{}).length?`${mark+1} 号`:''}航标；已获得 ${board.beacons.filter((cell) => board.reference.slice(0, step + 1).includes(cell)).length} / 3。${effects}`;
+  }
   if (board.currents[current]) return `第 ${step} 步进入洋流；下一步要沿箭头向${{ up: '上', right: '右', down: '下', left: '左' }[board.currents[current]]}离开。`;
   if (board.currents[previous]) return `第 ${step} 步顺着洋流离开，路线继续延伸。`;
   return `第 ${step} 步选择相邻海面，避开礁石且不重复经过旧格。`;
@@ -103,7 +107,10 @@ function render() {
         tile.classList.add('path');
         const number = document.createElement('span'); number.className = 'number'; number.textContent = String(position); tile.append(number);
       }
-      tile.setAttribute('aria-label', `第 ${Math.floor(index / size) + 1} 行第 ${index % size + 1} 列${position >= 0 ? `，航线第 ${position} 步` : ''}`);
+      const signal=signalState(board,index,board.reference.slice(0,step+1));
+      if(signal){tile.classList.add('signal-tile',signal.type,signal.open?'signal-open':'signal-closed');const label=document.createElement('span');label.className='signal-symbol';label.textContent=`${signal.type==='gate'?'闸':'桥'} ${signal.beacon+1}`;tile.append(label);}
+      if(Object.keys(board.signals||{}).length&&board.beacons.includes(index)){const badge=document.createElement('span');badge.className='beacon-number';badge.textContent=String(board.beacons.indexOf(index)+1);tile.append(badge);}
+      tile.setAttribute('aria-label', `第 ${Math.floor(index / size) + 1} 行第 ${index % size + 1} 列${signal?`，${signal.beacon+1} 号${signal.type==='gate'?'航闸':'潮桥'}，${signal.open?'开启':'关闭'}`:''}${position >= 0 ? `，航线第 ${position} 步` : ''}`);
     } else {
       const state = positions[step];
       const labels = [];

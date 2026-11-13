@@ -119,10 +119,18 @@ export function practiceBoard(level) {
   if (!Number.isInteger(level) || level < 1 || level > PRACTICE_COUNT) throw new Error('练习关卡不存在。');
   const entry = ROUTE_LEVELS[level - 1];
   return {
-    ...entry, size: SIZE, key: String(level), mode: 'practice', revision: 'route-v2',
+    ...entry, size: SIZE, key: String(level), mode: 'practice', revision: 'route-v3',
     beacons: [...entry.beacons], obstacles: [...entry.obstacles], currents: { ...entry.currents },
     reference: [...entry.reference], analysis: { ...entry.analysis },
+    signals: Object.fromEntries(Object.entries(entry.signals || {}).map(([cell,signal])=>[cell,{...signal}])),
   };
+}
+
+export function signalState(board, cell, path) {
+  const signal=board.signals?.[cell];
+  if(!signal)return null;
+  const collected=path.includes(board.beacons[signal.beacon]);
+  return {...signal,open:signal.type==='gate'?collected:!collected};
 }
 
 // Enumerate simple routes, respecting arrows, beacon collection and the move budget.
@@ -156,8 +164,9 @@ export function analyzeRouteBoard(board, { maxNodes = 250000 } = {}) {
     bounds.set(key, best);
     return best;
   }
-  function choices(current, visited) {
+  function choices(current, visited, mask) {
     return neighbors(current).filter((cell) => !visited(cell) && !blocked.has(cell)
+      && (!board.signals?.[cell] || (board.signals[cell].type==='gate')===Boolean(mask & (1 << board.signals[cell].beacon)))
       && (!board.currents[current] || direction(current, cell) === board.currents[current]));
   }
   function search(current, mask) {
@@ -174,7 +183,7 @@ export function analyzeRouteBoard(board, { maxNodes = 250000 } = {}) {
       return;
     }
     if (steps + lowerBound(current, mask) > board.limit) return;
-    for (const cell of choices(current, (cell) => seen[cell])) {
+    for (const cell of choices(current, (cell) => seen[cell], mask)) {
       const nextMask = mask | (marks.get(cell) || 0);
       if (cell === board.end && nextMask !== all) continue;
       seen[cell] = 1;
@@ -190,7 +199,8 @@ export function analyzeRouteBoard(board, { maxNodes = 250000 } = {}) {
   for (let index = 0; index < reference.length - 1; index += 1) {
     const prefix = reference.slice(0, index + 1);
     const visited = new Set(prefix);
-    const alternatives = choices(reference[index], (cell) => visited.has(cell));
+    const mask=board.beacons.reduce((value,cell,mark)=>value|(prefix.includes(cell)?1<<mark:0),0);
+    const alternatives = choices(reference[index], (cell) => visited.has(cell), mask);
     for (const cell of alternatives) {
       if (cell === board.end) continue;
       if (solutions.some((solution) => prefix.every((value, position) => solution[position] === value) && solution[index + 1] === cell)) continue;
@@ -222,6 +232,8 @@ export function advance(board, path, target) {
   if (path.at(-1) === board.end) return { path, status: 'solved' };
   if (!direction(current, target)) return { path, status: 'invalid', message: '只能走上下左右相邻格。' };
   if (board.obstacles.includes(target)) return { path, status: 'invalid', message: '礁石不可通行。' };
+  const signal=signalState(board,target,path);
+  if(signal&&!signal.open)return {path,status:'invalid',message:signal.type==='gate'?`先收集 ${signal.beacon+1} 号航标，才能开启这座航闸。`:`${signal.beacon+1} 号航标已收集，这座潮桥已经关闭。可撤回航标前重新规划。`};
   if (path.includes(target)) return { path, status: 'invalid', message: '航线不能重复经过同一格。' };
   if (board.currents[current] && board.currents[current] !== direction(current, target)) return { path, status: 'invalid', message: '必须沿洋流箭头的方向离开。' };
   if (path.length >= board.limit + 1) return { path, status: 'invalid', message: '已超过本局步数预算。' };

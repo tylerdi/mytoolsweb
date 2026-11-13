@@ -1,6 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { cleanVoyageProgress, nextVoyageLevel, saveVoyageResult } from '../assets/voyage.mjs';
+import { cleanVoyageProgress, migrateVoyageProgress, nextVoyageLevel, saveVoyageResult } from '../assets/voyage.mjs';
+
+test('new signal campaign preserves unchanged early levels without awarding the redesigned ones',()=>{
+  const old={1:{steps:6,hints:0},8:{steps:20,hints:1},9:{steps:22,hints:0},12:{steps:28,hints:0}};
+  assert.deepEqual(migrateVoyageProgress(null,old,12,8),{1:old[1],8:old[8]});
+  assert.deepEqual(migrateVoyageProgress({},old,12,8),{});
+  const current={9:{steps:22,hints:0}};
+  assert.deepEqual(migrateVoyageProgress(current,old,12,8),current);
+});
 
 test('local voyage progress rejects corrupt scores and levels outside this game', () => {
   assert.deepEqual(cleanVoyageProgress(null, 12), {});

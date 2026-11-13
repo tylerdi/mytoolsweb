@@ -1,4 +1,5 @@
-// Fixed campaign v2. Counts include every simple route within the stated budget.
+// Campaign v3: the first eight maps are unchanged; open-water signal maps follow.
+// Counts include every legal route within the budget and the signal state.
 export const ROUTE_LEVELS = [
   {
     title: "灯塔初航",
@@ -113,59 +114,300 @@ export const ROUTE_LEVELS = [
     analysis: {"shortest":20,"solutionCount":5,"misleadingBranches":10},
   },
   {
-    title: "潮口抉择",
-    difficulty: "困难",
-    chapter: "深海试炼",
-    focus: "预算没有多余步数，先在心里排除看似顺路的岔路。",
-    start: 21,
-    end: 27,
-    beacons: [2,26,38],
-    obstacles: [6,17,23,8,5,35,48,18,40,7,1],
-    currents: {"11":"right","15":"right","30":"down","31":"left"},
-    limit: 22,
-    reference: [21,14,15,16,9,2,3,4,11,12,19,26,25,24,31,30,37,38,39,32,33,34,27],
-    analysis: {"shortest":22,"solutionCount":4,"misleadingBranches":10},
+    "title": "信标开闸",
+    "difficulty": "困难",
+    "chapter": "信标机关",
+    "focus": "先取得 2 号航标，再通过 2 号航闸；近路并不总是先开放。",
+    "start": 21,
+    "end": 27,
+    "beacons": [
+      2,
+      26,
+      38
+    ],
+    "obstacles": [
+      35,
+      6,
+      40,
+      48,
+      1,
+      7
+    ],
+    "currents": {
+      "11": "right",
+      "15": "right",
+      "30": "down",
+      "31": "left"
+    },
+    "limit": 22,
+    "reference": [
+      21,
+      14,
+      15,
+      16,
+      9,
+      2,
+      3,
+      4,
+      5,
+      12,
+      19,
+      26,
+      25,
+      24,
+      31,
+      30,
+      37,
+      38,
+      39,
+      32,
+      33,
+      34,
+      27
+    ],
+    "analysis": {
+      "shortest": 22,
+      "solutionCount": 20,
+      "misleadingBranches": 15
+    },
+    "signals": {
+      "39": {
+        "type": "gate",
+        "beacon": 1
+      }
+    }
   },
   {
-    title: "六流迷航",
-    difficulty: "困难",
-    chapter: "深海试炼",
-    focus: "多股洋流限制出口；从目标附近倒推怎样进入。",
-    start: 21,
-    end: 27,
-    beacons: [25,41,4],
-    obstacles: [8,1,37,2,3,32,43,9,28,0,35,42,29,22],
-    currents: {"6":"down","11":"up","12":"left","18":"down","34":"left","38":"right"},
-    limit: 24,
-    reference: [21,14,15,16,17,10,11,4,5,6,13,20,19,18,25,24,31,38,39,40,41,34,33,26,27],
-    analysis: {"shortest":24,"solutionCount":3,"misleadingBranches":9},
+    "title": "双闸联锁",
+    "difficulty": "困难",
+    "chapter": "信标机关",
+    "focus": "3 号航标开启下方航闸，1 号航标开启灯塔前的航闸。先排好取标顺序。",
+    "start": 21,
+    "end": 27,
+    "beacons": [
+      25,
+      41,
+      4
+    ],
+    "obstacles": [
+      9,
+      2,
+      0,
+      35,
+      37,
+      32,
+      28
+    ],
+    "currents": {
+      "6": "down",
+      "11": "up",
+      "12": "left",
+      "18": "down",
+      "34": "left",
+      "38": "right"
+    },
+    "limit": 24,
+    "reference": [
+      21,
+      14,
+      15,
+      16,
+      17,
+      10,
+      3,
+      4,
+      5,
+      6,
+      13,
+      20,
+      19,
+      18,
+      25,
+      24,
+      31,
+      38,
+      39,
+      40,
+      41,
+      34,
+      33,
+      26,
+      27
+    ],
+    "analysis": {
+      "shortest": 24,
+      "solutionCount": 6,
+      "misleadingBranches": 16
+    },
+    "signals": {
+      "26": {
+        "type": "gate",
+        "beacon": 0
+      },
+      "40": {
+        "type": "gate",
+        "beacon": 2
+      }
+    }
   },
   {
-    title: "狭海穿行",
-    difficulty: "困难",
-    chapter: "深海试炼",
-    focus: "可行航线更少，经过窄口之前先确认后半段能连通。",
-    start: 21,
-    end: 27,
-    beacons: [17,20,45],
-    obstacles: [43,31,32,3,35,23,30,15,16,24,36,25,28],
-    currents: {"6":"down","8":"right","11":"up","26":"down","39":"left","41":"up","48":"up"},
-    limit: 26,
-    reference: [21,14,7,8,9,10,17,18,11,4,5,6,13,20,19,26,33,40,39,38,45,46,47,48,41,34,27],
-    analysis: {"shortest":26,"solutionCount":2,"misleadingBranches":11},
+    "title": "落潮之前",
+    "difficulty": "困难",
+    "chapter": "信标机关",
+    "focus": "通往下半海图的潮桥会在取得 3 号航标后关闭，先过桥，再取标。",
+    "start": 21,
+    "end": 27,
+    "beacons": [
+      17,
+      20,
+      45
+    ],
+    "obstacles": [
+      16,
+      43,
+      25,
+      36,
+      31,
+      24
+    ],
+    "currents": {
+      "6": "down",
+      "8": "right",
+      "11": "up",
+      "26": "down",
+      "39": "left",
+      "41": "up",
+      "48": "up"
+    },
+    "limit": 26,
+    "reference": [
+      21,
+      14,
+      7,
+      8,
+      9,
+      10,
+      17,
+      18,
+      11,
+      4,
+      5,
+      6,
+      13,
+      20,
+      19,
+      26,
+      33,
+      40,
+      39,
+      38,
+      45,
+      46,
+      47,
+      48,
+      41,
+      34,
+      27
+    ],
+    "analysis": {
+      "shortest": 26,
+      "solutionCount": 12,
+      "misleadingBranches": 13
+    },
+    "signals": {
+      "33": {
+        "type": "gate",
+        "beacon": 0
+      },
+      "40": {
+        "type": "bridge",
+        "beacon": 2
+      }
+    }
   },
   {
-    title: "终航试炼",
-    difficulty: "困难",
-    chapter: "深海试炼",
-    focus: "本关预算内只有一条可行航线；综合检查航标、洋流和回程。",
-    start: 21,
-    end: 27,
-    beacons: [37,3,39],
-    obstacles: [5,31,7,12,8,19,32,2,9,44,1,45,20,24,23,0],
-    currents: {"4":"down","10":"up","11":"down","15":"right","16":"right","29":"up","35":"down","41":"up","47":"right"},
-    limit: 28,
-    reference: [21,28,35,42,43,36,37,30,29,22,15,16,17,10,3,4,11,18,25,26,33,40,39,46,47,48,41,34,27],
-    analysis: {"shortest":28,"solutionCount":1,"misleadingBranches":9},
+    "title": "桥先门后",
+    "difficulty": "困难",
+    "chapter": "信标机关",
+    "focus": "两座潮桥在取得 3 号航标后关闭，两座航闸分别依赖 1、2 号航标。先安排过桥时机。",
+    "start": 21,
+    "end": 27,
+    "beacons": [
+      37,
+      3,
+      39
+    ],
+    "obstacles": [
+      5,
+      23,
+      24,
+      32
+    ],
+    "currents": {
+      "4": "down",
+      "10": "up",
+      "11": "down",
+      "15": "right",
+      "16": "right",
+      "29": "up",
+      "35": "down",
+      "41": "up",
+      "47": "right"
+    },
+    "limit": 28,
+    "reference": [
+      21,
+      28,
+      35,
+      42,
+      43,
+      36,
+      37,
+      30,
+      29,
+      22,
+      15,
+      16,
+      17,
+      10,
+      3,
+      4,
+      11,
+      18,
+      19,
+      26,
+      33,
+      40,
+      39,
+      46,
+      47,
+      48,
+      41,
+      34,
+      27
+    ],
+    "analysis": {
+      "shortest": 28,
+      "solutionCount": 6,
+      "misleadingBranches": 15
+    },
+    "signals": {
+      "22": {
+        "type": "bridge",
+        "beacon": 2
+      },
+      "28": {
+        "type": "bridge",
+        "beacon": 2
+      },
+      "33": {
+        "type": "gate",
+        "beacon": 0
+      },
+      "34": {
+        "type": "gate",
+        "beacon": 1
+      }
+    }
   },
 ];

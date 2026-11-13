@@ -8,22 +8,21 @@
   <meta property="og:type" content="website"><meta property="og:title" content="每日航线 · 每天一张新海图"><meta property="og:description" content="收齐航标，顺着洋流，在步数用尽前靠岸。"><meta property="og:url" content="https://tylerzhang.xyz/"><meta property="og:image" content="https://tylerzhang.xyz/assets/daily-route-logo.png">
   <link rel="stylesheet" href="./game.css">
   <link rel="stylesheet" href="../../assets/voyage.css">
+  <link rel="stylesheet" href="../../assets/signals.css">
 </head>
 <body>
-  <header class="topbar"><div class="topbar-inner"><a class="brand" href="./"><img class="brand-logo" src="./assets/logo.svg" alt=""><span>每日航线</span></a><nav class="game-nav" aria-label="游戏导航"><a href="./" aria-current="page">每日航线</a><a href="/twins/">潮汐双船</a><a href="/about">关于</a></nav></div></header>
+  <a class="skip-link" href="#game-board">跳到海图</a>
+  <header class="topbar"><div class="topbar-inner"><a class="brand" href="./"><img class="brand-logo" src="./assets/logo.svg" alt=""><span>每日航线</span></a><nav class="game-nav" aria-label="游戏导航"><a href="/">航线</a><a href="/twins/">双船</a><a href="/rules/">规则</a><a href="/guides/">精选</a></nav></div></header>
   <main class="game-shell">
-    <header class="game-intro"><div><p class="eyebrow">A NEW ROUTE EACH DAY</p><h1>每日航线</h1><p>收齐航标，顺着洋流，在步数用尽前靠岸。</p></div><div class="mode-switch" role="group" aria-label="游戏模式"><button type="button" data-mode="tutorial" aria-pressed="true">新手教学</button><button type="button" data-mode="daily" aria-pressed="false">每日挑战</button><button type="button" data-mode="practice" aria-pressed="false">航海闯关</button></div></header>
-    <section class="voyage-entry" data-voyage-entry aria-label="连续闯关">
-      <div class="voyage-copy"><h2>航海闯关 <strong data-voyage-progress>0 / 12 已通关</strong></h2><p>1–4 关简单 · 5–8 关标准 · 9–12 关困难，逐步挑战更严密的航线。</p><div class="voyage-meter" aria-hidden="true"><i data-voyage-fill></i></div></div>
-      <div class="voyage-actions"><button type="button" class="voyage-start" data-voyage-start>开始第 1 关 →</button><button type="button" data-voyage-map>查看关卡地图</button></div>
-    </section>
+    <header class="game-intro"><div><p class="eyebrow">A NEW ROUTE EACH DAY</p><h1>每日航线</h1><p>收齐航标，顺着洋流，在步数用尽前靠岸。</p></div><div class="mode-switch" role="group" aria-label="游戏模式"><button type="button" data-mode="tutorial" aria-pressed="true">新手教学</button><button type="button" data-mode="daily" aria-pressed="false">每日挑战</button><button type="button" data-mode="practice" aria-pressed="false">航海闯关</button><button type="button" data-signal-start aria-pressed="false">信标机关</button></div></header>
     <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">◉ 动效 开</button>
     <div class="game-layout">
       <section class="play-column" aria-labelledby="board-title">
         <div class="board-topline"><h2 id="board-title" data-board-title>今日海图</h2><span data-board-subtitle>上海时间每日更新</span></div>
         <div class="tutorial-guide" data-tutorial-guide hidden><strong data-tutorial-step>教学 · 第 1 步</strong><span data-tutorial-text>点船旁发光的相邻格，让船前进。</span></div>
         <div class="level-brief" data-level-brief hidden><strong></strong><span></span></div>
-        <div class="board" data-board role="grid" aria-label="7乘7航线棋盘"></div>
+        <p class="signal-guide" data-signal-guide hidden></p>
+        <div class="board" id="game-board" data-board role="grid" aria-label="7乘7航线棋盘"></div>
         <div class="legend" aria-label="地图图例"><span><img src="./assets/dock.svg" alt="">码头</span><span><img src="./assets/beacon.svg" alt="">航标</span><span><img src="./assets/reef.svg" alt="">礁石</span><span><span class="arrow" aria-hidden="true">→</span>洋流</span><span><img src="./assets/lighthouse.svg" alt="">灯塔</span></div>
         <div class="command-row"><button type="button" data-undo title="撤回上一步" aria-label="撤回上一步"><span aria-hidden="true">↶</span>撤回</button><button type="button" data-reset title="重新开始本局" aria-label="重新开始本局"><span aria-hidden="true">↺</span>重置</button><button type="button" data-hint title="标记下一步可行位置" aria-label="显示下一步提示"><span aria-hidden="true">?</span>提示</button><button type="button" data-share title="分享游戏链接" aria-label="分享游戏链接"><span aria-hidden="true">↗</span>分享</button></div>
         <p class="feedback" data-feedback data-tone="info" role="status" aria-live="polite">点棋盘上发光的格子开始教学。</p>
@@ -32,10 +31,15 @@
         <div class="side-heading"><h2>本局记录</h2><small data-mode-label>每日挑战</small></div>
         <div class="metrics"><div><strong data-steps>0 / 0</strong><span>已走 / 步数预算</span></div><div><strong data-beacons>0 / 3</strong><span>已收航标</span></div><div><strong data-time>00:00</strong><span>用时</span></div><div><strong data-streak>0</strong><span>连续完成天数</span></div></div>
         <div class="practice-row" data-practice-controls hidden><button type="button" data-prev title="上一关" aria-label="上一关">←</button><strong data-practice-title>练习 1 / 12</strong><button type="button" data-next title="下一关" aria-label="下一关">→</button></div>
-        <section class="rules"><h3>航行规则</h3><ol><li>只走相邻格，不可重复经过或穿过礁石。</li><li>收齐 3 个航标，再进入灯塔。</li><li>从箭头格离开时，必须沿箭头方向前进。</li><li>总步数不能超过当前预算；点击上一格可撤回。</li></ol></section><nav class="related-actions" aria-label="更多玩法"><a href="/guides/">精选关卡</a><a href="/twins/create/">创作关卡</a></nav>
+        <section class="rules"><h3>航行规则</h3><ol><li>只走相邻格，不可重复经过或穿过礁石。</li><li>收齐 3 个航标，再进入灯塔。</li><li>从箭头格离开时，必须沿箭头方向前进。</li><li>总步数不能超过当前预算；点击上一格可撤回。</li></ol></section><nav class="related-actions" aria-label="更多玩法"><a href="/rules/">图示规则</a><a href="/guides/">精选关卡</a><a href="/twins/create/">创作关卡</a></nav>
         <p class="side-note">每日关卡在上海时间 00:00 更新。成绩只保存在此浏览器；清除浏览器数据会丢失本地记录。</p>
       </aside>
     </div>
+    <section class="voyage-entry" data-voyage-entry aria-label="连续闯关">
+      <div class="voyage-copy"><h2>航海闯关 <strong data-voyage-progress>0 / 12 已通关</strong></h2><p>1–4 关学规则 · 5–8 关练规划 · 9–12 关挑战航闸与潮桥。</p><div class="voyage-meter" aria-hidden="true"><i data-voyage-fill></i></div></div>
+      <div class="voyage-actions"><button type="button" class="voyage-start" data-voyage-start>开始第 1 关 →</button><button type="button" data-voyage-map>查看关卡地图</button></div>
+    </section>
+<section class="chart-journal" aria-labelledby="chart-journal-title"><div class="journal-intro"><p class="eyebrow">PLAY · NOTICE · UNDERSTAND</p><h2 id="chart-journal-title">一张海图，不止一种发现</h2><p>在 7×7 海图上，串起三个航标，再给回灯塔留一条路。每走过一个格子，就少一个回头的选择。 精选记录把这类决定拆成可试走的例子：先尝试，再看反例与解释。</p><a href="/rules/route">读完整图示规则 →</a></div><div class="chart-stories"><a class="chart-story" href="/guides/route-currents"><span class="story-number">01</span><div><h3>洋流不是传送门</h3><p>看懂箭头规定的出口，再尝试一个会走进死胡同的开局。</p><span>试走与分析 →</span></div></a><a class="chart-story" href="/guides/route-beacons"><span class="story-number">02</span><div><h3>为什么要给回程留门？</h3><p>第 14 步是合法移动，却会让剩下六步不够用。</p><span>试走与分析 →</span></div></a></div><a class="chart-story" href="/guides/signals"><span class="story-number">03</span><div><h3>先过桥，还是先取航标？</h3><p>航标会开启航闸，也可能关闭潮桥。用第 11 关试试新的信标机关。</p><span>读懂机关与时机 →</span></div></a><div class="journal-note"><p><a href="/twins/">潮汐双船</a>用同一指令移动两艘船，体验另一种海图思考。</p><h3>每天一题，也可以连续闯关</h3><p>每日海图按上海时间 00:00 更新，同一天的玩家拿到同一张题。航线 12 关分简单、标准、困难三档。 不需要注册，成绩仅保存在当前浏览器。</p><p><a href="/guides/design-notes">读海图设计手记</a> · <a href="/twins/create/">制作自己的双船题</a> · <a href="/updates">查看真实更新记录</a></p></div></section>
   </main>
   <footer class="footer">每日航线 · 独立可玩原型 · 无广告与账号 · <a href="./PLAN.md">设计与验证范围</a></footer>
   <dialog class="finish-dialog" data-finish-dialog aria-labelledby="finish-title"><p class="eyebrow">ROUTE COMPLETE</p><h2 id="finish-title" data-finish-title>顺利靠岸</h2><p data-finish-description>所有航标已收齐。</p><div class="finish-score" data-finish-score>0 / 0 步</div><p data-finish-detail></p><div class="modal-actions"><button type="button" class="primary" data-dialog-practice>继续练习</button><button type="button" data-dialog-share>分享成绩</button><a data-replay href="/replay/" target="_blank" rel="noopener" hidden>观看一种解法</a><button type="button" data-dialog-close>返回海图</button></div></dialog>

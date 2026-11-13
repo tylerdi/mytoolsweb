@@ -171,24 +171,41 @@ html[data-motion=off] *,html[data-motion=off] *::before,html[data-motion=off] *:
 .level-badge[data-difficulty=标准]{background:#e3edf6;color:#345e80}.level-badge[data-difficulty=困难]{background:#f8e7df;color:#9a4f38}
 .level-brief{width:min(100%,560px,max(270px,calc(100dvh - 300px)));margin:0 auto 12px;padding:9px 12px;border:1px solid #cbded7;border-radius:8px;background:#f0f7f3;font-size:.76rem;color:var(--muted)}
 .level-brief strong{display:block;margin-bottom:2px;color:var(--deep);font-size:.73rem}.level-grid button:has(.level-badge){min-height:136px}
+/* Keep the puzzle in the first viewport; the campaign and reading follow it. */
+.chart-journal>.chart-story{margin-top:18px}
+.skip-link{position:absolute;left:12px;top:-100px;z-index:100;padding:10px 14px;background:#fff;color:var(--deep);border:2px solid var(--deep);border-radius:6px}.skip-link:focus{top:8px}
+.chart-journal{margin-top:46px;padding-top:32px;border-top:1px solid #bed1ca}.journal-intro{max-width:630px}.journal-intro h2{margin:7px 0 12px;font-size:1.55rem;letter-spacing:-.02em}.journal-intro p{font-size:.94rem;line-height:1.85;color:var(--muted)}.journal-intro>a{color:var(--deep);font-size:.86rem;font-weight:700}.chart-stories{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:24px}.chart-story{display:flex;align-items:start;gap:19px;padding:24px;border:1px solid #c5d8d0;border-radius:14px;background:#ffffffbd;color:var(--ink);text-decoration:none}.chart-story:hover{border-color:#4e9386;background:#fff}.story-number{font:500 1.6rem ui-monospace,monospace;color:#9aafa5}.chart-story h3{font-size:1rem;margin:0 0 9px}.chart-story p{color:var(--muted);font-size:.85rem;line-height:1.8}.chart-story div>span{color:var(--deep);font-size:.8rem;font-weight:700}.journal-note{padding:25px 0 0;max-width:760px}.journal-note h3{margin:0 0 10px;font-size:1rem}.journal-note p{color:var(--muted);font-size:.85rem;line-height:1.85}.journal-note a{color:var(--deep)}
+@media(max-width:560px){.game-nav a:last-child,.site-nav a:last-child{display:inline}.game-nav,.site-nav{gap:12px}.game-intro,.intro{padding:12px 14px;border-radius:12px}.game-shell,.shell{padding-top:12px}.game-intro h1,.intro h1{font-size:1.35rem}.game-intro p:last-child,.intro p:last-child{font-size:.73rem}.game-layout,.layout{padding-top:12px}.motion-toggle{margin-top:5px;margin-bottom:-8px;font-size:.66rem;min-height:28px;padding:3px 7px}.tutorial-guide{padding:7px 9px;font-size:.72rem}.tutorial-guide strong{display:inline;margin:0 7px 0 0}.voyage-entry{margin-top:22px}.chart-journal{margin-top:30px;padding-top:24px}.journal-intro h2{font-size:1.3rem}.journal-intro p{font-size:.85rem}.chart-stories{grid-template-columns:1fr;gap:12px}.chart-story{padding:20px;gap:15px}.journal-note p{font-size:.81rem}}
+
+</style>
+  <style>
+.signal-guide{width:min(100%,560px,max(270px,calc(100dvh - 300px)));margin:0 auto 12px;padding:10px 12px;border:1px solid #c8b49a;border-radius:8px;background:#fff5e7;color:#654b32;font-size:.78rem;line-height:1.7}
+:is(.tile,.lab-cell).signal-tile{transition:background .25s,border-color .25s,box-shadow .25s}
+:is(.tile,.lab-cell).signal-open{background:#d8f0e5;box-shadow:inset 0 0 0 2px #78ac94}
+:is(.tile,.lab-cell).signal-closed{background:repeating-linear-gradient(90deg,#e5dbd1 0 8px,#b9a28a 9px 11px,#e5dbd1 12px 19px);box-shadow:inset 0 0 0 2px #9c7b57}
+:is(.tile,.lab-cell).bridge.signal-open{background:repeating-linear-gradient(0deg,#e9cb9a 0 6px,#b68b54 7px 8px,#e9cb9a 9px 13px);box-shadow:inset 0 0 0 2px #ab8858}
+:is(.tile,.lab-cell).bridge.signal-closed{background:#c8dce4;box-shadow:inset 0 0 0 2px #6c8e9b}
+.signal-symbol{position:relative;padding:2px 3px;background:#fffffff0;border-radius:3px;font:750 .66rem/1.35 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif!important;letter-spacing:0;color:#375752;white-space:nowrap;z-index:2}
+.signal-closed .signal-symbol{color:#754829}.bridge.signal-closed .signal-symbol{text-decoration:line-through;text-decoration-thickness:2px}
+.beacon-number{position:absolute;top:1px;right:2px;display:grid;place-items:center;min-width:14px;height:14px;border-radius:50%;background:#f9f4df;color:#664d1d;font:800 10px/1 ui-monospace,monospace;z-index:3}
+.level-badge[data-difficulty^=困难]{background:#f8e7df;color:#9a4f38}
+@media(prefers-reduced-motion:reduce){:is(.tile,.lab-cell).signal-tile{transition:none}}
 
 </style>
 </head>
 <body>
-  <header class="topbar"><div class="topbar-inner"><a class="brand" href="/"><img class="brand-logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9Iuavj+aXpeiIque6v+WbvuaghyI+CiAgPHJlY3QgeD0iOCIgeT0iOCIgd2lkdGg9IjQ5NiIgaGVpZ2h0PSI0OTYiIHJ4PSI5NCIgZmlsbD0iIzE0M2Y0OSIvPgogIDxyZWN0IHg9IjcyIiB5PSI3MiIgd2lkdGg9IjM2OCIgaGVpZ2h0PSIzNjgiIHJ4PSIyNSIgZmlsbD0iIzFiNTk2MSIgc3Ryb2tlPSIjNWFhMTlkIiBzdHJva2Utd2lkdGg9IjMiLz4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiM5YmQxYzkiIHN0cm9rZS13aWR0aD0iMiIgb3BhY2l0eT0iLjIyIj4KICAgIDxwYXRoIGQ9Ik0xNjQgNzR2MzY0TTI1NiA3NHYzNjRNMzQ4IDc0djM2NE03NCAxNjRoMzY0TTc0IDI1NmgzNjRNNzQgMzQ4aDM2NCIvPgogIDwvZz4KICA8cGF0aCBkPSJNMTU2IDM1MGMzMC03IDM4LTYxIDY2LTYxIDI2IDAgMzQgMjggNjAgMTcgMjUtMTAgMjUtNjQgNjItNjRoMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2YwODA2NyIgc3Ryb2tlLXdpZHRoPSIxOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPGcgZmlsbD0iI2Y4Yzg3NCIgc3Ryb2tlPSIjMTQzZjQ5IiBzdHJva2Utd2lkdGg9IjUiPgogICAgPGNpcmNsZSBjeD0iMjIyIiBjeT0iMjg5IiByPSIxNiIvPgogICAgPGNpcmNsZSBjeD0iMjgyIiBjeT0iMzA2IiByPSIxNiIvPgogICAgPGNpcmNsZSBjeD0iMzQ0IiBjeT0iMjQyIiByPSIxNiIvPgogIDwvZz4KICA8cGF0aCBkPSJNODQgMzg4aDExOGwtMjAgMjVIMTA2eiIgZmlsbD0iI2YwODA2NyIgc3Ryb2tlPSIjMTQzZjQ5IiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNMTQyIDI5MnY5MW0wLTc5IDUwIDY5aC01MHoiIGZpbGw9IiNmNGY3ZTkiIHN0cm9rZT0iIzE0M2Y0OSIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0ibTEzNiAzMjMtMzkgNTBoMzl6IiBmaWxsPSIjOWJkMWM5IiBzdHJva2U9IiMxNDNmNDkiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0zNTUgMjI2aDc1bC0xMS0xMDBoLTUzeiIgZmlsbD0iI2Y0ZjdlOSIgc3Ryb2tlPSIjMTQzZjQ5IiBzdHJva2Utd2lkdGg9IjciIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNMzYyIDE4NGg2MWwtNC0yNGgtNTN6IiBmaWxsPSIjZjA4MDY3Ii8+CiAgPHBhdGggZD0iTTM2NCAxMjdoNTd2MTZoLTU3eiIgZmlsbD0iIzE0M2Y0OSIvPgogIDxwYXRoIGQ9Ik0zNzUgMTEyaDM2djE1aC0zNnoiIGZpbGw9IiNmOGM4NzQiIHN0cm9rZT0iIzE0M2Y0OSIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0ibTM1OCAxMDMtMjEtMTNtOTkgMTMgMjEtMTNNMzkzIDk2Vjc2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmOGM4NzQiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTg4IDQzOGMyNC0xNCAzOS0xNCA2MyAwIDI0LTE0IDM5LTE0IDYzIDAgMjQtMTQgMzktMTQgNjMgMCAyNC0xNCAzOS0xNCA2MyAwIDI0LTE0IDM5LTE0IDYzIDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzliZDFjOSIgc3Ryb2tlLXdpZHRoPSIxMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo=" alt=""><span>每日航线</span></a><nav class="game-nav" aria-label="游戏导航"><a href="./" aria-current="page">每日航线</a><a href="/twins/">潮汐双船</a><a href="/about">关于</a></nav></div></header>
+  <a class="skip-link" href="#game-board">跳到海图</a>
+  <header class="topbar"><div class="topbar-inner"><a class="brand" href="/"><img class="brand-logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9Iuavj+aXpeiIque6v+WbvuaghyI+CiAgPHJlY3QgeD0iOCIgeT0iOCIgd2lkdGg9IjQ5NiIgaGVpZ2h0PSI0OTYiIHJ4PSI5NCIgZmlsbD0iIzE0M2Y0OSIvPgogIDxyZWN0IHg9IjcyIiB5PSI3MiIgd2lkdGg9IjM2OCIgaGVpZ2h0PSIzNjgiIHJ4PSIyNSIgZmlsbD0iIzFiNTk2MSIgc3Ryb2tlPSIjNWFhMTlkIiBzdHJva2Utd2lkdGg9IjMiLz4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiM5YmQxYzkiIHN0cm9rZS13aWR0aD0iMiIgb3BhY2l0eT0iLjIyIj4KICAgIDxwYXRoIGQ9Ik0xNjQgNzR2MzY0TTI1NiA3NHYzNjRNMzQ4IDc0djM2NE03NCAxNjRoMzY0TTc0IDI1NmgzNjRNNzQgMzQ4aDM2NCIvPgogIDwvZz4KICA8cGF0aCBkPSJNMTU2IDM1MGMzMC03IDM4LTYxIDY2LTYxIDI2IDAgMzQgMjggNjAgMTcgMjUtMTAgMjUtNjQgNjItNjRoMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2YwODA2NyIgc3Ryb2tlLXdpZHRoPSIxOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPGcgZmlsbD0iI2Y4Yzg3NCIgc3Ryb2tlPSIjMTQzZjQ5IiBzdHJva2Utd2lkdGg9IjUiPgogICAgPGNpcmNsZSBjeD0iMjIyIiBjeT0iMjg5IiByPSIxNiIvPgogICAgPGNpcmNsZSBjeD0iMjgyIiBjeT0iMzA2IiByPSIxNiIvPgogICAgPGNpcmNsZSBjeD0iMzQ0IiBjeT0iMjQyIiByPSIxNiIvPgogIDwvZz4KICA8cGF0aCBkPSJNODQgMzg4aDExOGwtMjAgMjVIMTA2eiIgZmlsbD0iI2YwODA2NyIgc3Ryb2tlPSIjMTQzZjQ5IiBzdHJva2Utd2lkdGg9IjYiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNMTQyIDI5MnY5MW0wLTc5IDUwIDY5aC01MHoiIGZpbGw9IiNmNGY3ZTkiIHN0cm9rZT0iIzE0M2Y0OSIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0ibTEzNiAzMjMtMzkgNTBoMzl6IiBmaWxsPSIjOWJkMWM5IiBzdHJva2U9IiMxNDNmNDkiIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0zNTUgMjI2aDc1bC0xMS0xMDBoLTUzeiIgZmlsbD0iI2Y0ZjdlOSIgc3Ryb2tlPSIjMTQzZjQ5IiBzdHJva2Utd2lkdGg9IjciIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNMzYyIDE4NGg2MWwtNC0yNGgtNTN6IiBmaWxsPSIjZjA4MDY3Ii8+CiAgPHBhdGggZD0iTTM2NCAxMjdoNTd2MTZoLTU3eiIgZmlsbD0iIzE0M2Y0OSIvPgogIDxwYXRoIGQ9Ik0zNzUgMTEyaDM2djE1aC0zNnoiIGZpbGw9IiNmOGM4NzQiIHN0cm9rZT0iIzE0M2Y0OSIgc3Ryb2tlLXdpZHRoPSI2IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0ibTM1OCAxMDMtMjEtMTNtOTkgMTMgMjEtMTNNMzkzIDk2Vjc2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmOGM4NzQiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTg4IDQzOGMyNC0xNCAzOS0xNCA2MyAwIDI0LTE0IDM5LTE0IDYzIDAgMjQtMTQgMzktMTQgNjMgMCAyNC0xNCAzOS0xNCA2MyAwIDI0LTE0IDM5LTE0IDYzIDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzliZDFjOSIgc3Ryb2tlLXdpZHRoPSIxMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo=" alt=""><span>每日航线</span></a><nav class="game-nav" aria-label="游戏导航"><a href="/">航线</a><a href="/twins/">双船</a><a href="/rules/">规则</a><a href="/guides/">精选</a></nav></div></header>
   <main class="game-shell">
-    <header class="game-intro"><div><p class="eyebrow">A NEW ROUTE EACH DAY</p><h1>每日航线</h1><p>收齐航标，顺着洋流，在步数用尽前靠岸。</p></div><div class="mode-switch" role="group" aria-label="游戏模式"><button type="button" data-mode="tutorial" aria-pressed="true">新手教学</button><button type="button" data-mode="daily" aria-pressed="false">每日挑战</button><button type="button" data-mode="practice" aria-pressed="false">航海闯关</button></div></header>
-    <section class="voyage-entry" data-voyage-entry aria-label="连续闯关">
-      <div class="voyage-copy"><h2>航海闯关 <strong data-voyage-progress>0 / 12 已通关</strong></h2><p>1–4 关简单 · 5–8 关标准 · 9–12 关困难，逐步挑战更严密的航线。</p><div class="voyage-meter" aria-hidden="true"><i data-voyage-fill></i></div></div>
-      <div class="voyage-actions"><button type="button" class="voyage-start" data-voyage-start>开始第 1 关 →</button><button type="button" data-voyage-map>查看关卡地图</button></div>
-    </section>
+    <header class="game-intro"><div><p class="eyebrow">A NEW ROUTE EACH DAY</p><h1>每日航线</h1><p>收齐航标，顺着洋流，在步数用尽前靠岸。</p></div><div class="mode-switch" role="group" aria-label="游戏模式"><button type="button" data-mode="tutorial" aria-pressed="true">新手教学</button><button type="button" data-mode="daily" aria-pressed="false">每日挑战</button><button type="button" data-mode="practice" aria-pressed="false">航海闯关</button><button type="button" data-signal-start aria-pressed="false">信标机关</button></div></header>
     <button type="button" class="motion-toggle" data-motion-toggle aria-pressed="true">◉ 动效 开</button>
     <div class="game-layout">
       <section class="play-column" aria-labelledby="board-title">
         <div class="board-topline"><h2 id="board-title" data-board-title>今日海图</h2><span data-board-subtitle>上海时间每日更新</span></div>
         <div class="tutorial-guide" data-tutorial-guide hidden><strong data-tutorial-step>教学 · 第 1 步</strong><span data-tutorial-text>点船旁发光的相邻格，让船前进。</span></div>
         <div class="level-brief" data-level-brief hidden><strong></strong><span></span></div>
-        <div class="board" data-board role="grid" aria-label="7乘7航线棋盘"></div>
+        <p class="signal-guide" data-signal-guide hidden></p>
+        <div class="board" id="game-board" data-board role="grid" aria-label="7乘7航线棋盘"></div>
         <div class="legend" aria-label="地图图例"><span><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZD0iTTkgMzBoNDZ2OUg5ek0xNSAzOXYxNW0zNC0xNXYxNSIgZmlsbD0iI2Q1OTg2MyIgc3Ryb2tlPSIjNjk1MTNmIiBzdHJva2Utd2lkdGg9IjMiLz48cGF0aCBkPSJNOCA1N2M1LTMgOS0zIDE0IDAgNS0zIDktMyAxNCAwIDUtMyA5LTMgMTQgMCAzLTIgNi0zIDktMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjN2ZjOWMyIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yOSAxN2g2djEzaC02eiIgZmlsbD0iI2Q1OTg2MyIgc3Ryb2tlPSIjNjk1MTNmIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMzIgN3YxMCIgc3Ryb2tlPSIjNjk1MTNmIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4K" alt="">码头</span><span><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PGNpcmNsZSBjeD0iMzIiIGN5PSIzMSIgcj0iMjMiIGZpbGw9IiNmZmY1ZGUiIHN0cm9rZT0iI2QxN2M0ZCIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTMyIDEzIDM3IDI2IDUxIDI2IDQwIDM1IDQ0IDQ5IDMyIDQxIDIwIDQ5IDI0IDM1IDEzIDI2IDI3IDI2eiIgZmlsbD0iI2YzYTc1YiIgc3Ryb2tlPSIjYWU2MjNkIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4K" alt="">航标</span><span><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZD0iTTUgNTEgMTcgMzMgMjUgMzcgMzIgMTggNDMgMjkgNTAgMjUgNjAgNTF6IiBmaWxsPSIjNTM2NDZiIiBzdHJva2U9IiMyYzQ1NGYiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0zMiAxOCAyNyAzNSAzNyAzOSA0MyAyOU0xNyAzM2w5IDEyIiBmaWxsPSJub25lIiBzdHJva2U9IiM4MTkxOTciIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Ik0zIDU3YzctNCAxMi00IDE4IDAgNi00IDEyLTQgMTggMCA3LTQgMTMtNCAyMCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2YmI1YjUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+Cg==" alt="">礁石</span><span><span class="arrow" aria-hidden="true">→</span>洋流</span><span><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHBhdGggZD0iTTIyIDU1IDI3IDE3aDEwbDUgMzh6IiBmaWxsPSIjZmZmYWYxIiBzdHJva2U9IiMzNDU0NjMiIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik0yNSAzNWgxNGwxIDdIMjR6IiBmaWxsPSIjZWY5NDcxIi8+PHBhdGggZD0iTTI3IDE5aDEwbDEgN0gyNnoiIGZpbGw9IiNlZjk0NzEiLz48cGF0aCBkPSJNMjUgMTVoMTR2NUgyNXoiIGZpbGw9IiMzNDU0NjMiLz48cGF0aCBkPSJNMjkgN2g2djhoLTZ6IiBmaWxsPSIjZmZkOTc5IiBzdHJva2U9IiMzNDU0NjMiIHN0cm9rZS13aWR0aD0iMiIvPjxwYXRoIGQ9Im0xOCAxMi04LTRtMzYgNCA4LTRNMzIgM1YxIiBzdHJva2U9IiNmNWM4NjUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PHBhdGggZD0iTTE1IDU1aDM0IiBzdHJva2U9IiMzNDU0NjMiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+Cg==" alt="">灯塔</span></div>
         <div class="command-row"><button type="button" data-undo title="撤回上一步" aria-label="撤回上一步"><span aria-hidden="true">↶</span>撤回</button><button type="button" data-reset title="重新开始本局" aria-label="重新开始本局"><span aria-hidden="true">↺</span>重置</button><button type="button" data-hint title="标记下一步可行位置" aria-label="显示下一步提示"><span aria-hidden="true">?</span>提示</button><button type="button" data-share title="分享游戏链接" aria-label="分享游戏链接"><span aria-hidden="true">↗</span>分享</button></div>
         <p class="feedback" data-feedback data-tone="info" role="status" aria-live="polite">点棋盘上发光的格子开始教学。</p>
@@ -197,15 +214,21 @@ html[data-motion=off] *,html[data-motion=off] *::before,html[data-motion=off] *:
         <div class="side-heading"><h2>本局记录</h2><small data-mode-label>每日挑战</small></div>
         <div class="metrics"><div><strong data-steps>0 / 0</strong><span>已走 / 步数预算</span></div><div><strong data-beacons>0 / 3</strong><span>已收航标</span></div><div><strong data-time>00:00</strong><span>用时</span></div><div><strong data-streak>0</strong><span>连续完成天数</span></div></div>
         <div class="practice-row" data-practice-controls hidden><button type="button" data-prev title="上一关" aria-label="上一关">←</button><strong data-practice-title>练习 1 / 12</strong><button type="button" data-next title="下一关" aria-label="下一关">→</button></div>
-        <section class="rules"><h3>航行规则</h3><ol><li>只走相邻格，不可重复经过或穿过礁石。</li><li>收齐 3 个航标，再进入灯塔。</li><li>从箭头格离开时，必须沿箭头方向前进。</li><li>总步数不能超过当前预算；点击上一格可撤回。</li></ol></section><nav class="related-actions" aria-label="更多玩法"><a href="/guides/">精选关卡</a><a href="/twins/create/">创作关卡</a></nav>
+        <section class="rules"><h3>航行规则</h3><ol><li>只走相邻格，不可重复经过或穿过礁石。</li><li>收齐 3 个航标，再进入灯塔。</li><li>从箭头格离开时，必须沿箭头方向前进。</li><li>总步数不能超过当前预算；点击上一格可撤回。</li></ol></section><nav class="related-actions" aria-label="更多玩法"><a href="/rules/">图示规则</a><a href="/guides/">精选关卡</a><a href="/twins/create/">创作关卡</a></nav>
         <p class="side-note">每日关卡在上海时间 00:00 更新。成绩只保存在此浏览器；清除浏览器数据会丢失本地记录。</p>
       </aside>
     </div>
+    <section class="voyage-entry" data-voyage-entry aria-label="连续闯关">
+      <div class="voyage-copy"><h2>航海闯关 <strong data-voyage-progress>0 / 12 已通关</strong></h2><p>1–4 关学规则 · 5–8 关练规划 · 9–12 关挑战航闸与潮桥。</p><div class="voyage-meter" aria-hidden="true"><i data-voyage-fill></i></div></div>
+      <div class="voyage-actions"><button type="button" class="voyage-start" data-voyage-start>开始第 1 关 →</button><button type="button" data-voyage-map>查看关卡地图</button></div>
+    </section>
+<section class="chart-journal" aria-labelledby="chart-journal-title"><div class="journal-intro"><p class="eyebrow">PLAY · NOTICE · UNDERSTAND</p><h2 id="chart-journal-title">一张海图，不止一种发现</h2><p>在 7×7 海图上，串起三个航标，再给回灯塔留一条路。每走过一个格子，就少一个回头的选择。 精选记录把这类决定拆成可试走的例子：先尝试，再看反例与解释。</p><a href="/rules/route">读完整图示规则 →</a></div><div class="chart-stories"><a class="chart-story" href="/guides/route-currents"><span class="story-number">01</span><div><h3>洋流不是传送门</h3><p>看懂箭头规定的出口，再尝试一个会走进死胡同的开局。</p><span>试走与分析 →</span></div></a><a class="chart-story" href="/guides/route-beacons"><span class="story-number">02</span><div><h3>为什么要给回程留门？</h3><p>第 14 步是合法移动，却会让剩下六步不够用。</p><span>试走与分析 →</span></div></a></div><a class="chart-story" href="/guides/signals"><span class="story-number">03</span><div><h3>先过桥，还是先取航标？</h3><p>航标会开启航闸，也可能关闭潮桥。用第 11 关试试新的信标机关。</p><span>读懂机关与时机 →</span></div></a><div class="journal-note"><p><a href="/twins/">潮汐双船</a>用同一指令移动两艘船，体验另一种海图思考。</p><h3>每天一题，也可以连续闯关</h3><p>每日海图按上海时间 00:00 更新，同一天的玩家拿到同一张题。航线 12 关分简单、标准、困难三档。 不需要注册，成绩仅保存在当前浏览器。</p><p><a href="/guides/design-notes">读海图设计手记</a> · <a href="/twins/create/">制作自己的双船题</a> · <a href="/updates">查看真实更新记录</a></p></div></section>
   </main>
-  <footer class="footer">© 2026 每日航线 · <a href="/about">关于</a> · <a href="/privacy">隐私</a> · <a href="/contact">反馈</a></footer>
+  <footer class="footer">© 2026 每日航线 · <a href="/about">关于与创作</a> · <a href="/updates">更新记录</a> · <a href="/privacy">隐私</a> · <a href="/contact">反馈</a></footer>
   <dialog class="finish-dialog" data-finish-dialog aria-labelledby="finish-title"><p class="eyebrow">ROUTE COMPLETE</p><h2 id="finish-title" data-finish-title>顺利靠岸</h2><p data-finish-description>所有航标已收齐。</p><div class="finish-score" data-finish-score>0 / 0 步</div><p data-finish-detail></p><div class="modal-actions"><button type="button" class="primary" data-dialog-practice>继续练习</button><button type="button" data-dialog-share>分享成绩</button><a data-replay href="/replay/" target="_blank" rel="noopener" hidden>观看一种解法</a><button type="button" data-dialog-close>返回海图</button></div></dialog>
   <script>
-// Fixed campaign v2. Counts include every simple route within the stated budget.
+// Campaign v3: the first eight maps are unchanged; open-water signal maps follow.
+// Counts include every legal route within the budget and the signal state.
 const ROUTE_LEVELS = [
   {
     title: "灯塔初航",
@@ -320,60 +343,301 @@ const ROUTE_LEVELS = [
     analysis: {"shortest":20,"solutionCount":5,"misleadingBranches":10},
   },
   {
-    title: "潮口抉择",
-    difficulty: "困难",
-    chapter: "深海试炼",
-    focus: "预算没有多余步数，先在心里排除看似顺路的岔路。",
-    start: 21,
-    end: 27,
-    beacons: [2,26,38],
-    obstacles: [6,17,23,8,5,35,48,18,40,7,1],
-    currents: {"11":"right","15":"right","30":"down","31":"left"},
-    limit: 22,
-    reference: [21,14,15,16,9,2,3,4,11,12,19,26,25,24,31,30,37,38,39,32,33,34,27],
-    analysis: {"shortest":22,"solutionCount":4,"misleadingBranches":10},
+    "title": "信标开闸",
+    "difficulty": "困难",
+    "chapter": "信标机关",
+    "focus": "先取得 2 号航标，再通过 2 号航闸；近路并不总是先开放。",
+    "start": 21,
+    "end": 27,
+    "beacons": [
+      2,
+      26,
+      38
+    ],
+    "obstacles": [
+      35,
+      6,
+      40,
+      48,
+      1,
+      7
+    ],
+    "currents": {
+      "11": "right",
+      "15": "right",
+      "30": "down",
+      "31": "left"
+    },
+    "limit": 22,
+    "reference": [
+      21,
+      14,
+      15,
+      16,
+      9,
+      2,
+      3,
+      4,
+      5,
+      12,
+      19,
+      26,
+      25,
+      24,
+      31,
+      30,
+      37,
+      38,
+      39,
+      32,
+      33,
+      34,
+      27
+    ],
+    "analysis": {
+      "shortest": 22,
+      "solutionCount": 20,
+      "misleadingBranches": 15
+    },
+    "signals": {
+      "39": {
+        "type": "gate",
+        "beacon": 1
+      }
+    }
   },
   {
-    title: "六流迷航",
-    difficulty: "困难",
-    chapter: "深海试炼",
-    focus: "多股洋流限制出口；从目标附近倒推怎样进入。",
-    start: 21,
-    end: 27,
-    beacons: [25,41,4],
-    obstacles: [8,1,37,2,3,32,43,9,28,0,35,42,29,22],
-    currents: {"6":"down","11":"up","12":"left","18":"down","34":"left","38":"right"},
-    limit: 24,
-    reference: [21,14,15,16,17,10,11,4,5,6,13,20,19,18,25,24,31,38,39,40,41,34,33,26,27],
-    analysis: {"shortest":24,"solutionCount":3,"misleadingBranches":9},
+    "title": "双闸联锁",
+    "difficulty": "困难",
+    "chapter": "信标机关",
+    "focus": "3 号航标开启下方航闸，1 号航标开启灯塔前的航闸。先排好取标顺序。",
+    "start": 21,
+    "end": 27,
+    "beacons": [
+      25,
+      41,
+      4
+    ],
+    "obstacles": [
+      9,
+      2,
+      0,
+      35,
+      37,
+      32,
+      28
+    ],
+    "currents": {
+      "6": "down",
+      "11": "up",
+      "12": "left",
+      "18": "down",
+      "34": "left",
+      "38": "right"
+    },
+    "limit": 24,
+    "reference": [
+      21,
+      14,
+      15,
+      16,
+      17,
+      10,
+      3,
+      4,
+      5,
+      6,
+      13,
+      20,
+      19,
+      18,
+      25,
+      24,
+      31,
+      38,
+      39,
+      40,
+      41,
+      34,
+      33,
+      26,
+      27
+    ],
+    "analysis": {
+      "shortest": 24,
+      "solutionCount": 6,
+      "misleadingBranches": 16
+    },
+    "signals": {
+      "26": {
+        "type": "gate",
+        "beacon": 0
+      },
+      "40": {
+        "type": "gate",
+        "beacon": 2
+      }
+    }
   },
   {
-    title: "狭海穿行",
-    difficulty: "困难",
-    chapter: "深海试炼",
-    focus: "可行航线更少，经过窄口之前先确认后半段能连通。",
-    start: 21,
-    end: 27,
-    beacons: [17,20,45],
-    obstacles: [43,31,32,3,35,23,30,15,16,24,36,25,28],
-    currents: {"6":"down","8":"right","11":"up","26":"down","39":"left","41":"up","48":"up"},
-    limit: 26,
-    reference: [21,14,7,8,9,10,17,18,11,4,5,6,13,20,19,26,33,40,39,38,45,46,47,48,41,34,27],
-    analysis: {"shortest":26,"solutionCount":2,"misleadingBranches":11},
+    "title": "落潮之前",
+    "difficulty": "困难",
+    "chapter": "信标机关",
+    "focus": "通往下半海图的潮桥会在取得 3 号航标后关闭，先过桥，再取标。",
+    "start": 21,
+    "end": 27,
+    "beacons": [
+      17,
+      20,
+      45
+    ],
+    "obstacles": [
+      16,
+      43,
+      25,
+      36,
+      31,
+      24
+    ],
+    "currents": {
+      "6": "down",
+      "8": "right",
+      "11": "up",
+      "26": "down",
+      "39": "left",
+      "41": "up",
+      "48": "up"
+    },
+    "limit": 26,
+    "reference": [
+      21,
+      14,
+      7,
+      8,
+      9,
+      10,
+      17,
+      18,
+      11,
+      4,
+      5,
+      6,
+      13,
+      20,
+      19,
+      26,
+      33,
+      40,
+      39,
+      38,
+      45,
+      46,
+      47,
+      48,
+      41,
+      34,
+      27
+    ],
+    "analysis": {
+      "shortest": 26,
+      "solutionCount": 12,
+      "misleadingBranches": 13
+    },
+    "signals": {
+      "33": {
+        "type": "gate",
+        "beacon": 0
+      },
+      "40": {
+        "type": "bridge",
+        "beacon": 2
+      }
+    }
   },
   {
-    title: "终航试炼",
-    difficulty: "困难",
-    chapter: "深海试炼",
-    focus: "本关预算内只有一条可行航线；综合检查航标、洋流和回程。",
-    start: 21,
-    end: 27,
-    beacons: [37,3,39],
-    obstacles: [5,31,7,12,8,19,32,2,9,44,1,45,20,24,23,0],
-    currents: {"4":"down","10":"up","11":"down","15":"right","16":"right","29":"up","35":"down","41":"up","47":"right"},
-    limit: 28,
-    reference: [21,28,35,42,43,36,37,30,29,22,15,16,17,10,3,4,11,18,25,26,33,40,39,46,47,48,41,34,27],
-    analysis: {"shortest":28,"solutionCount":1,"misleadingBranches":9},
+    "title": "桥先门后",
+    "difficulty": "困难",
+    "chapter": "信标机关",
+    "focus": "两座潮桥在取得 3 号航标后关闭，两座航闸分别依赖 1、2 号航标。先安排过桥时机。",
+    "start": 21,
+    "end": 27,
+    "beacons": [
+      37,
+      3,
+      39
+    ],
+    "obstacles": [
+      5,
+      23,
+      24,
+      32
+    ],
+    "currents": {
+      "4": "down",
+      "10": "up",
+      "11": "down",
+      "15": "right",
+      "16": "right",
+      "29": "up",
+      "35": "down",
+      "41": "up",
+      "47": "right"
+    },
+    "limit": 28,
+    "reference": [
+      21,
+      28,
+      35,
+      42,
+      43,
+      36,
+      37,
+      30,
+      29,
+      22,
+      15,
+      16,
+      17,
+      10,
+      3,
+      4,
+      11,
+      18,
+      19,
+      26,
+      33,
+      40,
+      39,
+      46,
+      47,
+      48,
+      41,
+      34,
+      27
+    ],
+    "analysis": {
+      "shortest": 28,
+      "solutionCount": 6,
+      "misleadingBranches": 15
+    },
+    "signals": {
+      "22": {
+        "type": "bridge",
+        "beacon": 2
+      },
+      "28": {
+        "type": "bridge",
+        "beacon": 2
+      },
+      "33": {
+        "type": "gate",
+        "beacon": 0
+      },
+      "34": {
+        "type": "gate",
+        "beacon": 1
+      }
+    }
   },
 ];
 
@@ -497,10 +761,18 @@ function practiceBoard(level) {
   if (!Number.isInteger(level) || level < 1 || level > PRACTICE_COUNT) throw new Error('练习关卡不存在。');
   const entry = ROUTE_LEVELS[level - 1];
   return {
-    ...entry, size: SIZE, key: String(level), mode: 'practice', revision: 'route-v2',
+    ...entry, size: SIZE, key: String(level), mode: 'practice', revision: 'route-v3',
     beacons: [...entry.beacons], obstacles: [...entry.obstacles], currents: { ...entry.currents },
     reference: [...entry.reference], analysis: { ...entry.analysis },
+    signals: Object.fromEntries(Object.entries(entry.signals || {}).map(([cell,signal])=>[cell,{...signal}])),
   };
+}
+
+function signalState(board, cell, path) {
+  const signal=board.signals?.[cell];
+  if(!signal)return null;
+  const collected=path.includes(board.beacons[signal.beacon]);
+  return {...signal,open:signal.type==='gate'?collected:!collected};
 }
 
 // Enumerate simple routes, respecting arrows, beacon collection and the move budget.
@@ -534,8 +806,9 @@ function analyzeRouteBoard(board, { maxNodes = 250000 } = {}) {
     bounds.set(key, best);
     return best;
   }
-  function choices(current, visited) {
+  function choices(current, visited, mask) {
     return neighbors(current).filter((cell) => !visited(cell) && !blocked.has(cell)
+      && (!board.signals?.[cell] || (board.signals[cell].type==='gate')===Boolean(mask & (1 << board.signals[cell].beacon)))
       && (!board.currents[current] || direction(current, cell) === board.currents[current]));
   }
   function search(current, mask) {
@@ -552,7 +825,7 @@ function analyzeRouteBoard(board, { maxNodes = 250000 } = {}) {
       return;
     }
     if (steps + lowerBound(current, mask) > board.limit) return;
-    for (const cell of choices(current, (cell) => seen[cell])) {
+    for (const cell of choices(current, (cell) => seen[cell], mask)) {
       const nextMask = mask | (marks.get(cell) || 0);
       if (cell === board.end && nextMask !== all) continue;
       seen[cell] = 1;
@@ -568,7 +841,8 @@ function analyzeRouteBoard(board, { maxNodes = 250000 } = {}) {
   for (let index = 0; index < reference.length - 1; index += 1) {
     const prefix = reference.slice(0, index + 1);
     const visited = new Set(prefix);
-    const alternatives = choices(reference[index], (cell) => visited.has(cell));
+    const mask=board.beacons.reduce((value,cell,mark)=>value|(prefix.includes(cell)?1<<mark:0),0);
+    const alternatives = choices(reference[index], (cell) => visited.has(cell), mask);
     for (const cell of alternatives) {
       if (cell === board.end) continue;
       if (solutions.some((solution) => prefix.every((value, position) => solution[position] === value) && solution[index + 1] === cell)) continue;
@@ -600,6 +874,8 @@ function advance(board, path, target) {
   if (path.at(-1) === board.end) return { path, status: 'solved' };
   if (!direction(current, target)) return { path, status: 'invalid', message: '只能走上下左右相邻格。' };
   if (board.obstacles.includes(target)) return { path, status: 'invalid', message: '礁石不可通行。' };
+  const signal=signalState(board,target,path);
+  if(signal&&!signal.open)return {path,status:'invalid',message:signal.type==='gate'?`先收集 ${signal.beacon+1} 号航标，才能开启这座航闸。`:`${signal.beacon+1} 号航标已收集，这座潮桥已经关闭。可撤回航标前重新规划。`};
   if (path.includes(target)) return { path, status: 'invalid', message: '航线不能重复经过同一格。' };
   if (board.currents[current] && board.currents[current] !== direction(current, target)) return { path, status: 'invalid', message: '必须沿洋流箭头的方向离开。' };
   if (path.length >= board.limit + 1) return { path, status: 'invalid', message: '已超过本局步数预算。' };
@@ -920,10 +1196,19 @@ function saveVoyageResult(progress, level, result) {
   }
 }
 
-function createVoyage({ game, count, onSelect, titleFor, detailFor = () => null, version = 'v1', onMapOpen = () => {} }) {
+function migrateVoyageProgress(current, previous, count, preserveThrough) {
+  if(current!==null)return cleanVoyageProgress(current,count);
+  return Object.fromEntries(Object.entries(cleanVoyageProgress(previous,count)).filter(([level])=>Number(level)<=preserveThrough));
+}
+
+function createVoyage({ game, count, onSelect, titleFor, detailFor = () => null, version = 'v1', previousVersion = null, preserveThrough = 0, onMapOpen = () => {} }) {
   const key = `daily-games:voyage:${game}:${version}`;
   let progress = {};
-  try { progress = cleanVoyageProgress(JSON.parse(localStorage.getItem(key)), count); } catch { /* Local storage is optional. */ }
+  try {
+    const current=JSON.parse(localStorage.getItem(key));
+    const previous=current===null&&previousVersion?JSON.parse(localStorage.getItem(`daily-games:voyage:${game}:${previousVersion}`)):null;
+    progress=migrateVoyageProgress(current,previous,count,preserveThrough);
+  } catch { /* Local storage is optional. */ }
   const entry = document.querySelector('[data-voyage-entry]');
   const map = document.createElement('dialog');
   map.className = 'voyage-map';
@@ -1173,7 +1458,7 @@ const feedback = document.querySelector('[data-feedback]');
 const dialog = document.querySelector('[data-finish-dialog]');
 const cells = [];
 const motion = createSeaMotion(boardElement, dialog);
-const voyage = createVoyage({ game: 'route', count: PRACTICE_COUNT, version: 'v2', onSelect: (level) => loadBoard('practice', level), titleFor: (level) => practiceBoard(level).title, detailFor: (level) => practiceBoard(level).difficulty, onMapOpen: () => motion.cancelFinish() });
+const voyage = createVoyage({ game: 'route', count: PRACTICE_COUNT, version: 'v3', previousVersion:'v2', preserveThrough:8, onSelect: (level) => loadBoard('practice', level), titleFor: (level) => practiceBoard(level).title, detailFor: (level) => level>=9?`困难 · ${level<=10?'航闸':'潮桥'}`:practiceBoard(level).difficulty, onMapOpen: () => motion.cancelFinish() });
 
 function loadRecords() {
   try {
@@ -1240,7 +1525,9 @@ function labelFor(index) {
   const column = index % SIZE + 1;
   const kind = index === board.start ? '码头' : index === board.end ? '灯塔' : board.obstacles.includes(index) ? '礁石' : board.beacons.includes(index) ? '航标' : board.currents[index] ? `洋流向${{ up: '上', right: '右', down: '下', left: '左' }[board.currents[index]]}` : '海面';
   const position = path.indexOf(index);
-  return `第 ${row} 行第 ${column} 列，${kind}${position >= 0 ? `，航线第 ${position + 1} 格` : ''}`;
+  const signal=signalState(board,index,path);
+  const extra=signal?`${signal.beacon+1} 号${signal.type==='gate'?'航闸':'潮桥'}，${signal.open?'已开启':'已关闭'}`:board.signals&&Object.keys(board.signals).length&&board.beacons.includes(index)?`${board.beacons.indexOf(index)+1} 号航标`:kind;
+  return `第 ${row} 行第 ${column} 列，${extra}${position >= 0 ? `，航线第 ${position + 1} 格` : ''}`;
 }
 
 function icon(name) {
@@ -1279,6 +1566,9 @@ function render() {
     brief.querySelector('strong').textContent = board.limit > board.analysis.shortest ? `预算余量 ${board.limit - board.analysis.shortest} 步` : '预算无余量';
     brief.querySelector('span').textContent = board.focus;
   }
+  const signalGuide=document.querySelector('[data-signal-guide]');
+  signalGuide.hidden=!Object.keys(board.signals||{}).length;
+  signalGuide.textContent=Object.values(board.signals||{}).some(signal=>signal.type==='bridge')?'机关：闸 N 在取得 N 号航标后开启；桥 N 在取得 N 号航标后关闭。撤回会恢复机关状态。':'机关：先收集 N 号航标，再通过标有相同编号的航闸。撤回会恢复机关状态。';
   const guide = document.querySelector('[data-tutorial-guide]');
   guide.hidden = !tutorial;
   if (tutorial) {
@@ -1294,7 +1584,8 @@ function render() {
   const shareButton = document.querySelector('[data-share]');
   shareButton.title = won && !tutorial ? '分享本局成绩' : '分享游戏链接';
   shareButton.setAttribute('aria-label', shareButton.title);
-  document.querySelectorAll('[data-mode]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.mode === mode)));
+  document.querySelectorAll('[data-mode]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.mode === mode&&!(mode==='practice'&&practiceLevel>=9))));
+  document.querySelector('[data-signal-start]').setAttribute('aria-pressed',String(mode==='practice'&&practiceLevel>=9));
   boardElement.setAttribute('aria-label', `${SIZE} 乘 ${SIZE} 航线棋盘，${tutorial ? '新手教学，' : ''}${visitedBeacons} 个航标已收集，已走 ${path.length - 1} 步`);
 
   for (const cell of cells) {
@@ -1320,6 +1611,14 @@ function render() {
       flow.textContent = arrow[board.currents[index]];
       flow.setAttribute('aria-hidden', 'true');
       cell.append(flow);
+    }
+    const signal=signalState(board,index,path);
+    if(signal){
+      cell.classList.add('signal-tile',signal.type,signal.open?'signal-open':'signal-closed');
+      if(!isHead){const sign=document.createElement('span');sign.className='signal-symbol';sign.textContent=`${signal.type==='gate'?'闸':'桥'} ${signal.beacon+1}`;sign.setAttribute('aria-hidden','true');cell.append(sign);}
+    }
+    if(Object.keys(board.signals||{}).length&&board.beacons.includes(index)&&!isHead){
+      const badge=document.createElement('span');badge.className='beacon-number';badge.textContent=String(board.beacons.indexOf(index)+1);badge.setAttribute('aria-hidden','true');cell.append(badge);
     }
     if (position >= 0) {
       const step = document.createElement('span');
@@ -1512,6 +1811,7 @@ document.addEventListener('keydown', (event) => {
   if (candidate >= 0 && candidate < SIZE * SIZE) move(candidate);
 });
 
+document.querySelector('[data-signal-start]').addEventListener('click',()=>loadBoard('practice',9));
 document.querySelectorAll('[data-mode]').forEach((button) => button.addEventListener('click', () => {
   if (mode === 'tutorial' && button.dataset.mode !== 'tutorial') {
     try { localStorage.setItem(tutorialKey, 'done'); } catch { /* Playable without storage. */ }

@@ -1,4 +1,4 @@
-import { PRACTICE_COUNT, SIZE, advance, dailyBoard, dayKey, findHint, practiceBoard, streak, tutorialBoard, validateRoute } from './game-core.mjs';
+import { PRACTICE_COUNT, SIZE, advance, dailyBoard, dayKey, findHint, practiceBoard, signalState, streak, tutorialBoard, validateRoute } from './game-core.mjs';
 import { createGameTelemetry, shareURL, showGameShare } from '../../assets/game-analytics.mjs';
 import { createVoyage, createSeaMotion } from '../../assets/voyage.mjs';
 
@@ -16,7 +16,7 @@ const feedback = document.querySelector('[data-feedback]');
 const dialog = document.querySelector('[data-finish-dialog]');
 const cells = [];
 const motion = createSeaMotion(boardElement, dialog);
-const voyage = createVoyage({ game: 'route', count: PRACTICE_COUNT, version: 'v2', onSelect: (level) => loadBoard('practice', level), titleFor: (level) => practiceBoard(level).title, detailFor: (level) => practiceBoard(level).difficulty, onMapOpen: () => motion.cancelFinish() });
+const voyage = createVoyage({ game: 'route', count: PRACTICE_COUNT, version: 'v3', previousVersion:'v2', preserveThrough:8, onSelect: (level) => loadBoard('practice', level), titleFor: (level) => practiceBoard(level).title, detailFor: (level) => level>=9?`困难 · ${level<=10?'航闸':'潮桥'}`:practiceBoard(level).difficulty, onMapOpen: () => motion.cancelFinish() });
 
 function loadRecords() {
   try {
@@ -83,7 +83,9 @@ function labelFor(index) {
   const column = index % SIZE + 1;
   const kind = index === board.start ? '码头' : index === board.end ? '灯塔' : board.obstacles.includes(index) ? '礁石' : board.beacons.includes(index) ? '航标' : board.currents[index] ? `洋流向${{ up: '上', right: '右', down: '下', left: '左' }[board.currents[index]]}` : '海面';
   const position = path.indexOf(index);
-  return `第 ${row} 行第 ${column} 列，${kind}${position >= 0 ? `，航线第 ${position + 1} 格` : ''}`;
+  const signal=signalState(board,index,path);
+  const extra=signal?`${signal.beacon+1} 号${signal.type==='gate'?'航闸':'潮桥'}，${signal.open?'已开启':'已关闭'}`:board.signals&&Object.keys(board.signals).length&&board.beacons.includes(index)?`${board.beacons.indexOf(index)+1} 号航标`:kind;
+  return `第 ${row} 行第 ${column} 列，${extra}${position >= 0 ? `，航线第 ${position + 1} 格` : ''}`;
 }
 
 function icon(name) {
@@ -122,6 +124,9 @@ function render() {
     brief.querySelector('strong').textContent = board.limit > board.analysis.shortest ? `预算余量 ${board.limit - board.analysis.shortest} 步` : '预算无余量';
     brief.querySelector('span').textContent = board.focus;
   }
+  const signalGuide=document.querySelector('[data-signal-guide]');
+  signalGuide.hidden=!Object.keys(board.signals||{}).length;
+  signalGuide.textContent=Object.values(board.signals||{}).some(signal=>signal.type==='bridge')?'机关：闸 N 在取得 N 号航标后开启；桥 N 在取得 N 号航标后关闭。撤回会恢复机关状态。':'机关：先收集 N 号航标，再通过标有相同编号的航闸。撤回会恢复机关状态。';
   const guide = document.querySelector('[data-tutorial-guide]');
   guide.hidden = !tutorial;
   if (tutorial) {
@@ -137,7 +142,8 @@ function render() {
   const shareButton = document.querySelector('[data-share]');
   shareButton.title = won && !tutorial ? '分享本局成绩' : '分享游戏链接';
   shareButton.setAttribute('aria-label', shareButton.title);
-  document.querySelectorAll('[data-mode]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.mode === mode)));
+  document.querySelectorAll('[data-mode]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.mode === mode&&!(mode==='practice'&&practiceLevel>=9))));
+  document.querySelector('[data-signal-start]').setAttribute('aria-pressed',String(mode==='practice'&&practiceLevel>=9));
   boardElement.setAttribute('aria-label', `${SIZE} 乘 ${SIZE} 航线棋盘，${tutorial ? '新手教学，' : ''}${visitedBeacons} 个航标已收集，已走 ${path.length - 1} 步`);
 
   for (const cell of cells) {
@@ -163,6 +169,14 @@ function render() {
       flow.textContent = arrow[board.currents[index]];
       flow.setAttribute('aria-hidden', 'true');
       cell.append(flow);
+    }
+    const signal=signalState(board,index,path);
+    if(signal){
+      cell.classList.add('signal-tile',signal.type,signal.open?'signal-open':'signal-closed');
+      if(!isHead){const sign=document.createElement('span');sign.className='signal-symbol';sign.textContent=`${signal.type==='gate'?'闸':'桥'} ${signal.beacon+1}`;sign.setAttribute('aria-hidden','true');cell.append(sign);}
+    }
+    if(Object.keys(board.signals||{}).length&&board.beacons.includes(index)&&!isHead){
+      const badge=document.createElement('span');badge.className='beacon-number';badge.textContent=String(board.beacons.indexOf(index)+1);badge.setAttribute('aria-hidden','true');cell.append(badge);
     }
     if (position >= 0) {
       const step = document.createElement('span');
@@ -355,6 +369,7 @@ document.addEventListener('keydown', (event) => {
   if (candidate >= 0 && candidate < SIZE * SIZE) move(candidate);
 });
 
+document.querySelector('[data-signal-start]').addEventListener('click',()=>loadBoard('practice',9));
 document.querySelectorAll('[data-mode]').forEach((button) => button.addEventListener('click', () => {
   if (mode === 'tutorial' && button.dataset.mode !== 'tutorial') {
     try { localStorage.setItem(tutorialKey, 'done'); } catch { /* Playable without storage. */ }

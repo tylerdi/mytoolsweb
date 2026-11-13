@@ -27,7 +27,7 @@ test('practice levels are stable and bounded', () => {
   assert.deepEqual(makeBoard(42), makeBoard(42));
 });
 
-test('campaign difficulty increases in route length, precision and budget pressure', () => {
+test('campaign moves from forgiving routes to open-water planning and stateful signals', () => {
   let previousLength = 0;
   let previousCount = Infinity;
   let previousSlack = Infinity;
@@ -40,12 +40,18 @@ test('campaign difficulty increases in route length, precision and budget pressu
     assert.equal(validateRoute(board, result.reference).status, 'solved');
     assert.deepEqual(board.analysis, { shortest: result.shortest, solutionCount: result.solutionCount, misleadingBranches: result.misleadingBranches });
     assert.ok(result.shortest >= previousLength, `level ${level} route must not get shorter`);
-    assert.ok(result.solutionCount < previousCount, `level ${level} must require greater route precision`);
+    if(level<=8)assert.ok(result.solutionCount < previousCount, `level ${level} tightens the basic route budget`);
     assert.ok(board.limit - result.shortest <= previousSlack, `level ${level} must not add detour allowance`);
     assert.equal(board.difficulty, level <= 4 ? '简单' : level <= 8 ? '标准' : '困难');
     if (level >= 9) {
       assert.equal(board.limit, result.shortest);
-      assert.ok(result.misleadingBranches >= 9, 'hard maps need continuable wrong turns, not just long corridors');
+      assert.ok(result.misleadingBranches >= 12, 'hard maps need continuable wrong turns, not just long corridors');
+      assert.ok(49-board.obstacles.length>=42,'hard maps keep open water instead of outlining the answer');
+      assert.ok(board.reference.length/(49-board.obstacles.length)<.7,'reference must not fill almost every available cell');
+      assert.ok(Object.keys(board.signals).length>0);
+      const withoutSignals=analyzeRouteBoard({...board,signals:{}});
+      assert.equal(withoutSignals.truncated,false);
+      assert.ok(withoutSignals.solutionCount>result.solutionCount,'signals must change the actual set of solutions');
     }
     previousLength = result.shortest;
     previousCount = result.solutionCount;
@@ -54,7 +60,7 @@ test('campaign difficulty increases in route length, precision and budget pressu
   }
   assert.equal(stats[0].shortest, 6);
   assert.equal(stats.at(-1).shortest, 28);
-  assert.equal(stats.at(-1).solutionCount, 1);
+  assert.ok(stats.at(-1).solutionCount>0);
 });
 
 test('route solver counts alternatives and refuses exact claims on an incomplete search', () => {

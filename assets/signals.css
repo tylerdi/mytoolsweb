@@ -1,0 +1,11 @@
+.signal-guide{width:min(100%,560px,max(270px,calc(100dvh - 300px)));margin:0 auto 12px;padding:10px 12px;border:1px solid #c8b49a;border-radius:8px;background:#fff5e7;color:#654b32;font-size:.78rem;line-height:1.7}
+:is(.tile,.lab-cell).signal-tile{transition:background .25s,border-color .25s,box-shadow .25s}
+:is(.tile,.lab-cell).signal-open{background:#d8f0e5;box-shadow:inset 0 0 0 2px #78ac94}
+:is(.tile,.lab-cell).signal-closed{background:repeating-linear-gradient(90deg,#e5dbd1 0 8px,#b9a28a 9px 11px,#e5dbd1 12px 19px);box-shadow:inset 0 0 0 2px #9c7b57}
+:is(.tile,.lab-cell).bridge.signal-open{background:repeating-linear-gradient(0deg,#e9cb9a 0 6px,#b68b54 7px 8px,#e9cb9a 9px 13px);box-shadow:inset 0 0 0 2px #ab8858}
+:is(.tile,.lab-cell).bridge.signal-closed{background:#c8dce4;box-shadow:inset 0 0 0 2px #6c8e9b}
+.signal-symbol{position:relative;padding:2px 3px;background:#fffffff0;border-radius:3px;font:750 .66rem/1.35 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif!important;letter-spacing:0;color:#375752;white-space:nowrap;z-index:2}
+.signal-closed .signal-symbol{color:#754829}.bridge.signal-closed .signal-symbol{text-decoration:line-through;text-decoration-thickness:2px}
+.beacon-number{position:absolute;top:1px;right:2px;display:grid;place-items:center;min-width:14px;height:14px;border-radius:50%;background:#f9f4df;color:#664d1d;font:800 10px/1 ui-monospace,monospace;z-index:3}
+.level-badge[data-difficulty^=困难]{background:#f8e7df;color:#9a4f38}
+@media(prefers-reduced-motion:reduce){:is(.tile,.lab-cell).signal-tile{transition:none}}

@@ -24,10 +24,19 @@ export function saveVoyageResult(progress, level, result) {
   }
 }
 
-export function createVoyage({ game, count, onSelect, titleFor, detailFor = () => null, version = 'v1', onMapOpen = () => {} }) {
+export function migrateVoyageProgress(current, previous, count, preserveThrough) {
+  if(current!==null)return cleanVoyageProgress(current,count);
+  return Object.fromEntries(Object.entries(cleanVoyageProgress(previous,count)).filter(([level])=>Number(level)<=preserveThrough));
+}
+
+export function createVoyage({ game, count, onSelect, titleFor, detailFor = () => null, version = 'v1', previousVersion = null, preserveThrough = 0, onMapOpen = () => {} }) {
   const key = `daily-games:voyage:${game}:${version}`;
   let progress = {};
-  try { progress = cleanVoyageProgress(JSON.parse(localStorage.getItem(key)), count); } catch { /* Local storage is optional. */ }
+  try {
+    const current=JSON.parse(localStorage.getItem(key));
+    const previous=current===null&&previousVersion?JSON.parse(localStorage.getItem(`daily-games:voyage:${game}:${previousVersion}`)):null;
+    progress=migrateVoyageProgress(current,previous,count,preserveThrough);
+  } catch { /* Local storage is optional. */ }
   const entry = document.querySelector('[data-voyage-entry]');
   const map = document.createElement('dialog');
   map.className = 'voyage-map';

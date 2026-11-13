@@ -11,6 +11,7 @@ function routeSvg(board) {
   const offset = 26;
   const width = offset + 7 * size + 10;
   const tiles = [];
+  for(let n=0;n<7;n++) tiles.push(`<text x="${offset+n*size+31}" y="17" text-anchor="middle" font-size="12" fill="#315460">${n+1}</text><text x="12" y="${offset+n*size+36}" text-anchor="middle" font-size="12" fill="#315460">${n+1}</text>`);
   for (let index = 0; index < 49; index += 1) {
     const x = offset + index % 7 * size;
     const y = offset + Math.floor(index / 7) * size;
@@ -24,15 +25,18 @@ function routeSvg(board) {
     if (current) tiles.push(`<text x="${x + 31}" y="${y + 43}" text-anchor="middle" font-size="29" font-weight="800" fill="#3271a0">${{ up: '↑', right: '→', down: '↓', left: '←' }[current]}</text>`);
     if (index === board.start) tiles.push(`<path d="M${x + 13} ${y + 44}h37l-7 9h-23z" fill="#e5745c" stroke="#315460" stroke-width="2"/><path d="M${x + 31} ${y + 11}v31m0-28 16 25h-16z" fill="#fff8ed" stroke="#315460" stroke-width="2"/>`);
     if (index === board.end) tiles.push(`<path d="M${x + 20} ${y + 50}l5-35h12l5 35z" fill="#fff8ed" stroke="#315460" stroke-width="2"/><path d="M${x + 23} ${y + 34}h16l2 7h-19z" fill="#e5745c"/><circle cx="${x + 31}" cy="${y + 11}" r="4" fill="#f7c46c"/>`);
+    if(Object.keys(board.signals||{}).length&&beacon)tiles.push(`<circle cx="${x+49}" cy="${y+12}" r="10" fill="#fff8ed" stroke="#836336"/><text x="${x+49}" y="${y+17}" text-anchor="middle" font-size="13" fill="#664d1d">${board.beacons.indexOf(index)+1}</text>`);
+    if(board.signals?.[index]){const signal=board.signals[index];tiles.push(`<rect x="${x+6}" y="${y+17}" width="50" height="29" rx="4" fill="${signal.type==='gate'?'#d8c7b4':'#e9cb9a'}" stroke="#836336"/><text x="${x+31}" y="${y+37}" text-anchor="middle" font-size="14" fill="#513f2d">${signal.type==='gate'?'闸':'桥'} ${signal.beacon+1}</text>`);}
   }
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${width}" role="img" aria-label="每日航线练习关海图"><rect width="${width}" height="${width}" rx="8" fill="#b9d6ce"/>${tiles.join('')}</svg>`;
 }
 
 function twinSvg(board) {
   const size = 82;
-  const offset = 18;
+  const offset = 26;
   const width = offset + 5 * size + 10;
   const tiles = [];
+  for(let n=0;n<5;n++) tiles.push(`<text x="${offset+n*size+38}" y="17" text-anchor="middle" font-size="12" fill="#315460">${n+1}</text><text x="12" y="${offset+n*size+43}" text-anchor="middle" font-size="12" fill="#315460">${n+1}</text>`);
   for (let index = 0; index < 25; index += 1) {
     const x = offset + index % 5 * size;
     const y = offset + Math.floor(index / 5) * size;
@@ -50,6 +54,7 @@ function twinSvg(board) {
 
 for (const [name, content] of [
   ['route-2', routeSvg(routePractice(2))], ['route-8', routeSvg(routePractice(8))],
+  ['route-9', routeSvg(routePractice(9))], ['route-11', routeSvg(routePractice(11))],
   ['twins-9', twinSvg(twinPractice(9))], ['twins-15', twinSvg(twinPractice(15))],
 ]) {
   await writeFile(fileURLToPath(new URL(`${name}.svg`, directory)), content);
