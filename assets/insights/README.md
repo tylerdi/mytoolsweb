@@ -24,3 +24,11 @@ is deduped in sessionStorage per level, 30-minute inactivity or next UTC day res
 Leave includes hiding the tab and switching maps; never label it permanent churn.
 No historic backfill and no inferred unique users or retention. Existing product
 conversion summaries stay separate. Same privacy switches as unified statistics.
+
+Onboarding update: route tutorial events guided_complete and independent_start
+are accepted only in route/tutorial. The root dashboard compares entry, first
+move, four guided moves, first independent move, completion, and original chart
+2's start/completion. This is a comparison of independently deduped stage counts,
+not identity-linked funnel or proof that the same people progressed through all
+columns. Direct links to chart 2 still work. Leaving the tutorial does not mark
+it complete; entry preference is separate local state.

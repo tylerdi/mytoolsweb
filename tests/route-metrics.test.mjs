@@ -33,3 +33,10 @@ test('blocked or corrupted browser storage never prevents gameplay or deduplicat
  const t=createRouteTelemetry('twins',env);assert.doesNotThrow(()=>t.load('practice',1));
  env.sessionStorage={getItem(){throw Error('disabled');},setItem(){throw Error('disabled');}};const off=createRouteTelemetry('route',env);off.load('practice',1);off.send('start');off.send('start');assert.equal(env.calls.filter(c=>c.game==='route'&&c.event==='start').length,1);
 });
+
+test('onboarding phase events are scoped to route tutorial and deduped independently',async()=>{
+ const env=browser(),t=createRouteTelemetry('route',env);t.load('tutorial',0);t.send('start');t.send('guided_complete');t.send('guided_complete');t.send('independent_start');t.send('complete');
+ assert.deepEqual(env.calls.map(c=>c.event),['enter','start','guided_complete','independent_start','complete']);
+ const {validRouteMetric}=await import('../assets/route-metrics-core.mjs');
+ assert.ok(env.calls.every(validRouteMetric));assert.equal(validRouteMetric({...env.calls[2],mode:'practice',level:2}),false);assert.equal(validRouteMetric({...env.calls[2],game:'twins'}),false);
+});

@@ -92,3 +92,5 @@ h1{margin:0;font-size:1.85rem;line-height:1.25;font-weight:780}
 @media(prefers-reduced-motion:reduce){.tile,.tile.hint,.tile.tutorial-target{transition:none;animation:none}}
 
 .route-inspection{padding:16px 0;border-bottom:1px solid var(--line);font-size:.82rem;line-height:1.7}.route-inspection summary{cursor:pointer;font-weight:750}.route-inspection p{margin:10px 0}.route-inspection button{padding:10px 14px;background:#fff;color:#195c5d;border:1px solid #86aaa4;border-radius:6px}.route-inspection a{color:#195c5d}
+
+.session-records>summary,.context-rules>summary{cursor:pointer;font-size:.86rem;font-weight:750;padding:12px 0}.session-records>summary small{float:right;font-size:.72rem;color:var(--muted)}.session-records .metrics{margin-bottom:14px}.context-rules{border-top:1px solid var(--line);padding:0 0 12px}.context-rules ol{font-size:.83rem;line-height:1.8}.tutorial-guide[data-phase="independent"]{background:#fff6e5;border-color:#d8b76e;color:#624c2a}.tutorial-guide[data-phase="independent"] strong{color:#6a501e}

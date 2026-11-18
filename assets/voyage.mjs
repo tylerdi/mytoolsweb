@@ -29,7 +29,11 @@ export function migrateVoyageProgress(current, previous, count, preserveThrough)
   return Object.fromEntries(Object.entries(cleanVoyageProgress(previous,count)).filter(([level])=>Number(level)<=preserveThrough));
 }
 
-export function createVoyage({ game, count, onSelect, titleFor, detailFor = () => null, version = 'v1', previousVersion = null, preserveThrough = 0, onMapOpen = () => {} }) {
+export function nextSelectedLevel(progress, sequence) { return sequence.find(level=>!progress[level])??sequence[0]; }
+
+export function createVoyage({ game, count, sequence = null, onSelect, titleFor, detailFor = () => null, version = 'v1', previousVersion = null, preserveThrough = 0, onMapOpen = () => {} }) {
+  const selected=sequence||Array.from({length:count},(_,i)=>i+1);
+  const next=()=>nextSelectedLevel(progress,selected);
   const key = `daily-games:voyage:${game}:${version}`;
   let progress = {};
   try {
@@ -42,6 +46,7 @@ export function createVoyage({ game, count, onSelect, titleFor, detailFor = () =
   map.className = 'voyage-map';
   map.setAttribute('aria-labelledby', 'voyage-map-title');
   map.innerHTML = '<div class="map-heading"><div><p class="eyebrow">YOUR NEXT HORIZON</p><h2 id="voyage-map-title">选择你的下一片海</h2></div><button type="button" data-map-close aria-label="关闭关卡地图">×</button></div><p class="map-note">所有关卡都可直接挑战。✓ 表示已通关；记录仅保存在此浏览器。</p><div class="level-grid"></div>';
+  if(sequence){map.querySelector('h2').textContent='六站精选航程 · 全部海图';map.querySelector('.map-note').textContent='六站精选按不同的规划任务串联。全部海图均可随时挑战；✓ 表示已通关，记录仅保存在此浏览器。';}
   document.body.append(map);
   const grid = map.querySelector('.level-grid');
   let current = null;
@@ -57,10 +62,10 @@ export function createVoyage({ game, count, onSelect, titleFor, detailFor = () =
   map.querySelector('[data-map-close]').addEventListener('click', () => map.close());
   function update(level = current) {
     current = level;
-    const completed = Object.keys(progress).length;
-    entry.querySelector('[data-voyage-progress]').textContent = `${completed} / ${count} 已通关`;
-    entry.querySelector('[data-voyage-fill]').style.width = `${completed / count * 100}%`;
-    entry.querySelector('[data-voyage-start]').textContent = completed === count ? '再航行一次' : completed ? `继续第 ${nextVoyageLevel(progress, count)} 关 →` : '开始第 1 关 →';
+    const completed = selected.filter(level=>progress[level]).length;
+    entry.querySelector('[data-voyage-progress]').textContent = `${completed} / ${selected.length} 已通关`;
+    entry.querySelector('[data-voyage-fill]').style.width = `${completed / selected.length * 100}%`;
+    entry.querySelector('[data-voyage-start]').textContent = completed === selected.length ? (sequence?'重游精选航程':'再航行一次') : sequence?`开始精选第 ${selected.indexOf(next())+1} 站 →`:completed ? `继续第 ${next()} 关 →` : '开始第 1 关 →';
     for (const button of buttons) {
       const number = Number(button.dataset.level);
       const result = progress[number];
@@ -70,7 +75,7 @@ export function createVoyage({ game, count, onSelect, titleFor, detailFor = () =
       const title = document.createElement('span');
       title.textContent = titleFor(number);
       const detail = document.createElement('small');
-      detail.textContent = result ? `${result.steps} 步 · ${result.hints} 次提示` : '等待启航';
+      detail.textContent = (sequence?(selected.includes(number)?`精选第 ${selected.indexOf(number)+1} 站 · `:'补充练习 · '):'')+(result ? `${result.steps} 步 · ${result.hints} 次辅助` : '等待启航');
       const description = detailFor(number);
       button.append(label, title);
       if (description) {
@@ -90,14 +95,15 @@ export function createVoyage({ game, count, onSelect, titleFor, detailFor = () =
     onMapOpen();
     update();
     if (!map.open) map.showModal();
-    (buttons.find((button) => Number(button.dataset.level) === (current || nextVoyageLevel(progress, count))) || buttons[0]).focus();
+    (buttons.find((button) => Number(button.dataset.level) === (current || next())) || buttons[0]).focus();
   };
-  entry.querySelector('[data-voyage-start]').addEventListener('click', () => onSelect(nextVoyageLevel(progress, count)));
+  entry.querySelector('[data-voyage-start]').addEventListener('click', () => onSelect(next()));
   entry.querySelector('[data-voyage-map]').addEventListener('click', showMap);
   update();
   return {
     update, showMap,
-    next: () => nextVoyageLevel(progress, count),
+    next,
+    nextAfter(level){const index=selected.indexOf(level);return index===selected.length-1?null:index>=0?selected[index+1]:next();},
     win(level, result) {
       saveVoyageResult(progress, level, result);
       try { localStorage.setItem(key, JSON.stringify(progress)); } catch { /* Progress remains available for this visit. */ }

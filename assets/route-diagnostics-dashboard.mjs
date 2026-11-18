@@ -7,6 +7,9 @@ const cell=(tag,text)=>{const e=document.createElement(tag);e.textContent=text;r
 const tr=values=>{const e=document.createElement('tr');e.append(...values.map(v=>cell('td',v)));return e;};
 function render(){
  panel.hidden=!['all','route'].includes(product.value);const filtered=rows.filter(r=>source.value==='all'?r.source!=='qa':r.source===source.value);
+ const onboarding=panel.querySelector('[data-onboarding-rows]');
+ const count=(mode,level,event)=>filtered.filter(r=>r.game==='route'&&r.mode===mode&&r.level===level&&r.event===event).reduce((sum,r)=>sum+r.n,0);
+ if(onboarding)onboarding.replaceChildren(tr(['enter','start','guided_complete','independent_start','complete'].map(e=>count('tutorial',0,e)).concat([count('practice',2,'start'),count('practice',2,'complete')])));
  const levels=new Map(),detail=new Map();
  for(const r of filtered){const key=[r.game,r.mode,r.level].join('|');if(!levels.has(key))levels.set(key,{game:r.game,mode:r.mode,level:r.level});const item=levels.get(key);item[r.event]=(item[r.event]||0)+r.n;if(r.reason){const k=key+'|'+r.event+'|'+r.reason;detail.set(k,(detail.get(k)||0)+r.n);}}
  const title=(game,mode,level)=>`${game==='route'?'航线':'双船'} · ${mode==='daily'?`每日题${['',' · 简单',' · 标准',' · 困难'][Number(level)]||''}`:mode==='tutorial'?'教学':`第 ${level} 关`}`;

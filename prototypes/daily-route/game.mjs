@@ -1,4 +1,4 @@
-import { PRACTICE_COUNT, SIZE, inspectRoute, advance, dailyBoard, dayKey, findHint, practiceBoard, signalState, streak, tutorialBoard, validateRoute } from './game-core.mjs';
+import { PRACTICE_COUNT, SIZE, ROUTE_JOURNEY, tutorialStage, entryMode, contextRule, guidedMoveAllowed, inspectRoute, advance, dailyBoard, dayKey, findHint, practiceBoard, signalState, streak, tutorialBoard, validateRoute } from './game-core.mjs';
 import { createGameTelemetry, createRouteTelemetry, invalidReason, shareURL, showGameShare } from '../../assets/game-analytics.mjs';
 import { createVoyage, createSeaMotion } from '../../assets/voyage.mjs';
 
@@ -9,6 +9,7 @@ const asset = {
 const arrow = { up: '↑', right: '→', down: '↓', left: '←' };
 const storageKey = 'daily-route-results:v1';
 const tutorialKey = 'daily-route-tutorial:v1';
+const entryKey='daily-route-entry:v1';
 const track = createGameTelemetry('route');
 const diagnostics=createRouteTelemetry('route');
 const boardElement = document.querySelector('[data-board]');
@@ -17,7 +18,7 @@ const feedback = document.querySelector('[data-feedback]');
 const dialog = document.querySelector('[data-finish-dialog]');
 const cells = [];
 const motion = createSeaMotion(boardElement, dialog);
-const voyage = createVoyage({ game: 'route', count: PRACTICE_COUNT, version: 'v3', previousVersion:'v2', preserveThrough:8, onSelect: (level) => loadBoard('practice', level), titleFor: (level) => practiceBoard(level).title, detailFor: (level) => level>=9?`困难 · ${level<=10?'航闸':'潮桥'}`:practiceBoard(level).difficulty, onMapOpen: () => motion.cancelFinish() });
+const voyage = createVoyage({ game: 'route', count: PRACTICE_COUNT, sequence: ROUTE_JOURNEY, version: 'v3', previousVersion:'v2', preserveThrough:8, onSelect: (level) => loadBoard('practice', level), titleFor: (level) => practiceBoard(level).title, detailFor: (level) => level>=9?`困难 · ${level<=10?'航闸':'潮桥'}`:practiceBoard(level).difficulty, onMapOpen: () => motion.cancelFinish() });
 
 function loadRecords() {
   try {
@@ -28,9 +29,9 @@ function loadRecords() {
 
 const records = loadRecords();
 let mode = 'tutorial';
-try { if (localStorage.getItem(tutorialKey) === 'done') mode = 'daily'; } catch { /* Playable without storage. */ }
+try { mode=entryMode(localStorage.getItem(entryKey),localStorage.getItem(tutorialKey)==='done'); } catch { /* Playable without storage. */ }
 const requestedUrl = new URL(location.href);
-let practiceLevel = 1;
+let practiceLevel = voyage.next();
 const requestedPractice = Number(requestedUrl.searchParams.get('practice'));
 if (Number.isInteger(requestedPractice) && requestedPractice >= 1 && requestedPractice <= PRACTICE_COUNT) {
   mode = 'practice';
@@ -99,7 +100,12 @@ function icon(name) {
 }
 
 function tutorialInstruction() {
-  if (won) return '教学完成，可以开始今日挑战。';
+  if (won) return '试航完成。接下来独立挑战一张有岔路的海图。';
+  if(tutorialStage(path)==='independent'){
+    if(board.currents[path.at(-1)])return '船到了洋流格：沿箭头方向离开。找回灯塔的路由你决定。';
+    const left=board.beacons.filter(cell=>!path.includes(cell)).length;
+    return left?`现在自己来：再收集 ${left} 个航标，再用剩余 ${board.limit-path.length+1} 步靠岸。走错可以撤回。`:'航标收齐了。自己规划最后一段，进入灯塔靠岸。';
+  }
   const next = board.reference[path.length];
   if (path.length === 1) return '先点船右边发光的相邻格，让船前进。';
   if (board.currents[path.at(-1)]) return '船在蓝色洋流格里；下一步只能沿箭头方向走。';
@@ -122,9 +128,9 @@ function render() {
   document.querySelector('[data-beacons]').textContent = `${visitedBeacons} / 3`;
   document.querySelector('[data-time]').textContent = clockText(elapsed);
   document.querySelector('[data-streak]').textContent = String(streak(records, dayKey()));
-  document.querySelector('[data-mode-label]').textContent = tutorial ? '新手教学' : mode === 'daily' ? '每日挑战' : `闯关 ${practiceLevel}`;
+  document.querySelector('[data-mode-label]').textContent = tutorial ? '入门试航' : mode === 'daily' ? '每日挑战' : `闯关 ${practiceLevel}`;
   document.querySelector('[data-board-title]').textContent = tutorial ? '入门海图' : mode === 'daily' ? `${Number(board.key.slice(5, 7))} 月 ${Number(board.key.slice(8, 10))} 日 · 今日海图` : `第 ${practiceLevel} 关 · ${board.title}`;
-  document.querySelector('[data-board-subtitle]').textContent = tutorial ? '跟着发光的格子前进' : mode === 'daily' ? (board.difficulty?`${board.difficulty} · ${board.family}`:'今日完成后还能继续闯关') : `${board.difficulty} · ${board.chapter}`;
+  document.querySelector('[data-board-subtitle]').textContent = tutorial ? (tutorialStage(path)==='guided'?'前四步示范':'后半程自己决定') : mode === 'daily' ? (board.difficulty?`${board.difficulty} · ${board.family}`:'今日完成后还能继续闯关') : `${board.difficulty} · ${board.chapter}`;
   const brief = document.querySelector('[data-level-brief]');
   brief.hidden = mode === 'tutorial'||!board.analysis;
   if (mode !== 'tutorial'&&board.analysis) {
@@ -132,26 +138,27 @@ function render() {
     brief.querySelector('span').textContent = board.focus;
   }
   const signalGuide=document.querySelector('[data-signal-guide]');
-  signalGuide.hidden=!Object.keys(board.signals||{}).length;
-  signalGuide.textContent=Object.values(board.signals||{}).some(signal=>signal.type==='bridge')?'机关：闸 N 在取得 N 号航标后开启；桥 N 在取得 N 号航标后关闭。撤回会恢复机关状态。':'机关：先收集 N 号航标，再通过标有相同编号的航闸。撤回会恢复机关状态。';
+  const cue=mode==='tutorial'?'':contextRule(board,path);
+  signalGuide.hidden=!cue;signalGuide.textContent=cue;
   const guide = document.querySelector('[data-tutorial-guide]');
-  guide.hidden = !tutorial;
+  guide.hidden = !tutorial;guide.dataset.phase=tutorialStage(path);
   if (tutorial) {
-    document.querySelector('[data-tutorial-step]').textContent = won ? '教学完成' : `教学 · 第 ${path.length} / ${board.reference.length - 1} 步`;
+    document.querySelector('[data-tutorial-step]').textContent = won ? '试航完成' : tutorialStage(path)==='guided'?`跟我试四步 · ${path.length} / 4`:'轮到你独立靠岸';
     document.querySelector('[data-tutorial-text]').textContent = tutorialInstruction();
   }
   document.querySelector('[data-practice-controls]').hidden = mode !== 'practice';
-  document.querySelector('[data-practice-title]').textContent = `第 ${practiceLevel} / ${PRACTICE_COUNT} 关`;
-  document.querySelector('[data-prev]').disabled = practiceLevel <= 1;
-  document.querySelector('[data-next]').disabled = practiceLevel >= PRACTICE_COUNT;
+  const station=ROUTE_JOURNEY.indexOf(practiceLevel);
+  document.querySelector('[data-practice-title]').textContent = station>=0?`精选 ${station+1} / 6 · 海图 ${practiceLevel}`:`补练海图 ${practiceLevel} / 12`;
+  document.querySelector('[data-prev]').disabled = station>=0?station===0:practiceLevel<=1;
+  document.querySelector('[data-next]').disabled = station>=0?station===ROUTE_JOURNEY.length-1:practiceLevel>=PRACTICE_COUNT;
   document.querySelector('[data-undo]').disabled = path.length <= 1;
   document.querySelector('[data-hint]').disabled = tutorial || hints >= 3 || won;
   const shareButton = document.querySelector('[data-share]');
   shareButton.title = won && !tutorial ? '分享本局成绩' : '分享游戏链接';
   shareButton.setAttribute('aria-label', shareButton.title);
-  document.querySelectorAll('[data-mode]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.mode === mode&&!(mode==='practice'&&practiceLevel>=9))));
-  document.querySelector('[data-signal-start]').setAttribute('aria-pressed',String(mode==='practice'&&practiceLevel>=9));
-  boardElement.setAttribute('aria-label', `${SIZE} 乘 ${SIZE} 航线棋盘，${tutorial ? '新手教学，' : ''}${visitedBeacons} 个航标已收集，已走 ${path.length - 1} 步`);
+  document.querySelectorAll('[data-mode]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.mode === mode)));
+
+  boardElement.setAttribute('aria-label', `${SIZE} 乘 ${SIZE} 航线棋盘，${tutorial ? '入门试航，' : ''}${visitedBeacons} 个航标已收集，已走 ${path.length - 1} 步`);
 
   for (const cell of cells) {
     const index = Number(cell.dataset.index);
@@ -162,7 +169,7 @@ function render() {
       ['reef', board.obstacles.includes(index)], ['beacon', board.beacons.includes(index)],
       ['current', Boolean(board.currents[index])], ['goal', index === board.end],
       ['path', position >= 0], ['head', isHead], ['hint', hintTarget === index],
-      ['tutorial-target', tutorial && !won && board.reference[path.length] === index],
+      ['tutorial-target', tutorial && tutorialStage(path)==='guided' && !won && board.reference[path.length] === index],
     ]) if (active) cell.classList.add(name);
     cell.replaceChildren();
     if (isHead) cell.append(icon('boat'));
@@ -192,7 +199,7 @@ function render() {
       step.setAttribute('aria-hidden', 'true');
       cell.append(step);
     }
-    cell.setAttribute('aria-label', `${labelFor(index)}${board.currents[index]?`，洋流出口向${{up:"上",right:"右",down:"下",left:"左"}[board.currents[index]]}`:""}${tutorial && !won && board.reference[path.length] === index ? '，教学下一步' : ''}`);
+    cell.setAttribute('aria-label', `${labelFor(index)}${board.currents[index]?`，洋流出口向${{up:"上",right:"右",down:"下",left:"左"}[board.currents[index]]}`:""}${tutorial && tutorialStage(path)==='guided' && !won && board.reference[path.length] === index ? '，教学下一步' : ''}`);
     cell.setAttribute('aria-pressed', String(position >= 0));
   }
 }
@@ -214,9 +221,9 @@ function finish() {
   if (mode === 'tutorial') {
     try { localStorage.setItem(tutorialKey, 'done'); } catch { /* Playable without storage. */ }
   }
-  document.querySelector('[data-finish-title]').textContent = mode === 'tutorial' ? '已学会航行' : '顺利靠岸';
+  document.querySelector('[data-finish-title]').textContent = mode === 'tutorial' ? '首次试航完成' : '顺利靠岸';
   document.querySelector('[data-finish-score]').textContent = `${path.length - 1} / ${board.limit} 步`;
-  document.querySelector('[data-finish-description]').textContent = mode === 'tutorial' ? '已经掌握航行规则，开启你的闯关航程吧。' : mode === 'daily' ? `${board.key} 每日挑战完成，还可以继续闯关。` : `第 ${practiceLevel} 关完成${practiceLevel < PRACTICE_COUNT ? `，下关练习：${practiceBoard(practiceLevel+1).focus}` : '，这段航程抵达终点！'}`;
+  document.querySelector('[data-finish-description]').textContent = mode === 'tutorial' ? '后半程已经顺利靠岸。下一张海图不再标答案，试试自己选择洋流的入口。' : mode === 'daily' ? `${board.key} 每日挑战完成，还可以继续闯关。` : `第 ${practiceLevel} 关完成${voyage.nextAfter(practiceLevel)!==null ? `，下一站：${practiceBoard(voyage.nextAfter(practiceLevel)).focus}` : '，这段航程抵达终点！'}`;
   document.querySelector('[data-finish-detail]').textContent = `航标 3 / 3 · 辅助 ${hints} / 3 · 用时 ${clockText(elapsed)}${mode === 'practice' ? `。本关最短 ${board.analysis.shortest} 步，预算内共 ${board.analysis.solutionCount} 条可行航线。` : ''}`;
   document.querySelector('[data-dialog-share]').textContent = mode === 'tutorial' ? '分享游戏' : '分享成绩';
   const replay = document.querySelector('[data-replay]');
@@ -226,8 +233,8 @@ function finish() {
   const lessons={2:['route-currents','复盘洋流出口'],8:['route-beacons','复盘回程规划'],11:['signals','复盘潮桥时机']};
   const topic=mode==='practice'?lessons[practiceLevel]:null;
   lesson.href=topic?`/guides/${topic[0]}`:'/guides/';lesson.textContent=topic?topic[1]:'练五个规划方法';
-  document.querySelector('[data-dialog-practice]').textContent = mode === 'practice' ? practiceLevel < PRACTICE_COUNT ? `下一关 · 第 ${practiceLevel + 1} 关 →` : '查看关卡地图' : `继续闯关 · 第 ${voyage.next()} 关 →`;
-  message(mode === 'tutorial' ? '教学完成，现在可以独立规划今日航线。' : '航线完成，所有航标都已收齐。');
+  document.querySelector('[data-dialog-practice]').textContent = mode === 'practice' ? voyage.nextAfter(practiceLevel)!==null ? `下一站 · ${practiceBoard(voyage.nextAfter(practiceLevel)).title} →` : '精选航程完成 · 查看全部海图' : `独立挑战 · ${practiceBoard(voyage.next()).title} →`;
+  message(mode === 'tutorial' ? '试航完成，接下来挑战精选首站。' : '航线完成，所有航标都已收齐。');
   render();
   motion.finish();
 }
@@ -235,7 +242,7 @@ function finish() {
 function move(target) {
   if (won) return;
   if (target === path.at(-1)) return;
-  if (mode === 'tutorial' && target !== path.at(-2) && target !== board.reference[path.length]) {
+  if (mode === 'tutorial' && !guidedMoveAllowed(board,path,target)) {
     message(board.currents[path.at(-1)] ? '船在洋流格，必须沿蓝色箭头方向离开。' : board.obstacles.includes(target) ? '灰色礁石不能走，先点发光的格子。' : '先点发光的相邻格；也可以点上一格撤回。', 'warn');
     motion.invalid();
     return;
@@ -257,10 +264,11 @@ function move(target) {
   path = result.path;
   hintTarget = null;
   track('move');
+  if(mode==='tutorial'){if(path.length===5)diagnostics.send('guided_complete');if(path.length>5)diagnostics.send('independent_start');}
   if (!started) { track(`${mode}_start`);diagnostics.send('start'); started = true; }
   if (result.status === 'solved') { finish(); motion.sail(previous, target, '.vessel', true); return; }
   startClock();
-  message(mode === 'tutorial' ? tutorialInstruction() : board.beacons.includes(target) ? '收集到航标，继续向灯塔前进。' : '航线已延伸。');
+  message(mode === 'tutorial' ? tutorialInstruction() : board.beacons.includes(target) ? `已收集 ${board.beacons.filter(cell=>path.includes(cell)).length} / 3 航标。${Object.values(board.signals||{}).filter(signal=>signal.beacon===board.beacons.indexOf(target)).map(signal=>signal.type==='gate'?'对应航闸已开启。':'对应潮桥已关闭。').join('')}${board.beacons.every(cell=>path.includes(cell))?'现在前往灯塔。':'继续规划剩下的航标。'}` : '航线已延伸。');
   render();
   motion.sail(previous, target, '.vessel', board.beacons.includes(target));
 }
@@ -272,6 +280,7 @@ function loadBoard(nextMode = mode, level = practiceLevel) {
   if (dialog.open) dialog.close();
   if(started&&!won)diagnostics.send('leave');
   mode = nextMode;
+  document.querySelector('[data-session-records]').open=mode!=='tutorial';
   practiceLevel = level;
   board = mode === 'tutorial' ? tutorialBoard() : mode === 'daily' ? dailyBoard() : practiceBoard(practiceLevel);
   path = [board.start];
@@ -289,11 +298,12 @@ function loadBoard(nextMode = mode, level = practiceLevel) {
       won = true;
       message('今日航线已完成。点击上方“开始闯关”，还有 12 张海图可玩。');
     } else message('找到码头与灯塔，先观察剩余航标和机关，再点击相邻格画线。');
-  } else message(mode === 'tutorial' ? tutorialInstruction() : `第 ${practiceLevel} 关已载入。通关后可直接前往下一关。`);
+  } else message(mode === 'tutorial' ? tutorialInstruction() : `第 ${practiceLevel} 关已载入。通关后可直接前往下一站。`);
   diagnostics.load(mode,practiceLevel,board.difficulty);
   voyage.update(mode === 'practice' ? practiceLevel : null);
   render();
   motion.enter();
+  if(arguments.length&&mode!=='tutorial'){try{localStorage.setItem(entryKey,mode);}catch{}}
   if (arguments.length) boardElement.focus({ preventScroll: true });
 }
 
@@ -384,15 +394,12 @@ document.addEventListener('keydown', (event) => {
   if (candidate >= 0 && candidate < SIZE * SIZE) move(candidate);
 });
 
-document.querySelector('[data-signal-start]').addEventListener('click',()=>loadBoard('practice',9));
+
 document.querySelectorAll('[data-mode]').forEach((button) => button.addEventListener('click', () => {
-  if (mode === 'tutorial' && button.dataset.mode !== 'tutorial') {
-    try { localStorage.setItem(tutorialKey, 'done'); } catch { /* Playable without storage. */ }
-  }
   loadBoard(button.dataset.mode, button.dataset.mode === 'practice' ? voyage.next() : practiceLevel);
 }));
-document.querySelector('[data-prev]').addEventListener('click', () => loadBoard('practice', practiceLevel - 1));
-document.querySelector('[data-next]').addEventListener('click', () => loadBoard('practice', practiceLevel + 1));
+document.querySelector('[data-prev]').addEventListener('click', () => loadBoard('practice', ROUTE_JOURNEY.includes(practiceLevel)?ROUTE_JOURNEY[ROUTE_JOURNEY.indexOf(practiceLevel)-1]:practiceLevel-1));
+document.querySelector('[data-next]').addEventListener('click', () => loadBoard('practice', ROUTE_JOURNEY.includes(practiceLevel)?voyage.nextAfter(practiceLevel):practiceLevel+1));
 document.querySelector('[data-undo]').addEventListener('click', undo);
 document.querySelector('[data-reset]').addEventListener('click', reset);
 document.querySelector('[data-hint]').addEventListener('click', hint);
@@ -400,8 +407,8 @@ document.querySelector('[data-share]').addEventListener('click', share);
 document.querySelector('[data-dialog-share]').addEventListener('click', share);
 document.querySelector('[data-dialog-close]').addEventListener('click', () => dialog.close());
 document.querySelector('[data-dialog-practice]').addEventListener('click', () => {
-  if (mode === 'practice' && practiceLevel === PRACTICE_COUNT) { dialog.close(); voyage.showMap(); }
-  else loadBoard('practice', mode === 'practice' ? practiceLevel + 1 : voyage.next());
+  if (mode === 'practice' && voyage.nextAfter(practiceLevel)===null) { dialog.close(); voyage.showMap(); }
+  else loadBoard('practice', mode === 'practice' ? voyage.nextAfter(practiceLevel) : voyage.next());
 });
 setInterval(() => { if (mode === 'daily' && board.key !== dayKey()) loadBoard('daily'); }, 60000);
 loadBoard();

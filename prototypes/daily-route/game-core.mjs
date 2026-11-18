@@ -331,3 +331,21 @@ export function streak(records, today) {
   }
   return days;
 }
+
+export const ROUTE_JOURNEY = [2,5,8,9,11,12];
+export const GUIDED_MOVES = 4;
+export function tutorialStage(path) { return path.length-1<GUIDED_MOVES?'guided':'independent'; }
+export function entryMode(preference,tutorialDone) { return ['practice','daily'].includes(preference)?preference:tutorialDone?'daily':'tutorial'; }
+
+export function contextRule(board,path) {
+  const here=path.at(-1),names={up:'↑ 向上',right:'→ 向右',down:'↓ 向下',left:'← 向左'};
+  if(board.currents[here])return `船已进入洋流：下一步要${names[board.currents[here]]}离开。撤回仍然可用。`;
+  for(const cell of neighbors(here)){
+    const signal=signalState(board,cell,path);if(!signal||path.includes(cell))continue;
+    if(signal.type==='gate'&&!signal.open)return `身旁的闸 ${signal.beacon+1} 尚未开启：先取得 ${signal.beacon+1} 号航标，再回来通过。`;
+    if(signal.type==='bridge'&&signal.open)return `身旁的桥 ${signal.beacon+1} 当前开放；取得 ${signal.beacon+1} 号航标后会关闭，先考虑过桥时机。`;
+  }
+  return '';
+}
+
+export function guidedMoveAllowed(board,path,target) { return tutorialStage(path)!=='guided'||target===path.at(-2)||target===board.reference[path.length]; }
