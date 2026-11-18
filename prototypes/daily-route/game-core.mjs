@@ -285,6 +285,37 @@ export function findHint(board, path) {
   return result?.[path.length] ?? null;
 }
 
+// Prefix-aware bounded search: reaching the search limit is not proof of a dead end.
+export function inspectRoute(board, path, {maxNodes=30000}={}) {
+  const remaining=board.limit-(path.length-1);
+  if(validateRoute(board,path).status==='invalid')return {status:'invalid',message:'这条路线不符合当前规则，请重置后再试。'};
+  if(path.at(-1)===board.end)return {status:'solved',message:'已经收齐航标并靠岸。试着不使用提示再完成一次。'};
+  const missing=board.beacons.filter(cell=>!path.includes(cell));
+  const distance=(a,b)=>Math.abs(a%SIZE-b%SIZE)+Math.abs(Math.floor(a/SIZE)-Math.floor(b/SIZE));
+  let bound=Infinity;
+  function order(at,targets,total){if(!targets.length){bound=Math.min(bound,total+distance(at,board.end));return;}for(const cell of targets)order(cell,targets.filter(x=>x!==cell),total+distance(at,cell));}
+  order(path.at(-1),missing,0);
+  if(bound>remaining)return {status:'budget',message:`还剩 ${remaining} 步，即使忽略礁石、洋流与重走限制，收齐剩余航标再靠岸也至少需要 ${bound} 步。撤回前面的绕行，重新安排取标顺序。`};
+  let nodes=0,truncated=false;
+  function search(route){
+    if(++nodes>maxNodes){truncated=true;return false;}
+    if(route.at(-1)===board.end)return true;
+    if(route.length>board.limit)return false;
+    for(const cell of neighbors(route.at(-1))){
+      if(route.includes(cell))continue;
+      const next=advance(board,route,cell);
+      if(next.status==='invalid')continue;
+      if(search(next.path))return true;
+      if(truncated)return false;
+    }return false;
+  }
+  const possible=search(path);
+  if(possible)return {status:'possible',message:`当前航线仍能在剩余 ${remaining} 步内完成。先找最后一枚航标到灯塔的通道，注意别被自己走过的格子封住；检查不展示答案。`};
+  if(truncated)return {status:'unknown',message:'本次检查达到搜索上限，尚不能确定这条分支能否完成。可以继续尝试，或使用下一步提示；这不代表无解。'};
+  const exits=neighbors(path.at(-1)).filter(cell=>!path.includes(cell)&&advance(board,path,cell).status!=='invalid');
+  return {status:'blocked',message:exits.length?'剩余步数的直线估计虽然够，但加入礁石、洋流、旧路线和机关后，这个分支已经无法靠岸。撤回最近一次分岔，再给回程留出通道。':'当前已没有合法的前进出口。回到上一处分岔，避免把自己封在礁石、旧路线或关闭的机关之间。'};
+}
+
 export function streak(records, today) {
   let current = today;
   if (!records[current]) current = new Date(Date.parse(`${today}T00:00:00Z`) - 86400000).toISOString().slice(0, 10);

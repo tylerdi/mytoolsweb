@@ -2,3 +2,10 @@
 # 环境变量全部在 Dashboard 管理
 name = "mytoolsweb"
 compatibility_date = "2024-03-12"
+
+# Feedback is private; only the write-only API is exposed.
+pages_build_output_dir = "."
+[[d1_databases]]
+binding = "FEEDBACK_DB"
+database_name = "jimao-metrics"
+database_id = "ece52659-8473-4585-ab93-d3f47d7b6d57"

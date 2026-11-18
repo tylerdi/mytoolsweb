@@ -1,4 +1,4 @@
-import { PRACTICE_COUNT, SIZE, advance, dailyBoard, dayKey, findHint, practiceBoard, signalState, streak, tutorialBoard, validateRoute } from './game-core.mjs';
+import { PRACTICE_COUNT, SIZE, inspectRoute, advance, dailyBoard, dayKey, findHint, practiceBoard, signalState, streak, tutorialBoard, validateRoute } from './game-core.mjs';
 import { createGameTelemetry, shareURL, showGameShare } from '../../assets/game-analytics.mjs';
 import { createVoyage, createSeaMotion } from '../../assets/voyage.mjs';
 
@@ -109,6 +109,12 @@ function tutorialInstruction() {
 }
 
 function render() {
+  const inspectionNote=document.querySelector('[data-inspect-note]');
+  if(inspectionNote.dataset.path!==path.join(',')){
+    inspectionNote.dataset.path=path.join(',');
+    inspectionNote.textContent='不显示路线；确定结果记一次辅助，搜索未完成不扣次数。';
+  }
+  document.querySelector('[data-inspect]').disabled=mode==='tutorial'||hints>=3||won;
   const visitedBeacons = board.beacons.filter((beacon) => path.includes(beacon)).length;
   const tutorial = mode === 'tutorial';
   document.querySelector('[data-steps]').textContent = `${path.length - 1} / ${board.limit}`;
@@ -210,7 +216,7 @@ function finish() {
   document.querySelector('[data-finish-title]').textContent = mode === 'tutorial' ? '已学会航行' : '顺利靠岸';
   document.querySelector('[data-finish-score]').textContent = `${path.length - 1} / ${board.limit} 步`;
   document.querySelector('[data-finish-description]').textContent = mode === 'tutorial' ? '已经掌握航行规则，开启你的闯关航程吧。' : mode === 'daily' ? `${board.key} 每日挑战完成，还可以继续闯关。` : `第 ${practiceLevel} 关完成${practiceLevel < PRACTICE_COUNT ? '，下一片海等你探索。' : '，这段航程抵达终点！'}`;
-  document.querySelector('[data-finish-detail]').textContent = `航标 3 / 3 · 提示 ${hints} / 3 · 用时 ${clockText(elapsed)}${mode === 'practice' ? `。本关最短 ${board.analysis.shortest} 步，预算内共 ${board.analysis.solutionCount} 条可行航线。` : ''}`;
+  document.querySelector('[data-finish-detail]').textContent = `航标 3 / 3 · 辅助 ${hints} / 3 · 用时 ${clockText(elapsed)}${mode === 'practice' ? `。本关最短 ${board.analysis.shortest} 步，预算内共 ${board.analysis.solutionCount} 条可行航线。` : ''}`;
   document.querySelector('[data-dialog-share]').textContent = mode === 'tutorial' ? '分享游戏' : '分享成绩';
   const replay = document.querySelector('[data-replay]');
   replay.hidden = mode === 'tutorial';
@@ -255,6 +261,7 @@ function move(target) {
 }
 
 function loadBoard(nextMode = mode, level = practiceLevel) {
+  document.querySelector('[data-inspect-note]').textContent='不显示路线；确定结果记一次辅助，搜索未完成不扣次数。';
   motion.cancelFinish();
   stopClock();
   if (dialog.open) dialog.close();
@@ -326,7 +333,7 @@ async function share() {
   const url = shareURL(`https://tylerzhang.xyz/${mode === 'practice' ? `?practice=${practiceLevel}` : ''}`);
   const title = '每日航线';
   const text = won && mode !== 'tutorial'
-    ? `${mode === 'daily' ? board.key : `练习 ${practiceLevel}`} · ${path.length - 1}/${board.limit} 步 · ${hints} 次提示`
+    ? `${mode === 'daily' ? board.key : `练习 ${practiceLevel}`} · ${path.length - 1}/${board.limit} 步 · ${hints} 次辅助`
     : '每天一张新海图，也可以连续闯关。来规划你的航线。';
   showGameShare({title,text,url,onShared:()=>track('share')});
 }
@@ -390,3 +397,12 @@ document.querySelector('[data-dialog-practice]').addEventListener('click', () =>
 });
 setInterval(() => { if (mode === 'daily' && board.key !== dayKey()) loadBoard('daily'); }, 60000);
 loadBoard();
+
+const inspection=document.querySelector('[data-inspect]');
+inspection.addEventListener('click',()=>{
+  const note=document.querySelector('[data-inspect-note]');
+  if(mode==='tutorial'){note.textContent='教学会标出下一步。完成教学后，再独立检查每日题或闯关局面。';return;}
+  if(hints>=3){note.textContent='本局三次辅助已用完，可以撤回继续尝试。';return;}
+  const result=inspectRoute(board,path);if(result.status!=='unknown'&&result.status!=='solved')hints+=1;
+  note.textContent=result.message+(result.status==='unknown'||result.status==='solved'?'':'（记一次辅助，和下一步提示共用三次额度。）');render();
+});

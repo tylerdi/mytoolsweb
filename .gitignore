@@ -64,3 +64,6 @@ coverage/
 
 # Generated Rain Temple preview bundle (production assets are built into dist/)
 prototypes/rain-temple/temple.js
+
+# Local Cloudflare development databases and generated workers
+.wrangler/

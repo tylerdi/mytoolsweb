@@ -101,6 +101,8 @@ h1{margin:0;font-size:1.85rem;line-height:1.25;font-weight:780}
 @media(max-width:560px){.topbar-inner{width:min(100% - 24px,1180px);height:58px}.brand{font-size:.86rem}.brand-logo{width:30px;height:30px}.game-nav{gap:10px}.game-nav a{font-size:.73rem}.game-nav a:last-child{display:none}.game-shell{width:min(100% - 24px,1180px);padding-top:19px}.game-intro{align-items:start;flex-direction:column;gap:14px}.game-intro h1{font-size:1.5rem}.mode-switch{width:100%}.mode-switch button{flex:1;min-width:0;padding:7px 5px;font-size:.77rem}.game-layout{padding-top:16px}.tutorial-guide{display:block}.tutorial-guide strong{display:block;margin-bottom:2px}.board{gap:3px;padding:5px}.board-topline{align-items:start}.board-topline span{font-size:.71rem;text-align:right}.tile .flow{font-size:1.1rem}.tile .step{font-size:.55rem;right:2px;bottom:0}.legend{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px}.legend span{gap:1px;font-size:.66rem;white-space:nowrap}.legend img{width:16px;height:16px}.legend .arrow{font-size:.85rem}.command-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.command-row button{white-space:nowrap}.command-row button:last-child{margin-left:0}.feedback{font-size:.78rem}.side-panel{padding-top:17px}}
 @media(prefers-reduced-motion:reduce){.tile,.tile.hint,.tile.tutorial-target{transition:none;animation:none}}
 
+.route-inspection{padding:16px 0;border-bottom:1px solid var(--line);font-size:.82rem;line-height:1.7}.route-inspection summary{cursor:pointer;font-weight:750}.route-inspection p{margin:10px 0}.route-inspection button{padding:10px 14px;background:#fff;color:#195c5d;border:1px solid #86aaa4;border-radius:6px}.route-inspection a{color:#195c5d}
+
 </style>
   <style>
 /* Ocean adventure skin, shared only by the two game pages. */
@@ -214,7 +216,7 @@ html[data-motion=off] *,html[data-motion=off] *::before,html[data-motion=off] *:
         <div class="side-heading"><h2>本局记录</h2><small data-mode-label>每日挑战</small></div>
         <div class="metrics"><div><strong data-steps>0 / 0</strong><span>已走 / 步数预算</span></div><div><strong data-beacons>0 / 3</strong><span>已收航标</span></div><div><strong data-time>00:00</strong><span>用时</span></div><div><strong data-streak>0</strong><span>连续完成天数</span></div></div>
         <div class="practice-row" data-practice-controls hidden><button type="button" data-prev title="上一关" aria-label="上一关">←</button><strong data-practice-title>练习 1 / 12</strong><button type="button" data-next title="下一关" aria-label="下一关">→</button></div>
-        <section class="rules"><h3>航行规则</h3><ol><li>只走相邻格，不可重复经过或穿过礁石。</li><li>收齐 3 个航标，再进入灯塔。</li><li>从箭头格离开时，必须沿箭头方向前进。</li><li>总步数不能超过当前预算；点击上一格可撤回。</li></ol></section><nav class="related-actions" aria-label="更多玩法"><a href="/rules/">图示规则</a><a href="/guides/">精选关卡</a><a href="/twins/create/">创作关卡</a></nav>
+        <details class="route-inspection"><summary>卡住了？先检查局面</summary><p>检查这条分支是否还能完成，不直接揭示下一步。与提示共用每局三次辅助。</p><button type="button" data-inspect>检查当前航线</button><p data-inspect-note role="status" aria-live="polite">不显示路线；确定结果记一次辅助，搜索未完成不扣次数。</p><a href="/contact?game=每日航线">关卡太简单、太难或有问题？</a></details><section class="rules"><h3>航行规则</h3><ol><li>只走相邻格，不可重复经过或穿过礁石。</li><li>收齐 3 个航标，再进入灯塔。</li><li>从箭头格离开时，必须沿箭头方向前进。</li><li>总步数不能超过当前预算；点击上一格可撤回。</li></ol></section><nav class="related-actions" aria-label="更多玩法"><a href="/rules/">图示规则</a><a href="/guides/">精选关卡</a><a href="/twins/create/">创作关卡</a></nav>
         <p class="side-note">每日关卡在上海时间 00:00 更新。成绩只保存在此浏览器；清除浏览器数据会丢失本地记录。</p>
       </aside>
     </div>
@@ -927,6 +929,37 @@ function findHint(board, path) {
   return result?.[path.length] ?? null;
 }
 
+// Prefix-aware bounded search: reaching the search limit is not proof of a dead end.
+function inspectRoute(board, path, {maxNodes=30000}={}) {
+  const remaining=board.limit-(path.length-1);
+  if(validateRoute(board,path).status==='invalid')return {status:'invalid',message:'这条路线不符合当前规则，请重置后再试。'};
+  if(path.at(-1)===board.end)return {status:'solved',message:'已经收齐航标并靠岸。试着不使用提示再完成一次。'};
+  const missing=board.beacons.filter(cell=>!path.includes(cell));
+  const distance=(a,b)=>Math.abs(a%SIZE-b%SIZE)+Math.abs(Math.floor(a/SIZE)-Math.floor(b/SIZE));
+  let bound=Infinity;
+  function order(at,targets,total){if(!targets.length){bound=Math.min(bound,total+distance(at,board.end));return;}for(const cell of targets)order(cell,targets.filter(x=>x!==cell),total+distance(at,cell));}
+  order(path.at(-1),missing,0);
+  if(bound>remaining)return {status:'budget',message:`还剩 ${remaining} 步，即使忽略礁石、洋流与重走限制，收齐剩余航标再靠岸也至少需要 ${bound} 步。撤回前面的绕行，重新安排取标顺序。`};
+  let nodes=0,truncated=false;
+  function search(route){
+    if(++nodes>maxNodes){truncated=true;return false;}
+    if(route.at(-1)===board.end)return true;
+    if(route.length>board.limit)return false;
+    for(const cell of neighbors(route.at(-1))){
+      if(route.includes(cell))continue;
+      const next=advance(board,route,cell);
+      if(next.status==='invalid')continue;
+      if(search(next.path))return true;
+      if(truncated)return false;
+    }return false;
+  }
+  const possible=search(path);
+  if(possible)return {status:'possible',message:`当前航线仍能在剩余 ${remaining} 步内完成。先找最后一枚航标到灯塔的通道，注意别被自己走过的格子封住；检查不展示答案。`};
+  if(truncated)return {status:'unknown',message:'本次检查达到搜索上限，尚不能确定这条分支能否完成。可以继续尝试，或使用下一步提示；这不代表无解。'};
+  const exits=neighbors(path.at(-1)).filter(cell=>!path.includes(cell)&&advance(board,path,cell).status!=='invalid');
+  return {status:'blocked',message:exits.length?'剩余步数的直线估计虽然够，但加入礁石、洋流、旧路线和机关后，这个分支已经无法靠岸。撤回最近一次分岔，再给回程留出通道。':'当前已没有合法的前进出口。回到上一处分岔，避免把自己封在礁石、旧路线或关闭的机关之间。'};
+}
+
 function streak(records, today) {
   let current = today;
   if (!records[current]) current = new Date(Date.parse(`${today}T00:00:00Z`) - 86400000).toISOString().slice(0, 10);
@@ -1551,6 +1584,12 @@ function tutorialInstruction() {
 }
 
 function render() {
+  const inspectionNote=document.querySelector('[data-inspect-note]');
+  if(inspectionNote.dataset.path!==path.join(',')){
+    inspectionNote.dataset.path=path.join(',');
+    inspectionNote.textContent='不显示路线；确定结果记一次辅助，搜索未完成不扣次数。';
+  }
+  document.querySelector('[data-inspect]').disabled=mode==='tutorial'||hints>=3||won;
   const visitedBeacons = board.beacons.filter((beacon) => path.includes(beacon)).length;
   const tutorial = mode === 'tutorial';
   document.querySelector('[data-steps]').textContent = `${path.length - 1} / ${board.limit}`;
@@ -1652,7 +1691,7 @@ function finish() {
   document.querySelector('[data-finish-title]').textContent = mode === 'tutorial' ? '已学会航行' : '顺利靠岸';
   document.querySelector('[data-finish-score]').textContent = `${path.length - 1} / ${board.limit} 步`;
   document.querySelector('[data-finish-description]').textContent = mode === 'tutorial' ? '已经掌握航行规则，开启你的闯关航程吧。' : mode === 'daily' ? `${board.key} 每日挑战完成，还可以继续闯关。` : `第 ${practiceLevel} 关完成${practiceLevel < PRACTICE_COUNT ? '，下一片海等你探索。' : '，这段航程抵达终点！'}`;
-  document.querySelector('[data-finish-detail]').textContent = `航标 3 / 3 · 提示 ${hints} / 3 · 用时 ${clockText(elapsed)}${mode === 'practice' ? `。本关最短 ${board.analysis.shortest} 步，预算内共 ${board.analysis.solutionCount} 条可行航线。` : ''}`;
+  document.querySelector('[data-finish-detail]').textContent = `航标 3 / 3 · 辅助 ${hints} / 3 · 用时 ${clockText(elapsed)}${mode === 'practice' ? `。本关最短 ${board.analysis.shortest} 步，预算内共 ${board.analysis.solutionCount} 条可行航线。` : ''}`;
   document.querySelector('[data-dialog-share]').textContent = mode === 'tutorial' ? '分享游戏' : '分享成绩';
   const replay = document.querySelector('[data-replay]');
   replay.hidden = mode === 'tutorial';
@@ -1697,6 +1736,7 @@ function move(target) {
 }
 
 function loadBoard(nextMode = mode, level = practiceLevel) {
+  document.querySelector('[data-inspect-note]').textContent='不显示路线；确定结果记一次辅助，搜索未完成不扣次数。';
   motion.cancelFinish();
   stopClock();
   if (dialog.open) dialog.close();
@@ -1768,7 +1808,7 @@ async function share() {
   const url = shareURL(`https://tylerzhang.xyz/${mode === 'practice' ? `?practice=${practiceLevel}` : ''}`);
   const title = '每日航线';
   const text = won && mode !== 'tutorial'
-    ? `${mode === 'daily' ? board.key : `练习 ${practiceLevel}`} · ${path.length - 1}/${board.limit} 步 · ${hints} 次提示`
+    ? `${mode === 'daily' ? board.key : `练习 ${practiceLevel}`} · ${path.length - 1}/${board.limit} 步 · ${hints} 次辅助`
     : '每天一张新海图，也可以连续闯关。来规划你的航线。';
   showGameShare({title,text,url,onShared:()=>track('share')});
 }
@@ -1832,6 +1872,15 @@ document.querySelector('[data-dialog-practice]').addEventListener('click', () =>
 });
 setInterval(() => { if (mode === 'daily' && board.key !== dayKey()) loadBoard('daily'); }, 60000);
 loadBoard();
+
+const inspection=document.querySelector('[data-inspect]');
+inspection.addEventListener('click',()=>{
+  const note=document.querySelector('[data-inspect-note]');
+  if(mode==='tutorial'){note.textContent='教学会标出下一步。完成教学后，再独立检查每日题或闯关局面。';return;}
+  if(hints>=3){note.textContent='本局三次辅助已用完，可以撤回继续尝试。';return;}
+  const result=inspectRoute(board,path);if(result.status!=='unknown'&&result.status!=='solved')hints+=1;
+  note.textContent=result.message+(result.status==='unknown'||result.status==='solved'?'':'（记一次辅助，和下一步提示共用三次额度。）');render();
+});
 
 </script>
 </body>
