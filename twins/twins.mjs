@@ -1,8 +1,9 @@
 import { DIRECTIONS, PRACTICE_COUNT, SIZE, dailyBoard, dayKey, hintFor, isWon, moveBoats, practiceBoard, tutorialBoard, validateRoute } from './twins-core.mjs';
-import { createGameTelemetry, shareURL, showGameShare } from '../assets/game-analytics.mjs';
+import { createGameTelemetry, createRouteTelemetry, invalidReason, shareURL, showGameShare } from '../assets/game-analytics.mjs';
 import { createVoyage, createSeaMotion } from '../assets/voyage.mjs';
 
 const track = createGameTelemetry('twins');
+const diagnostics=createRouteTelemetry('twins');
 const recordsKey = 'tide-twins-results:v1';
 const tutorialKey = 'tide-twins-tutorial:v1';
 const boardElement = document.querySelector('[data-board]');
@@ -172,7 +173,7 @@ function finish() {
   stopClock();
   saveWin();
   if (mode === 'practice') voyage.win(practiceLevel, { steps: directions.length, hints });
-  track(`${mode}_complete`);
+  track(`${mode}_complete`);diagnostics.send('complete');
   if (mode === 'tutorial') {
     try { localStorage.setItem(tutorialKey, 'done'); } catch { /* Playable without storage. */ }
   }
@@ -196,7 +197,7 @@ function animateBoats(before, after) {
 }
 
 function move(direction) {
-  if (won || directions.length >= board.limit) return;
+  if(won)return;if(directions.length>=board.limit){diagnostics.send('invalid','budget');return;}
   if (mode === 'tutorial' && direction !== board.reference[directions.length]) {
     message(`先点发光的 ${arrow[board.reference[directions.length]]}，跟着教学前进。`, 'warn');
     motion.invalid();
@@ -204,12 +205,12 @@ function move(direction) {
   }
   const before = currentState();
   const next = moveBoats(board, before, direction);
-  if (!next) { message('这一步无法移动：两艘船不能重叠，也不能穿过礁石。', 'warn'); motion.invalid(); return; }
+  if (!next) { diagnostics.send('invalid','collision');message('这一步无法移动：两艘船不能重叠，也不能穿过礁石。', 'warn'); motion.invalid(); return; }
   states.push(next);
   directions.push(direction);
   hintDirection = null;
   track('move');
-  if (!started) { track(`${mode}_start`); started = true; }
+  if (!started) { track(`${mode}_start`);diagnostics.send('start'); started = true; }
   if (isWon(board, next)) { finish(); animateBoats(before, next); return; }
   startClock();
   if (directions.length >= board.limit) message('步数已用完，可以撤回或重置再试。', 'warn');
@@ -224,6 +225,7 @@ function loadBoard(nextMode = mode, level = practiceLevel) {
   motion.cancelFinish();
   stopClock();
   if (dialog.open) dialog.close();
+  if(started&&!won)diagnostics.send('leave');
   mode = nextMode;
   practiceLevel = level;
   board = mode === 'tutorial' ? tutorialBoard() : mode === 'daily' ? dailyBoard() : practiceBoard(level);
@@ -245,6 +247,7 @@ function loadBoard(nextMode = mode, level = practiceLevel) {
       message('今日双船已靠岸。点击上方“开始闯关”，还有 16 张海图可玩。');
     } else message('点下方方向箭头，同时指挥两艘船前进。');
   } else message(mode === 'tutorial' ? tutorialInstruction() : `第 ${practiceLevel} 关已载入。通关后可直接前往下一关。`);
+  diagnostics.load(mode,practiceLevel);
   voyage.update(mode === 'practice' ? practiceLevel : null);
   render();
   motion.enter();
@@ -252,6 +255,7 @@ function loadBoard(nextMode = mode, level = practiceLevel) {
 }
 
 function reset() {
+  diagnostics.send('reset');
   motion.cancelFinish();
   motion.clear();
   stopClock();
@@ -285,7 +289,7 @@ function hint() {
   if (mode === 'tutorial' || won || hints >= 3) return;
   hintDirection = hintFor(board, currentState());
   if (!hintDirection) { message('当前局面无法靠岸，先撤回几步。', 'warn'); return; }
-  hints += 1;
+  hints += 1;diagnostics.send('hint');
   message('下一步方向已标记在箭头按钮上。');
   render();
 }
@@ -337,3 +341,5 @@ document.querySelector('[data-dialog-next]').addEventListener('click', () => {
 });
 setInterval(() => { if (mode === 'daily' && board.key !== dayKey()) loadBoard('daily'); }, 60000);
 loadBoard();
+
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&started&&!won)diagnostics.send('leave');});

@@ -1,3 +1,5 @@
+export {createRouteTelemetry} from './route-telemetry.mjs';
+export {invalidReason} from './route-metrics-core.mjs';
 import {createInsights,shareURL} from './insights/client.mjs';
 export {shareURL};
 const events = new Set([

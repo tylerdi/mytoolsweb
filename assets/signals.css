@@ -9,3 +9,5 @@
 .beacon-number{position:absolute;top:1px;right:2px;display:grid;place-items:center;min-width:14px;height:14px;border-radius:50%;background:#f9f4df;color:#664d1d;font:800 10px/1 ui-monospace,monospace;z-index:3}
 .level-badge[data-difficulty^=困难]{background:#f8e7df;color:#9a4f38}
 @media(prefers-reduced-motion:reduce){:is(.tile,.lab-cell).signal-tile{transition:none}}
+
+.flow.flow-overlay{position:absolute;left:1px;bottom:1px;z-index:4;padding:1px 3px;border-radius:3px;background:#f2faff;color:#155772;font:900 13px/1.1 system-ui!important;border:1px solid #91b3c3;pointer-events:none}

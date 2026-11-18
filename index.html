@@ -193,6 +193,8 @@ html[data-motion=off] *,html[data-motion=off] *::before,html[data-motion=off] *:
 .level-badge[data-difficulty^=困难]{background:#f8e7df;color:#9a4f38}
 @media(prefers-reduced-motion:reduce){:is(.tile,.lab-cell).signal-tile{transition:none}}
 
+.flow.flow-overlay{position:absolute;left:1px;bottom:1px;z-index:4;padding:1px 3px;border-radius:3px;background:#f2faff;color:#155772;font:900 13px/1.1 system-ui!important;border:1px solid #91b3c3;pointer-events:none}
+
 </style>
 </head>
 <body>
@@ -216,18 +218,18 @@ html[data-motion=off] *,html[data-motion=off] *::before,html[data-motion=off] *:
         <div class="side-heading"><h2>本局记录</h2><small data-mode-label>每日挑战</small></div>
         <div class="metrics"><div><strong data-steps>0 / 0</strong><span>已走 / 步数预算</span></div><div><strong data-beacons>0 / 3</strong><span>已收航标</span></div><div><strong data-time>00:00</strong><span>用时</span></div><div><strong data-streak>0</strong><span>连续完成天数</span></div></div>
         <div class="practice-row" data-practice-controls hidden><button type="button" data-prev title="上一关" aria-label="上一关">←</button><strong data-practice-title>练习 1 / 12</strong><button type="button" data-next title="下一关" aria-label="下一关">→</button></div>
-        <details class="route-inspection"><summary>卡住了？先检查局面</summary><p>检查这条分支是否还能完成，不直接揭示下一步。与提示共用每局三次辅助。</p><button type="button" data-inspect>检查当前航线</button><p data-inspect-note role="status" aria-live="polite">不显示路线；确定结果记一次辅助，搜索未完成不扣次数。</p><a href="/contact?game=每日航线">关卡太简单、太难或有问题？</a></details><section class="rules"><h3>航行规则</h3><ol><li>只走相邻格，不可重复经过或穿过礁石。</li><li>收齐 3 个航标，再进入灯塔。</li><li>从箭头格离开时，必须沿箭头方向前进。</li><li>总步数不能超过当前预算；点击上一格可撤回。</li></ol></section><nav class="related-actions" aria-label="更多玩法"><a href="/rules/">图示规则</a><a href="/guides/">精选关卡</a><a href="/twins/create/">创作关卡</a></nav>
+        <details class="route-inspection"><summary>卡住了？先检查局面</summary><p>检查这条分支是否还能完成，不直接揭示下一步。与提示共用每局三次辅助。</p><button type="button" data-inspect>检查当前航线</button><p data-inspect-note role="status" aria-live="polite">不显示路线；确定结果记一次辅助，搜索未完成不扣次数。</p><a href="/contact?game=每日航线">关卡太简单、太难或有问题？</a></details><section class="rules"><h3>航行规则</h3><ol><li>只走相邻格，不可重复经过或穿过礁石。</li><li>收齐 3 个航标，再进入灯塔。</li><li>从箭头格离开时，必须沿箭头方向前进。</li><li>总步数不能超过当前预算；点击上一格可撤回。</li></ol></section><nav class="related-actions" aria-label="更多玩法"><a href="/?practice=5">熟悉规则？从标准档开始</a><a href="/rules/">图示规则</a><a href="/guides/">精选关卡</a><a href="/twins/create/">创作关卡</a></nav>
         <p class="side-note">每日关卡在上海时间 00:00 更新。成绩只保存在此浏览器；清除浏览器数据会丢失本地记录。</p>
       </aside>
     </div>
     <section class="voyage-entry" data-voyage-entry aria-label="连续闯关">
-      <div class="voyage-copy"><h2>航海闯关 <strong data-voyage-progress>0 / 12 已通关</strong></h2><p>1–4 关学规则 · 5–8 关练规划 · 9–12 关挑战航闸与潮桥。</p><div class="voyage-meter" aria-hidden="true"><i data-voyage-fill></i></div></div>
+      <div class="voyage-copy"><h2>航海闯关 <strong data-voyage-progress>0 / 12 已通关</strong></h2><p>1–4 关：出口与分岔 · 5–8 关：取标顺序与回程 · 9–12 关：开门与关桥的时机。</p><div class="voyage-meter" aria-hidden="true"><i data-voyage-fill></i></div></div>
       <div class="voyage-actions"><button type="button" class="voyage-start" data-voyage-start>开始第 1 关 →</button><button type="button" data-voyage-map>查看关卡地图</button></div>
     </section>
-<section class="chart-journal" aria-labelledby="chart-journal-title"><div class="journal-intro"><p class="eyebrow">PLAY · NOTICE · UNDERSTAND</p><h2 id="chart-journal-title">一张海图，不止一种发现</h2><p>在 7×7 海图上，串起三个航标，再给回灯塔留一条路。每走过一个格子，就少一个回头的选择。 精选记录把这类决定拆成可试走的例子：先尝试，再看反例与解释。</p><a href="/rules/route">读完整图示规则 →</a></div><div class="chart-stories"><a class="chart-story" href="/guides/route-currents"><span class="story-number">01</span><div><h3>洋流不是传送门</h3><p>看懂箭头规定的出口，再尝试一个会走进死胡同的开局。</p><span>试走与分析 →</span></div></a><a class="chart-story" href="/guides/route-beacons"><span class="story-number">02</span><div><h3>为什么要给回程留门？</h3><p>第 14 步是合法移动，却会让剩下六步不够用。</p><span>试走与分析 →</span></div></a></div><a class="chart-story" href="/guides/signals"><span class="story-number">03</span><div><h3>先过桥，还是先取航标？</h3><p>航标会开启航闸，也可能关闭潮桥。用第 11 关试试新的信标机关。</p><span>读懂机关与时机 →</span></div></a><div class="journal-note"><p><a href="/twins/">潮汐双船</a>用同一指令移动两艘船，体验另一种海图思考。</p><h3>每天一题，也可以连续闯关</h3><p>每日海图按上海时间 00:00 更新，同一天的玩家拿到同一张题。航线 12 关分简单、标准、困难三档。 不需要注册，成绩仅保存在当前浏览器。</p><p><a href="/guides/design-notes">读海图设计手记</a> · <a href="/twins/create/">制作自己的双船题</a> · <a href="/updates">查看真实更新记录</a></p></div></section>
+<section class="chart-journal" aria-labelledby="chart-journal-title"><div class="journal-intro"><p class="eyebrow">PLAY · NOTICE · UNDERSTAND</p><h2 id="chart-journal-title">一张海图，不止一种发现</h2><p>在 7×7 海图上，串起三个航标，再给回灯塔留一条路。每走过一个格子，就少一个回头的选择。 精选记录把这类决定拆成可试走的例子：先尝试，再看反例与解释。</p><a href="/rules/route">读完整图示规则 →</a></div><div class="chart-stories"><a class="chart-story" href="/guides/route-currents"><span class="story-number">01</span><div><h3>洋流不是传送门</h3><p>看懂箭头规定的出口，再尝试一个会走进死胡同的开局。</p><span>试走与分析 →</span></div></a><a class="chart-story" href="/guides/route-beacons"><span class="story-number">02</span><div><h3>为什么要给回程留门？</h3><p>第 14 步是合法移动，却会让剩下六步不够用。</p><span>试走与分析 →</span></div></a></div><a class="chart-story" href="/guides/signals"><span class="story-number">03</span><div><h3>先过桥，还是先取航标？</h3><p>航标会开启航闸，也可能关闭潮桥。用第 11 关试试新的信标机关。</p><span>读懂机关与时机 →</span></div></a><div class="journal-note"><p><a href="/twins/">潮汐双船</a>用同一指令移动两艘船，体验另一种海图思考。</p><h3>每天一题，也可以连续闯关</h3><p>从 11 月 19 日起，每日题按周递进：周一、二简单；周三、四标准；周五、六困难；周日标准巩固。84 张海图按 12 周轮换，覆盖回程、洋流、开闸、潮桥与双闸五类规划任务。</p><p>每日海图按上海时间 00:00 更新，同一天的玩家拿到同一张题。航线 12 关分简单、标准、困难三档。 不需要注册，成绩仅保存在当前浏览器。</p><p><a href="/guides/design-notes">读海图设计手记</a> · <a href="/twins/create/">制作自己的双船题</a> · <a href="/updates">查看真实更新记录</a></p></div></section>
   </main>
   <footer class="footer">© 2026 每日航线 · <a href="/about">关于与创作</a> · <a href="/updates">更新记录</a> · <a href="/privacy">隐私</a> · <a href="/contact">反馈</a></footer>
-  <dialog class="finish-dialog" data-finish-dialog aria-labelledby="finish-title"><p class="eyebrow">ROUTE COMPLETE</p><h2 id="finish-title" data-finish-title>顺利靠岸</h2><p data-finish-description>所有航标已收齐。</p><div class="finish-score" data-finish-score>0 / 0 步</div><p data-finish-detail></p><div class="modal-actions"><button type="button" class="primary" data-dialog-practice>继续练习</button><button type="button" data-dialog-share>分享成绩</button><a data-replay href="/replay/" target="_blank" rel="noopener" hidden>观看一种解法</a><button type="button" data-dialog-close>返回海图</button></div></dialog>
+  <dialog class="finish-dialog" data-finish-dialog aria-labelledby="finish-title"><p class="eyebrow">ROUTE COMPLETE</p><h2 id="finish-title" data-finish-title>顺利靠岸</h2><p data-finish-description>所有航标已收齐。</p><div class="finish-score" data-finish-score>0 / 0 步</div><p data-finish-detail></p><div class="modal-actions"><button type="button" class="primary" data-dialog-practice>继续练习</button><button type="button" data-dialog-share>分享成绩</button><a data-next-lesson href="/guides/">练五个规划方法</a><a data-replay href="/replay/" target="_blank" rel="noopener" hidden>观看一种解法</a><button type="button" data-dialog-close>返回海图</button></div></dialog>
   <script>
 // Campaign v3: the first eight maps are unchanged; open-water signal maps follow.
 // Counts include every legal route within the budget and the signal state.
@@ -643,6 +645,9 @@ const ROUTE_LEVELS = [
   },
 ];
 
+// 84 solver-screened charts. Regenerate with node scripts/build-daily-charts.mjs.
+const DAILY_CHARTS = [{"size":7,"start":3,"end":42,"beacons":[18,23,29],"obstacles":[12,37,43,26,1,24,38,21,32,34],"currents":{"4":"down","18":"left"},"limit":15,"reference":[3,4,11,18,17,16,23,30,29,36,35,42],"signals":{},"difficulty":"简单","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":11,"solutionCount":34,"misleadingBranches":2}},{"size":7,"start":45,"end":0,"beacons":[30,14,9],"obstacles":[2,48,20,25,3,46,11,6,43,40],"currents":{"8":"left","31":"left"},"limit":17,"reference":[45,38,31,30,23,24,17,10,9,16,15,14,7,0],"signals":{},"difficulty":"简单","family":"洋流出口","focus":"先看箭头出口，再决定从哪边接近航标。","analysis":{"shortest":13,"solutionCount":124,"misleadingBranches":6}},{"size":7,"start":3,"end":43,"beacons":[14,30,47],"obstacles":[17,1,5,36,12,37,0,32,19,10],"currents":{"23":"down","38":"right","40":"down","44":"left"},"limit":20,"reference":[3,2,9,16,15,14,21,22,23,30,31,38,39,40,47,46,45,44,43],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":18,"solutionCount":32,"misleadingBranches":7}},{"size":7,"start":5,"end":43,"beacons":[19,3,15],"obstacles":[30,41,14,35,42,9,44,7,46,45],"currents":{"12":"left","13":"down","20":"left","22":"down"},"limit":18,"reference":[5,6,13,20,19,12,11,4,3,10,17,16,15,22,29,36,43],"signals":{"10":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":16,"solutionCount":31,"misleadingBranches":5}},{"size":7,"start":48,"end":1,"beacons":[13,16,44],"obstacles":[37,3,47,14,30,42],"currents":{"19":"up","20":"left","27":"up","29":"up"},"limit":27,"reference":[48,41,34,27,20,19,12,13,6,5,4,11,18,17,16,23,24,31,38,45,44,43,36,29,22,15,8,1],"signals":{"22":{"type":"gate","beacon":1}},"difficulty":"困难","family":"航标开闸","focus":"先取得 2 号航标，打开通道，再规划另外两个目标和回程。","analysis":{"shortest":27,"solutionCount":12,"misleadingBranches":16}},{"size":7,"start":41,"end":5,"beacons":[37,2,26],"obstacles":[34,7,1,33,24,10],"currents":{"12":"down","39":"down","40":"left","45":"left"},"limit":22,"reference":[41,48,47,46,45,44,37,30,23,16,9,2,3,4,11,12,19,26,27,20,13,6,5],"signals":{"4":{"type":"bridge","beacon":2}},"difficulty":"困难","family":"潮桥时机","focus":"先通过潮桥，再收集会让它关闭的航标。","analysis":{"shortest":22,"solutionCount":8,"misleadingBranches":13}},{"size":7,"start":42,"end":20,"beacons":[38,28,16],"obstacles":[21,10,2,34,47,1,9,25,5,46],"currents":{"30":"up","35":"up","38":"left","43":"right"},"limit":18,"reference":[42,35,28,29,36,43,44,45,38,37,30,23,16,17,18,19,20],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":16,"solutionCount":23,"misleadingBranches":7}},{"size":7,"start":20,"end":35,"beacons":[11,8,14],"obstacles":[3,22,23,2,33,48,17,34,27,4],"currents":{"9":"left","10":"left"},"limit":15,"reference":[20,13,12,11,10,9,8,15,14,21,28,35],"signals":{},"difficulty":"简单","family":"洋流出口","focus":"先看箭头出口，再决定从哪边接近航标。","analysis":{"shortest":11,"solutionCount":49,"misleadingBranches":3}},{"size":7,"start":46,"end":1,"beacons":[34,6,11],"obstacles":[14,16,25,19,26,39,43,35,37,31],"currents":{"5":"down","11":"up"},"limit":19,"reference":[46,47,40,33,34,27,20,13,6,5,12,11,4,3,2,1],"signals":{},"difficulty":"简单","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":15,"solutionCount":22,"misleadingBranches":3}},{"size":7,"start":20,"end":1,"beacons":[11,16,22],"obstacles":[12,29,34,39,35,31,45,6,19,46],"currents":{"11":"up","16":"up","18":"up","22":"left"},"limit":21,"reference":[20,27,26,25,18,11,4,3,10,17,24,23,22,21,14,15,16,9,2,1],"signals":{"10":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":19,"solutionCount":9,"misleadingBranches":6}},{"size":7,"start":47,"end":14,"beacons":[25,6,10],"obstacles":[26,42,43,21,34,40,31,0,2,17],"currents":{"11":"left","19":"right","32":"up","46":"up"},"limit":19,"reference":[47,46,39,32,25,18,19,20,13,6,5,12,11,10,9,16,15,14],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":17,"solutionCount":15,"misleadingBranches":7}},{"size":7,"start":41,"end":4,"beacons":[31,19,34],"obstacles":[3,37,7,26,40,1],"currents":{"10":"right","17":"up","18":"down","19":"left"},"limit":23,"reference":[41,48,47,46,39,38,31,24,17,10,11,12,19,18,25,32,33,34,27,20,13,6,5,4],"signals":{"25":{"type":"bridge","beacon":2}},"difficulty":"困难","family":"潮桥时机","focus":"先通过潮桥，再收集会让它关闭的航标。","analysis":{"shortest":23,"solutionCount":2,"misleadingBranches":10}},{"size":7,"start":46,"end":6,"beacons":[12,15,1],"obstacles":[20,24,34,23,17,37],"currents":{"8":"down","10":"left","11":"left","15":"down"},"limit":22,"reference":[46,39,32,25,18,19,12,11,10,9,16,15,22,21,14,7,0,1,2,3,4,5,6],"signals":{"9":{"type":"gate","beacon":0}},"difficulty":"困难","family":"航标开闸","focus":"先取得 1 号航标，打开通道，再规划另外两个目标和回程。","analysis":{"shortest":22,"solutionCount":10,"misleadingBranches":10}},{"size":7,"start":44,"end":34,"beacons":[40,36,24],"obstacles":[15,30,7,28,16,21,20,25,26,8],"currents":{"33":"right","40":"left","45":"right","47":"up"},"limit":18,"reference":[44,45,46,47,40,39,38,37,36,29,22,23,24,31,32,33,34],"signals":{"37":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":16,"solutionCount":3,"misleadingBranches":6}},{"size":7,"start":2,"end":47,"beacons":[15,30,38],"obstacles":[24,19,41,27,3,32,40,17,48,0],"currents":{"8":"down","22":"down"},"limit":15,"reference":[2,9,16,15,22,29,30,31,38,39,46,47],"signals":{},"difficulty":"简单","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":11,"solutionCount":156,"misleadingBranches":3}},{"size":7,"start":2,"end":48,"beacons":[14,29,39],"obstacles":[41,16,11,40,32,0,35,33,26,37],"currents":{"21":"right","39":"down"},"limit":18,"reference":[2,9,8,15,14,21,22,29,30,31,38,39,46,47,48],"signals":{},"difficulty":"简单","family":"洋流出口","focus":"先看箭头出口，再决定从哪边接近航标。","analysis":{"shortest":14,"solutionCount":33,"misleadingBranches":5}},{"size":7,"start":0,"end":13,"beacons":[16,5,25],"obstacles":[29,24,30,10,36,40,39,21,41,47],"currents":{"4":"right","12":"down","20":"up","26":"right"},"limit":19,"reference":[0,1,8,15,16,9,2,3,4,5,12,19,18,25,26,27,20,13],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":17,"solutionCount":14,"misleadingBranches":9}},{"size":7,"start":34,"end":28,"beacons":[25,41,38],"obstacles":[36,22,42,9,24,23,12,3,2,27],"currents":{"25":"down","26":"up","30":"left","47":"left"},"limit":20,"reference":[34,33,26,19,18,25,32,39,40,41,48,47,46,45,38,31,30,29,28],"signals":{"40":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":18,"solutionCount":4,"misleadingBranches":8}},{"size":7,"start":27,"end":7,"beacons":[23,2,36],"obstacles":[44,4,37,3,13,11],"currents":{"23":"right","24":"up","25":"down","31":"left"},"limit":22,"reference":[27,34,33,32,31,30,23,24,17,10,9,2,1,8,15,22,29,36,35,28,21,14,7],"signals":{"21":{"type":"gate","beacon":1}},"difficulty":"困难","family":"航标开闸","focus":"先取得 2 号航标，打开通道，再规划另外两个目标和回程。","analysis":{"shortest":22,"solutionCount":6,"misleadingBranches":15}},{"size":7,"start":44,"end":4,"beacons":[7,11,34],"obstacles":[14,6,32,47,35,46],"currents":{"11":"down","18":"right","20":"up","33":"down"},"limit":26,"reference":[44,37,30,23,16,9,8,7,0,1,2,3,10,11,18,19,26,33,40,41,34,27,20,13,12,5,4],"signals":{"26":{"type":"bridge","beacon":2}},"difficulty":"困难","family":"潮桥时机","focus":"先通过潮桥，再收集会让它关闭的航标。","analysis":{"shortest":26,"solutionCount":11,"misleadingBranches":15}},{"size":7,"start":46,"end":4,"beacons":[33,25,8],"obstacles":[12,7,10,44,27,37,18,5,1,36],"currents":{"9":"up","24":"left","33":"down","47":"right"},"limit":20,"reference":[46,47,48,41,34,33,40,39,32,25,24,23,16,15,8,9,2,3,4],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":18,"solutionCount":6,"misleadingBranches":8}},{"size":7,"start":44,"end":5,"beacons":[29,8,2],"obstacles":[0,38,10,31,35,6,16,12,18,42],"currents":{"1":"right","22":"up"},"limit":15,"reference":[44,37,30,29,22,15,8,1,2,3,4,5],"signals":{},"difficulty":"简单","family":"洋流出口","focus":"先看箭头出口，再决定从哪边接近航标。","analysis":{"shortest":11,"solutionCount":54,"misleadingBranches":4}},{"size":7,"start":44,"end":7,"beacons":[47,25,16],"obstacles":[4,48,15,28,2,38,29,37,10,6],"currents":{"17":"left","46":"right"},"limit":17,"reference":[44,45,46,47,40,33,26,25,18,17,16,9,8,7],"signals":{},"difficulty":"简单","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":13,"solutionCount":151,"misleadingBranches":3}},{"size":7,"start":14,"end":4,"beacons":[24,44,32],"obstacles":[6,27,19,15,17,8,35,42,26,3],"currents":{"21":"right","23":"right","38":"left","39":"up"},"limit":18,"reference":[14,21,22,23,24,31,38,37,44,45,46,39,32,25,18,11,4],"signals":{"37":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":16,"solutionCount":18,"misleadingBranches":7}},{"size":7,"start":43,"end":0,"beacons":[14,23,11],"obstacles":[45,26,20,48,29,5,6,47,33,13],"currents":{"3":"left","15":"up","23":"right","24":"up"},"limit":21,"reference":[43,36,35,28,21,14,7,8,9,16,23,24,17,10,11,4,3,2,1,0],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":19,"solutionCount":26,"misleadingBranches":9}},{"size":7,"start":14,"end":6,"beacons":[24,27,3],"obstacles":[47,22,15,48,41,29],"currents":{"5":"down","16":"right","20":"left","26":"down"},"limit":22,"reference":[14,7,8,9,16,17,24,25,26,33,34,27,20,19,18,11,10,3,4,5,12,13,6],"signals":{"19":{"type":"bridge","beacon":2}},"difficulty":"困难","family":"潮桥时机","focus":"先通过潮桥，再收集会让它关闭的航标。","analysis":{"shortest":22,"solutionCount":3,"misleadingBranches":15}},{"size":7,"start":28,"end":47,"beacons":[46,12,13],"obstacles":[9,17,18,29,2,36],"currents":{"5":"right","12":"left","43":"right","44":"right"},"limit":23,"reference":[28,35,42,43,44,45,46,39,32,25,26,19,12,11,4,5,6,13,20,27,34,41,48,47],"signals":{"26":{"type":"gate","beacon":0}},"difficulty":"困难","family":"航标开闸","focus":"先取得 1 号航标，打开通道，再规划另外两个目标和回程。","analysis":{"shortest":23,"solutionCount":6,"misleadingBranches":10}},{"size":7,"start":21,"end":13,"beacons":[16,0,17],"obstacles":[5,4,42,26,44,37,47,41,31,38],"currents":{"1":"right","2":"down","22":"down","23":"up"},"limit":20,"reference":[21,22,29,30,23,16,15,8,7,0,1,2,9,10,17,18,11,12,13],"signals":{"7":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":18,"solutionCount":34,"misleadingBranches":9}},{"size":7,"start":48,"end":4,"beacons":[33,31,10],"obstacles":[38,14,15,40,28,35,0,6,23,47],"currents":{"32":"left","33":"left"},"limit":14,"reference":[48,41,34,33,32,31,24,17,10,3,4],"signals":{},"difficulty":"简单","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":10,"solutionCount":38,"misleadingBranches":2}},{"size":7,"start":48,"end":3,"beacons":[39,30,24],"obstacles":[20,9,29,0,42,12,21,33,11,22],"currents":{"31":"up","46":"up"},"limit":15,"reference":[48,41,40,39,38,37,30,23,24,17,10,3],"signals":{},"difficulty":"简单","family":"洋流出口","focus":"先看箭头出口，再决定从哪边接近航标。","analysis":{"shortest":11,"solutionCount":60,"misleadingBranches":6}},{"size":7,"start":44,"end":0,"beacons":[48,26,16],"obstacles":[6,27,11,7,3,5,37,32,8,22],"currents":{"16":"up","41":"left","47":"right","48":"up"},"limit":18,"reference":[44,45,46,47,48,41,40,33,26,19,18,17,16,9,2,1,0],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":16,"solutionCount":13,"misleadingBranches":6}},{"size":7,"start":0,"end":20,"beacons":[23,1,10],"obstacles":[46,21,39,32,44,12,29,26,37,13],"currents":{"3":"right","15":"down","16":"up","22":"right"},"limit":20,"reference":[0,7,14,15,22,23,16,9,8,1,2,3,4,11,10,17,18,19,20],"signals":{"8":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":18,"solutionCount":4,"misleadingBranches":6}},{"size":7,"start":0,"end":6,"beacons":[18,44,40],"obstacles":[28,47,26,1,39,12],"currents":{"7":"right","16":"right","18":"down","27":"up"},"limit":24,"reference":[0,7,8,9,10,11,18,25,24,23,30,37,44,45,38,31,32,33,40,41,34,27,20,13,6],"signals":{"30":{"type":"gate","beacon":0}},"difficulty":"困难","family":"航标开闸","focus":"先取得 1 号航标，打开通道，再规划另外两个目标和回程。","analysis":{"shortest":24,"solutionCount":7,"misleadingBranches":14}},{"size":7,"start":35,"end":2,"beacons":[47,4,22],"obstacles":[16,32,24,34,36,5],"currents":{"22":"left","44":"right","45":"right","46":"right"},"limit":25,"reference":[35,42,43,44,45,46,47,40,33,26,19,12,11,4,3,10,9,8,15,22,21,14,7,0,1,2],"signals":{"10":{"type":"bridge","beacon":2}},"difficulty":"困难","family":"潮桥时机","focus":"先通过潮桥，再收集会让它关闭的航标。","analysis":{"shortest":25,"solutionCount":3,"misleadingBranches":14}},{"size":7,"start":47,"end":3,"beacons":[20,11,30],"obstacles":[21,29,35,32,33,10,1,40,4,43],"currents":{"13":"up","16":"up","20":"up","30":"up"},"limit":22,"reference":[47,48,41,34,27,20,13,6,5,12,11,18,25,24,31,30,23,16,9,2,3],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":20,"solutionCount":21,"misleadingBranches":5}},{"size":7,"start":28,"end":4,"beacons":[7,2,17],"obstacles":[5,16,6,23,22,20,41,37,29,32],"currents":{"18":"up","21":"up"},"limit":16,"reference":[28,21,14,7,0,1,2,3,10,17,18,11,4],"signals":{},"difficulty":"简单","family":"洋流出口","focus":"先看箭头出口，再决定从哪边接近航标。","analysis":{"shortest":12,"solutionCount":26,"misleadingBranches":4}},{"size":7,"start":7,"end":46,"beacons":[2,11,25],"obstacles":[43,38,19,15,28,40,26,41,29,0],"currents":{"8":"up","39":"down"},"limit":15,"reference":[7,8,1,2,3,4,11,18,25,32,39,46],"signals":{},"difficulty":"简单","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":11,"solutionCount":47,"misleadingBranches":2}},{"size":7,"start":41,"end":7,"beacons":[31,27,11],"obstacles":[23,28,4,35,6,26,45,42,46,15],"currents":{"10":"left","11":"left","12":"left","34":"up"},"limit":18,"reference":[41,40,39,38,31,32,33,34,27,20,13,12,11,10,9,8,7],"signals":{"34":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":16,"solutionCount":21,"misleadingBranches":6}},{"size":7,"start":20,"end":1,"beacons":[3,22,28],"obstacles":[30,33,43,27,12,41,26,47,4,13],"currents":{"0":"right","2":"down","15":"down","29":"down"},"limit":21,"reference":[20,19,18,11,10,3,2,9,16,23,22,29,36,35,28,21,14,7,0,1],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":19,"solutionCount":22,"misleadingBranches":5}},{"size":7,"start":48,"end":0,"beacons":[24,21,11],"obstacles":[33,12,30,15,34,16],"currents":{"7":"right","22":"down","32":"up","39":"up"},"limit":22,"reference":[48,41,40,39,32,25,24,23,22,29,28,21,14,7,8,9,10,11,4,3,2,1,0],"signals":{"7":{"type":"bridge","beacon":2}},"difficulty":"困难","family":"潮桥时机","focus":"先通过潮桥，再收集会让它关闭的航标。","analysis":{"shortest":22,"solutionCount":4,"misleadingBranches":13}},{"size":7,"start":47,"end":6,"beacons":[13,17,8],"obstacles":[25,48,18,19,34,46],"currents":{"10":"left","11":"left","12":"left","17":"down"},"limit":23,"reference":[47,40,33,26,27,20,13,12,11,10,9,16,17,24,23,22,15,8,1,2,3,4,5,6],"signals":{"9":{"type":"gate","beacon":0}},"difficulty":"困难","family":"航标开闸","focus":"先取得 1 号航标，打开通道，再规划另外两个目标和回程。","analysis":{"shortest":23,"solutionCount":7,"misleadingBranches":12}},{"size":7,"start":34,"end":42,"beacons":[26,48,38],"obstacles":[6,5,18,15,35,30,10,22,45,24],"currents":{"27":"up","36":"down","37":"left","46":"up"},"limit":18,"reference":[34,27,20,19,26,33,40,41,48,47,46,39,38,37,36,43,42],"signals":{"41":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":16,"solutionCount":4,"misleadingBranches":6}},{"size":7,"start":3,"end":47,"beacons":[18,23,38],"obstacles":[9,41,27,8,14,43,26,31,24,7],"currents":{"11":"down","18":"left"},"limit":16,"reference":[3,4,11,18,17,16,23,30,37,38,39,40,47],"signals":{},"difficulty":"简单","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":12,"solutionCount":160,"misleadingBranches":3}},{"size":7,"start":35,"end":6,"beacons":[22,2,3],"obstacles":[0,38,17,7,31,24,39,13,34,40],"currents":{"2":"down","28":"right"},"limit":17,"reference":[35,28,29,22,15,8,1,2,9,10,3,4,5,6],"signals":{},"difficulty":"简单","family":"洋流出口","focus":"先看箭头出口，再决定从哪边接近航标。","analysis":{"shortest":13,"solutionCount":40,"misleadingBranches":6}},{"size":7,"start":34,"end":7,"beacons":[46,27,11],"obstacles":[38,29,42,40,18,36,31,2,3,24],"currents":{"8":"left","9":"left","25":"right","47":"left"},"limit":19,"reference":[34,41,48,47,46,39,32,25,26,27,20,13,12,11,10,9,8,7],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":17,"solutionCount":24,"misleadingBranches":5}},{"size":7,"start":13,"end":47,"beacons":[24,2,31],"obstacles":[33,39,0,34,28,11,8,40,1,7],"currents":{"18":"down","23":"down","30":"right","31":"down"},"limit":20,"reference":[13,20,27,26,25,24,17,10,3,2,9,16,23,30,31,38,45,46,47],"signals":{"3":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":18,"solutionCount":24,"misleadingBranches":7}},{"size":7,"start":48,"end":0,"beacons":[23,9,6],"obstacles":[12,30,10,39,11,15],"currents":{"2":"left","9":"down","13":"up","20":"up"},"limit":26,"reference":[48,41,34,27,26,25,24,23,22,21,14,7,8,9,16,17,18,19,20,13,6,5,4,3,2,1,0],"signals":{"3":{"type":"gate","beacon":1}},"difficulty":"困难","family":"航标开闸","focus":"先取得 2 号航标，打开通道，再规划另外两个目标和回程。","analysis":{"shortest":26,"solutionCount":11,"misleadingBranches":11}},{"size":7,"start":1,"end":45,"beacons":[35,30,18],"obstacles":[20,22,40,39,25,36],"currents":{"11":"down","24":"down","30":"up","42":"right"},"limit":22,"reference":[1,8,15,14,21,28,35,42,43,44,37,30,23,16,9,10,11,18,17,24,31,38,45],"signals":{"16":{"type":"bridge","beacon":2}},"difficulty":"困难","family":"潮桥时机","focus":"先通过潮桥，再收集会让它关闭的航标。","analysis":{"shortest":22,"solutionCount":6,"misleadingBranches":12}},{"size":7,"start":28,"end":4,"beacons":[1,22,39],"obstacles":[45,6,5,43,26,23,40,17,44,35],"currents":{"1":"right","8":"up","11":"up","16":"left"},"limit":22,"reference":[28,21,14,7,0,1,2,9,16,15,22,29,30,31,38,39,32,25,18,11,4],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":20,"solutionCount":24,"misleadingBranches":9}},{"size":7,"start":48,"end":28,"beacons":[39,30,15],"obstacles":[36,41,7,9,32,18,26,25,34,4],"currents":{"15":"left","47":"up"},"limit":16,"reference":[48,47,40,39,38,31,30,23,16,15,14,21,28],"signals":{},"difficulty":"简单","family":"洋流出口","focus":"先看箭头出口，再决定从哪边接近航标。","analysis":{"shortest":12,"solutionCount":62,"misleadingBranches":2}},{"size":7,"start":45,"end":6,"beacons":[30,8,3],"obstacles":[36,29,27,1,39,25,17,19,10,41],"currents":{"9":"up","30":"up"},"limit":17,"reference":[45,38,31,30,23,16,15,8,9,2,3,4,5,6],"signals":{},"difficulty":"简单","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":13,"solutionCount":92,"misleadingBranches":4}},{"size":7,"start":5,"end":46,"beacons":[16,7,23],"obstacles":[35,20,37,34,19,14,43,30,18,47],"currents":{"4":"left","7":"right","8":"down","25":"down"},"limit":21,"reference":[5,12,11,10,17,16,9,2,1,0,7,8,15,22,23,24,25,32,39,46],"signals":{"1":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":19,"solutionCount":28,"misleadingBranches":12}},{"size":7,"start":2,"end":45,"beacons":[8,5,17],"obstacles":[6,28,36,13,33,48,42,39,37,41],"currents":{"1":"left","8":"right","11":"down","18":"left"},"limit":19,"reference":[2,1,0,7,8,9,10,3,4,5,12,19,18,17,24,31,38,45],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":17,"solutionCount":15,"misleadingBranches":8}},{"size":7,"start":7,"end":34,"beacons":[36,45,9],"obstacles":[0,21,8,32,33,5],"currents":{"14":"right","15":"down","17":"left","36":"up"},"limit":27,"reference":[7,14,15,22,23,30,37,36,29,28,35,42,43,44,45,38,31,24,17,16,9,10,11,12,13,20,27,34],"signals":{"31":{"type":"bridge","beacon":2}},"difficulty":"困难","family":"潮桥时机","focus":"先通过潮桥，再收集会让它关闭的航标。","analysis":{"shortest":27,"solutionCount":6,"misleadingBranches":15}},{"size":7,"start":3,"end":43,"beacons":[19,13,41],"obstacles":[0,23,29,14,35,36],"currents":{"10":"left","12":"left","27":"left","34":"down"},"limit":24,"reference":[3,10,9,16,17,18,19,12,11,4,5,6,13,20,27,26,33,34,41,48,47,46,45,44,43],"signals":{"5":{"type":"gate","beacon":0}},"difficulty":"困难","family":"航标开闸","focus":"先取得 1 号航标，打开通道，再规划另外两个目标和回程。","analysis":{"shortest":24,"solutionCount":12,"misleadingBranches":15}},{"size":7,"start":48,"end":5,"beacons":[26,3,19],"obstacles":[7,39,18,9,29,34,43,42,44,32],"currents":{"10":"up","12":"down","20":"up","41":"left"},"limit":19,"reference":[48,41,40,33,26,25,24,17,10,3,4,11,12,19,20,13,6,5],"signals":{"17":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":17,"solutionCount":4,"misleadingBranches":6}},{"size":7,"start":48,"end":6,"beacons":[33,19,4],"obstacles":[17,9,18,37,46,7,13,2,38,36],"currents":{"34":"left","41":"up"},"limit":14,"reference":[48,41,34,33,26,19,12,11,4,5,6],"signals":{},"difficulty":"简单","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":10,"solutionCount":24,"misleadingBranches":4}},{"size":7,"start":20,"end":45,"beacons":[4,24,29],"obstacles":[21,15,33,0,48,9,13,14,10,6],"currents":{"25":"left","29":"right"},"limit":19,"reference":[20,19,12,5,4,11,18,25,24,23,22,29,30,31,38,45],"signals":{},"difficulty":"简单","family":"洋流出口","focus":"先看箭头出口，再决定从哪边接近航标。","analysis":{"shortest":15,"solutionCount":62,"misleadingBranches":7}},{"size":7,"start":0,"end":42,"beacons":[17,29,46],"obstacles":[26,4,3,47,10,21,14,11,15,38],"currents":{"1":"down","8":"right","29":"right","45":"left"},"limit":20,"reference":[0,1,8,9,16,17,24,23,22,29,30,31,32,39,46,45,44,43,42],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":18,"solutionCount":14,"misleadingBranches":6}},{"size":7,"start":44,"end":1,"beacons":[28,37,17],"obstacles":[3,19,46,33,5,23,11,9,40,6],"currents":{"17":"left","28":"up","30":"down","38":"up"},"limit":19,"reference":[44,43,36,35,28,21,22,29,30,37,38,31,24,17,16,15,8,1],"signals":{"29":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":17,"solutionCount":21,"misleadingBranches":5}},{"size":7,"start":13,"end":35,"beacons":[0,30,33],"obstacles":[14,27,3,40,17,44],"currents":{"12":"left","25":"up","31":"up","32":"down"},"limit":26,"reference":[13,12,11,10,9,2,1,0,7,8,15,16,23,30,31,24,25,18,19,26,33,32,39,38,37,36,35],"signals":{"38":{"type":"gate","beacon":1}},"difficulty":"困难","family":"航标开闸","focus":"先取得 2 号航标，打开通道，再规划另外两个目标和回程。","analysis":{"shortest":26,"solutionCount":4,"misleadingBranches":16}},{"size":7,"start":45,"end":13,"beacons":[9,4,32],"obstacles":[3,36,15,31,2,28],"currents":{"5":"down","10":"down","32":"right","37":"up"},"limit":22,"reference":[45,38,37,30,23,16,9,10,17,18,11,4,5,12,19,26,25,32,33,34,27,20,13],"signals":{"12":{"type":"bridge","beacon":2}},"difficulty":"困难","family":"潮桥时机","focus":"先通过潮桥，再收集会让它关闭的航标。","analysis":{"shortest":22,"solutionCount":2,"misleadingBranches":16}},{"size":7,"start":3,"end":21,"beacons":[20,24,1],"obstacles":[22,13,37,31,23,32,38,44,46,28],"currents":{"8":"left","14":"down","17":"left","19":"right"},"limit":20,"reference":[3,4,5,12,19,20,27,26,25,24,17,16,9,2,1,8,7,14,21],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":18,"solutionCount":24,"misleadingBranches":6}},{"size":7,"start":47,"end":6,"beacons":[32,17,11],"obstacles":[21,30,22,45,0,42,3,28,38,35],"currents":{"11":"up","32":"up"},"limit":15,"reference":[47,40,33,32,25,18,17,10,11,4,5,6],"signals":{},"difficulty":"简单","family":"洋流出口","focus":"先看箭头出口，再决定从哪边接近航标。","analysis":{"shortest":11,"solutionCount":156,"misleadingBranches":5}},{"size":7,"start":1,"end":43,"beacons":[17,14,30],"obstacles":[12,5,28,46,7,48,26,4,31,20],"currents":{"2":"right","14":"down"},"limit":18,"reference":[1,2,3,10,17,16,15,14,21,22,23,30,37,44,43],"signals":{},"difficulty":"简单","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":14,"solutionCount":120,"misleadingBranches":6}},{"size":7,"start":42,"end":3,"beacons":[31,16,18],"obstacles":[23,2,39,13,11,34,47,1,7,26],"currents":{"4":"left","15":"right","16":"up","18":"right"},"limit":21,"reference":[42,35,28,21,14,15,16,9,10,17,24,31,32,25,18,19,12,5,4,3],"signals":{"22":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":19,"solutionCount":29,"misleadingBranches":7}},{"size":7,"start":27,"end":0,"beacons":[47,18,16],"obstacles":[38,35,29,45,37,26,6,39,9,8],"currents":{"18":"up","33":"left","40":"up","47":"up"},"limit":19,"reference":[27,34,41,48,47,40,33,32,25,18,11,10,17,16,15,14,7,0],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":17,"solutionCount":13,"misleadingBranches":6}},{"size":7,"start":0,"end":45,"beacons":[36,38,27],"obstacles":[4,2,17,11,22,39],"currents":{"28":"right","35":"down","36":"left","46":"left"},"limit":23,"reference":[0,7,14,21,28,29,36,35,42,43,44,37,38,31,24,25,26,27,34,41,48,47,46,45],"signals":{"32":{"type":"bridge","beacon":2}},"difficulty":"困难","family":"潮桥时机","focus":"先通过潮桥，再收集会让它关闭的航标。","analysis":{"shortest":23,"solutionCount":8,"misleadingBranches":13}},{"size":7,"start":21,"end":27,"beacons":[9,30,4],"obstacles":[44,5,48,28,24,19],"currents":{"9":"left","10":"up","13":"down","22":"down"},"limit":22,"reference":[21,14,7,0,1,2,3,4,11,18,17,16,9,8,15,22,29,30,31,32,25,26,27],"signals":{"22":{"type":"gate","beacon":0}},"difficulty":"困难","family":"航标开闸","focus":"先取得 1 号航标，打开通道，再规划另外两个目标和回程。","analysis":{"shortest":22,"solutionCount":8,"misleadingBranches":11}},{"size":7,"start":42,"end":2,"beacons":[22,0,16],"obstacles":[9,20,34,5,4,31,6,18,38,19],"currents":{"7":"up","16":"right","17":"up","21":"up"},"limit":18,"reference":[42,35,28,29,22,21,14,7,0,1,8,15,16,17,10,3,2],"signals":{"7":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":16,"solutionCount":14,"misleadingBranches":6}},{"size":7,"start":0,"end":42,"beacons":[9,24,37],"obstacles":[20,3,29,14,44,28,41,26,18,40],"currents":{"24":"left","30":"down"},"limit":16,"reference":[0,1,2,9,10,17,24,23,30,37,36,43,42],"signals":{},"difficulty":"简单","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":12,"solutionCount":22,"misleadingBranches":5}},{"size":7,"start":42,"end":4,"beacons":[21,15,10],"obstacles":[32,31,36,45,38,34,44,9,8,41],"currents":{"3":"right","28":"up"},"limit":14,"reference":[42,35,28,21,14,15,16,17,10,3,4],"signals":{},"difficulty":"简单","family":"洋流出口","focus":"先看箭头出口，再决定从哪边接近航标。","analysis":{"shortest":10,"solutionCount":45,"misleadingBranches":1}},{"size":7,"start":41,"end":3,"beacons":[24,22,1],"obstacles":[2,32,42,4,12,36,20,33,28,5],"currents":{"0":"right","8":"right","9":"right","24":"down"},"limit":20,"reference":[41,34,27,26,25,24,31,30,23,22,15,14,7,0,1,8,9,10,3],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":18,"solutionCount":22,"misleadingBranches":8}},{"size":7,"start":34,"end":35,"beacons":[37,9,0],"obstacles":[6,25,5,4,18,20,38,44,42,13],"currents":{"9":"right","10":"up","21":"down","33":"left"},"limit":23,"reference":[34,33,32,31,24,17,16,9,10,3,2,1,0,7,14,21,28,29,30,37,36,35],"signals":{"15":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":21,"solutionCount":26,"misleadingBranches":6}},{"size":7,"start":14,"end":48,"beacons":[32,47,13],"obstacles":[5,28,7,11,24,42],"currents":{"12":"right","26":"up","31":"right","39":"left"},"limit":22,"reference":[14,15,16,17,18,25,32,39,38,45,46,47,40,33,26,19,12,13,20,27,34,41,48],"signals":{"34":{"type":"gate","beacon":1},"45":{"type":"gate","beacon":0}},"difficulty":"困难","family":"双闸联锁","focus":"安排两个取标条件，再串起两座航闸。","analysis":{"shortest":22,"solutionCount":6,"misleadingBranches":11}},{"size":7,"start":44,"end":6,"beacons":[18,5,41],"obstacles":[11,24,28,2,7,16],"currents":{"5":"down","12":"down","33":"down","41":"up"},"limit":22,"reference":[44,37,30,31,32,25,18,17,10,3,4,5,12,19,26,33,40,41,34,27,20,13,6],"signals":{"19":{"type":"bridge","beacon":2}},"difficulty":"困难","family":"潮桥时机","focus":"先通过潮桥，再收集会让它关闭的航标。","analysis":{"shortest":22,"solutionCount":6,"misleadingBranches":14}},{"size":7,"start":1,"end":43,"beacons":[5,11,15],"obstacles":[21,32,40,39,18,23,24,48,20,28],"currents":{"4":"right","5":"right","11":"left","29":"down"},"limit":18,"reference":[1,2,3,4,5,6,13,12,11,10,17,16,15,22,29,36,43],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":16,"solutionCount":12,"misleadingBranches":6}},{"size":7,"start":48,"end":14,"beacons":[33,19,16],"obstacles":[32,8,23,7,29,45,24,0,42,44],"currents":{"19":"left","26":"up"},"limit":14,"reference":[48,41,34,33,26,19,18,17,16,15,14],"signals":{},"difficulty":"简单","family":"洋流出口","focus":"先看箭头出口，再决定从哪边接近航标。","analysis":{"shortest":10,"solutionCount":74,"misleadingBranches":3}},{"size":7,"start":47,"end":2,"beacons":[34,13,11],"obstacles":[39,44,32,38,0,7,1,10,33,31],"currents":{"4":"left","11":"up"},"limit":15,"reference":[47,40,41,34,27,20,13,12,11,4,3,2],"signals":{},"difficulty":"简单","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":11,"solutionCount":16,"misleadingBranches":3}},{"size":7,"start":7,"end":46,"beacons":[35,16,18],"obstacles":[4,24,34,3,5,37,2,17,48,40],"currents":{"10":"right","11":"down","14":"down","25":"down"},"limit":19,"reference":[7,14,21,28,35,36,29,22,15,16,9,10,11,18,25,32,39,46],"signals":{"22":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":17,"solutionCount":29,"misleadingBranches":7}},{"size":7,"start":1,"end":41,"beacons":[6,9,36],"obstacles":[28,18,46,44,24,30,23,21,31,45],"currents":{"2":"right","6":"down","36":"right","39":"right"},"limit":22,"reference":[1,2,3,4,5,6,13,12,11,10,9,16,15,22,29,36,37,38,39,40,41],"signals":{},"difficulty":"标准","family":"回程规划","focus":"先给最后一个航标到灯塔留出未走过的通道。","analysis":{"shortest":20,"solutionCount":12,"misleadingBranches":7}},{"size":7,"start":34,"end":42,"beacons":[9,23,48],"obstacles":[10,3,28,0,19,36],"currents":{"8":"down","22":"down","24":"down","29":"right"},"limit":26,"reference":[34,27,26,25,18,17,16,9,8,15,22,29,30,23,24,31,32,33,40,41,48,47,46,45,44,43,42],"signals":{"38":{"type":"bridge","beacon":2}},"difficulty":"困难","family":"潮桥时机","focus":"先通过潮桥，再收集会让它关闭的航标。","analysis":{"shortest":26,"solutionCount":7,"misleadingBranches":16}},{"size":7,"start":21,"end":48,"beacons":[11,1,12],"obstacles":[33,31,44,25,35,42],"currents":{"1":"right","4":"right","8":"left","12":"down"},"limit":23,"reference":[21,14,15,16,17,18,11,10,9,8,7,0,1,2,3,4,5,12,19,20,27,34,41,48],"signals":{"7":{"type":"gate","beacon":0}},"difficulty":"困难","family":"航标开闸","focus":"先取得 1 号航标，打开通道，再规划另外两个目标和回程。","analysis":{"shortest":23,"solutionCount":8,"misleadingBranches":14}},{"size":7,"start":47,"end":7,"beacons":[24,13,10],"obstacles":[9,44,0,27,19,45,22,48,33,28],"currents":{"3":"down","6":"left","18":"up","31":"up"},"limit":22,"reference":[47,40,39,32,31,24,25,18,11,12,13,6,5,4,3,10,17,16,15,8,7],"signals":{"12":{"type":"gate","beacon":0}},"difficulty":"标准","family":"航标开闸","focus":"先准备开门条件，再连接远处目标和回程。","analysis":{"shortest":20,"solutionCount":16,"misleadingBranches":9}}];
+
 
 const SIZE = 7;
 const PRACTICE_COUNT = 12;
@@ -756,7 +761,11 @@ function dayKey(date = new Date()) {
 
 function dailyBoard(date = new Date()) {
   const key = dayKey(date);
-  return { ...makeBoard(hash(`daily-route:${key}`)), key, mode: 'daily' };
+  // Never change a published date: the new catalogue starts the next Shanghai day.
+  if(key<'2026-11-19')return { ...makeBoard(hash(`daily-route:${key}`)), key, mode: 'daily' };
+  const day=Math.floor((Date.parse(`${key}T00:00:00Z`)-Date.parse('2026-11-16T00:00:00Z'))/86400000);
+  const entry=JSON.parse(JSON.stringify(DAILY_CHARTS[((day%DAILY_CHARTS.length)+DAILY_CHARTS.length)%DAILY_CHARTS.length]));
+  return {...entry,key,mode:'daily',revision:'daily-v2',catalogueIndex:day%DAILY_CHARTS.length};
 }
 
 function practiceBoard(level) {
@@ -994,6 +1003,8 @@ var routeTelemetry = (() => {
   var game_analytics_exports = {};
   __export(game_analytics_exports, {
     createGameTelemetry: () => createGameTelemetry,
+    createRouteTelemetry: () => createRouteTelemetry,
+    invalidReason: () => invalidReason,
     shareURL: () => shareURL,
     showGameShare: () => showGameShare
   });
@@ -1024,6 +1035,65 @@ var routeTelemetry = (() => {
     } catch {
       return "direct";
     }
+  }
+
+  // assets/route-metrics-core.mjs
+  var ROUTE_EVENTS = ["enter", "start", "complete", "hint", "inspect", "reset", "invalid", "leave"];
+  var ROUTE_REASONS = ["", "neighbor", "reef", "signal", "repeat", "current", "budget", "beacon", "blocked", "possible", "unknown", "invalid", "solved", "collision"];
+  function validRouteMetric(d) {
+    return !!d && Object.keys(d).sort().join(",") === "event,game,level,mode,reason,source" && ["route", "twins"].includes(d.game) && ["tutorial", "daily", "practice"].includes(d.mode) && Number.isInteger(d.level) && (d.mode === "practice" ? d.level >= 1 && d.level <= (d.game === "route" ? 12 : 16) : d.mode === "daily" ? d.level >= 0 && d.level <= 3 : d.level === 0) && ["ai6666", "share", "search", "direct", "other", "qa"].includes(d.source) && ROUTE_EVENTS.includes(d.event) && ROUTE_REASONS.includes(d.reason) && (["invalid", "inspect"].includes(d.event) ? d.reason !== "" : d.reason === "");
+  }
+  function invalidReason(message) {
+    if (/相邻/.test(message)) return "neighbor";
+    if (/礁石/.test(message)) return "reef";
+    if (/航闸|潮桥/.test(message)) return "signal";
+    if (/重复/.test(message)) return "repeat";
+    if (/洋流/.test(message)) return "current";
+    if (/预算/.test(message)) return "budget";
+    if (/航标/.test(message)) return "beacon";
+    return "invalid";
+  }
+
+  // assets/route-telemetry.mjs
+  function createRouteTelemetry(game, env = globalThis) {
+    const key = "route:diagnostics:v1";
+    let fallback, current;
+    const get = () => {
+      try {
+        return JSON.parse(env.sessionStorage.getItem(key)) || fallback;
+      } catch {
+        return fallback;
+      }
+    };
+    const put = (s) => {
+      fallback = s;
+      try {
+        env.sessionStorage.setItem(key, JSON.stringify(s));
+      } catch {
+      }
+    };
+    function send(event, reason = "") {
+      if (!current) return;
+      try {
+        if (JSON.parse(env.localStorage.getItem("insights:off")) === true || JSON.parse(env.localStorage.getItem("jimao:metrics-off")) === true) return;
+      } catch {
+      }
+      if (env.location.protocol !== "https:" || !["tylerzhang.xyz", "www.tylerzhang.xyz"].includes(env.location.hostname) || env.location.pathname.startsWith("/prototypes/") || ["1", "yes"].includes(env.navigator.doNotTrack) || env.navigator.globalPrivacyControl === true || new URL(env.location.href).searchParams.get("analytics") === "off") return;
+      const now = Date.now(), day = new Date(now).toISOString().slice(0, 10);
+      let state = get();
+      if (!state || !Array.isArray(state.seen) || !Number.isFinite(state.updated) || state.day !== day || now - state.updated > 18e5) state = { day, updated: now, source: classifySource(env.location.href, env.document.referrer) || "direct", seen: [] };
+      const data = { game, ...current, source: state.source, event, reason }, id = JSON.stringify([game, current.mode, current.level, event, reason]);
+      if (!validRouteMetric(data) || state.seen.includes(id)) return;
+      state.updated = now;
+      state.seen.push(id);
+      put(state);
+      env.fetch("/api/route-metrics", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data), keepalive: true, credentials: "omit", referrerPolicy: "no-referrer" }).catch(() => {
+      });
+    }
+    return { load(mode, level, grade) {
+      current = { mode, level: mode === "practice" ? level : mode === "daily" ? { "\u7B80\u5355": 1, "\u6807\u51C6": 2, "\u56F0\u96BE": 3 }[grade] || 0 : 0 };
+      send("enter");
+    }, send };
   }
 
   // assets/insights/client.mjs
@@ -1202,7 +1272,7 @@ ${url}`;
   return __toCommonJS(game_analytics_exports);
 })();
 
-const {createGameTelemetry,shareURL,showGameShare}=routeTelemetry;
+const {createGameTelemetry,createRouteTelemetry,invalidReason,shareURL,showGameShare}=routeTelemetry;
 // Progress stays on this device. Existing daily scores use their own storage.
 function cleanVoyageProgress(value, count) {
   const clean = {};
@@ -1485,6 +1555,7 @@ const arrow = { up: '↑', right: '→', down: '↓', left: '←' };
 const storageKey = 'daily-route-results:v1';
 const tutorialKey = 'daily-route-tutorial:v1';
 const track = createGameTelemetry('route');
+const diagnostics=createRouteTelemetry('route');
 const boardElement = document.querySelector('[data-board]');
 boardElement.tabIndex = -1;
 const feedback = document.querySelector('[data-feedback]');
@@ -1598,10 +1669,10 @@ function render() {
   document.querySelector('[data-streak]').textContent = String(streak(records, dayKey()));
   document.querySelector('[data-mode-label]').textContent = tutorial ? '新手教学' : mode === 'daily' ? '每日挑战' : `闯关 ${practiceLevel}`;
   document.querySelector('[data-board-title]').textContent = tutorial ? '入门海图' : mode === 'daily' ? `${Number(board.key.slice(5, 7))} 月 ${Number(board.key.slice(8, 10))} 日 · 今日海图` : `第 ${practiceLevel} 关 · ${board.title}`;
-  document.querySelector('[data-board-subtitle]').textContent = tutorial ? '跟着发光的格子前进' : mode === 'daily' ? '今日完成后还能继续闯关' : `${board.difficulty} · ${board.chapter}`;
+  document.querySelector('[data-board-subtitle]').textContent = tutorial ? '跟着发光的格子前进' : mode === 'daily' ? (board.difficulty?`${board.difficulty} · ${board.family}`:'今日完成后还能继续闯关') : `${board.difficulty} · ${board.chapter}`;
   const brief = document.querySelector('[data-level-brief]');
-  brief.hidden = mode !== 'practice';
-  if (mode === 'practice') {
+  brief.hidden = mode === 'tutorial'||!board.analysis;
+  if (mode !== 'tutorial'&&board.analysis) {
     brief.querySelector('strong').textContent = board.limit > board.analysis.shortest ? `预算余量 ${board.limit - board.analysis.shortest} 步` : '预算无余量';
     brief.querySelector('span').textContent = board.focus;
   }
@@ -1644,9 +1715,9 @@ function render() {
     else if (index === board.end) cell.append(icon('end'));
     else if (board.obstacles.includes(index)) cell.append(icon('reef'));
     else if (board.beacons.includes(index)) cell.append(icon('beacon'));
-    else if (board.currents[index]) {
+    if (board.currents[index]) {
       const flow = document.createElement('span');
-      flow.className = 'flow';
+      flow.className = 'flow'+(isHead||board.beacons.includes(index)||board.signals?.[index]?' flow-overlay':'');
       flow.textContent = arrow[board.currents[index]];
       flow.setAttribute('aria-hidden', 'true');
       cell.append(flow);
@@ -1666,7 +1737,7 @@ function render() {
       step.setAttribute('aria-hidden', 'true');
       cell.append(step);
     }
-    cell.setAttribute('aria-label', `${labelFor(index)}${tutorial && !won && board.reference[path.length] === index ? '，教学下一步' : ''}`);
+    cell.setAttribute('aria-label', `${labelFor(index)}${board.currents[index]?`，洋流出口向${{up:"上",right:"右",down:"下",left:"左"}[board.currents[index]]}`:""}${tutorial && !won && board.reference[path.length] === index ? '，教学下一步' : ''}`);
     cell.setAttribute('aria-pressed', String(position >= 0));
   }
 }
@@ -1684,18 +1755,22 @@ function finish() {
   stopClock();
   storeWin();
   if (mode === 'practice') voyage.win(practiceLevel, { steps: path.length - 1, hints });
-  track(`${mode}_complete`);
+  track(`${mode}_complete`);diagnostics.send('complete');
   if (mode === 'tutorial') {
     try { localStorage.setItem(tutorialKey, 'done'); } catch { /* Playable without storage. */ }
   }
   document.querySelector('[data-finish-title]').textContent = mode === 'tutorial' ? '已学会航行' : '顺利靠岸';
   document.querySelector('[data-finish-score]').textContent = `${path.length - 1} / ${board.limit} 步`;
-  document.querySelector('[data-finish-description]').textContent = mode === 'tutorial' ? '已经掌握航行规则，开启你的闯关航程吧。' : mode === 'daily' ? `${board.key} 每日挑战完成，还可以继续闯关。` : `第 ${practiceLevel} 关完成${practiceLevel < PRACTICE_COUNT ? '，下一片海等你探索。' : '，这段航程抵达终点！'}`;
+  document.querySelector('[data-finish-description]').textContent = mode === 'tutorial' ? '已经掌握航行规则，开启你的闯关航程吧。' : mode === 'daily' ? `${board.key} 每日挑战完成，还可以继续闯关。` : `第 ${practiceLevel} 关完成${practiceLevel < PRACTICE_COUNT ? `，下关练习：${practiceBoard(practiceLevel+1).focus}` : '，这段航程抵达终点！'}`;
   document.querySelector('[data-finish-detail]').textContent = `航标 3 / 3 · 辅助 ${hints} / 3 · 用时 ${clockText(elapsed)}${mode === 'practice' ? `。本关最短 ${board.analysis.shortest} 步，预算内共 ${board.analysis.solutionCount} 条可行航线。` : ''}`;
   document.querySelector('[data-dialog-share]').textContent = mode === 'tutorial' ? '分享游戏' : '分享成绩';
   const replay = document.querySelector('[data-replay]');
   replay.hidden = mode === 'tutorial';
   if (mode !== 'tutorial') replay.href = mode === 'daily' ? `/replay/?game=route&date=${board.key}` : `/replay/?game=route&level=${practiceLevel}`;
+  const lesson=document.querySelector('[data-next-lesson]');
+  const lessons={2:['route-currents','复盘洋流出口'],8:['route-beacons','复盘回程规划'],11:['signals','复盘潮桥时机']};
+  const topic=mode==='practice'?lessons[practiceLevel]:null;
+  lesson.href=topic?`/guides/${topic[0]}`:'/guides/';lesson.textContent=topic?topic[1]:'练五个规划方法';
   document.querySelector('[data-dialog-practice]').textContent = mode === 'practice' ? practiceLevel < PRACTICE_COUNT ? `下一关 · 第 ${practiceLevel + 1} 关 →` : '查看关卡地图' : `继续闯关 · 第 ${voyage.next()} 关 →`;
   message(mode === 'tutorial' ? '教学完成，现在可以独立规划今日航线。' : '航线完成，所有航标都已收齐。');
   render();
@@ -1711,7 +1786,7 @@ function move(target) {
     return;
   }
   const result = advance(board, path, target);
-  if (result.status === 'invalid') { message(result.message, 'warn'); motion.invalid(); return; }
+  if (result.status === 'invalid') { diagnostics.send('invalid',invalidReason(result.message));message(result.message, 'warn'); motion.invalid(); return; }
   if (result.status === 'backtrack') {
     const previous = path.at(-1);
     path = result.path;
@@ -1727,7 +1802,7 @@ function move(target) {
   path = result.path;
   hintTarget = null;
   track('move');
-  if (!started) { track(`${mode}_start`); started = true; }
+  if (!started) { track(`${mode}_start`);diagnostics.send('start'); started = true; }
   if (result.status === 'solved') { finish(); motion.sail(previous, target, '.vessel', true); return; }
   startClock();
   message(mode === 'tutorial' ? tutorialInstruction() : board.beacons.includes(target) ? '收集到航标，继续向灯塔前进。' : '航线已延伸。');
@@ -1740,6 +1815,7 @@ function loadBoard(nextMode = mode, level = practiceLevel) {
   motion.cancelFinish();
   stopClock();
   if (dialog.open) dialog.close();
+  if(started&&!won)diagnostics.send('leave');
   mode = nextMode;
   practiceLevel = level;
   board = mode === 'tutorial' ? tutorialBoard() : mode === 'daily' ? dailyBoard() : practiceBoard(practiceLevel);
@@ -1757,8 +1833,9 @@ function loadBoard(nextMode = mode, level = practiceLevel) {
       elapsed = saved.elapsed;
       won = true;
       message('今日航线已完成。点击上方“开始闯关”，还有 12 张海图可玩。');
-    } else message('从左侧码头出发，点击相邻格开始画线。');
+    } else message('找到码头与灯塔，先观察剩余航标和机关，再点击相邻格画线。');
   } else message(mode === 'tutorial' ? tutorialInstruction() : `第 ${practiceLevel} 关已载入。通关后可直接前往下一关。`);
+  diagnostics.load(mode,practiceLevel,board.difficulty);
   voyage.update(mode === 'practice' ? practiceLevel : null);
   render();
   motion.enter();
@@ -1766,6 +1843,7 @@ function loadBoard(nextMode = mode, level = practiceLevel) {
 }
 
 function reset() {
+  diagnostics.send('reset');
   motion.cancelFinish();
   motion.clear();
   stopClock();
@@ -1797,8 +1875,8 @@ function undo() {
 function hint() {
   if (mode === 'tutorial' || hints >= 3 || won) return;
   const next = findHint(board, path);
-  if (next === null) { message('当前路线已无法在预算内完成，先撤回几步。', 'warn'); return; }
-  hints += 1;
+  if (next === null) { message('当前搜索没有找到下一步，可能是分支受阻或搜索达到上限。可先检查局面，再撤回尝试。', 'warn'); return; }
+  hints += 1;diagnostics.send('hint');
   hintTarget = next;
   message('下一步可行位置已在棋盘上标记。');
   render();
@@ -1878,9 +1956,11 @@ inspection.addEventListener('click',()=>{
   const note=document.querySelector('[data-inspect-note]');
   if(mode==='tutorial'){note.textContent='教学会标出下一步。完成教学后，再独立检查每日题或闯关局面。';return;}
   if(hints>=3){note.textContent='本局三次辅助已用完，可以撤回继续尝试。';return;}
-  const result=inspectRoute(board,path);if(result.status!=='unknown'&&result.status!=='solved')hints+=1;
+  const result=inspectRoute(board,path);diagnostics.send('inspect',result.status);if(result.status!=='unknown'&&result.status!=='solved')hints+=1;
   note.textContent=result.message+(result.status==='unknown'||result.status==='solved'?'':'（记一次辅助，和下一步提示共用三次额度。）');render();
 });
+
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&started&&!won)diagnostics.send('leave');});
 
 </script>
 </body>

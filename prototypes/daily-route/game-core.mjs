@@ -1,4 +1,5 @@
 import { ROUTE_LEVELS } from './route-levels.mjs';
+import { DAILY_CHARTS } from './daily-charts.mjs';
 
 export const SIZE = 7;
 export const PRACTICE_COUNT = 12;
@@ -112,7 +113,11 @@ export function dayKey(date = new Date()) {
 
 export function dailyBoard(date = new Date()) {
   const key = dayKey(date);
-  return { ...makeBoard(hash(`daily-route:${key}`)), key, mode: 'daily' };
+  // Never change a published date: the new catalogue starts the next Shanghai day.
+  if(key<'2026-11-19')return { ...makeBoard(hash(`daily-route:${key}`)), key, mode: 'daily' };
+  const day=Math.floor((Date.parse(`${key}T00:00:00Z`)-Date.parse('2026-11-16T00:00:00Z'))/86400000);
+  const entry=JSON.parse(JSON.stringify(DAILY_CHARTS[((day%DAILY_CHARTS.length)+DAILY_CHARTS.length)%DAILY_CHARTS.length]));
+  return {...entry,key,mode:'daily',revision:'daily-v2',catalogueIndex:day%DAILY_CHARTS.length};
 }
 
 export function practiceBoard(level) {

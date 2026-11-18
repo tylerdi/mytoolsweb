@@ -102,7 +102,7 @@ function render() {
       else if (index === board.start) tile.append(icon('/prototypes/daily-route/assets/dock.svg'));
       else if (index === board.end) { tile.classList.add('goal'); tile.append(icon('/prototypes/daily-route/assets/lighthouse.svg')); }
       else if (board.beacons.includes(index)) { tile.classList.add('beacon'); tile.append(icon('/prototypes/daily-route/assets/beacon.svg')); }
-      else if (board.currents[index]) { tile.classList.add('current'); const flow = document.createElement('span'); flow.className = 'flow'; flow.textContent = { up: '↑', right: '→', down: '↓', left: '←' }[board.currents[index]]; tile.append(flow); }
+      if (board.currents[index]) { tile.classList.add('current'); const flow = document.createElement('span'); flow.className = 'flow'+(index===board.reference[step]||board.beacons.includes(index)||board.signals?.[index]?' flow-overlay':''); flow.textContent = { up: '↑', right: '→', down: '↓', left: '←' }[board.currents[index]]; tile.append(flow); }
       if (position >= 0) {
         tile.classList.add('path');
         const number = document.createElement('span'); number.className = 'number'; number.textContent = String(position); tile.append(number);
@@ -110,7 +110,7 @@ function render() {
       const signal=signalState(board,index,board.reference.slice(0,step+1));
       if(signal){tile.classList.add('signal-tile',signal.type,signal.open?'signal-open':'signal-closed');const label=document.createElement('span');label.className='signal-symbol';label.textContent=`${signal.type==='gate'?'闸':'桥'} ${signal.beacon+1}`;tile.append(label);}
       if(Object.keys(board.signals||{}).length&&board.beacons.includes(index)){const badge=document.createElement('span');badge.className='beacon-number';badge.textContent=String(board.beacons.indexOf(index)+1);tile.append(badge);}
-      tile.setAttribute('aria-label', `第 ${Math.floor(index / size) + 1} 行第 ${index % size + 1} 列${signal?`，${signal.beacon+1} 号${signal.type==='gate'?'航闸':'潮桥'}，${signal.open?'开启':'关闭'}`:''}${position >= 0 ? `，航线第 ${position} 步` : ''}`);
+      tile.setAttribute('aria-label', `第 ${Math.floor(index / size) + 1} 行第 ${index % size + 1} 列${board.currents[index]?`，洋流向${{up:'上',right:'右',down:'下',left:'左'}[board.currents[index]]}`:''}${signal?`，${signal.beacon+1} 号${signal.type==='gate'?'航闸':'潮桥'}，${signal.open?'开启':'关闭'}`:''}${position >= 0 ? `，航线第 ${position} 步` : ''}`);
     } else {
       const state = positions[step];
       const labels = [];

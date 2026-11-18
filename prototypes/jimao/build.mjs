@@ -11,6 +11,7 @@ const replaceOnce=(source,from,to)=>{if(source.split(from).length!==2)throw new 
 export async function buildSite(){
  await rm(out,{recursive:true,force:true});await mkdir(out,{recursive:true});
  await cp(new URL('../../assets/insights/',base),new URL('assets/insights/',out),{recursive:true});await mkdir(new URL('metrics/',out),{recursive:true});await copyFile(new URL('../../metrics.html',base),new URL('metrics/index.html',out));
+ await copyFile(new URL('../../assets/route-diagnostics-dashboard.mjs',base),new URL('assets/route-diagnostics-dashboard.mjs',out));
  const source=await read('source.html'),style=source.match(/<style>([\s\S]*?)<\/style>/)[1],raw=source.match(/<script>([\s\S]*?)<\/script>/)[1];
  let engine=(await transform(raw,{charset:'utf8',minify:false})).code;
  engine=replaceOnce(engine,'t.game = mM(t);','t.game = mM(t); window.Jimao.bind(t);');
