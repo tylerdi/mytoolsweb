@@ -9,6 +9,8 @@ const games = {
   corner: { name: '这是什么的一角', kind: '看图猜物', puzzles: corner },
 };
 const puzzleUrl = (base, game, puzzle) => base + 'play/' + game + '-' + puzzle.id + '.html';
+const catalogUrl = (base, game) => base + game + '.html';
+const progressId = (game, puzzle) => `${game}-${puzzle.id}${puzzle.revision ? '-r' + puzzle.revision : ''}`;
 
 function page({ title, description, main, base = './', active = '', bodyClass = '' }) {
   return `<!doctype html>
@@ -29,7 +31,7 @@ function page({ title, description, main, base = './', active = '', bodyClass = 
     <div class="wrap header-inner">
       <a class="brand" href="${base}index.html"><span class="brand-mark" aria-hidden="true">✦</span> 三分钟谜题社</a>
       <nav aria-label="游戏导航">
-        ${Object.entries(games).map(([key, game]) => `<a ${active === key ? 'aria-current="true"' : ''} href="${puzzleUrl(base, key, game.puzzles[0])}">${game.name}</a>`).join('')}
+        ${Object.entries(games).map(([key, game]) => `<a ${active === key ? 'aria-current="true"' : ''} href="${catalogUrl(base, key)}">${game.name}</a>`).join('')}
       </nav>
     </div>
   </header>
@@ -44,9 +46,12 @@ function page({ title, description, main, base = './', active = '', bodyClass = 
 function card(game, className, mark, headline, description) {
   const info = games[game];
   return `<article class="game-card ${className}">
-  <div class="card-top"><span>${info.kind} <span aria-hidden="true">·</span> 6 题</span><span class="card-mark" aria-hidden="true">${mark}</span></div>
+  <div class="card-top"><span>${info.kind} <span aria-hidden="true">·</span> ${info.puzzles.length} 题</span><span class="card-mark" aria-hidden="true">${mark}</span></div>
   <h3>${headline}</h3><p>${description}</p>
-  <a class="button" href="${puzzleUrl('./', game, info.puzzles[0])}">开始${info.kind === '线索推理' ? '推理' : '猜图'} <span aria-hidden="true">↗</span></a>
+  <div class="card-actions">
+    <a class="button" href="${puzzleUrl('./', game, info.puzzles[0])}">开始${info.kind === '线索推理' ? '推理' : '猜图'} <span aria-hidden="true">↗</span></a>
+    <a class="button secondary" href="${catalogUrl('./', game)}" aria-label="${info.name}选题">选题</a>
+  </div>
 </article>`;
 }
 
@@ -109,7 +114,12 @@ function choices(items) {
 }
 
 function spotContent(puzzle) {
-  return `<div class="instruction"><b>已知事实</b><p>${e(puzzle.rules)}</p></div>
+  const facts = [
+    puzzle.rules && `<p>${e(puzzle.rules)}</p>`,
+    puzzle.facts && evidenceList(puzzle.facts),
+  ].filter(Boolean).join('\n      ');
+  return `<div class="instruction"><b>已知事实</b>${facts}
+    </div>
     ${choices(puzzle.clues.map(([time, label, text]) =>
       `<span class="clue-meta">${e(time)} <span aria-hidden="true">·</span> ${e(label)}</span><span class="clue-text">${e(text)}</span>`))}`;
 }
@@ -123,22 +133,54 @@ function cornerContent(puzzle) {
     ${choices(puzzle.options.map(e))}`;
 }
 
+function evidenceList(items) {
+  return `<dl class="evidence-list">
+    ${items.map(([label, detail]) => `<div><dt>${e(label)}</dt><dd>${e(detail)}</dd></div>`).join('')}
+  </dl>`;
+}
+
 function answerContent(game, puzzle) {
   if (game === 'corner') {
     return `<figure class="reveal"><img loading="lazy" src="../assets/${puzzle.id}-full.webp" alt="${e(puzzle.alt)}" width="800" height="600"></figure>
     <p><strong>${e(puzzle.options[puzzle.answer])}</strong>。 ${e(puzzle.explanation)}</p>`;
   }
-  return `<p><strong>${letters[puzzle.answer]} · ${e(puzzle.clues[puzzle.answer][1])}</strong>的说法对不上。 ${e(puzzle.explanation)}</p>`;
+  return [
+    `<p><strong>${letters[puzzle.answer]} · ${e(puzzle.clues[puzzle.answer][1])}</strong>的说法对不上。</p>`,
+    puzzle.proof && evidenceList(puzzle.proof),
+    `<p>${e(puzzle.explanation)}</p>`,
+  ].filter(Boolean).join('\n    ');
 }
 
 for (const [key, game] of Object.entries(games)) {
   const other = key === 'spot' ? 'corner' : 'spot';
   const base = '../';
+  const catalogDescription = key === 'spot'
+    ? '对照两条或三条线索，指出哪条说法对不上。答完可以查看证据。'
+    : '先看静物的一小块。需要提示时可以扩大范围，最后揭晓整张插画。';
+
+  await write(key + '.html', page({
+    active: key, bodyClass: 'catalog-page ' + key,
+    title: '选题 · ' + game.name,
+    description: catalogDescription,
+    main: `
+  <div class="play-wrap">
+    <div class="play-path"><a href="./index.html#games">所有玩法</a></div>
+    <h1>${game.name}</h1>
+    <p class="play-intro">${catalogDescription}</p>
+    <div class="catalog-heading"><h2>全部 ${game.puzzles.length} 题</h2><a class="plain-link" href="${catalogUrl('./', other)}">换个玩法 <span aria-hidden="true">↗</span></a></div>
+    <ol class="question-list" aria-label="${game.name}题目">
+      ${game.puzzles.map((puzzle, index) => `<li><a href="${puzzleUrl('./', key, puzzle)}" data-question="${progressId(key, puzzle)}">
+        <span class="question-number">${String(index + 1).padStart(2, '0')}</span>
+        <span class="question-title"><strong>${e(puzzle.title)}</strong>${puzzle.scene ? `<span>${e(puzzle.scene)}</span>` : ''}</span>
+        <small data-done hidden>已答</small><span class="question-arrow" aria-hidden="true">→</span>
+      </a></li>`).join('')}
+    </ol>
+  </div>`,
+  }));
 
   for (const [index, puzzle] of game.puzzles.entries()) {
     const number = index + 1;
     const last = number === game.puzzles.length;
-    const list = game.puzzles.map((item, i) => `<li><a ${item === puzzle ? 'aria-current="page"' : ''} href="${puzzleUrl(base, key, item)}" data-question="${key}-${item.id}"><span>${i + 1}</span> ${e(item.title)}<small data-done hidden>已答</small></a></li>`).join('');
     const review = answerContent(key, puzzle);
     const instruction = key === 'spot' ? puzzle.intro + ' 找出与事实不符的一条。' : '观察局部插画，猜猜它是什么。你也可以先多看一点。';
     await write('play/' + key + '-' + puzzle.id + '.html', page({
@@ -148,10 +190,10 @@ for (const [key, game] of Object.entries(games)) {
       main: `
   <div class="play-wrap">
     <div class="play-path"><a href="../index.html#games">所有玩法</a><span aria-hidden="true">/</span><span>${game.name}</span></div>
-    <div class="play-meta"><span>${game.kind}${puzzle.scene ? ' · ' + e(puzzle.scene) : ''}</span><span>第 ${number} / ${game.puzzles.length} 题</span></div>
+    <div class="play-meta"><span>${game.kind}${puzzle.scene ? ' · ' + e(puzzle.scene) : ''}</span><div>第 ${number} / ${game.puzzles.length} 题 <a href="${catalogUrl(base, key)}">选题</a></div></div>
     <h1>${e(puzzle.title)}</h1>
     <p class="play-intro">${e(instruction)}</p>
-    <form data-puzzle data-key="${key}-${puzzle.id}" data-answer="${puzzle.answer}" data-evidence="${(puzzle.evidence ?? []).join(',')}">
+    <form data-puzzle data-key="${progressId(key, puzzle)}" data-answer="${puzzle.answer}" data-evidence="${(puzzle.evidence ?? []).join(',')}">
       ${key === 'spot' ? spotContent(puzzle) : cornerContent(puzzle)}
       <div class="actions"><button type="submit" class="button primary" data-submit hidden>确认答案</button></div>
     </form>
@@ -162,15 +204,11 @@ for (const [key, game] of Object.entries(games)) {
       <button class="hint" type="button" data-retry>重玩本题</button>
     </section>
     <div class="play-actions">
-      <a class="button ${last ? '' : 'primary'}" href="${last ? '#questions' : puzzleUrl(base, key, game.puzzles[index + 1])}" ${last ? 'data-questions-link' : ''}>${last ? '返回选题' : '再来一题'} <span aria-hidden="true">→</span></a>
+      <a class="button ${last ? '' : 'primary'}" href="${last ? catalogUrl(base, key) : puzzleUrl(base, key, game.puzzles[index + 1])}">${last ? '返回选题' : '再来一题'} <span aria-hidden="true">→</span></a>
       <a class="button" href="${puzzleUrl(base, other, games[other].puzzles[0])}">换个玩法</a>
       <button class="hint" type="button" data-share hidden>分享本题</button>
       <div class="share-panel" data-share-panel hidden><label for="share-url">复制链接发给朋友</label><input id="share-url" readonly><span role="status" data-share-status></span></div>
     </div>
-    <details class="questions" id="questions">
-      <summary>本玩法全部 6 题</summary>
-      <ol>${list}</ol>
-    </details>
   </div>`,
     }));
   }

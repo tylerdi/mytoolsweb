@@ -1,9 +1,6 @@
 (() => {
   const form = document.querySelector('[data-puzzle]');
-  if (!form) return;
-
   const key = 'three-minute-puzzles:v1:';
-  const puzzleKey = key + form.dataset.key;
   const load = (name) => {
     try {
       return localStorage.getItem(name);
@@ -11,6 +8,21 @@
       return null;
     }
   };
+
+  const questions = [...document.querySelectorAll('[data-question]')];
+  if (questions.length) {
+    const showProgress = () => {
+      for (const link of questions) {
+        link.querySelector('[data-done]').hidden = load(key + link.dataset.question) === null;
+      }
+    };
+    showProgress();
+    // Back navigation can restore the catalog without executing this script again.
+    window.addEventListener('pageshow', showProgress);
+  }
+
+  if (!form) return;
+  const puzzleKey = key + form.dataset.key;
   const save = (value) => {
     try {
       if (value === null) localStorage.removeItem(puzzleKey);
@@ -31,16 +43,6 @@
   const pictureNote = form.querySelector('[data-picture-note]');
   const firstPicture = picture?.getAttribute('src');
   const firstCaption = picture?.alt;
-  const questions = document.getElementById('questions');
-
-  function updateQuestionList() {
-    for (const link of questions.querySelectorAll('[data-question]')) {
-      const saved = load(key + link.dataset.question);
-      const state = link.querySelector('[data-done]');
-      state.hidden = saved === null;
-    }
-  }
-
   function reveal(selected, focus = true) {
     const correct = selected === answer;
     verdict.textContent = correct ? '猜对了' : '看看答案';
@@ -81,7 +83,6 @@
     if (selected < 0 || !result.hidden) return;
     save(selected);
     reveal(selected);
-    updateQuestionList();
   });
 
   result.querySelector('[data-retry]').addEventListener('click', () => {
@@ -97,18 +98,12 @@
       hint.hidden = false;
       showPicture(false);
     }
-    updateQuestionList();
     options[0].focus();
   });
 
   const saved = load(puzzleKey);
   const index = options.findIndex((option) => option.value === saved);
   if (index >= 0) reveal(index, false);
-  updateQuestionList();
-
-  document.querySelector('[data-questions-link]')?.addEventListener('click', () => {
-    questions.open = true;
-  });
 
   const share = document.querySelector('[data-share]');
   const sharePanel = document.querySelector('[data-share-panel]');

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>拍立得少了一张吗？ · 一眼穿帮</title>
-  <meta name="description" content="同一盒相纸还有多少张，三张便签给出了不同视角。 找出与事实不符的一条。">
+  <title>白边上有个暗记 · 一眼穿帮</title>
+  <meta name="description" content="两台即拍相机拍了同一只橙色杯子。三张登记卡里有一张写出了不可能的组合。 找出与事实不符的一条。">
   <meta name="theme-color" content="#f5f2e9">
   <link rel="icon" href="../assets/icon.png" type="image/png">
   <link rel="stylesheet" href="../assets/site.css">
@@ -16,52 +16,60 @@
     <div class="wrap header-inner">
       <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">✦</span> 三分钟谜题社</a>
       <nav aria-label="游戏导航">
-        <a aria-current="true" href="../play/spot-lunch.html">一眼穿帮</a><a  href="../play/corner-tape.html">这是什么的一角</a>
+        <a aria-current="true" href="../spot.html">一眼穿帮</a><a  href="../corner.html">这是什么的一角</a>
       </nav>
     </div>
   </header>
   <main id="main" class="wrap">
   <div class="play-wrap">
     <div class="play-path"><a href="../index.html#games">所有玩法</a><span aria-hidden="true">/</span><span>一眼穿帮</span></div>
-    <div class="play-meta"><span>线索推理 · 周末手作</span><span>第 6 / 6 题</span></div>
-    <h1>拍立得少了一张吗？</h1>
-    <p class="play-intro">同一盒相纸还有多少张，三张便签给出了不同视角。 找出与事实不符的一条。</p>
-    <form data-puzzle data-key="spot-film" data-answer="2" data-evidence="0,1,2">
-      <div class="instruction"><b>已知事实</b><p>开场确认盒里有 10 张相纸。每次按快门都会消耗 1 张，包含失败的拍摄。没有更换或追加相纸。</p></div>
+    <div class="play-meta"><span>线索推理 · 周末手作</span><div>第 6 / 6 题 <a href="../spot.html">选题</a></div></div>
+    <h1>白边上有个暗记</h1>
+    <p class="play-intro">两台即拍相机拍了同一只橙色杯子。三张登记卡里有一张写出了不可能的组合。 找出与事实不符的一条。</p>
+    <form data-puzzle data-key="spot-film-r2" data-answer="1" data-evidence="0,2">
+      <div class="instruction"><b>已知事实</b><p>相纸没有互换，照片未经上色或涂改。三张照片都能看到杯子。</p>
+      <dl class="evidence-list">
+    <div><dt>相纸盒背面</dt><dd>蓝机照片的白边印着两道短杠。红机照片的白边印着一个圆点。</dd></div><div><dt>现场装片记录</dt><dd>蓝机只装了黑白相纸。红机只装了彩色相纸。</dd></div>
+  </dl>
+    </div>
     <fieldset class="choices">
       <legend>选一个答案</legend>
       <label class="choice">
         <input type="radio" name="answer" value="0" required>
         <span class="choice-letter">A</span>
-        <span><span class="clue-meta">14:05 <span aria-hidden="true">·</span> 第一轮</span><span class="clue-text">按了 3 次快门，其中 1 张曝光失败。</span></span>
+        <span><span class="clue-meta">照片一 <span aria-hidden="true">·</span> 登记卡一</span><span class="clue-text">白边有两道短杠，杯子只呈现灰色。</span></span>
       </label><label class="choice">
         <input type="radio" name="answer" value="1" required>
         <span class="choice-letter">B</span>
-        <span><span class="clue-meta">14:15 <span aria-hidden="true">·</span> 第二轮</span><span class="clue-text">又按了 2 次快门，两张都成功。</span></span>
+        <span><span class="clue-meta">照片二 <span aria-hidden="true">·</span> 登记卡二</span><span class="clue-text">白边有两道短杠，杯子在照片里呈橙色。</span></span>
       </label><label class="choice">
         <input type="radio" name="answer" value="2" required>
         <span class="choice-letter">C</span>
-        <span><span class="clue-meta">14:18 <span aria-hidden="true">·</span> 收纳便签</span><span class="clue-text">成功照片有 4 张，所以盒里剩 6 张。</span></span>
+        <span><span class="clue-meta">照片三 <span aria-hidden="true">·</span> 登记卡三</span><span class="clue-text">白边有一个圆点，杯子在照片里呈橙色。</span></span>
       </label>
     </fieldset>
       <div class="actions"><button type="submit" class="button primary" data-submit hidden>确认答案</button></div>
     </form>
-    <noscript><details class="answer"><summary>打开答案与解析</summary><p><strong>C · 收纳便签</strong>的说法对不上。 成功照片确实是 4 张，但失败的那张同样消耗了相纸。共按了 3 + 2 = 5 次快门，所以盒里还剩 5 张。</p></details></noscript>
+    <noscript><details class="answer"><summary>打开答案与解析</summary><p><strong>B · 登记卡二</strong>的说法对不上。</p>
+    <dl class="evidence-list">
+    <div><dt>白边的两道短杠</dt><dd>照片二来自蓝机。</dd></div><div><dt>蓝机只装了黑白相纸</dt><dd>照片中可以看到杯子的明暗，无法呈现橙色。</dd></div>
+  </dl>
+    <p>照片二同时写了蓝机暗记和彩色成像，这两点无法同时成立。照片一符合蓝机的特征，照片三符合红机的特征。</p></details></noscript>
     <section class="answer" data-result hidden aria-labelledby="result-title">
       <h2 id="result-title" tabindex="-1" data-verdict>答案与解析</h2>
-      <p><strong>C · 收纳便签</strong>的说法对不上。 成功照片确实是 4 张，但失败的那张同样消耗了相纸。共按了 3 + 2 = 5 次快门，所以盒里还剩 5 张。</p>
+      <p><strong>B · 登记卡二</strong>的说法对不上。</p>
+    <dl class="evidence-list">
+    <div><dt>白边的两道短杠</dt><dd>照片二来自蓝机。</dd></div><div><dt>蓝机只装了黑白相纸</dt><dd>照片中可以看到杯子的明暗，无法呈现橙色。</dd></div>
+  </dl>
+    <p>照片二同时写了蓝机暗记和彩色成像，这两点无法同时成立。照片一符合蓝机的特征，照片三符合红机的特征。</p>
       <button class="hint" type="button" data-retry>重玩本题</button>
     </section>
     <div class="play-actions">
-      <a class="button " href="#questions" data-questions-link>返回选题 <span aria-hidden="true">→</span></a>
+      <a class="button " href="../spot.html">返回选题 <span aria-hidden="true">→</span></a>
       <a class="button" href="../play/corner-tape.html">换个玩法</a>
       <button class="hint" type="button" data-share hidden>分享本题</button>
       <div class="share-panel" data-share-panel hidden><label for="share-url">复制链接发给朋友</label><input id="share-url" readonly><span role="status" data-share-status></span></div>
     </div>
-    <details class="questions" id="questions">
-      <summary>本玩法全部 6 题</summary>
-      <ol><li><a  href="../play/spot-lunch.html" data-question="spot-lunch"><span>1</span> 谁先动了封口贴？<small data-done hidden>已答</small></a></li><li><a  href="../play/spot-elevator.html" data-question="spot-elevator"><span>2</span> 电梯里的合照<small data-done hidden>已答</small></a></li><li><a  href="../play/spot-books.html" data-question="spot-books"><span>3</span> 书架上的空位<small data-done hidden>已答</small></a></li><li><a  href="../play/spot-labels.html" data-question="spot-labels"><span>4</span> 谁写错了杯贴？<small data-done hidden>已答</small></a></li><li><a  href="../play/spot-queue.html" data-question="spot-queue"><span>5</span> 排在门口的三个人<small data-done hidden>已答</small></a></li><li><a aria-current="page" href="../play/spot-film.html" data-question="spot-film"><span>6</span> 拍立得少了一张吗？<small data-done hidden>已答</small></a></li></ol>
-    </details>
   </div></main>
   <footer class="site-footer">
     <div class="wrap footer-inner"><a href="../index.html">三分钟谜题社</a><a href="../about.html">关于题目与隐私</a></div>

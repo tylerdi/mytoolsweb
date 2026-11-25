@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>电梯里的合照 · 一眼穿帮</title>
-  <meta name="description" content="三个人描述同一趟电梯，控制面板留下了记录。 找出与事实不符的一条。">
+  <meta name="description" content="相机慢了两分钟。把两只钟对齐，再看谁说错了。 找出与事实不符的一条。">
   <meta name="theme-color" content="#f5f2e9">
   <link rel="icon" href="../assets/icon.png" type="image/png">
   <link rel="stylesheet" href="../assets/site.css">
@@ -16,52 +16,59 @@
     <div class="wrap header-inner">
       <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">✦</span> 三分钟谜题社</a>
       <nav aria-label="游戏导航">
-        <a aria-current="true" href="../play/spot-lunch.html">一眼穿帮</a><a  href="../play/corner-tape.html">这是什么的一角</a>
+        <a aria-current="true" href="../spot.html">一眼穿帮</a><a  href="../corner.html">这是什么的一角</a>
       </nav>
     </div>
   </header>
   <main id="main" class="wrap">
   <div class="play-wrap">
     <div class="play-path"><a href="../index.html#games">所有玩法</a><span aria-hidden="true">/</span><span>一眼穿帮</span></div>
-    <div class="play-meta"><span>线索推理 · 下班时分</span><span>第 2 / 6 题</span></div>
+    <div class="play-meta"><span>线索推理 · 下班时分</span><div>第 2 / 6 题 <a href="../spot.html">选题</a></div></div>
     <h1>电梯里的合照</h1>
-    <p class="play-intro">三个人描述同一趟电梯，控制面板留下了记录。 找出与事实不符的一条。</p>
-    <form data-puzzle data-key="spot-elevator" data-answer="1" data-evidence="1">
-      <div class="instruction"><b>已知事实</b><p>这是一部检修电梯。整个行程只在 1 楼和 7 楼停靠并开门，中间没有停。合照里三个人拍照时都在轿厢内。</p></div>
+    <p class="play-intro">相机慢了两分钟。把两只钟对齐，再看谁说错了。 找出与事实不符的一条。</p>
+    <form data-puzzle data-key="spot-elevator-r2" data-answer="1" data-evidence="2">
+      <div class="instruction"><b>已知事实</b><dl class="evidence-list">
+    <div><dt>相机记录</dt><dd>轿厢内的合照显示 18:03。核对后发现相机比电梯时钟慢 2 分钟。小周、小许、小陈三人都在照片里。</dd></div><div><dt>电梯日志</dt><dd>电梯在 1 楼 18:04 关门，18:06 到 4 楼开门，18:08 到 7 楼开门。这趟只停这三层。</dd></div>
+  </dl>
+    </div>
     <fieldset class="choices">
       <legend>选一个答案</legend>
       <label class="choice">
         <input type="radio" name="answer" value="0" required>
         <span class="choice-letter">A</span>
-        <span><span class="clue-meta">18:04 <span aria-hidden="true">·</span> 小周</span><span class="clue-text">我在 1 楼开门时进了电梯。</span></span>
+        <span><span class="clue-meta">小周 <span aria-hidden="true">·</span> 上车</span><span class="clue-text">我是从 1 楼上的。</span></span>
       </label><label class="choice">
         <input type="radio" name="answer" value="1" required>
         <span class="choice-letter">B</span>
-        <span><span class="clue-meta">18:05 <span aria-hidden="true">·</span> 小许</span><span class="clue-text">我在 4 楼上了同一趟电梯，进门时合照还没拍。</span></span>
+        <span><span class="clue-meta">小许 <span aria-hidden="true">·</span> 上车</span><span class="clue-text">我是到 4 楼才上的。</span></span>
       </label><label class="choice">
         <input type="radio" name="answer" value="2" required>
         <span class="choice-letter">C</span>
-        <span><span class="clue-meta">18:06 <span aria-hidden="true">·</span> 小陈</span><span class="clue-text">到 7 楼开门前，我们在轿厢里合了影。</span></span>
+        <span><span class="clue-meta">小陈 <span aria-hidden="true">·</span> 拍照</span><span class="clue-text">拍照时，电梯还没在 4 楼停靠。</span></span>
       </label>
     </fieldset>
       <div class="actions"><button type="submit" class="button primary" data-submit hidden>确认答案</button></div>
     </form>
-    <noscript><details class="answer"><summary>打开答案与解析</summary><p><strong>B · 小许</strong>的说法对不上。 电梯在 4 楼没有开门，小许无法在那里上车。小许仍可能从 1 楼进入，所以「三个人合影」本身可以成立。</p></details></noscript>
+    <noscript><details class="answer"><summary>打开答案与解析</summary><p><strong>B · 上车</strong>的说法对不上。</p>
+    <dl class="evidence-list">
+    <div><dt>校正后的拍摄时间</dt><dd>18:03 加 2 分钟，实际是 18:05。小许已经在轿厢里。</dd></div><div><dt>4 楼开门时间</dt><dd>18:06，晚于拍摄时间。</dd></div>
+  </dl>
+    <p>合照拍在电梯离开 1 楼之后、到达 4 楼之前。照片里的三个人都只能在 1 楼上车。小周和小陈的说法成立。</p></details></noscript>
     <section class="answer" data-result hidden aria-labelledby="result-title">
       <h2 id="result-title" tabindex="-1" data-verdict>答案与解析</h2>
-      <p><strong>B · 小许</strong>的说法对不上。 电梯在 4 楼没有开门，小许无法在那里上车。小许仍可能从 1 楼进入，所以「三个人合影」本身可以成立。</p>
+      <p><strong>B · 上车</strong>的说法对不上。</p>
+    <dl class="evidence-list">
+    <div><dt>校正后的拍摄时间</dt><dd>18:03 加 2 分钟，实际是 18:05。小许已经在轿厢里。</dd></div><div><dt>4 楼开门时间</dt><dd>18:06，晚于拍摄时间。</dd></div>
+  </dl>
+    <p>合照拍在电梯离开 1 楼之后、到达 4 楼之前。照片里的三个人都只能在 1 楼上车。小周和小陈的说法成立。</p>
       <button class="hint" type="button" data-retry>重玩本题</button>
     </section>
     <div class="play-actions">
-      <a class="button primary" href="../play/spot-books.html" >再来一题 <span aria-hidden="true">→</span></a>
+      <a class="button primary" href="../play/spot-books.html">再来一题 <span aria-hidden="true">→</span></a>
       <a class="button" href="../play/corner-tape.html">换个玩法</a>
       <button class="hint" type="button" data-share hidden>分享本题</button>
       <div class="share-panel" data-share-panel hidden><label for="share-url">复制链接发给朋友</label><input id="share-url" readonly><span role="status" data-share-status></span></div>
     </div>
-    <details class="questions" id="questions">
-      <summary>本玩法全部 6 题</summary>
-      <ol><li><a  href="../play/spot-lunch.html" data-question="spot-lunch"><span>1</span> 谁先动了封口贴？<small data-done hidden>已答</small></a></li><li><a aria-current="page" href="../play/spot-elevator.html" data-question="spot-elevator"><span>2</span> 电梯里的合照<small data-done hidden>已答</small></a></li><li><a  href="../play/spot-books.html" data-question="spot-books"><span>3</span> 书架上的空位<small data-done hidden>已答</small></a></li><li><a  href="../play/spot-labels.html" data-question="spot-labels"><span>4</span> 谁写错了杯贴？<small data-done hidden>已答</small></a></li><li><a  href="../play/spot-queue.html" data-question="spot-queue"><span>5</span> 排在门口的三个人<small data-done hidden>已答</small></a></li><li><a  href="../play/spot-film.html" data-question="spot-film"><span>6</span> 拍立得少了一张吗？<small data-done hidden>已答</small></a></li></ol>
-    </details>
   </div></main>
   <footer class="site-footer">
     <div class="wrap footer-inner"><a href="../index.html">三分钟谜题社</a><a href="../about.html">关于题目与隐私</a></div>
