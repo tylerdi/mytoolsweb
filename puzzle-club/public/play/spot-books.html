@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>书架上的空位 · 一眼穿帮</title>
+  <meta name="description" content="书店用柜台小卡记录同一格的库存。 找出与事实不符的一条。">
+  <meta name="theme-color" content="#f5f2e9">
+  <link rel="icon" href="../assets/icon.png" type="image/png">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script defer src="../assets/play.js"></script>
+</head>
+<body class="game-page spot">
+  <a class="skip" href="#main">跳到正文</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">✦</span> 三分钟谜题社</a>
+      <nav aria-label="游戏导航">
+        <a aria-current="true" href="../play/spot-lunch.html">一眼穿帮</a><a  href="../play/corner-tape.html">这是什么的一角</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="wrap">
+  <div class="play-wrap">
+    <div class="play-path"><a href="../index.html#games">所有玩法</a><span aria-hidden="true">/</span><span>一眼穿帮</span></div>
+    <div class="play-meta"><span>线索推理 · 旧书店</span><span>第 3 / 6 题</span></div>
+    <h1>书架上的空位</h1>
+    <p class="play-intro">书店用柜台小卡记录同一格的库存。 找出与事实不符的一条。</p>
+    <form data-puzzle data-key="spot-books" data-answer="2" data-evidence="1,2">
+      <div class="instruction"><b>已知事实</b><p>这格早上有 7 本书。当天只发生下列两次库存变动。结账拿走 3 本，归还放回 1 本。</p></div>
+    <fieldset class="choices">
+      <legend>选一个答案</legend>
+      <label class="choice">
+        <input type="radio" name="answer" value="0" required>
+        <span class="choice-letter">A</span>
+        <span><span class="clue-meta">11:00 <span aria-hidden="true">·</span> 柜台便签</span><span class="clue-text">结账前，这格有 7 本。</span></span>
+      </label><label class="choice">
+        <input type="radio" name="answer" value="1" required>
+        <span class="choice-letter">B</span>
+        <span><span class="clue-meta">12:00 <span aria-hidden="true">·</span> 整理记录</span><span class="clue-text">结账拿走 3 本后，这格剩 4 本。</span></span>
+      </label><label class="choice">
+        <input type="radio" name="answer" value="2" required>
+        <span class="choice-letter">C</span>
+        <span><span class="clue-meta">18:00 <span aria-hidden="true">·</span> 关店记录</span><span class="clue-text">归还的 1 本放回后，这格有 6 本。</span></span>
+      </label>
+    </fieldset>
+      <div class="actions"><button type="submit" class="button primary" data-submit hidden>确认答案</button></div>
+    </form>
+    <noscript><details class="answer"><summary>打开答案与解析</summary><p><strong>C · 关店记录</strong>的说法对不上。 结账后剩 4 本，归还 1 本，应为 5 本。题目已给出全天只有这两次变动，所以关店记录多算了 1 本。</p></details></noscript>
+    <section class="answer" data-result hidden aria-labelledby="result-title">
+      <h2 id="result-title" tabindex="-1" data-verdict>答案与解析</h2>
+      <p><strong>C · 关店记录</strong>的说法对不上。 结账后剩 4 本，归还 1 本，应为 5 本。题目已给出全天只有这两次变动，所以关店记录多算了 1 本。</p>
+      <button class="hint" type="button" data-retry>重玩本题</button>
+    </section>
+    <div class="play-actions">
+      <a class="button primary" href="../play/spot-labels.html" >再来一题 <span aria-hidden="true">→</span></a>
+      <a class="button" href="../play/corner-tape.html">换个玩法</a>
+      <button class="hint" type="button" data-share hidden>分享本题</button>
+      <div class="share-panel" data-share-panel hidden><label for="share-url">复制链接发给朋友</label><input id="share-url" readonly><span role="status" data-share-status></span></div>
+    </div>
+    <details class="questions" id="questions">
+      <summary>本玩法全部 6 题</summary>
+      <ol><li><a  href="../play/spot-lunch.html" data-question="spot-lunch"><span>1</span> 谁先动了封口贴？<small data-done hidden>已答</small></a></li><li><a  href="../play/spot-elevator.html" data-question="spot-elevator"><span>2</span> 电梯里的合照<small data-done hidden>已答</small></a></li><li><a aria-current="page" href="../play/spot-books.html" data-question="spot-books"><span>3</span> 书架上的空位<small data-done hidden>已答</small></a></li><li><a  href="../play/spot-labels.html" data-question="spot-labels"><span>4</span> 谁写错了杯贴？<small data-done hidden>已答</small></a></li><li><a  href="../play/spot-queue.html" data-question="spot-queue"><span>5</span> 排在门口的三个人<small data-done hidden>已答</small></a></li><li><a  href="../play/spot-film.html" data-question="spot-film"><span>6</span> 拍立得少了一张吗？<small data-done hidden>已答</small></a></li></ol>
+    </details>
+  </div></main>
+  <footer class="site-footer">
+    <div class="wrap footer-inner"><a href="../index.html">三分钟谜题社</a><a href="../about.html">关于题目与隐私</a></div>
+  </footer>
+</body>
+</html>
