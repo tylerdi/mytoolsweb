@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>哪只杯子已经寄出？ · 一眼穿帮</title>
+  <meta name="description" content="三个同样大小的杯子靠绑绳区分。寄件卡上有一句和打包记录对不上。 找出与事实不符的一条。">
+  <meta name="theme-color" content="#f5f2e9">
+  <link rel="icon" href="../assets/icon.png" type="image/png">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script defer src="../assets/play.js"></script>
+</head>
+<body class="game-page spot">
+  <a class="skip" href="#main">跳到正文</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">✦</span> 三分钟谜题社</a>
+      <nav aria-label="游戏导航">
+        <a aria-current="true" href="../spot.html">一眼穿帮</a><a  href="../corner.html">这是什么的一角</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="wrap">
+  <div class="play-wrap">
+    <div class="play-path"><a href="../index.html#games">所有玩法</a><span aria-hidden="true">/</span><span>一眼穿帮</span></div>
+    <div class="play-meta"><span>线索推理 · 陶艺工作室</span><div>第 10 / 12 题 <a href="../spot.html">选题</a></div></div>
+    <h1>哪只杯子已经寄出？</h1>
+    <p class="play-intro">三个同样大小的杯子靠绑绳区分。寄件卡上有一句和打包记录对不上。 找出与事实不符的一条。</p>
+    <form data-puzzle data-key="spot-pottery" data-answer="2" data-evidence="">
+      <div class="instruction"><b>已知事实</b><p>三个杯子各有一个独立编号，用红、黄、绿绳分别标记。寄出的杯子已交给快递员，未寄出的都留在店里，当天没有退件。</p>
+      <dl class="evidence-list">
+    <div><dt>出炉标签</dt><dd>红绳是 18 号，黄绳是 21 号，绿绳是 24 号。</dd></div><div><dt>寄件回执</dt><dd>今天寄出的只有 21 和 24 号。</dd></div>
+  </dl>
+    </div>
+    <fieldset class="choices">
+      <legend>选一个答案</legend>
+      <label class="choice">
+        <input type="radio" name="answer" value="0" required>
+        <span class="choice-letter">A</span>
+        <span><span class="clue-meta">打包员 <span aria-hidden="true">·</span> 收件留言</span><span class="clue-text">绿绳杯已经寄出。</span></span>
+      </label><label class="choice">
+        <input type="radio" name="answer" value="1" required>
+        <span class="choice-letter">B</span>
+        <span><span class="clue-meta">店员 <span aria-hidden="true">·</span> 工作台留言</span><span class="clue-text">红绳杯还在店里。</span></span>
+      </label><label class="choice">
+        <input type="radio" name="answer" value="2" required>
+        <span class="choice-letter">C</span>
+        <span><span class="clue-meta">仓管员 <span aria-hidden="true">·</span> 库存留言</span><span class="clue-text">黄绳杯还在店里。</span></span>
+      </label>
+    </fieldset>
+      <div class="actions"><button type="submit" class="button primary" data-submit hidden>确认答案</button></div>
+    </form>
+    <noscript><details class="answer"><summary>打开答案与解析</summary><p><strong>C · 库存留言</strong>的说法对不上。</p>
+    <dl class="evidence-list">
+    <div><dt>黄绳对应 21 号</dt><dd>出炉标签把颜色和编号配成一一对应。</dd></div><div><dt>21 号在寄件回执上</dt><dd>黄绳杯今天已经寄出。</dd></div>
+  </dl>
+    <p>黄绳和绿绳的编号都出现在回执上。红绳的 18 号未寄，只有仓管员的留言与两张记录冲突。</p></details></noscript>
+    <section class="answer" data-result hidden aria-labelledby="result-title">
+      <h2 id="result-title" tabindex="-1" data-verdict>答案与解析</h2>
+      <p><strong>C · 库存留言</strong>的说法对不上。</p>
+    <dl class="evidence-list">
+    <div><dt>黄绳对应 21 号</dt><dd>出炉标签把颜色和编号配成一一对应。</dd></div><div><dt>21 号在寄件回执上</dt><dd>黄绳杯今天已经寄出。</dd></div>
+  </dl>
+    <p>黄绳和绿绳的编号都出现在回执上。红绳的 18 号未寄，只有仓管员的留言与两张记录冲突。</p>
+      <button class="hint" type="button" data-retry>重玩本题</button>
+    </section>
+    <div class="play-actions">
+      <a class="button primary" href="../play/spot-broadcast.html">再来一题 <span aria-hidden="true">→</span></a>
+      <a class="button" href="../play/corner-tape.html">换个玩法</a>
+      <button class="hint" type="button" data-share hidden>分享本题</button>
+      <div class="share-panel" data-share-panel hidden><label for="share-url">复制链接发给朋友</label><input id="share-url" readonly><span role="status" data-share-status></span></div>
+    </div>
+  </div></main>
+  <footer class="site-footer">
+    <div class="wrap footer-inner"><a href="../index.html">三分钟谜题社</a><a href="../about.html">关于题目与隐私</a></div>
+  </footer>
+</body>
+</html>

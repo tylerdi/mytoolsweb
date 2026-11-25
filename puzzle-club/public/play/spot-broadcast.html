@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>楼上为什么没听见？ · 一眼穿帮</title>
+  <meta name="description" content="一段节目播出了两次。比对播放时间和线路切换时间。 找出与事实不符的一条。">
+  <meta name="theme-color" content="#f5f2e9">
+  <link rel="icon" href="../assets/icon.png" type="image/png">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script defer src="../assets/play.js"></script>
+</head>
+<body class="game-page spot">
+  <a class="skip" href="#main">跳到正文</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">✦</span> 三分钟谜题社</a>
+      <nav aria-label="游戏导航">
+        <a aria-current="true" href="../spot.html">一眼穿帮</a><a  href="../corner.html">这是什么的一角</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="wrap">
+  <div class="play-wrap">
+    <div class="play-path"><a href="../index.html#games">所有玩法</a><span aria-hidden="true">/</span><span>一眼穿帮</span></div>
+    <div class="play-meta"><span>线索推理 · 校园广播站</span><div>第 11 / 12 题 <a href="../spot.html">选题</a></div></div>
+    <h1>楼上为什么没听见？</h1>
+    <p class="play-intro">一段节目播出了两次。比对播放时间和线路切换时间。 找出与事实不符的一条。</p>
+    <form data-puzzle data-key="spot-broadcast" data-answer="0" data-evidence="1,2">
+      <div class="instruction"><b>已知事实</b><p>每次只向一层广播，同一轮节目只在一个楼层播完。几位听众始终在同一楼层，只能听见本楼层的扬声器。</p>
+      <dl class="evidence-list">
+    <div><dt>线路记录</dt><dd>16:30 前只接一楼，16:30 起只接二楼。</dd></div><div><dt>节目记录</dt><dd>该段节目在 16:26–16:29、16:33–16:36 完整播放，其他时间没有播。</dd></div>
+  </dl>
+    </div>
+    <fieldset class="choices">
+      <legend>选一个答案</legend>
+      <label class="choice">
+        <input type="radio" name="answer" value="0" required>
+        <span class="choice-letter">A</span>
+        <span><span class="clue-meta">二楼小夏 <span aria-hidden="true">·</span> 听众留言</span><span class="clue-text">我在第一次节目里听见了片尾曲。</span></span>
+      </label><label class="choice">
+        <input type="radio" name="answer" value="1" required>
+        <span class="choice-letter">B</span>
+        <span><span class="clue-meta">一楼小池 <span aria-hidden="true">·</span> 听众留言</span><span class="clue-text">我听到了 16:29 结束的那一遍。</span></span>
+      </label><label class="choice">
+        <input type="radio" name="answer" value="2" required>
+        <span class="choice-letter">C</span>
+        <span><span class="clue-meta">二楼小罗 <span aria-hidden="true">·</span> 听众留言</span><span class="clue-text">16:33 开始的第二遍，我听到了开头。</span></span>
+      </label>
+    </fieldset>
+      <div class="actions"><button type="submit" class="button primary" data-submit hidden>确认答案</button></div>
+    </form>
+    <noscript><details class="answer"><summary>打开答案与解析</summary><p><strong>A · 听众留言</strong>的说法对不上。</p>
+    <dl class="evidence-list">
+    <div><dt>第一次 16:29 结束</dt><dd>整段都早于 16:30。</dd></div><div><dt>16:30 才切换到二楼</dt><dd>第一遍只从一楼线路播出。</dd></div>
+  </dl>
+    <p>二楼直到第二遍才收到节目。因此小夏在二楼听不到第一次的片尾曲。小池和小罗的话与两次播放记录相符。</p></details></noscript>
+    <section class="answer" data-result hidden aria-labelledby="result-title">
+      <h2 id="result-title" tabindex="-1" data-verdict>答案与解析</h2>
+      <p><strong>A · 听众留言</strong>的说法对不上。</p>
+    <dl class="evidence-list">
+    <div><dt>第一次 16:29 结束</dt><dd>整段都早于 16:30。</dd></div><div><dt>16:30 才切换到二楼</dt><dd>第一遍只从一楼线路播出。</dd></div>
+  </dl>
+    <p>二楼直到第二遍才收到节目。因此小夏在二楼听不到第一次的片尾曲。小池和小罗的话与两次播放记录相符。</p>
+      <button class="hint" type="button" data-retry>重玩本题</button>
+    </section>
+    <div class="play-actions">
+      <a class="button primary" href="../play/spot-postcard.html">再来一题 <span aria-hidden="true">→</span></a>
+      <a class="button" href="../play/corner-tape.html">换个玩法</a>
+      <button class="hint" type="button" data-share hidden>分享本题</button>
+      <div class="share-panel" data-share-panel hidden><label for="share-url">复制链接发给朋友</label><input id="share-url" readonly><span role="status" data-share-status></span></div>
+    </div>
+  </div></main>
+  <footer class="site-footer">
+    <div class="wrap footer-inner"><a href="../index.html">三分钟谜题社</a><a href="../about.html">关于题目与隐私</a></div>
+  </footer>
+</body>
+</html>

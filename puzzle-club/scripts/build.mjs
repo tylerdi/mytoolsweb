@@ -58,12 +58,12 @@ function card(game, className, mark, headline, description) {
 await mkdir(new URL('play/', publicDir), { recursive: true });
 await write('index.html', page({
   title: '三分钟谜题社 · 两款短谜题',
-  description: '玩一局原创短谜题。读三条记录找矛盾，或者看一张静物插画的局部猜物品。两种玩法各六题。',
+  description: `玩一局原创短谜题。读三条记录找矛盾，或者看一张静物插画的局部猜物品。共 ${spot.length + corner.length} 题。`,
   bodyClass: 'home',
   main: `
   <section class="hero" aria-labelledby="headline">
     <div>
-      <p class="eyebrow">两种玩法 · 12 道原创短题</p>
+      <p class="eyebrow">两种玩法 · ${spot.length + corner.length} 道原创短题</p>
       <h1 id="headline">这题，<br><em>你看出来了吗？</em></h1>
       <p class="hero-description">在三条记录里发现破绽，或从一小块图里猜出桌上是什么。每题一分钟左右。</p>
       <div class="actions"><a class="button primary" href="${puzzleUrl('./', 'spot', spot[0])}">玩第一题 <span aria-hidden="true">↗</span></a><a class="plain-link" href="#games">挑个玩法 <span aria-hidden="true">↓</span></a></div>

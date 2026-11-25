@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>四分钟，来得及吗？ · 一眼穿帮</title>
+  <meta name="description" content="三人从同一个广场去买报纸，用的是同一块准确的站钟。 找出与事实不符的一条。">
+  <meta name="theme-color" content="#f5f2e9">
+  <link rel="icon" href="../assets/icon.png" type="image/png">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script defer src="../assets/play.js"></script>
+</head>
+<body class="game-page spot">
+  <a class="skip" href="#main">跳到正文</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">✦</span> 三分钟谜题社</a>
+      <nav aria-label="游戏导航">
+        <a aria-current="true" href="../spot.html">一眼穿帮</a><a  href="../corner.html">这是什么的一角</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="wrap">
+  <div class="play-wrap">
+    <div class="play-path"><a href="../index.html#games">所有玩法</a><span aria-hidden="true">/</span><span>一眼穿帮</span></div>
+    <div class="play-meta"><span>线索推理 · 周末车站</span><div>第 9 / 12 题 <a href="../spot.html">选题</a></div></div>
+    <h1>四分钟，来得及吗？</h1>
+    <p class="play-intro">三人从同一个广场去买报纸，用的是同一块准确的站钟。 找出与事实不符的一条。</p>
+    <form data-puzzle data-key="spot-clockshop" data-answer="0" data-evidence="">
+      <div class="instruction"><b>已知事实</b><p>他们只走下列三条路，每人只去一个报刊亭。记录里的时间都精确到整分钟，买到报纸的时间不会早于到达时间。</p>
+      <dl class="evidence-list">
+    <div><dt>路线实测下限</dt><dd>北亭至少 3 分钟，东亭至少 5 分钟，河边亭至少 7 分钟。</dd></div><div><dt>今日通知</dt><dd>北亭暂停营业。剩下两亭柜台正常开放。</dd></div>
+  </dl>
+    </div>
+    <fieldset class="choices">
+      <legend>选一个答案</legend>
+      <label class="choice">
+        <input type="radio" name="answer" value="0" required>
+        <span class="choice-letter">A</span>
+        <span><span class="clue-meta">小和 <span aria-hidden="true">·</span> 取报记录</span><span class="clue-text">10:01 离开广场，10:05 已买到报纸。</span></span>
+      </label><label class="choice">
+        <input type="radio" name="answer" value="1" required>
+        <span class="choice-letter">B</span>
+        <span><span class="clue-meta">小米 <span aria-hidden="true">·</span> 取报记录</span><span class="clue-text">10:02 离开广场，10:07 在东亭买到了报纸。</span></span>
+      </label><label class="choice">
+        <input type="radio" name="answer" value="2" required>
+        <span class="choice-letter">C</span>
+        <span><span class="clue-meta">小果 <span aria-hidden="true">·</span> 取报记录</span><span class="clue-text">10:03 离开广场，10:11 在河边亭买到了报纸。</span></span>
+      </label>
+    </fieldset>
+      <div class="actions"><button type="submit" class="button primary" data-submit hidden>确认答案</button></div>
+    </form>
+    <noscript><details class="answer"><summary>打开答案与解析</summary><p><strong>A · 取报记录</strong>的说法对不上。</p>
+    <dl class="evidence-list">
+    <div><dt>4 分钟以内可达</dt><dd>只有北亭，最少要走 3 分钟。</dd></div><div><dt>北亭暂停营业</dt><dd>能买到报纸的东亭最少也要 5 分钟。</dd></div>
+  </dl>
+    <p>小和从出发到买报只有 4 分钟。时间上唯一可能的北亭当天没开，另两人的用时均达到各自路线的下限。</p></details></noscript>
+    <section class="answer" data-result hidden aria-labelledby="result-title">
+      <h2 id="result-title" tabindex="-1" data-verdict>答案与解析</h2>
+      <p><strong>A · 取报记录</strong>的说法对不上。</p>
+    <dl class="evidence-list">
+    <div><dt>4 分钟以内可达</dt><dd>只有北亭，最少要走 3 分钟。</dd></div><div><dt>北亭暂停营业</dt><dd>能买到报纸的东亭最少也要 5 分钟。</dd></div>
+  </dl>
+    <p>小和从出发到买报只有 4 分钟。时间上唯一可能的北亭当天没开，另两人的用时均达到各自路线的下限。</p>
+      <button class="hint" type="button" data-retry>重玩本题</button>
+    </section>
+    <div class="play-actions">
+      <a class="button primary" href="../play/spot-pottery.html">再来一题 <span aria-hidden="true">→</span></a>
+      <a class="button" href="../play/corner-tape.html">换个玩法</a>
+      <button class="hint" type="button" data-share hidden>分享本题</button>
+      <div class="share-panel" data-share-panel hidden><label for="share-url">复制链接发给朋友</label><input id="share-url" readonly><span role="status" data-share-status></span></div>
+    </div>
+  </div></main>
+  <footer class="site-footer">
+    <div class="wrap footer-inner"><a href="../index.html">三分钟谜题社</a><a href="../about.html">关于题目与隐私</a></div>
+  </footer>
+</body>
+</html>

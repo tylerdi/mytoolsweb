@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>哪张摊位图画错了？ · 一眼穿帮</title>
+  <meta name="description" content="三个摊位沿一条窄巷排开。还原入口到出口的顺序。 找出与事实不符的一条。">
+  <meta name="theme-color" content="#f5f2e9">
+  <link rel="icon" href="../assets/icon.png" type="image/png">
+  <link rel="stylesheet" href="../assets/site.css">
+  <script defer src="../assets/play.js"></script>
+</head>
+<body class="game-page spot">
+  <a class="skip" href="#main">跳到正文</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="../index.html"><span class="brand-mark" aria-hidden="true">✦</span> 三分钟谜题社</a>
+      <nav aria-label="游戏导航">
+        <a aria-current="true" href="../spot.html">一眼穿帮</a><a  href="../corner.html">这是什么的一角</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="wrap">
+  <div class="play-wrap">
+    <div class="play-path"><a href="../index.html#games">所有玩法</a><span aria-hidden="true">/</span><span>一眼穿帮</span></div>
+    <div class="play-meta"><span>线索推理 · 雨天集市</span><div>第 8 / 12 题 <a href="../spot.html">选题</a></div></div>
+    <h1>哪张摊位图画错了？</h1>
+    <p class="play-intro">三个摊位沿一条窄巷排开。还原入口到出口的顺序。 找出与事实不符的一条。</p>
+    <form data-puzzle data-key="spot-market" data-answer="1" data-evidence="0,2">
+      <div class="instruction"><b>已知事实</b><p>插画、花束、咖啡三个摊位各占一个位置。入口和出口在巷子两头。</p>
+      <dl class="evidence-list">
+    <div><dt>布置单</dt><dd>咖啡摊比插画摊离入口近。</dd></div><div><dt>布展视频</dt><dd>插画摊和咖啡摊中间隔着花束摊。</dd></div>
+  </dl>
+    </div>
+    <fieldset class="choices">
+      <legend>选一个答案</legend>
+      <label class="choice">
+        <input type="radio" name="answer" value="0" required>
+        <span class="choice-letter">A</span>
+        <span><span class="clue-meta">巡场员 <span aria-hidden="true">·</span> 入口速写</span><span class="clue-text">进巷子先看到咖啡摊。</span></span>
+      </label><label class="choice">
+        <input type="radio" name="answer" value="1" required>
+        <span class="choice-letter">B</span>
+        <span><span class="clue-meta">花摊主 <span aria-hidden="true">·</span> 收摊留言</span><span class="clue-text">从出口进巷子，会先经过我的摊位，再经过插画摊。</span></span>
+      </label><label class="choice">
+        <input type="radio" name="answer" value="2" required>
+        <span class="choice-letter">C</span>
+        <span><span class="clue-meta">咖啡师 <span aria-hidden="true">·</span> 送货指引</span><span class="clue-text">从入口走到花束摊，先经过咖啡摊。</span></span>
+      </label>
+    </fieldset>
+      <div class="actions"><button type="submit" class="button primary" data-submit hidden>确认答案</button></div>
+    </form>
+    <noscript><details class="answer"><summary>打开答案与解析</summary><p><strong>B · 收摊留言</strong>的说法对不上。</p>
+    <dl class="evidence-list">
+    <div><dt>两个端点</dt><dd>花束摊夹在两者中间，咖啡摊和插画摊分占两头。</dd></div><div><dt>哪头是入口</dt><dd>咖啡摊离入口更近，插画摊就在出口那头。</dd></div>
+  </dl>
+    <p>从出口进去的顺序是插画、花束、咖啡。花摊主把头两个摊位的顺序说反了。</p></details></noscript>
+    <section class="answer" data-result hidden aria-labelledby="result-title">
+      <h2 id="result-title" tabindex="-1" data-verdict>答案与解析</h2>
+      <p><strong>B · 收摊留言</strong>的说法对不上。</p>
+    <dl class="evidence-list">
+    <div><dt>两个端点</dt><dd>花束摊夹在两者中间，咖啡摊和插画摊分占两头。</dd></div><div><dt>哪头是入口</dt><dd>咖啡摊离入口更近，插画摊就在出口那头。</dd></div>
+  </dl>
+    <p>从出口进去的顺序是插画、花束、咖啡。花摊主把头两个摊位的顺序说反了。</p>
+      <button class="hint" type="button" data-retry>重玩本题</button>
+    </section>
+    <div class="play-actions">
+      <a class="button primary" href="../play/spot-clockshop.html">再来一题 <span aria-hidden="true">→</span></a>
+      <a class="button" href="../play/corner-tape.html">换个玩法</a>
+      <button class="hint" type="button" data-share hidden>分享本题</button>
+      <div class="share-panel" data-share-panel hidden><label for="share-url">复制链接发给朋友</label><input id="share-url" readonly><span role="status" data-share-status></span></div>
+    </div>
+  </div></main>
+  <footer class="site-footer">
+    <div class="wrap footer-inner"><a href="../index.html">三分钟谜题社</a><a href="../about.html">关于题目与隐私</a></div>
+  </footer>
+</body>
+</html>
