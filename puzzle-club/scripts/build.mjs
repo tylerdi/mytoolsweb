@@ -2,7 +2,14 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { corner, spot } from '../src/puzzles.mjs';
 
 const publicDir = new URL('../public/', import.meta.url);
+const siteOrigin = 'https://tylerzhang.xyz';
+const sitemapUrls = [];
+const canonicalPath = (name) => name === 'index.html' ? '/' : '/' + name.replace(/\.html$/, '');
 const write = (name, value) => writeFile(new URL(name, publicDir), value, 'utf8');
+function writePage(name, options) {
+  if (name !== '404.html') sitemapUrls.push(siteOrigin + canonicalPath(name));
+  return write(name, page({ ...options, name }));
+}
 const e = (str) => String(str).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 const games = {
   spot: { name: '一眼穿帮', kind: '线索推理', puzzles: spot },
@@ -12,7 +19,7 @@ const puzzleUrl = (base, game, puzzle) => base + 'play/' + game + '-' + puzzle.i
 const catalogUrl = (base, game) => base + game + '.html';
 const progressId = (game, puzzle) => `${game}-${puzzle.id}${puzzle.revision ? '-r' + puzzle.revision : ''}`;
 
-function page({ title, description, main, base = './', active = '', bodyClass = '' }) {
+function page({ name, title, description, main, base = './', active = '', bodyClass = '' }) {
   return `<!doctype html>
 <html lang="zh-CN">
 <head>
@@ -21,7 +28,8 @@ function page({ title, description, main, base = './', active = '', bodyClass = 
   <title>${e(title)}</title>
   <meta name="description" content="${e(description)}">
   <meta name="theme-color" content="#f5f2e9">
-  <link rel="icon" href="${base}assets/icon.png" type="image/png">
+  ${name === '404.html' ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${siteOrigin}${canonicalPath(name)}">`}
+${name === 'index.html' ? '  <meta name="google-adsense-account" content="ca-pub-6426056111301969">\n' : ''}  <link rel="icon" href="${base}assets/icon.png" type="image/png">
   <link rel="stylesheet" href="${base}assets/site.css">
   <script defer src="${base}assets/play.js"></script>
 </head>
@@ -56,7 +64,7 @@ function card(game, className, mark, headline, description) {
 }
 
 await mkdir(new URL('play/', publicDir), { recursive: true });
-await write('index.html', page({
+await writePage('index.html', {
   title: '三分钟谜题社 · 两款短谜题',
   description: `玩一局原创短谜题。读三条记录找矛盾，或者看一张静物插画的局部猜物品。共 ${spot.length + corner.length} 题。`,
   bodyClass: 'home',
@@ -87,9 +95,9 @@ await write('index.html', page({
     </div>
   </section>
   `,
-}));
+});
 
-await write('about.html', page({
+await writePage('about.html', {
   title: '关于题目与隐私 · 三分钟谜题社',
   description: '了解三分钟谜题社的原创题面、静物插画及本机游玩记录。',
   main: `
@@ -99,7 +107,18 @@ await write('about.html', page({
     <section><h2>题目怎么做</h2><p>「一眼穿帮」的题面是为本站写的虚构小故事。每题给出判断依据和答案解析。「这是什么的一角」使用本站绘制的数字静物插画，两级局部都从同一张完整图裁切。</p></section>
     <section><h2>本机进度</h2><p>本站把已完成的题号和答案选项保存在当前浏览器，用于恢复进度。页面无需注册，作答记录只保存在本机。清理浏览器中该站点的数据可重置进度。分享链接只包含题目地址。</p></section>
   </article>`,
-}));
+});
+
+await writePage('404.html', {
+  base: '/',
+  title: '找不到这个页面 · 三分钟谜题社',
+  description: '这个网址没有对应的页面。',
+  main: `
+  <div class="play-wrap">
+    <h1>找不到这个页面</h1>
+    <div class="actions"><a class="button primary" href="/">回到首页</a></div>
+  </div>`,
+});
 
 const letters = ['A', 'B', 'C', 'D'];
 function choices(items) {
@@ -158,7 +177,7 @@ for (const [key, game] of Object.entries(games)) {
     ? '对照两条或三条线索，指出哪条说法对不上。答完可以查看证据。'
     : '先看静物的一小块。需要提示时可以扩大范围，最后揭晓整张插画。';
 
-  await write(key + '.html', page({
+  await writePage(key + '.html', {
     active: key, bodyClass: 'catalog-page ' + key,
     title: '选题 · ' + game.name,
     description: catalogDescription,
@@ -176,14 +195,14 @@ for (const [key, game] of Object.entries(games)) {
       </a></li>`).join('')}
     </ol>
   </div>`,
-  }));
+  });
 
   for (const [index, puzzle] of game.puzzles.entries()) {
     const number = index + 1;
     const last = number === game.puzzles.length;
     const review = answerContent(key, puzzle);
     const instruction = key === 'spot' ? puzzle.intro + ' 找出与事实不符的一条。' : '观察局部插画，猜猜它是什么。你也可以先多看一点。';
-    await write('play/' + key + '-' + puzzle.id + '.html', page({
+    await writePage('play/' + key + '-' + puzzle.id + '.html', {
       base, active: key, bodyClass: 'game-page ' + key,
       title: puzzle.title + ' · ' + game.name,
       description: instruction,
@@ -210,6 +229,11 @@ for (const [key, game] of Object.entries(games)) {
       <div class="share-panel" data-share-panel hidden><label for="share-url">复制链接发给朋友</label><input id="share-url" readonly><span role="status" data-share-status></span></div>
     </div>
   </div>`,
-    }));
+    });
   }
 }
+
+await write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemapUrls.map((url) => `  <url><loc>${url}</loc></url>`).join('\n')}
+</urlset>\n`);
